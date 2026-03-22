@@ -94,6 +94,26 @@ body {
   border-radius: 6px;
 }
 
+/* Hide scrollbar utility */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Ghost border (transport module) */
+.ghost-border {
+  border: 1px solid rgba(159, 142, 121, 0.15);
+}
+
+/* Range input styling (create activity) */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #ffc56c;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
 /* Tailwind custom theme */
 @theme {
   --color-surface-lowest: #0c0f0a;
@@ -109,10 +129,27 @@ body {
   --color-on-surface: #e1e3da;
   --color-on-surface-variant: #d6c4ac;
   --color-muted: #9f8e79;
+  --color-on-primary: #442c00;
+  --color-on-primary-container: #5f3f00;
+  --color-on-secondary: #00391a;
+  --color-secondary-container: #00733b;
+  --color-on-secondary-container: #95f5ae;
+  --color-secondary-fixed-dim: #7bda96;
+  --color-primary-fixed-dim: #ffba44;
   --color-error: #ffb4ab;
   --color-error-container: #93000a;
+  --color-on-error: #690005;
   --color-outline-variant: #514533;
+  --color-outline: #9f8e79;
+  --color-surface-bright: #373a34;
+  --color-surface-variant: #333630;
+  --color-surface-dim: #11140f;
+  --color-tertiary: #c2d5bb;
+  --color-tertiary-container: #a6b9a0;
+  --color-inverse-surface: #e1e3da;
+  --color-inverse-on-surface: #2e312b;
   --font-display: 'Epilogue', sans-serif;
+  --font-headline: 'Epilogue', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
   --font-label: 'Space Grotesk', monospace;
 }

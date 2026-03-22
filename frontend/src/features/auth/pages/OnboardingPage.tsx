@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft,
   ArrowRight,
   Eye,
   EyeOff,
@@ -17,12 +16,11 @@ import {
   Users,
   Trophy,
   Tent,
+  Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { LucideIcon } from 'lucide-react';
 
-import CTAButton from '@/components/CTAButton';
-import ProgressDots from '@/components/ProgressDots';
 import ActivityMap from '@/components/ActivityMap';
 import { categories } from '@/data/categories';
 import api, { endpoints } from '@/services/api';
@@ -48,13 +46,13 @@ const initialData: OnboardingData = {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Shared classes                                                     */
+/*  Shared classes (Stitch design)                                     */
 /* ------------------------------------------------------------------ */
 const inputClasses =
-  'w-full bg-surface-container border border-[#514533] rounded-xl px-4 py-3 text-on-surface placeholder:text-muted focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors duration-200 font-body';
+  'w-full bg-surface-container-highest border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-on-surface-variant/40 outline-none transition-colors duration-200 font-body';
 
 const labelClasses =
-  'block font-label text-xs uppercase tracking-wider text-muted mb-2';
+  'block font-label uppercase tracking-widest text-xs text-primary-fixed-dim px-1 mb-2';
 
 /* ------------------------------------------------------------------ */
 /*  Slide animation variants                                           */
@@ -86,6 +84,22 @@ const iconMap: Record<string, LucideIcon> = {
   tent: Tent,
 };
 
+/* ------------------------------------------------------------------ */
+/*  Gradient backgrounds per category for interest cards                */
+/* ------------------------------------------------------------------ */
+const categoryGradients: Record<string, string> = {
+  trekking: 'linear-gradient(160deg, #2d5a27 0%, #1a3518 40%, #0c1a0a 100%)',
+  festival: 'linear-gradient(160deg, #5a4a27 0%, #352c15 40%, #1a150a 100%)',
+  ciclismo: 'linear-gradient(160deg, #273a5a 0%, #152235 40%, #0a111a 100%)',
+  kayak: 'linear-gradient(160deg, #1a4a4a 0%, #0f2d2d 40%, #071717 100%)',
+  cine: 'linear-gradient(160deg, #4a2727 0%, #2d1515 40%, #170a0a 100%)',
+  viaje: 'linear-gradient(160deg, #4a4027 0%, #2d2615 40%, #17130a 100%)',
+  social: 'linear-gradient(160deg, #3a3a3a 0%, #222222 40%, #111111 100%)',
+  deporte: 'linear-gradient(160deg, #5a3a00 0%, #352200 40%, #1a1100 100%)',
+  camping: 'linear-gradient(160deg, #1a4a27 0%, #0f2d18 40%, #07170c 100%)',
+  surf: 'linear-gradient(160deg, #1a3a5a 0%, #0f2235 40%, #07111a 100%)',
+};
+
 /* ================================================================== */
 /*  OnboardingPage                                                     */
 /* ================================================================== */
@@ -98,6 +112,7 @@ export default function OnboardingPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
+  const [gpsAcquiring, setGpsAcquiring] = useState(false);
 
   /* helpers */
   const update = <K extends keyof OnboardingData>(key: K, value: OnboardingData[K]) =>
@@ -175,26 +190,52 @@ export default function OnboardingPage() {
     }
   };
 
+  const handleGPS = () => {
+    setGpsAcquiring(true);
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setUserCoords([pos.coords.latitude, pos.coords.longitude]);
+          update(
+            'location',
+            `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`,
+          );
+          setGpsAcquiring(false);
+        },
+        () => {
+          update('location', 'Santiago, Chile');
+          setUserCoords([-33.4489, -70.6693]);
+          setGpsAcquiring(false);
+        },
+      );
+    } else {
+      update('location', 'Santiago, Chile');
+      setUserCoords([-33.4489, -70.6693]);
+      setGpsAcquiring(false);
+    }
+  };
+
   const selectedCount = formData.selectedCategories.length;
 
   /* ---------------------------------------------------------------- */
-  /*  Step 1 — Bienvenido a AKTIVAR                                    */
+  /*  Step 1 — BECOME THE PATHFINDER                                   */
   /* ---------------------------------------------------------------- */
   const step1 = (
-    <div className="space-y-8">
-      {/* Logo / brand */}
-      <div className="text-center space-y-2 pt-4">
-        <h1 className="font-display text-5xl font-black text-on-surface tracking-tight">
-          AKTIVAR
+    <section className="w-full space-y-12">
+      {/* Hero headline */}
+      <div className="space-y-4">
+        <h1 className="text-5xl md:text-7xl font-headline font-black tracking-tight leading-[0.9] text-on-surface">
+          BECOME THE <br />
+          <span className="text-primary italic">PATHFINDER.</span>
         </h1>
-        <p className="font-body text-on-surface-variant text-lg">
-          Tu red social de aventuras
+        <p className="text-on-surface-variant text-lg md:text-xl max-w-md font-body leading-relaxed">
+          Join Latin America's elite outdoor community. Let's start with the basics.
         </p>
       </div>
 
-      {/* Form fields */}
-      <div className="space-y-5">
-        <div>
+      {/* Form fields — 2-col grid on md */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        <div className="space-y-2">
           <label className={labelClasses}>Nombre</label>
           <input
             type="text"
@@ -205,7 +246,7 @@ export default function OnboardingPage() {
           />
         </div>
 
-        <div>
+        <div className="space-y-2">
           <label className={labelClasses}>Email</label>
           <input
             type="email"
@@ -216,7 +257,7 @@ export default function OnboardingPage() {
           />
         </div>
 
-        <div>
+        <div className="space-y-2 md:col-span-2">
           <label className={labelClasses}>Contraseña</label>
           <div className="relative">
             <input
@@ -229,7 +270,7 @@ export default function OnboardingPage() {
             <button
               type="button"
               onClick={() => setShowPassword((s) => !s)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-on-surface transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 hover:text-on-surface transition-colors"
               aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -238,38 +279,42 @@ export default function OnboardingPage() {
         </div>
       </div>
 
-      <CTAButton
-        label="Continuar"
+      {/* CTA */}
+      <button
         onClick={next}
-        fullWidth
-        icon={<ArrowRight size={16} />}
-      />
+        className="w-full md:w-max px-12 py-5 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-extrabold text-lg rounded-full shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3 cursor-pointer"
+      >
+        CONTINUE JOURNEY
+        <ArrowRight size={20} strokeWidth={3} />
+      </button>
 
-      <p className="text-center text-sm text-muted font-body">
+      <p className="text-sm text-on-surface-variant/60 font-body">
         ¿Ya tienes cuenta?{' '}
         <Link to="/login" className="text-primary hover:underline font-semibold">
           Inicia sesión
         </Link>
       </p>
-    </div>
+    </section>
   );
 
   /* ---------------------------------------------------------------- */
-  /*  Step 2 — ¿Qué te interesa?                                      */
+  /*  Step 2 — SELECT YOUR TERRAIN                                     */
   /* ---------------------------------------------------------------- */
   const step2 = (
-    <div className="space-y-6">
-      <div className="text-center space-y-1">
-        <h2 className="font-display text-2xl font-bold text-on-surface">
-          Elige tus intereses
-        </h2>
-        <p className="font-body text-sm text-on-surface-variant">
-          Selecciona al menos 3 categorías
-        </p>
+    <section className="w-full space-y-8">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="space-y-2">
+          <h2 className="text-4xl font-headline font-bold text-on-surface">
+            SELECT YOUR TERRAIN
+          </h2>
+          <p className="text-on-surface-variant font-label text-sm uppercase tracking-widest">
+            Selecciona al menos 3 — {selectedCount}/3
+          </p>
+        </div>
       </div>
 
-      {/* Category grid */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Category grid — tall image cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {categories.map((cat) => {
           const isSelected = formData.selectedCategories.includes(cat.id);
           const Icon = iconMap[cat.icon.toLowerCase()] ?? Mountain;
@@ -279,145 +324,135 @@ export default function OnboardingPage() {
               key={cat.id}
               type="button"
               onClick={() => toggleCategory(cat.id)}
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className={`relative flex flex-col items-center justify-center gap-2 rounded-2xl p-5 transition-all duration-200 cursor-pointer select-none ${
+              className={`group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer transition-all ${
                 isSelected
-                  ? 'bg-surface-container border-2 border-secondary'
-                  : 'bg-surface-container border-2 border-transparent'
+                  ? 'ring-2 ring-primary'
+                  : 'hover:ring-2 hover:ring-primary/50'
               }`}
-              style={{
-                background: isSelected
-                  ? `linear-gradient(135deg, ${cat.color}10, ${cat.color}05)`
-                  : undefined,
-              }}
             >
-              {/* Checkmark */}
+              {/* Background — gradient with icon overlay */}
+              <div
+                className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
+                style={{
+                  background:
+                    categoryGradients[cat.slug] ??
+                    `linear-gradient(160deg, ${cat.color}30 0%, ${cat.color}10 40%, #0c0f0a 100%)`,
+                }}
+              />
+
+              {/* Large faded icon in the center */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                <Icon size={64} style={{ color: cat.color }} />
+              </div>
+
+              {/* Bottom gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent" />
+
+              {/* Checkmark badge (selected) */}
               {isSelected && (
                 <motion.div
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="absolute top-2 right-2 w-5 h-5 rounded-full bg-secondary flex items-center justify-center"
+                  className="absolute top-4 right-4 bg-primary text-on-primary rounded-full p-1 shadow-xl"
                 >
-                  <Check size={12} className="text-surface" />
+                  <Check size={16} strokeWidth={3} />
                 </motion.div>
               )}
 
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor: `${cat.color}20` }}
-              >
-                <Icon size={22} style={{ color: cat.color }} />
+              {/* Category name at bottom-left */}
+              <div className="absolute bottom-4 left-4">
+                <span className="font-headline text-xl text-[#EDE9DF]">{cat.name}</span>
               </div>
-
-              <span
-                className={`font-label text-sm tracking-wide ${
-                  isSelected ? 'text-on-surface font-semibold' : 'text-on-surface-variant'
-                }`}
-              >
-                {cat.name}
-              </span>
             </motion.button>
           );
         })}
       </div>
-
-      {/* Selection count */}
-      <p
-        className={`text-center font-label text-sm tracking-wide ${
-          selectedCount >= 3 ? 'text-secondary' : 'text-muted'
-        }`}
-      >
-        {selectedCount}/3 seleccionadas
-      </p>
-
-      <CTAButton
-        label="Continuar"
-        onClick={next}
-        fullWidth
-        disabled={selectedCount < 3}
-        icon={<ArrowRight size={16} />}
-      />
-    </div>
+    </section>
   );
 
   /* ---------------------------------------------------------------- */
-  /*  Step 3 — ¿Dónde estás?                                          */
+  /*  Step 3 — LOCATE YOUR SQUAD                                       */
   /* ---------------------------------------------------------------- */
   const step3 = (
-    <div className="space-y-6">
-      <div className="text-center space-y-1">
-        <h2 className="font-display text-2xl font-bold text-on-surface">
-          Tu ubicación
+    <section className="w-full flex flex-col md:flex-row gap-12 items-center">
+      {/* Left — text + GPS button */}
+      <div className="flex-1 space-y-6">
+        <h2 className="text-4xl font-headline font-bold text-on-surface">
+          LOCATE YOUR SQUAD
         </h2>
-        <p className="font-body text-sm text-on-surface-variant">
-          Para mostrarte actividades cerca de ti
+        <p className="text-on-surface-variant leading-relaxed font-body">
+          Aktivar works best when we know where the trails are. Enable location to see
+          nearby groups and active routes.
         </p>
+
+        {/* Location text input */}
+        <div className="space-y-2">
+          <label className={labelClasses}>
+            <MapPin size={14} className="inline mr-1 -mt-0.5" />
+            Ciudad o región
+          </label>
+          <input
+            type="text"
+            className={inputClasses}
+            placeholder="Ej: Santiago, Chile"
+            value={formData.location}
+            onChange={(e) => update('location', e.target.value)}
+          />
+        </div>
+
+        {/* GPS Button */}
+        <button
+          onClick={handleGPS}
+          className="bg-surface-container-highest text-primary font-headline font-bold px-8 py-4 rounded-full flex items-center gap-3 cursor-pointer hover:bg-surface-container-high transition-colors"
+        >
+          <MapPin size={20} />
+          ENABLE GPS
+        </button>
       </div>
 
-      {/* Location input */}
-      <div>
-        <label className={labelClasses}>
-          <MapPin size={14} className="inline mr-1 -mt-0.5" />
-          Ciudad o región
-        </label>
-        <input
-          type="text"
-          className={inputClasses}
-          placeholder="Ej: Santiago, Chile"
-          value={formData.location}
-          onChange={(e) => update('location', e.target.value)}
-        />
+      {/* Right — map with pulsing dot */}
+      <div className="flex-1 w-full aspect-square md:aspect-video rounded-3xl overflow-hidden bg-surface-container-high relative border border-outline-variant/15">
+        <div className="w-full h-full">
+          <ActivityMap
+            activities={[]}
+            singleMarker={
+              userCoords
+                ? {
+                    lat: userCoords[0],
+                    lng: userCoords[1],
+                    label: formData.location || 'Tu ubicación',
+                  }
+                : undefined
+            }
+            center={userCoords ?? [-33.4489, -70.6693]}
+            zoom={userCoords ? 13 : 4}
+          />
+        </div>
+
+        {/* Pulsing dot overlay (when no coords yet) */}
+        {!userCoords && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center animate-pulse">
+              <div
+                className="w-8 h-8 bg-primary rounded-full"
+                style={{ boxShadow: '0 0 20px rgba(240,165,0,0.6)' }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* GPS status label */}
+        <div className="absolute bottom-4 right-4 bg-surface/80 backdrop-blur-sm px-4 py-2 rounded-lg font-label text-xs tracking-widest text-[#EDE9DF]">
+          {gpsAcquiring
+            ? 'GPS_SIGNAL: ACQUIRING...'
+            : userCoords
+              ? 'GPS_SIGNAL: LOCKED'
+              : 'GPS_SIGNAL: WAITING...'}
+        </div>
       </div>
-
-      {/* Map */}
-      <div className="rounded-2xl border border-[#514533] overflow-hidden h-48">
-        <ActivityMap
-          activities={[]}
-          singleMarker={
-            userCoords
-              ? { lat: userCoords[0], lng: userCoords[1], label: formData.location || 'Tu ubicación' }
-              : undefined
-          }
-          center={userCoords ?? [-33.4489, -70.6693]}
-          zoom={userCoords ? 13 : 4}
-        />
-      </div>
-
-      {/* Activate location button */}
-      <CTAButton
-        label="Usar mi ubicación"
-        variant="secondary"
-        onClick={() => {
-          if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(
-              (pos) => {
-                setUserCoords([pos.coords.latitude, pos.coords.longitude]);
-                update('location', `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
-              },
-              () => {
-                update('location', 'Santiago, Chile');
-                setUserCoords([-33.4489, -70.6693]);
-              },
-            );
-          } else {
-            update('location', 'Santiago, Chile');
-            setUserCoords([-33.4489, -70.6693]);
-          }
-        }}
-        fullWidth
-        icon={<MapPin size={16} />}
-      />
-
-      {/* Final CTA */}
-      <CTAButton
-        label="Empezar a explorar"
-        onClick={handleComplete}
-        loading={loading}
-        fullWidth
-        icon={<ArrowRight size={16} />}
-      />
-    </div>
+    </section>
   );
 
   const steps = [step1, step2, step3];
@@ -426,43 +461,42 @@ export default function OnboardingPage() {
   /*  Render                                                           */
   /* ================================================================ */
   return (
-    <div
-      className="min-h-screen relative overflow-hidden"
-      style={{ backgroundColor: '#0c0f0a' }}
-    >
-      {/* Subtle background gradients */}
+    <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#0c0f0a]">
+      {/* Mesh gradient background */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background: [
-            'radial-gradient(ellipse 60% 50% at 85% 15%, rgba(255, 197, 108, 0.10) 0%, transparent 70%)',
-            'radial-gradient(ellipse 50% 60% at 15% 85%, rgba(123, 218, 150, 0.07) 0%, transparent 70%)',
+            'radial-gradient(at 0% 0%, rgba(240, 165, 0, 0.1) 0px, transparent 50%)',
+            'radial-gradient(at 100% 100%, rgba(123, 218, 150, 0.05) 0px, transparent 50%)',
           ].join(', '),
         }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 max-w-lg mx-auto px-4 py-6">
-        {/* Progress dots + back button */}
-        <div className="flex flex-col items-center gap-4 mb-8">
-          {currentStep > 0 && (
-            <button
-              onClick={prev}
-              className="self-start text-muted hover:text-on-surface transition-colors"
-              aria-label="Volver"
-            >
-              <ArrowLeft size={20} />
-            </button>
-          )}
-
-          <ProgressDots
-            steps={3}
-            currentStep={currentStep}
-            labels={['Cuenta', 'Intereses', 'Ubicación']}
-          />
+      {/* ---- Header: brand + progress dots ---- */}
+      <header className="sticky top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-md flex justify-between items-center px-6 py-4">
+        <div className="text-2xl font-black text-[#EDE9DF] tracking-tighter font-headline">
+          Aktivar
         </div>
+        <div className="flex items-center gap-2">
+          <div className="flex space-x-2">
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                layout
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === currentStep
+                    ? 'w-8 bg-primary-container'
+                    : 'w-2 bg-surface-container-highest'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </header>
 
-        {/* Step content */}
+      {/* ---- Main content ---- */}
+      <main className="flex-grow flex flex-col items-center justify-center px-6 py-12 max-w-4xl mx-auto w-full relative z-10">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={currentStep}
@@ -472,11 +506,49 @@ export default function OnboardingPage() {
             animate="center"
             exit="exit"
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="w-full"
           >
             {steps[currentStep]}
           </motion.div>
         </AnimatePresence>
-      </div>
+      </main>
+
+      {/* ---- Footer ---- */}
+      <footer className="p-6 md:p-12 flex justify-between items-center bg-surface-container-lowest relative z-10">
+        <div className="hidden md:block">
+          <p className="font-label text-xs text-on-surface-variant/40 tracking-[0.2em]">
+            AKTIVAR // LATAM OUTDOORS
+          </p>
+        </div>
+        <div className="flex gap-6 items-center">
+          {currentStep > 0 && (
+            <button
+              onClick={prev}
+              className="text-on-surface-variant font-label text-sm uppercase tracking-widest hover:text-on-surface transition-colors cursor-pointer"
+            >
+              Back
+            </button>
+          )}
+          {currentStep === 2 ? (
+            <button
+              onClick={handleComplete}
+              disabled={loading}
+              className="text-primary font-label text-sm uppercase tracking-widest font-bold cursor-pointer disabled:opacity-50 flex items-center gap-2"
+            >
+              {loading && <Loader2 size={14} className="animate-spin" />}
+              Empezar a explorar
+            </button>
+          ) : (
+            <button
+              onClick={next}
+              disabled={currentStep === 1 && selectedCount < 3}
+              className="text-primary font-label text-sm uppercase tracking-widest font-bold cursor-pointer disabled:opacity-50"
+            >
+              {currentStep === 1 && selectedCount < 3 ? `Select ${3 - selectedCount} more` : 'Skip for now'}
+            </button>
+          )}
+        </div>
+      </footer>
     </div>
   );
 }

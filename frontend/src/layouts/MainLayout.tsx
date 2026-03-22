@@ -12,13 +12,15 @@ export function MainLayout() {
     if (path === '/create') return 'create';
     if (path.startsWith('/trip')) return 'trips';
     if (path === '/profile') return 'profile';
+    if (path.startsWith('/chat')) return 'home';
+    if (path === '/notifications') return 'home';
     return 'home';
   };
 
   const handleTabChange = (tab: string) => {
     const routes: Record<string, string> = {
       home: '/',
-      explore: '/',
+      explore: '/explore',
       create: '/create',
       trips: '/',
       profile: '/profile',
@@ -26,16 +28,19 @@ export function MainLayout() {
     navigate(routes[tab] || '/');
   };
 
+  // Hide bottom nav on activity detail page (per Stitch UX: focused task)
+  const hideNav = location.pathname.startsWith('/activity/');
+
   return (
     <div className="min-h-screen bg-surface">
-      <main className="pb-20">
-        <Outlet />
-      </main>
-      <GlassNav
-        activeTab={getActiveTab()}
-        onTabChange={handleTabChange}
-        notificationCount={3}
-      />
+      <Outlet />
+      {!hideNav && (
+        <GlassNav
+          activeTab={getActiveTab()}
+          onTabChange={handleTabChange}
+          notificationCount={3}
+        />
+      )}
     </div>
   );
 }

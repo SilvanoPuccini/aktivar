@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Home, Compass, Plus, Car, User } from 'lucide-react';
+import { Home, Compass, Plus, Mountain, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface GlassNavProps {
@@ -15,11 +15,11 @@ interface Tab {
 }
 
 const tabs: Tab[] = [
-  { key: 'home', label: 'Inicio', icon: Home },
-  { key: 'explore', label: 'Explorar', icon: Compass },
-  { key: 'create', label: 'Crear', icon: Plus },
-  { key: 'trips', label: 'Viajes', icon: Car },
-  { key: 'profile', label: 'Perfil', icon: User },
+  { key: 'home', label: 'Home', icon: Home },
+  { key: 'explore', label: 'Explore', icon: Compass },
+  { key: 'create', label: 'Create', icon: Plus },
+  { key: 'trips', label: 'Trips', icon: Mountain },
+  { key: 'profile', label: 'Profile', icon: User },
 ];
 
 export default function GlassNav({
@@ -29,52 +29,28 @@ export default function GlassNav({
 }: GlassNavProps) {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 flex items-end justify-around px-2"
+      className="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 rounded-t-2xl z-50"
       style={{
-        background: 'rgba(17,20,15,0.85)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        borderTop: '1px solid rgba(81,69,51,0.3)',
-        paddingBottom: 'env(safe-area-inset-bottom, 8px)',
+        background: 'rgba(17,20,15,0.70)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        boxShadow: '0 -10px 30px rgba(0,0,0,0.4)',
       }}
     >
       {tabs.map((tab) => {
         const isActive = activeTab === tab.key;
-        const isCreate = tab.key === 'create';
         const Icon = tab.icon;
-
-        if (isCreate) {
-          return (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => onTabChange(tab.key)}
-              className="flex flex-col items-center gap-0.5 pt-2 pb-1 cursor-pointer"
-            >
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.92 }}
-                className="flex items-center justify-center w-12 h-8 rounded-full -mt-2"
-                style={{
-                  background: 'linear-gradient(135deg, #ffc56c, #f0a500)',
-                  boxShadow: '0 4px 16px rgba(240,165,0,0.35)',
-                }}
-              >
-                <Plus size={20} className="text-[#442c00]" />
-              </motion.div>
-              <span className="font-[Space_Grotesk] text-xs text-primary">
-                {tab.label}
-              </span>
-            </button>
-          );
-        }
 
         return (
           <button
             key={tab.key}
             type="button"
             onClick={() => onTabChange(tab.key)}
-            className="relative flex flex-col items-center gap-0.5 pt-2 pb-1 px-3 cursor-pointer"
+            className={`relative flex flex-col items-center justify-center px-3 py-1 rounded-xl transition-all duration-300 ease-out cursor-pointer ${
+              isActive
+                ? 'text-[#F0A500] bg-[#1d201b]'
+                : 'text-[#EDE9DF]/60 hover:bg-[#333630]'
+            }`}
           >
             <motion.div
               animate={{ scale: isActive ? 1.1 : 1 }}
@@ -82,22 +58,19 @@ export default function GlassNav({
             >
               <Icon
                 size={22}
-                className={isActive ? 'text-primary' : 'text-muted'}
+                fill={isActive ? 'currentColor' : 'none'}
+                strokeWidth={isActive ? 2 : 1.5}
               />
             </motion.div>
 
-            {/* notification badge on explore */}
+            {/* notification badge */}
             {tab.key === 'explore' && notificationCount > 0 && (
-              <span className="absolute top-1.5 right-2 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-error text-[10px] font-bold text-[#442c00] leading-none">
+              <span className="absolute top-0 right-1 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-error text-[10px] font-bold text-[#442c00] leading-none">
                 {notificationCount > 99 ? '99+' : notificationCount}
               </span>
             )}
 
-            <span
-              className={`font-[Space_Grotesk] text-xs ${
-                isActive ? 'text-primary' : 'text-muted'
-              }`}
-            >
+            <span className="font-label text-[10px] uppercase tracking-widest mt-0.5">
               {tab.label}
             </span>
           </button>

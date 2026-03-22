@@ -1,28 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  MapPin,
-  Mountain,
-  Users,
-  Route,
-  Trophy,
-  Star,
-  Shield,
-  Calendar,
-  Instagram,
-  Globe,
   ArrowLeft,
-  Settings,
-  Compass,
-  Flag,
-  Car,
+  Search,
+  MoreVertical,
+  Star,
+  Mountain,
+  Trophy,
+  Zap,
+  Camera,
+  CheckCircle,
   LogOut,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import VerifiedBadge from '@/components/VerifiedBadge';
-import StatCard from '@/components/StatCard';
 import CTAButton from '@/components/CTAButton';
-import { currentUser, mockUsers } from '@/data/users';
+import { currentUser } from '@/data/users';
 import { mockActivities } from '@/data/activities';
 import { useCurrentUser } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
@@ -30,30 +22,28 @@ import { useAuthStore } from '@/stores/authStore';
 const badgeIconMap: Record<string, React.ReactNode> = {
   'mountain-snow': <Mountain size={20} />,
   star: <Star size={20} />,
-  route: <Route size={20} />,
-  compass: <Compass size={20} />,
-  flag: <Flag size={20} />,
-  car: <Car size={20} />,
   trophy: <Trophy size={20} />,
+  compass: <Mountain size={20} />,
+  flag: <Trophy size={20} />,
+  car: <Zap size={20} />,
+  route: <Zap size={20} />,
 };
 
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.06 } },
+const badgeColorMap: Record<string, string> = {
+  'mountain-snow': 'bg-secondary-container/20 text-secondary',
+  star: 'bg-primary-container/20 text-primary-container',
+  trophy: 'bg-primary-container/20 text-primary-container',
+  compass: 'bg-secondary-container/20 text-secondary',
+  flag: 'bg-primary-container/20 text-primary-container',
+  car: 'bg-primary-container/20 text-primary-container',
+  route: 'bg-secondary-container/20 text-secondary',
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' as const } },
-};
-
-// Simulated past activities for the adventure passport grid
-const pastActivityPhotos = mockActivities.slice(0, 9).map((a) => ({
+// Simulated past activities for the photo grid
+const pastActivityPhotos = mockActivities.slice(0, 5).map((a) => ({
   id: a.id,
   title: a.title,
   cover_image: a.cover_image,
-  category: a.category.name,
-  date: a.start_datetime,
 }));
 
 export default function ProfilePage() {
@@ -71,278 +61,239 @@ export default function ProfilePage() {
     navigate('/login');
   };
 
-  const memberSince = new Date(user.created_at).toLocaleDateString('es-CL', {
-    year: 'numeric',
-    month: 'long',
-  });
+  const rating = 4.8;
+  const reviewCount = 124;
+  const filledStars = Math.floor(rating);
 
   return (
     <div className="min-h-screen bg-surface pb-24">
-      {/* ---- Header ---- */}
-      <div className="relative bg-surface-lowest px-4 pb-8 pt-6">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container"
-            aria-label="Volver"
-          >
-            <ArrowLeft size={20} className="text-on-surface" />
-          </button>
-          <button
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container"
-            aria-label="Configuración"
-          >
-            <Settings size={20} className="text-on-surface" />
-          </button>
+      {/* ---- Header (Glassmorphism) ---- */}
+      <header className="sticky top-0 z-50 w-full bg-[#11140f]/70 backdrop-blur-md">
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate(-1)} aria-label="Volver">
+              <ArrowLeft size={24} className="text-primary" />
+            </button>
+            <span className="font-headline text-2xl font-black tracking-tighter text-on-surface">
+              Aktivar
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Search size={24} className="text-on-surface" />
+            <MoreVertical size={24} className="text-on-surface" />
+          </div>
         </div>
+      </header>
 
-        {/* Avatar + Name */}
-        <motion.div
-          className="mt-6 flex flex-col items-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-        >
-          <div className="relative">
-            <img
-              src={user.avatar}
-              alt={user.full_name}
-              className="h-24 w-24 rounded-full border-[3px] border-primary bg-surface-container object-cover"
-            />
-            {user.role === 'organizer' && (
-              <div className="absolute -bottom-1 -right-1">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary">
-                  <Shield size={14} className="text-surface" />
-                </div>
+      <main className="mx-auto max-w-4xl px-6 pb-32">
+        {/* ---- Profile Header ---- */}
+        <section className="mt-8 mb-12 flex flex-col items-center text-center">
+          {/* Avatar with gradient ring */}
+          <motion.div
+            className="relative mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="h-32 w-32 rounded-full bg-gradient-to-tr from-primary to-secondary p-1">
+              <img
+                src={user.avatar}
+                alt={user.full_name}
+                className="h-full w-full rounded-full border-4 border-surface object-cover"
+              />
+            </div>
+            {/* Verified badge */}
+            {(user.is_verified_email || user.role === 'organizer') && (
+              <div className="absolute bottom-1 right-1 rounded-full border-2 border-surface bg-primary p-1 text-on-primary">
+                <CheckCircle size={16} />
               </div>
             )}
-          </div>
+          </motion.div>
 
-          <h1 className="mt-4 font-display text-2xl font-bold text-on-surface">
+          {/* Name */}
+          <motion.h1
+            className="mb-2 font-headline text-4xl font-extrabold tracking-tight text-on-surface"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.35 }}
+          >
             {user.full_name}
-          </h1>
+          </motion.h1>
 
-          <div className="mt-1 flex items-center gap-2">
-            <MapPin size={14} className="text-muted" />
-            <span className="font-label text-sm text-muted">{profile.location_name}</span>
-          </div>
+          {/* Star rating row */}
+          <motion.div
+            className="mb-4 flex items-center justify-center gap-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.15 }}
+          >
+            <div className="flex text-primary">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  size={16}
+                  className={i < filledStars ? 'fill-primary' : ''}
+                />
+              ))}
+            </div>
+            <span className="font-label text-xs uppercase tracking-widest text-on-surface-variant">
+              ({rating} &bull; {reviewCount} reviews)
+            </span>
+          </motion.div>
 
-          <div className="mt-2 flex items-center gap-2">
-            {user.is_verified_email && <VerifiedBadge type="email" />}
-            {user.is_verified_phone && <VerifiedBadge type="phone" />}
-            {user.role === 'organizer' && <VerifiedBadge type="organizer" />}
-            {user.role === 'driver' && <VerifiedBadge type="driver" />}
-          </div>
-
-          <p className="mt-3 max-w-md text-center text-sm text-on-surface-variant">
+          {/* Bio */}
+          <motion.p
+            className="mb-8 max-w-md font-body leading-relaxed text-on-surface/80"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
             {user.bio}
-          </p>
+          </motion.p>
 
-          {/* Social links */}
-          <div className="mt-3 flex items-center gap-4">
-            {profile.instagram && (
-              <a
-                href={`https://instagram.com/${profile.instagram.replace('@', '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-primary"
-              >
-                <Instagram size={14} />
-                <span className="font-label text-xs">{profile.instagram}</span>
-              </a>
-            )}
-            {profile.website && (
-              <a
-                href={profile.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-primary"
-              >
-                <Globe size={14} />
-                <span className="font-label text-xs">Web</span>
-              </a>
-            )}
-          </div>
+          {/* Stats Row */}
+          <motion.div
+            className="grid w-full max-w-lg grid-cols-3 gap-4 rounded-xl bg-surface-container py-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+          >
+            <div className="flex flex-col">
+              <span className="font-label text-2xl font-bold text-primary">
+                {profile.total_activities}
+              </span>
+              <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
+                Actividades
+              </span>
+            </div>
+            <div className="flex flex-col border-x border-outline-variant/20">
+              <span className="font-label text-2xl font-bold text-primary">
+                {profile.total_km >= 1000
+                  ? `${(profile.total_km / 1000).toFixed(1)}k`
+                  : profile.total_km.toLocaleString()}
+              </span>
+              <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
+                KM recorridos
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-label text-2xl font-bold text-primary">
+                {profile.total_people_met}
+              </span>
+              <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
+                Personas
+              </span>
+            </div>
+          </motion.div>
+        </section>
 
-          <div className="mt-2 flex items-center gap-1.5 text-xs text-muted">
-            <Calendar size={12} />
-            <span className="font-label">Miembro desde {memberSince}</span>
-          </div>
-        </motion.div>
-      </div>
+        {/* ---- Achievements / Badges (horizontal scroll pills) ---- */}
+        {profile.badges.length > 0 && (
+          <motion.section
+            className="mb-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h3 className="mb-4 font-label text-xs uppercase tracking-widest text-on-surface-variant">
+              Top Achievements
+            </h3>
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none">
+              {profile.badges.map((badge) => (
+                <div
+                  key={badge.id}
+                  className="flex flex-shrink-0 items-center gap-3 rounded-full bg-surface-container-high py-2 pl-2 pr-5"
+                >
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                      badgeColorMap[badge.icon] ?? 'bg-primary-container/20 text-primary-container'
+                    }`}
+                  >
+                    {badgeIconMap[badge.icon] ?? <Trophy size={20} />}
+                  </div>
+                  <span className="font-label text-sm font-bold text-on-surface">
+                    {badge.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </motion.section>
+        )}
 
-      {/* ---- Stats ---- */}
-      <motion.div
-        className="mx-4 -mt-1 grid grid-cols-3 gap-3 lg:mx-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <StatCard
-          icon={<Mountain size={22} />}
-          value={profile.total_activities}
-          label="Actividades"
-        />
-        <StatCard
-          icon={<Route size={22} />}
-          value={`${profile.total_km.toLocaleString()} km`}
-          label="Recorridos"
-        />
-        <StatCard
-          icon={<Users size={22} />}
-          value={profile.total_people_met}
-          label="Personas"
-        />
-      </motion.div>
-
-      {/* ---- Bio Extended ---- */}
-      {profile.bio_extended && (
-        <motion.div
-          className="mx-4 mt-6 rounded-xl bg-surface-container p-5 lg:mx-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <h2 className="font-label text-xs uppercase tracking-wider text-muted">Sobre mí</h2>
-          <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
-            {profile.bio_extended}
-          </p>
-        </motion.div>
-      )}
-
-      {/* ---- Badges ---- */}
-      {profile.badges.length > 0 && (
-        <motion.div
-          className="mx-4 mt-6 lg:mx-8"
+        {/* ---- Photo Grid (editorial-grid) ---- */}
+        <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.35 }}
         >
-          <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-on-surface">
-            <Trophy size={18} className="text-primary" />
-            Badges
-          </h2>
+          <div className="mb-6 flex items-end justify-between">
+            <h2 className="font-headline text-2xl font-bold text-on-surface">
+              Recuerdos del Trail
+            </h2>
+            <span className="cursor-pointer font-label text-sm text-primary hover:underline">
+              Ver todo
+            </span>
+          </div>
 
-          <motion.div
-            className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-          >
-            {profile.badges.map((badge) => (
-              <motion.div
-                key={badge.id}
-                variants={itemVariants}
-                className="flex items-start gap-3 rounded-xl bg-surface-container p-4 transition-colors hover:bg-surface-container-high"
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            {pastActivityPhotos.map((photo) => (
+              <div
+                key={photo.id}
+                className="aspect-square cursor-pointer overflow-hidden rounded-xl bg-surface-container-highest"
+                onClick={() => navigate(`/activity/${photo.id}`)}
               >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  {badgeIconMap[badge.icon] ?? <Trophy size={20} />}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-sm font-semibold text-on-surface truncate">{badge.name}</h3>
-                  <p className="mt-0.5 text-xs text-muted line-clamp-2">{badge.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
-      )}
-
-      {/* ---- Adventure Passport (Photo Grid) ---- */}
-      <motion.div
-        className="mx-4 mt-8 lg:mx-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-      >
-        <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-bold text-on-surface">
-          <Compass size={18} className="text-primary" />
-          Pasaporte de Aventuras
-        </h2>
-
-        <motion.div
-          className="grid grid-cols-3 gap-1.5 sm:gap-2"
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
-          {pastActivityPhotos.map((photo) => (
-            <motion.div
-              key={photo.id}
-              variants={itemVariants}
-              className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg"
-              onClick={() => navigate(`/activity/${photo.id}`)}
-            >
-              <img
-                src={photo.cover_image}
-                alt={photo.title}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-              <div className="absolute inset-x-0 bottom-0 p-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                <p className="text-xs font-semibold text-on-surface truncate">{photo.title}</p>
-                <span className="font-label text-[10px] text-primary">{photo.category}</span>
+                <img
+                  src={photo.cover_image}
+                  alt={photo.title}
+                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
+                  loading="lazy"
+                />
               </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
+            ))}
 
-      {/* ---- Other Adventurers ---- */}
-      <motion.div
-        className="mx-4 mt-8 lg:mx-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.45 }}
-      >
-        <h2 className="mb-4 font-display text-lg font-bold text-on-surface">
-          Aventureros similares
-        </h2>
-
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none -mx-4 px-4">
-          {mockUsers.slice(1, 7).map((u) => (
-            <div
-              key={u.id}
-              className="flex w-28 flex-shrink-0 flex-col items-center gap-2 rounded-xl bg-surface-container p-4 transition-colors hover:bg-surface-container-high"
-            >
-              <img
-                src={u.avatar}
-                alt={u.full_name}
-                className="h-14 w-14 rounded-full border-2 border-outline-variant bg-surface-container-high object-cover"
-              />
-              <span className="w-full truncate text-center text-xs font-medium text-on-surface">
-                {u.full_name.split(' ')[0]}
-              </span>
-              <span className="font-label text-[10px] text-muted">
-                {u.profile.total_activities} act.
-              </span>
+            {/* Add more cell */}
+            <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-surface-container-high to-surface">
+              <div className="text-center">
+                <Camera size={28} className="mx-auto mb-1 text-primary" />
+                <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
+                  Agregar más
+                </p>
+              </div>
             </div>
-          ))}
-        </div>
-      </motion.div>
+          </div>
+        </motion.section>
 
-      {/* ---- Edit Profile / Auth CTAs ---- */}
-      <div className="mx-4 mt-8 lg:mx-8 space-y-3">
-        {isAuthenticated ? (
-          <>
-            <CTAButton label="Editar perfil" variant="secondary" fullWidth onClick={() => {}} />
-            <CTAButton
-              label="Cerrar sesión"
-              variant="danger"
-              fullWidth
-              onClick={handleLogout}
-              icon={<LogOut size={16} />}
-            />
-          </>
-        ) : (
-          <>
-            <CTAButton label="Iniciar sesión" variant="primary" fullWidth onClick={() => navigate('/login')} />
-            <CTAButton label="Crear cuenta" variant="secondary" fullWidth onClick={() => navigate('/onboarding')} />
-          </>
-        )}
-      </div>
+        {/* ---- Edit Profile / Auth CTAs ---- */}
+        <div className="mt-12 space-y-3">
+          {isAuthenticated ? (
+            <>
+              <CTAButton label="Editar perfil" variant="secondary" fullWidth onClick={() => {}} />
+              <CTAButton
+                label="Cerrar sesión"
+                variant="danger"
+                fullWidth
+                onClick={handleLogout}
+                icon={<LogOut size={16} />}
+              />
+            </>
+          ) : (
+            <>
+              <CTAButton
+                label="Iniciar sesión"
+                variant="primary"
+                fullWidth
+                onClick={() => navigate('/login')}
+              />
+              <CTAButton
+                label="Crear cuenta"
+                variant="secondary"
+                fullWidth
+                onClick={() => navigate('/onboarding')}
+              />
+            </>
+          )}
+        </div>
+      </main>
     </div>
   );
 }
-
