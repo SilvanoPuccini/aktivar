@@ -11,6 +11,9 @@ const ActivityDetailPage = lazy(() => import('@/features/activities/pages/Activi
 const CreateActivityPage = lazy(() => import('@/features/activities/pages/CreateActivityPage'));
 const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'));
 const TripDetailPage = lazy(() => import('@/features/transport/pages/TripDetailPage'));
+const ExplorePage = lazy(() => import('@/features/explore/pages/ExplorePage'));
+const ChatPage = lazy(() => import('@/features/chat/pages/ChatPage'));
+const NotificationsPage = lazy(() => import('@/features/notifications/pages/NotificationsPage'));
 const OnboardingPage = lazy(() => import('@/features/auth/pages/OnboardingPage'));
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
 
@@ -57,6 +60,9 @@ export default function App() {
             <Route path="/create" element={<CreateActivityPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/trip/:id" element={<TripDetailPage />} />
+            <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/chat/:activityId" element={<ChatPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
           </Route>
         </Routes>
       </Suspense>

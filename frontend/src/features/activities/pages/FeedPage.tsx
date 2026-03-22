@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { SearchX } from 'lucide-react';
-import SearchBar from '@/components/SearchBar';
-import CategoryChip from '@/components/CategoryChip';
+import { SearchX, MapPin, SlidersHorizontal, Plus, Minus, LocateFixed } from 'lucide-react';
 import ActivityCard from '@/components/ActivityCard';
+import ActivityCardSkeleton from '@/components/ActivityCardSkeleton';
 import EmptyState from '@/components/EmptyState';
 import ActivityMap from '@/components/ActivityMap';
 import { mockActivities } from '@/data/activities';
@@ -31,7 +30,7 @@ export default function FeedPage() {
   const selectedCategory = searchParams.get('cat') ?? null;
 
   // Fetch from API with fallback to mock data
-  const { data: apiActivities } = useActivities({
+  const { data: apiActivities, isLoading } = useActivities({
     search: searchQuery || undefined,
     category: selectedCategory || undefined,
   });
@@ -73,44 +72,65 @@ export default function FeedPage() {
   }, [selectedCategory, searchQuery, apiActivities]);
 
   return (
-    <div className="min-h-screen bg-surface pb-24">
-      {/* ---- Top Section ---- */}
-      <div className="px-4 pt-6 lg:px-8">
-        <h1 className="font-display text-2xl font-bold text-on-surface sm:text-3xl lg:text-4xl">
-          Descubre tu próxima aventura
-        </h1>
-
-        <div className="mt-4 max-w-xl">
-          <SearchBar value={searchQuery} onChange={setSearchQuery} />
-        </div>
-
-        {/* Category chips */}
-        <div className="mt-4 flex gap-2 overflow-x-auto scrollbar-none pb-2 -mx-4 px-4">
-          <CategoryChip
-            category={{ name: 'Todas', icon: 'users' }}
-            selected={selectedCategory === null}
-            onClick={() => setSelectedCategory(null)}
-            size="sm"
-          />
-          {categories.map((cat) => (
-            <CategoryChip
-              key={cat.id}
-              category={cat}
-              selected={selectedCategory === cat.slug}
-              onClick={() =>
-                setSelectedCategory(selectedCategory === cat.slug ? null : cat.slug)
-              }
-              size="sm"
+    <div className="flex flex-col md:flex-row h-[calc(100vh-76px)] overflow-hidden bg-surface">
+      {/* ---- Left Side: Activity Cards Feed ---- */}
+      <section className="w-full md:w-1/2 lg:w-5/12 overflow-y-auto hide-scrollbar bg-surface relative z-10">
+        {/* Sticky Search & Filter Bar */}
+        <div className="sticky top-0 z-20 bg-surface/90 backdrop-blur-md px-6 py-4 space-y-4">
+          {/* Search input */}
+          <div className="flex items-center gap-3 bg-surface-container-highest px-4 py-3 rounded-xl border border-[#2A3826]">
+            <MapPin size={20} className="text-primary shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Antioquia, Colombia"
+              className="bg-transparent border-none outline-none text-on-surface font-label w-full placeholder:text-on-surface/40"
             />
-          ))}
-        </div>
-      </div>
+            <SlidersHorizontal size={20} className="text-on-surface/60 shrink-0 cursor-pointer" />
+          </div>
 
-      {/* ---- Main content ---- */}
-      <div className="mt-6 flex gap-6 px-4 lg:px-8">
-        {/* Cards column */}
-        <div className="flex-1 lg:w-[60%] lg:flex-none">
-          {filtered.length === 0 ? (
+          {/* Category chips */}
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+            <button
+              type="button"
+              onClick={() => setSelectedCategory(null)}
+              className={`px-5 py-2 rounded-full font-label text-sm font-bold whitespace-nowrap transition-colors cursor-pointer ${
+                selectedCategory === null
+                  ? 'bg-secondary text-on-secondary'
+                  : 'bg-surface-container-highest text-on-surface/70'
+              }`}
+            >
+              ALL
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() =>
+                  setSelectedCategory(selectedCategory === cat.slug ? null : cat.slug)
+                }
+                className={`px-5 py-2 rounded-full font-label text-sm font-bold whitespace-nowrap transition-colors cursor-pointer ${
+                  selectedCategory === cat.slug
+                    ? 'bg-secondary text-on-secondary'
+                    : 'bg-surface-container-highest text-on-surface/70'
+                }`}
+              >
+                {cat.name.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Cards list */}
+        <div className="px-6 space-y-10 pb-32">
+          {isLoading && !apiActivities ? (
+            <div className="space-y-10">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <ActivityCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
             <EmptyState
               icon={<SearchX size={48} />}
               title="No hay actividades"
@@ -125,7 +145,7 @@ export default function FeedPage() {
             />
           ) : (
             <motion.div
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+              className="space-y-10"
               variants={containerVariants}
               initial="hidden"
               animate="show"
@@ -141,17 +161,46 @@ export default function FeedPage() {
             </motion.div>
           )}
         </div>
+      </section>
 
-        {/* Interactive map — desktop only */}
-        <div className="hidden lg:block lg:w-[40%] lg:flex-none">
-          <div className="sticky top-6 h-[calc(100vh-10rem)] rounded-2xl border border-outline-variant overflow-hidden">
-            <ActivityMap
-              activities={filtered}
-              onActivityClick={(id) => navigate(`/activity/${id}`)}
-            />
-          </div>
+      {/* ---- Right Side: Interactive Map ---- */}
+      <section className="hidden md:block md:w-1/2 lg:w-7/12 h-full bg-surface-container-low relative">
+        <ActivityMap
+          activities={filtered}
+          onActivityClick={(id) => navigate(`/activity/${id}`)}
+        />
+
+        {/* Map Controls */}
+        <div className="absolute bottom-8 right-8 flex flex-col gap-3 z-[1000]">
+          <button
+            type="button"
+            className="w-12 h-12 rounded-full bg-surface-container-highest/80 backdrop-blur-md flex items-center justify-center text-[#EDE9DF] border border-outline-variant/20 active:scale-95 transition-all cursor-pointer"
+          >
+            <Plus size={20} />
+          </button>
+          <button
+            type="button"
+            className="w-12 h-12 rounded-full bg-surface-container-highest/80 backdrop-blur-md flex items-center justify-center text-[#EDE9DF] border border-outline-variant/20 active:scale-95 transition-all cursor-pointer"
+          >
+            <Minus size={20} />
+          </button>
+          <button
+            type="button"
+            className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-xl active:scale-95 transition-all cursor-pointer"
+          >
+            <LocateFixed size={20} />
+          </button>
         </div>
-      </div>
+      </section>
+
+      {/* ---- FAB ---- */}
+      <button
+        type="button"
+        onClick={() => navigate('/create')}
+        className="fixed right-6 bottom-24 md:bottom-8 z-40 bg-gradient-to-br from-primary to-primary-container text-on-primary-container w-14 h-14 rounded-full flex items-center justify-center shadow-[0_10px_40px_rgba(240,165,0,0.4)] active:scale-95 transition-transform duration-200 cursor-pointer"
+      >
+        <Plus size={28} />
+      </button>
     </div>
   );
 }
