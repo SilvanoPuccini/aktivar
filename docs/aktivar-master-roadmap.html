@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKTIVAR — Master Roadmap para Claude Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --surface:           #11140f;
+  --surface-low:       #191c17;
+  --surface-container: #1d201b;
+  --surface-high:      #282b25;
+  --surface-highest:   #333630;
+  --surface-lowest:    #0c0f0a;
+  --primary:           #ffc56c;
+  --primary-container: #f0a500;
+  --secondary:         #7bda96;
+  --secondary-dim:     #7bda96;
+  --on-surface:        #e1e3da;
+  --on-surface-var:    #d6c4ac;
+  --muted:             #9f8e79;
+  --error:             #ffb4ab;
+  --outline-var:       #514533;
+  --font-display:      'Epilogue', sans-serif;
+  --font-body:         'Plus Jakarta Sans', sans-serif;
+  --font-label:        'Space Grotesk', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--surface);
+  color:var(--on-surface);
+  font-family:var(--font-body);
+  font-size:15px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:80px 64px 60px;
+  position:relative;overflow:hidden;
+  background:var(--surface-lowest);
+}
+.hero::before{
+  content:'';position:absolute;top:-150px;right:-150px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(255,197,108,0.10) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-80px;left:-80px;
+  width:350px;height:350px;
+  background:radial-gradient(circle,rgba(123,218,150,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.eyebrow{
+  font-family:var(--font-label);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--secondary);
+  border:1px solid rgba(123,218,150,.25);display:inline-block;
+  padding:5px 14px;border-radius:2px;margin-bottom:32px;
+}
+.hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(72px,12vw,140px);
+  font-weight:900;line-height:.88;letter-spacing:-.04em;
+  color:var(--on-surface);margin-bottom:6px;
+}
+.hero h1 em{color:var(--primary);font-style:normal;}
+.hero-tagline{
+  font-family:var(--font-display);
+  font-size:clamp(16px,2.5vw,24px);font-weight:400;
+  color:var(--muted);margin-top:24px;max-width:560px;line-height:1.4;
+}
+.hero-meta{display:flex;gap:48px;margin-top:56px;flex-wrap:wrap;}
+.meta-item{display:flex;flex-direction:column;gap:5px;}
+.meta-lbl{font-family:var(--font-label);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.meta-val{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--on-surface);}
+
+/* STICKY NAV */
+.sticky-nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(17,20,15,.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(81,69,51,.3);
+  padding:0 64px;display:flex;gap:0;overflow-x:auto;
+}
+.sticky-nav a{
+  font-family:var(--font-label);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);text-decoration:none;
+  padding:18px 18px;border-bottom:2px solid transparent;white-space:nowrap;
+  transition:color .2s,border-color .2s;
+}
+.sticky-nav a:hover{color:var(--primary);border-color:var(--primary);}
+
+/* SECTIONS */
+.section{padding:80px 64px;border-top:1px solid rgba(81,69,51,.25);}
+.section-header{display:flex;align-items:baseline;gap:24px;margin-bottom:56px;}
+.phase-num{
+  font-family:var(--font-display);font-size:88px;font-weight:900;
+  line-height:1;color:rgba(81,69,51,.35);letter-spacing:-.05em;user-select:none;
+}
+.phase-info{display:flex;flex-direction:column;gap:7px;}
+.phase-eyebrow{font-family:var(--font-label);font-size:10px;letter-spacing:.16em;text-transform:uppercase;}
+.phase-title{font-family:var(--font-display);font-size:38px;font-weight:800;letter-spacing:-.025em;line-height:1.05;}
+.phase-sub{font-family:var(--font-label);font-size:11px;color:var(--muted);letter-spacing:.08em;}
+
+/* DESIGN SYSTEM TOKENS */
+.tokens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:3px;margin-top:32px;}
+.token-card{border-radius:4px;overflow:hidden;}
+.token-swatch{height:72px;}
+.token-meta{background:var(--surface-container);padding:10px 14px;}
+.token-name{font-family:var(--font-label);font-size:10px;color:var(--on-surface);letter-spacing:.08em;}
+.token-hex{font-family:var(--font-label);font-size:10px;color:var(--muted);}
+.font-block{
+  background:var(--surface-container);border-radius:4px;
+  padding:28px 32px;margin-top:20px;
+}
+.font-role{font-family:var(--font-label);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.font-sample-display{font-family:var(--font-display);font-size:44px;font-weight:900;line-height:1;letter-spacing:-.03em;color:var(--on-surface);}
+.font-sample-body{font-family:var(--font-body);font-size:15px;font-weight:400;line-height:1.7;color:var(--on-surface-var);margin-top:12px;}
+.font-sample-label{font-family:var(--font-label);font-size:13px;color:var(--secondary);margin-top:10px;letter-spacing:.06em;}
+
+/* RULES */
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px;}
+@media(max-width:900px){.rules-grid,.tasks-grid{grid-template-columns:1fr;}}
+.rule-card{
+  background:var(--surface-container);border-radius:6px;
+  padding:20px 24px;border-left:3px solid var(--outline-var);
+}
+.rule-card.do{border-color:var(--secondary);}
+.rule-card.dont{border-color:var(--error);}
+.rule-card.do .rule-label{color:var(--secondary);}
+.rule-card.dont .rule-label{color:var(--error);}
+.rule-label{font-family:var(--font-label);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px;font-weight:700;}
+.rule-text{font-size:13px;color:var(--on-surface-var);line-height:1.6;}
+
+/* STRUCTURE */
+.struct-box{
+  background:var(--surface-lowest);border:1px solid rgba(81,69,51,.3);
+  border-radius:6px;padding:24px 28px;margin-top:24px;
+  font-family:var(--font-label);font-size:12px;line-height:2;
+  color:var(--on-surface-var);
+}
+.struct-box .dir{color:var(--primary);font-weight:700;}
+.struct-box .file{color:var(--on-surface-var);}
+.struct-box .new{color:var(--secondary);}
+.struct-box .comment{color:var(--muted);}
+
+/* TASKS */
+.tasks-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px;}
+.task-group{display:flex;flex-direction:column;gap:14px;}
+.task-group-title{
+  font-family:var(--font-label);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;padding-bottom:12px;
+  border-bottom:1px solid rgba(81,69,51,.25);margin-bottom:4px;
+}
+.task{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:16px;border-radius:6px;
+  background:var(--surface-container);
+  border-left:2px solid var(--outline-var);
+  transition:border-color .2s;
+}
+.task:hover{border-color:var(--secondary);}
+.task.security{border-color:rgba(255,180,171,.4);}
+.task.feature{border-color:rgba(123,218,150,.3);}
+.task.ux{border-color:rgba(255,197,108,.3);}
+.task.infra{border-color:rgba(81,69,51,.6);}
+.task-ico{
+  width:30px;height:30px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;margin-top:2px;
+}
+.task-ico.s{background:rgba(255,180,171,.12);}
+.task-ico.f{background:rgba(123,218,150,.12);}
+.task-ico.u{background:rgba(255,197,108,.12);}
+.task-ico.i{background:rgba(81,69,51,.4);}
+.task-title{font-weight:600;font-size:13px;margin-bottom:4px;color:var(--on-surface);}
+.task-desc{font-size:12px;color:var(--on-surface-var);line-height:1.55;}
+.task-tech{font-family:var(--font-label);font-size:10px;color:var(--secondary);margin-top:5px;letter-spacing:.06em;}
+
+/* SECURITY PANEL */
+.sec-panel{
+  margin-top:36px;border:1px solid rgba(255,180,171,.2);
+  background:rgba(255,180,171,.03);border-radius:6px;padding:28px 32px;
+}
+.sec-title{
+  font-family:var(--font-display);font-size:17px;font-weight:800;
+  color:var(--error);margin-bottom:20px;
+}
+.sec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.sec-item{display:flex;gap:12px;align-items:flex-start;}
+.sec-dot{width:5px;height:5px;border-radius:50%;background:var(--error);margin-top:8px;flex-shrink:0;}
+.sec-text{font-size:13px;color:var(--on-surface);line-height:1.5;}
+.sec-note{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* TEST PANEL */
+.test-panel{
+  margin-top:36px;border:1px solid rgba(123,218,150,.2);
+  background:rgba(123,218,150,.03);border-radius:6px;padding:28px 32px;
+}
+.test-title{
+  font-family:var(--font-display);font-size:17px;font-weight:800;
+  color:var(--secondary);margin-bottom:20px;
+}
+.test-table{width:100%;border-collapse:collapse;}
+.test-table th{
+  font-family:var(--font-label);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+  padding:8px 12px;border-bottom:1px solid rgba(81,69,51,.3);text-align:left;
+}
+.test-table td{
+  font-size:12px;color:var(--on-surface-var);padding:10px 12px;
+  border-bottom:1px solid rgba(81,69,51,.12);line-height:1.5;
+}
+.test-table td:first-child{color:var(--secondary);font-family:var(--font-label);font-size:11px;}
+.test-table td:last-child{color:var(--primary);font-family:var(--font-label);font-size:11px;}
+
+/* SCALE PANEL */
+.scale-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:32px;}
+.scale-card{
+  background:var(--surface-container);border-radius:6px;padding:24px;
+  border-top:2px solid var(--outline-var);
+}
+.scale-card.tier1{border-color:var(--secondary);}
+.scale-card.tier2{border-color:var(--primary);}
+.scale-card.tier3{border-color:var(--error);}
+.scale-tier{font-family:var(--font-label);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px;}
+.scale-tier.t1{color:var(--secondary);}
+.scale-tier.t2{color:var(--primary);}
+.scale-tier.t3{color:var(--error);}
+.scale-users{font-family:var(--font-display);font-size:26px;font-weight:800;margin-bottom:8px;}
+.scale-desc{font-size:13px;color:var(--on-surface-var);line-height:1.6;}
+.scale-stack{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;}
+.pill{
+  font-family:var(--font-label);font-size:10px;
+  background:var(--surface-highest);border:1px solid rgba(81,69,51,.4);
+  padding:3px 9px;border-radius:99px;color:var(--muted);
+}
+
+/* PROMPT BOXES */
+.prompt-box{
+  background:var(--surface-lowest);
+  border:1px solid rgba(123,218,150,.2);
+  border-left:3px solid var(--secondary);
+  border-radius:4px;padding:20px 24px;margin-top:18px;
+}
+.prompt-lbl{
+  font-family:var(--font-label);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--secondary);margin-bottom:10px;font-weight:700;
+}
+.prompt-text{
+  font-family:var(--font-label);font-size:11.5px;
+  color:var(--on-surface);line-height:1.8;white-space:pre-wrap;
+}
+
+/* SCREENS GRID */
+.screens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:32px;}
+.screen-card{
+  background:var(--surface-container);border-radius:8px;overflow:hidden;
+  border:1px solid rgba(81,69,51,.3);
+}
+.screen-header{padding:16px 20px 12px;border-bottom:1px solid rgba(81,69,51,.2);}
+.screen-name{font-family:var(--font-display);font-size:16px;font-weight:800;}
+.screen-file{font-family:var(--font-label);font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:.08em;}
+.screen-body{padding:14px 20px 18px;}
+.screen-feature{font-size:12px;color:var(--on-surface-var);line-height:1.6;margin-bottom:4px;}
+.screen-tech{font-family:var(--font-label);font-size:10px;color:var(--primary);margin-top:10px;}
+
+/* COMPONENTS TABLE */
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:28px;}
+.comp-card{background:var(--surface-container);border-radius:6px;padding:18px 20px;}
+.comp-name{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.comp-file{font-family:var(--font-label);font-size:10px;color:var(--muted);margin-bottom:8px;}
+.comp-desc{font-size:12px;color:var(--on-surface-var);line-height:1.55;}
+.comp-props{font-family:var(--font-label);font-size:10px;color:var(--secondary);margin-top:8px;}
+
+/* SOCIAL FEATURES */
+.social-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:28px;}
+.social-card{background:var(--surface-container);border-radius:6px;padding:20px;border-left:3px solid var(--outline-var);}
+.social-origin{font-family:var(--font-label);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;}
+.social-name{font-size:14px;font-weight:600;color:var(--on-surface);margin-bottom:6px;}
+.social-desc{font-size:12px;color:var(--on-surface-var);line-height:1.55;}
+.social-phase{font-family:var(--font-label);font-size:10px;color:var(--primary);margin-top:8px;}
+.tag-ig{border-color:rgba(225,48,108,.5);} .tag-ig .social-origin{color:#E1306C;}
+.tag-td{border-color:rgba(254,107,0,.5);} .tag-td .social-origin{color:#FE6B00;}
+.tag-wa{border-color:rgba(37,211,102,.5);} .tag-wa .social-origin{color:#25D366;}
+.tag-fb{border-color:rgba(24,119,242,.5);} .tag-fb .social-origin{color:#1877F2;}
+.tag-ok{border-color:rgba(123,218,150,.4);} .tag-ok .social-origin{color:var(--secondary);}
+
+/* FOOTER */
+.footer{
+  padding:64px;border-top:1px solid rgba(81,69,51,.25);
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;
+}
+.footer-brand{font-family:var(--font-display);font-size:56px;font-weight:900;letter-spacing:-.04em;}
+.footer-brand em{color:var(--primary);font-style:normal;}
+.footer-note{font-size:13px;color:var(--muted);line-height:1.8;margin-top:14px;max-width:360px;}
+.footer-stats{display:flex;flex-direction:column;justify-content:flex-end;gap:0;}
+.footer-stat{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(81,69,51,.2);}
+.footer-stat-lbl{font-family:var(--font-label);font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;}
+.footer-stat-val{font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--primary);}
+
+/* utils */
+.col-amber{color:var(--primary);}
+.col-green{color:var(--secondary);}
+.col-red{color:var(--error);}
+.col-muted{color:var(--muted);}
+hr{border:none;border-top:1px solid rgba(81,69,51,.2);margin:28px 0;}
+.mt-8{margin-top:8px;}
+.mt-16{margin-top:16px;}
+.mt-24{margin-top:24px;}
+.badge{
+  display:inline-block;font-family:var(--font-label);font-size:10px;
+  padding:3px 9px;border-radius:99px;font-weight:700;letter-spacing:.06em;
+  margin-left:8px;vertical-align:middle;
+}
+.badge-green{background:rgba(123,218,150,.15);color:var(--secondary);}
+.badge-amber{background:rgba(255,197,108,.15);color:var(--primary);}
+.badge-red{background:rgba(255,180,171,.15);color:var(--error);}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">Master Roadmap · Claude Code · v2.0 · 2025</div>
+  <h1>AKT<em>IVAR</em></h1>
+  <p class="hero-tagline">Red social de actividades grupales — trekking, festivales, viajes, cine y más. Stack completo Django + React. Design system "The Editorial Wild" por Stitch. Listo para pasar a Claude Code.</p>
+  <div class="hero-meta">
+    <div class="meta-item"><span class="meta-lbl">Dominio</span><span class="meta-val">aktivar.app</span></div>
+    <div class="meta-item"><span class="meta-lbl">Duración</span><span class="meta-val">20 semanas</span></div>
+    <div class="meta-item"><span class="meta-lbl">Fases</span><span class="meta-val">5 fases</span></div>
+    <div class="meta-item"><span class="meta-lbl">Pantallas Stitch</span><span class="meta-val">6 screens</span></div>
+    <div class="meta-item"><span class="meta-lbl">Tests objetivo</span><span class="meta-val">100+</span></div>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="sticky-nav">
+  <a href="#design">Design System</a>
+  <a href="#stack">Stack</a>
+  <a href="#estructura">Estructura</a>
+  <a href="#screens">Pantallas</a>
+  <a href="#componentes">Componentes</a>
+  <a href="#social">Features Social</a>
+  <a href="#fase1">Fase 1</a>
+  <a href="#fase2">Fase 2</a>
+  <a href="#fase3">Fase 3</a>
+  <a href="#fase4">Fase 4</a>
+  <a href="#fase5">Fase 5</a>
+  <a href="#testing">Testing</a>
+  <a href="#seguridad">Seguridad</a>
+  <a href="#escala">Escalabilidad</a>
+</nav>
+
+<!-- DESIGN SYSTEM -->
+<section class="section" id="design">
+  <div class="section-header">
+    <div class="phase-num">DS</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-amber">The Editorial Wild — Stitch Design System</span>
+      <h2 class="phase-title">Sistema de diseño oficial</h2>
+      <span class="phase-sub">The Modern Pathfinder · Deep Forest palette · Todos los tokens de Stitch</span>
+    </div>
+  </div>
+
+  <p style="max-width:680px;color:var(--on-surface-var);font-size:14px;line-height:1.8;margin-bottom:32px;">
+    Stitch generó el design system completo llamado <strong style="color:var(--on-surface)">"The Editorial Wild"</strong> — una fusión de revista outdoor premium con energía atlética tipo Strava. Dark theme profundo con capas de superficie tonales. Sin líneas divisoras de 1px — las jerarquías se crean solo con cambios de color de fondo.
+  </p>
+
+  <div class="tokens-grid">
+    <div class="token-card"><div class="token-swatch" style="background:#0c0f0a"></div><div class="token-meta"><div class="token-name">surface-lowest</div><div class="token-hex">#0C0F0A · Base más profundo</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#11140f"></div><div class="token-meta"><div class="token-name">surface</div><div class="token-hex">#11140F · Fondo principal</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#191c17"></div><div class="token-meta"><div class="token-name">surface-container-low</div><div class="token-hex">#191C17 · Bloques estructurales</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#1d201b"></div><div class="token-meta"><div class="token-name">surface-container</div><div class="token-hex">#1D201B · Cards principales</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#282b25"></div><div class="token-meta"><div class="token-name">surface-container-high</div><div class="token-hex">#282B25 · Hover states</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#333630"></div><div class="token-meta"><div class="token-name">surface-container-highest</div><div class="token-hex">#333630 · Inset / emphasis</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#ffc56c"></div><div class="token-meta"><div class="token-name">primary · Golden Hour</div><div class="token-hex">#FFC56C · Textos primarios</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#f0a500"></div><div class="token-meta"><div class="token-name">primary-container</div><div class="token-hex">#F0A500 · CTAs / botones</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#7bda96"></div><div class="token-meta"><div class="token-name">secondary · Highland</div><div class="token-hex">#7BDA96 · Confirmados / éxito</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#e1e3da"></div><div class="token-meta"><div class="token-name">on-surface · Cream</div><div class="token-hex">#E1E3DA · Texto principal</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#d6c4ac"></div><div class="token-meta"><div class="token-name">on-surface-variant</div><div class="token-hex">#D6C4AC · Texto secundario</div></div></div>
+    <div class="token-card"><div class="token-swatch" style="background:#ffb4ab"></div><div class="token-meta"><div class="token-name">error · Alerta</div><div class="token-hex">#FFB4AB · Errores / urgencia</div></div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px;">
+    <div class="font-block">
+      <div class="font-role">Display · Headlines — Epilogue</div>
+      <div class="font-sample-display">AKTIVAR</div>
+      <div style="font-family:'Epilogue';font-size:18px;font-weight:400;color:var(--muted);margin-top:6px;">Trekking Villarrica 2025</div>
+    </div>
+    <div class="font-block">
+      <div class="font-role">Body · Navegación — Plus Jakarta Sans</div>
+      <div class="font-sample-body">Descripción de actividades, chats grupales, comentarios y contenido editorial. Alta legibilidad en dark mode, espaciado generoso.</div>
+    </div>
+    <div class="font-block">
+      <div class="font-role">Labels · Datos — Space Grotesk</div>
+      <div class="font-sample-label">42.3 KM · 5:30 AM · -34.6° LAT<br>RATING: 4.8 · 23 PARTICIPANTES<br>aktivar.app/trek/villarrica-2025</div>
+    </div>
+  </div>
+
+  <div class="rules-grid" style="margin-top:28px;">
+    <div class="rule-card do"><div class="rule-label">✓ Do</div><div class="rule-text">Usar fotos del paisaje latinoamericano como fondo con overlay gradient de surface de abajo hacia arriba para legibilidad.</div></div>
+    <div class="rule-card dont"><div class="rule-label">✗ Don't</div><div class="rule-text">NUNCA usar líneas divisoras de 1px. Si sentís que necesitás una línea, aumentá el whitespace o cambiá el color de superficie del bloque siguiente.</div></div>
+    <div class="rule-card do"><div class="rule-label">✓ Do</div><div class="rule-text">Glassmorphism en nav inferior y headers sticky: bg-surface/70 + backdrop-blur-md. El contenido del feed se "filtra" a través.</div></div>
+    <div class="rule-card dont"><div class="rule-label">✗ Don't</div><div class="rule-text">Nunca usar blanco puro (#FFFFFF). Todo "blanco" debe ser warm cream #EDE9DF o el token on-surface #E1E3DA para mantener la atmósfera oscura.</div></div>
+    <div class="rule-card do"><div class="rule-label">✓ Do</div><div class="rule-text">CTAs primarios con gradient de primary (#FFC56C) a primary-container (#F0A500) a 135°. Simula el glow de un amanecer.</div></div>
+    <div class="rule-card dont"><div class="rule-label">✗ Don't</div><div class="rule-text">No usar sombras pesadas tipo Material Design estándar. Las sombras permitidas son ultra-difusas: box-shadow: 0 20px 40px rgba(0,0,0,0.4) con color teñido del fondo.</div></div>
+  </div>
+
+  <div class="prompt-box" style="margin-top:28px;">
+    <div class="prompt-lbl">Claude Code Prompt · Setup Design System</div>
+    <div class="prompt-text">Crea el archivo `frontend/src/styles/tokens.css` con todos los tokens de diseño de Aktivar basados en el design system "The Editorial Wild" de Stitch.
+
+Variables CSS requeridas:
+/* Superficies (Deep Forest palette) */
+--surface-lowest: #0c0f0a;
+--surface: #11140f;
+--surface-container-low: #191c17;
+--surface-container: #1d201b;
+--surface-container-high: #282b25;
+--surface-container-highest: #333630;
+/* Colores de acción */
+--primary: #ffc56c;           /* Golden Hour - textos amber */
+--primary-container: #f0a500; /* CTAs y botones */
+--secondary: #7bda96;         /* Highland - confirmados */
+--secondary-dim: #7bda96;
+/* Texto */
+--on-surface: #e1e3da;        /* warm cream */
+--on-surface-variant: #d6c4ac;
+--muted: #9f8e79;
+/* Estados */
+--error: #ffb4ab;
+--outline-variant: #514533;
+/* Fuentes */
+--font-display: 'Epilogue', sans-serif;
+--font-body: 'Plus Jakarta Sans', sans-serif;
+--font-label: 'Space Grotesk', monospace;
+
+También crear `frontend/src/styles/globals.css` con:
+- Import de Google Fonts: Epilogue (400,700,800,900) + Plus Jakarta Sans (300,400,500,700) + Space Grotesk (300,400,500,700)
+- Reset base + body con bg surface, color on-surface, font-family body
+- Clase .glass para glassmorphism: background rgba(17,20,15,0.70) + backdrop-filter blur(20px)
+- Clase .gradient-cta para botones: linear-gradient(135deg, #ffc56c, #f0a500)
+- Clase .editorial-shadow: box-shadow 0 20px 40px rgba(0,0,0,0.4)
+- Clase .font-display aplicando Epilogue, clase .font-label aplicando Space Grotesk
+- Scrollbar personalizada: thumb #333630, track transparent
+- Selection color: background #f0a500, text #442c00</div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section class="section" id="stack">
+  <div class="section-header">
+    <div class="phase-num">00</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-amber">Decisión técnica final</span>
+      <h2 class="phase-title">Stack definitivo</h2>
+      <span class="phase-sub">No cambiar en MVP — cada herramienta elegida por razón específica</span>
+    </div>
+  </div>
+
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-name" style="color:var(--secondary)">Backend · Django 5 + Python</div>
+      <div class="comp-file">La capa de lógica y datos</div>
+      <div class="comp-desc">ORM poderoso, admin gratis, signals para side effects, GeoDjango para queries geoespaciales con PostGIS. Celery para tareas asíncronas (emails, push, reminders).</div>
+      <div class="comp-props">Django 5 · GeoDjango · Celery · Redis · Django Channels (WebSocket)</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name" style="color:#5B9CF6">La capa del medio · DRF</div>
+      <div class="comp-file">Django REST Framework — el puente con React</div>
+      <div class="comp-desc">Convierte Django en API REST. JWT con SimpleJWT, CORS con django-cors-headers, documentación automática con drf-spectacular (Swagger/OpenAPI).</div>
+      <div class="comp-props">djangorestframework · simplejwt · django-cors-headers · drf-spectacular · django-filter</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name" style="color:var(--primary)">Frontend · React + TypeScript</div>
+      <div class="comp-file">Vite como bundler — NO CRA</div>
+      <div class="comp-desc">SPA con Vite 5. TypeScript strict mode. Tailwind configurado con todos los tokens de Stitch. React Query para estado del servidor. Zustand para estado global.</div>
+      <div class="comp-props">React 18 · Vite 5 · TypeScript 5 · Tailwind 3 · React Query · Zustand · Zod · Axios</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name" style="color:#A78BFA">Base de datos · PostgreSQL + PostGIS</div>
+      <div class="comp-file">Geoespacial desde el día 1</div>
+      <div class="comp-desc">PostGIS para queries de proximidad (actividades en N km con dwithin()). Redis como cache de feeds y como broker de Celery. pg_trgm para búsqueda fuzzy (como en ferrelonstock).</div>
+      <div class="comp-props">PostgreSQL 16 · PostGIS 3 · Redis 7 · pg_trgm · psycopg2</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name" style="color:var(--error)">Infra · Railway + Vercel</div>
+      <div class="comp-file">Deploy automático desde GitHub</div>
+      <div class="comp-desc">Railway para Django + PostgreSQL + Redis todo junto. Vercel para el frontend React. Cloudinary para imágenes (como ferrelonstock). GitHub Actions para CI/CD.</div>
+      <div class="comp-props">Railway · Vercel · Cloudinary · Cloudflare R2 · GitHub Actions · Docker</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">Servicios externos</div>
+      <div class="comp-file">APIs de terceros — free tiers generosos</div>
+      <div class="comp-desc">Mapbox para mapas y geocoding. Stripe + Stripe Connect para pagos y comisiones. Resend para emails transaccionales. OneSignal para push notifications.</div>
+      <div class="comp-props">Mapbox GL JS · Stripe · Stripe Connect · Resend · OneSignal · Open-Meteo (clima, gratis)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ESTRUCTURA -->
+<section class="section" id="estructura">
+  <div class="section-header">
+    <div class="phase-num">01</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-green">Inspirada en ferrelonstock</span>
+      <h2 class="phase-title">Estructura del proyecto</h2>
+      <span class="phase-sub">Monorepo · Misma lógica de apps por dominio · Adaptada para Django API + React SPA</span>
+    </div>
+  </div>
+
+  <p style="max-width:660px;color:var(--on-surface-var);font-size:14px;line-height:1.8;margin-bottom:8px;">
+    La arquitectura de ferrelonstock (7 apps modulares por dominio) es el patrón correcto. Lo adaptamos: eliminamos templates/ y static/ de Django (van al repo React), agregamos <code style="color:var(--secondary);background:var(--surface-container);padding:2px 6px;border-radius:3px;font-size:12px;">serializers.py</code>, <code style="color:var(--secondary);background:var(--surface-container);padding:2px 6px;border-radius:3px;font-size:12px;">consumers.py</code> (WebSocket) y <code style="color:var(--secondary);background:var(--surface-container);padding:2px 6px;border-radius:3px;font-size:12px;">asgi.py</code>. La separación backend/frontend es el único cambio estructural real.
+  </p>
+
+  <div class="struct-box">
+<span class="dir">aktivar/</span>                                    <span class="comment"># monorepo raíz</span>
+├── <span class="dir">backend/</span>                                    <span class="comment"># Django API (inspirado en ferrelonstock)</span>
+│   ├── <span class="dir">aktivar/</span>                                <span class="comment"># config principal (= ferrelonstock/ferrelonstock/)</span>
+│   │   ├── <span class="file">settings.py</span>                         <span class="comment"># dev settings con django-environ</span>
+│   │   ├── <span class="file">settings_prod.py</span>                    <span class="comment"># producción (DEBUG=False, HTTPS, HSTS)</span>
+│   │   ├── <span class="file">urls.py</span>                             <span class="comment"># api/v1/ prefix para todas las rutas</span>
+│   │   ├── <span class="file">wsgi.py</span>                             <span class="comment"># servidor WSGI (Gunicorn)</span>
+│   │   └── <span class="new">asgi.py</span>                             <span class="comment"># NUEVO: servidor ASGI (Daphne, para Channels)</span>
+│   │
+│   ├── <span class="dir">users/</span>                                  <span class="comment"># = accounts/ en ferrelonstock</span>
+│   │   ├── <span class="file">models.py</span>                           <span class="comment"># CustomUser + UserProfile + DriverProfile</span>
+│   │   ├── <span class="new">serializers.py</span>                      <span class="comment"># NUEVO: en vez de forms.py</span>
+│   │   ├── <span class="file">views.py</span>                            <span class="comment"># ViewSets DRF</span>
+│   │   ├── <span class="new">permissions.py</span>                      <span class="comment"># NUEVO: IsOrganizer, IsDriver, IsVerified</span>
+│   │   ├── <span class="file">admin.py</span>                            <span class="comment"># Panel admin personalizado</span>
+│   │   ├── <span class="file">urls.py</span>                             <span class="comment"># /api/v1/users/</span>
+│   │   └── <span class="dir">tests/</span>
+│   │       ├── <span class="file">test_models.py</span>
+│   │       └── <span class="file">test_views.py</span>
+│   │
+│   ├── <span class="dir">activities/</span>                             <span class="comment"># = shop/ en ferrelonstock</span>
+│   │   ├── <span class="file">models.py</span>                           <span class="comment"># Activity + ActivityParticipant + Category</span>
+│   │   ├── <span class="new">serializers.py</span>
+│   │   ├── <span class="new">filters.py</span>                          <span class="comment"># NUEVO: django-filter para búsqueda geoespacial</span>
+│   │   ├── <span class="file">views.py</span>
+│   │   ├── <span class="file">admin.py</span>
+│   │   ├── <span class="file">urls.py</span>
+│   │   └── <span class="dir">tests/</span>
+│   │
+│   ├── <span class="new dir">transport/</span>                              <span class="comment"># NUEVO — no existe en ferrelonstock</span>
+│   │   ├── <span class="file">models.py</span>                           <span class="comment"># Trip + Vehicle + TripStop + TripPassenger</span>
+│   │   ├── <span class="file">serializers.py</span>
+│   │   ├── <span class="new">permissions.py</span>                      <span class="comment"># solo conductores verificados</span>
+│   │   ├── <span class="file">admin.py</span>
+│   │   ├── <span class="file">urls.py</span>
+│   │   └── <span class="dir">tests/</span>
+│   │
+│   ├── <span class="new dir">chat/</span>                                   <span class="comment"># NUEVO — Django Channels WebSocket</span>
+│   │   ├── <span class="file">models.py</span>                           <span class="comment"># Message + Reaction + MessageRead</span>
+│   │   ├── <span class="new">consumers.py</span>                        <span class="comment"># ActivityChatConsumer WebSocket</span>
+│   │   ├── <span class="new">routing.py</span>                          <span class="comment"># = urls.py pero para WebSocket</span>
+│   │   └── <span class="dir">tests/</span>
+│   │
+│   ├── <span class="dir">reviews/</span>                                <span class="comment"># = reviews en shop/ de ferrelonstock</span>
+│   │   ├── <span class="file">models.py</span>                           <span class="comment"># Review + Report</span>
+│   │   ├── <span class="file">serializers.py</span>
+│   │   ├── <span class="file">views.py</span>
+│   │   └── <span class="dir">tests/</span>
+│   │
+│   ├── <span class="dir">payments/</span>                               <span class="comment"># = payments/ en ferrelonstock</span>
+│   │   ├── <span class="file">models.py</span>                           <span class="comment"># Payment + Subscription + StripeEvent</span>
+│   │   ├── <span class="file">views.py</span>
+│   │   ├── <span class="new">webhooks.py</span>                         <span class="comment"># = shipping/webhooks.py en ferrelonstock</span>
+│   │   └── <span class="dir">tests/</span>
+│   │
+│   ├── <span class="new dir">notifications/</span>                          <span class="comment"># NUEVO (= emails en orders/ de ferrelonstock)</span>
+│   │   ├── <span class="file">models.py</span>                           <span class="comment"># Notification + PushSubscription</span>
+│   │   ├── <span class="new">tasks.py</span>                            <span class="comment"># Celery tasks async</span>
+│   │   └── <span class="dir">templates/email/</span>                    <span class="comment"># solo templates de email HTML</span>
+│   │
+│   ├── <span class="dir">core/</span>                                   <span class="comment"># = core/ en ferrelonstock</span>
+│   │   └── <span class="comment"># health check, sitemap.xml, robots.txt, páginas públicas SEO</span>
+│   │
+│   ├── <span class="dir">management/commands/</span>                    <span class="comment"># = management commands de ferrelonstock</span>
+│   │   ├── <span class="file">load_demo_activities.py</span>
+│   │   ├── <span class="file">load_demo_users.py</span>
+│   │   └── <span class="file">load_demo_transport.py</span>
+│   │
+│   ├── <span class="file">manage.py</span>
+│   ├── <span class="file">requirements.txt</span>
+│   ├── <span class="file">pyproject.toml</span>
+│   ├── <span class="file">render.yaml</span>                            <span class="comment"># = render.yaml de ferrelonstock + Redis + Celery</span>
+│   ├── <span class="file">build.sh</span>
+│   ├── <span class="file">Procfile</span>
+│   ├── <span class="file">runtime.txt</span>
+│   └── <span class="file">.env.example</span>
+│
+└── <span class="new dir">frontend/</span>                               <span class="comment"># React + TypeScript — NO existe en ferrelonstock</span>
+    ├── <span class="dir">src/</span>
+    │   ├── <span class="new dir">features/</span>                           <span class="comment"># una carpeta por dominio (= apps Django)</span>
+    │   │   ├── <span class="dir">auth/</span>                           <span class="comment"># login, register, verify, JWT</span>
+    │   │   ├── <span class="dir">activities/</span>                     <span class="comment"># feed, detalle, crear, buscar</span>
+    │   │   ├── <span class="dir">transport/</span>                      <span class="comment"># ride details, pickup, split cost</span>
+    │   │   ├── <span class="dir">chat/</span>                           <span class="comment"># grupo chat WebSocket</span>
+    │   │   ├── <span class="dir">payments/</span>                       <span class="comment"># checkout Stripe, subscriptions</span>
+    │   │   └── <span class="dir">profile/</span>                        <span class="comment"># perfil, pasaporte, badges</span>
+    │   ├── <span class="dir">components/</span>                         <span class="comment"># componentes reutilizables del design system</span>
+    │   │   ├── <span class="new">ActivityCard.tsx</span>
+    │   │   ├── <span class="new">MapView.tsx</span>
+    │   │   ├── <span class="new">CategoryChip.tsx</span>
+    │   │   ├── <span class="new">GlassNav.tsx</span>
+    │   │   └── <span class="new">...</span>
+    │   ├── <span class="dir">hooks/</span>                              <span class="comment"># useAuth, useChat, useMap, useActivities</span>
+    │   ├── <span class="dir">services/</span>                           <span class="comment"># api.ts, stripe.ts, mapbox.ts, websocket.ts</span>
+    │   ├── <span class="dir">stores/</span>                             <span class="comment"># Zustand: authStore, uiStore</span>
+    │   ├── <span class="dir">types/</span>                              <span class="comment"># TypeScript interfaces y types</span>
+    │   ├── <span class="dir">styles/</span>                             <span class="comment"># tokens.css, globals.css</span>
+    │   └── <span class="file">main.tsx</span>
+    ├── <span class="file">package.json</span>
+    ├── <span class="file">vite.config.ts</span>
+    ├── <span class="file">tailwind.config.ts</span>                      <span class="comment"># con todos los tokens de Stitch</span>
+    └── <span class="file">.env.example</span>
+  </div>
+
+  <div class="prompt-box">
+    <div class="prompt-lbl">Claude Code Prompt · Setup inicial del proyecto</div>
+    <div class="prompt-text">Inicializá el monorepo Aktivar con esta estructura exacta.
+
+BACKEND:
+1. Crear `backend/` con Django 5 usando: django-environ, djangorestframework, djangorestframework-simplejwt, django-cors-headers, drf-spectacular, django-filter, channels, channels-redis, celery, django-redis, psycopg2-binary, Pillow, django-cloudinary-storage, stripe, gunicorn, whitenoise, django-import-export, pytest-django, python-decouple
+2. Crear las apps: users, activities, transport, chat, reviews, payments, notifications, core
+3. Settings con separación dev/prod, django-environ para variables
+4. asgi.py configurado con Django Channels (ASGI + WebSocket routing)
+5. requirements.txt y pyproject.toml
+6. .env.example con todas las variables documentadas
+7. management commands: load_demo_activities, load_demo_users, load_demo_transport
+8. render.yaml con servicios: web (Django), worker (Celery), redis, postgresql
+
+FRONTEND:
+1. Crear `frontend/` con Vite 5 + React 18 + TypeScript 5 strict
+2. Instalar: @tanstack/react-query, zustand, zod, react-hook-form, axios, react-router-dom v6, mapbox-gl, @stripe/react-stripe-js, @stripe/stripe-js, framer-motion
+3. Tailwind configurado con TODOS los tokens de Stitch:
+   - Colores: surface, surface-container-low, surface-container, surface-container-high, surface-container-highest, surface-lowest, primary (#ffc56c), primary-container (#f0a500), secondary (#7bda96), on-surface (#e1e3da), on-surface-variant (#d6c4ac), error (#ffb4ab), outline-variant (#514533)
+   - Fonts: headline (Epilogue), body (Plus Jakarta Sans), label (Space Grotesk)
+4. Estructura de carpetas: features/, components/, hooks/, services/, stores/, types/, styles/
+5. src/styles/tokens.css y src/styles/globals.css con el design system Editorial Wild
+6. Path aliases: @/ → src/, @features/ → src/features/, @components/ → src/components/
+
+Ambos proyectos con ESLint + Prettier + Husky para git hooks.</div>
+  </div>
+</section>
+
+<!-- SCREENS DE STITCH -->
+<section class="section" id="screens">
+  <div class="section-header">
+    <div class="phase-num">SC</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-amber">Generadas por Stitch</span>
+      <h2 class="phase-title">6 pantallas a implementar</h2>
+      <span class="phase-sub">Cada HTML de Stitch → componentes React + TypeScript</span>
+    </div>
+  </div>
+
+  <div class="screens-grid">
+    <div class="screen-card">
+      <div class="screen-header"><div class="screen-name col-amber">Home Feed</div><div class="screen-file">home_feed_map_view/code.html</div></div>
+      <div class="screen-body">
+        <div class="screen-feature">Vista split: lista de actividades + mapa Mapbox con pins</div>
+        <div class="screen-feature">Sticky header con glassmorphism + búsqueda</div>
+        <div class="screen-feature">Cards con foto, categoría chip, cupos, clima, distancia</div>
+        <div class="screen-feature">Badge "2 spots left" en rojo para urgencia</div>
+        <div class="screen-feature">Bottom nav con glassmorphism</div>
+        <div class="screen-tech">→ src/features/activities/pages/FeedPage.tsx</div>
+      </div>
+    </div>
+    <div class="screen-card">
+      <div class="screen-header"><div class="screen-name col-amber">Activity Detail</div><div class="screen-file">activity_detail/code.html</div></div>
+      <div class="screen-body">
+        <div class="screen-feature">Hero image full-width con overlay gradient</div>
+        <div class="screen-feature">Organizador con avatar, verified badge, rating, historial</div>
+        <div class="screen-feature">Mapa del punto de encuentro</div>
+        <div class="screen-feature">Lista de participantes (avatares)</div>
+        <div class="screen-feature">Botón JOIN fijo en bottom con gradient CTA</div>
+        <div class="screen-tech">→ src/features/activities/pages/ActivityDetailPage.tsx</div>
+      </div>
+    </div>
+    <div class="screen-card">
+      <div class="screen-header"><div class="screen-name col-green">User Profile</div><div class="screen-file">user_profile/code.html</div></div>
+      <div class="screen-body">
+        <div class="screen-feature">Avatar grande + nombre + badges verificados</div>
+        <div class="screen-feature">Stats bar: actividades / km / personas conocidas</div>
+        <div class="screen-feature">Grid de fotos tipo Instagram (pasaporte de aventuras)</div>
+        <div class="screen-feature">Badges ganadas con iconos trophy en amber</div>
+        <div class="screen-tech">→ src/features/profile/pages/ProfilePage.tsx</div>
+      </div>
+    </div>
+    <div class="screen-card">
+      <div class="screen-header"><div class="screen-name col-amber">Create Activity</div><div class="screen-file">create_activity/code.html</div></div>
+      <div class="screen-body">
+        <div class="screen-feature">Formulario en 3 pasos con progress dots</div>
+        <div class="screen-feature">Category chips horizontales con scroll + iconos</div>
+        <div class="screen-feature">Date/time picker + location con mapa pin</div>
+        <div class="screen-feature">Capacity slider + price toggle (free/paid)</div>
+        <div class="screen-tech">→ src/features/activities/pages/CreateActivityPage.tsx</div>
+      </div>
+    </div>
+    <div class="screen-card">
+      <div class="screen-header"><div class="screen-name" style="color:var(--error)">Transport Module</div><div class="screen-file">transport_module/code.html</div></div>
+      <div class="screen-body">
+        <div class="screen-feature">Mapa de ruta con stops numerados en amber/green</div>
+        <div class="screen-feature">Driver card: foto + verified badge + licencia + rating</div>
+        <div class="screen-feature">Vehículo: marca/modelo/color/patente</div>
+        <div class="screen-feature">Split calculator: costo total ÷ N pasajeros</div>
+        <div class="screen-feature">Botón de emergencia sutil en rojo</div>
+        <div class="screen-tech">→ src/features/transport/pages/TripDetailPage.tsx</div>
+      </div>
+    </div>
+    <div class="screen-card">
+      <div class="screen-header"><div class="screen-name col-green">Onboarding</div><div class="screen-file">onboarding_flow/code.html</div></div>
+      <div class="screen-body">
+        <div class="screen-feature">3 pasos: datos básicos → intereses → ubicación</div>
+        <div class="screen-feature">Categorías seleccionables con fotos (multi-select + checkmarks amber)</div>
+        <div class="screen-feature">Progress dots en top</div>
+        <div class="screen-feature">Location permission con visual de mapa</div>
+        <div class="screen-tech">→ src/features/auth/pages/OnboardingPage.tsx</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prompt-box" style="margin-top:28px;">
+    <div class="prompt-lbl">Claude Code Prompt · Convertir Stitch → React</div>
+    <div class="prompt-text">Convertí el archivo HTML de Stitch `stitch/home_feed_map_view/code.html` en un componente React + TypeScript.
+
+Reglas de conversión:
+- Respetar 100% el design system: colores, tipografías, espaciados del HTML original
+- Tailwind config con todos los tokens de Stitch (ya configurado)
+- Convertir clases de Tailwind directamente — no agregar CSS inline nuevo
+- Usar los tipos TypeScript: Activity, User, Category definidos en src/types/
+- Integrar React Query: useActivities() hook para fetch de actividades
+- Integrar Mapbox GL JS para el mapa con pins de actividades
+- El mapa debe responder al hover de cards (resaltar pin)
+- Geolocalización del usuario al montar el componente para centrar el mapa
+- Skeleton loading con las mismas dimensiones de las cards reales
+- Scroll infinito con Intersection Observer
+- Bottom nav con glassmorphism usando la clase .glass del design system
+
+Output esperado:
+- src/features/activities/pages/FeedPage.tsx
+- src/features/activities/components/ActivityCard.tsx
+- src/features/activities/components/ActivityMap.tsx  
+- src/hooks/useActivities.ts
+- src/types/activity.ts</div>
+  </div>
+</section>
+
+<!-- COMPONENTES REUTILIZABLES -->
+<section class="section" id="componentes">
+  <div class="section-header">
+    <div class="phase-num">CO</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-green">Design system → código</span>
+      <h2 class="phase-title">Componentes del sistema</h2>
+      <span class="phase-sub">Todos tipados con TypeScript · Todos con el design system de Stitch</span>
+    </div>
+  </div>
+
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-name">ActivityCard</div>
+      <div class="comp-file">src/components/ActivityCard.tsx</div>
+      <div class="comp-desc">Card con foto hero, category chip, título, organizador + rating, fecha, distancia, barra de cupos (progress bar), precio, badge urgencia "X spots left".</div>
+      <div class="comp-props">props: activity, onJoin, showDistance, variant: "feed" | "compact"</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">CategoryChip</div>
+      <div class="comp-file">src/components/CategoryChip.tsx</div>
+      <div class="comp-desc">Pill-shaped (border-radius: 999px). Unselected: surface-container-highest bg. Selected: secondary (#7BDA96) fill. Icono + label en Space Grotesk.</div>
+      <div class="comp-props">props: category, selected, onClick, size: "sm" | "md"</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">GlassNav</div>
+      <div class="comp-file">src/components/GlassNav.tsx</div>
+      <div class="comp-desc">Bottom navigation con glassmorphism. 5 tabs: Home, Explore, Create (+amber pill), Trips, Profile. Active state en primary. Badge de notificaciones.</div>
+      <div class="comp-props">props: activeTab, onTabChange, notificationCount</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">MapView</div>
+      <div class="comp-file">src/components/MapView.tsx</div>
+      <div class="comp-desc">Mapbox GL JS con dark style. Pins de actividades coloreados por categoría. Cluster de pins cuando hay muchas actividades. Click → preview card. Geolocalización del usuario.</div>
+      <div class="comp-props">props: activities, center, zoom, onPinClick, highlightedId</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">CTAButton</div>
+      <div class="comp-file">src/components/CTAButton.tsx</div>
+      <div class="comp-desc">Botón primario con gradient de #FFC56C a #F0A500 a 135°. Pill shape (border-radius: 9999px). Loading state con spinner. Variants: primary, secondary (ghost), danger.</div>
+      <div class="comp-props">props: label, onClick, loading, variant, disabled, fullWidth</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">AvatarGroup</div>
+      <div class="comp-file">src/components/AvatarGroup.tsx</div>
+      <div class="comp-desc">Fila de avatares solapados (overlap -8px). Máx 5 visible + "+N más" en surface-container-highest. Ring de 2px border-surface al rededor de cada uno.</div>
+      <div class="comp-props">props: users, maxVisible, size: "sm" | "md" | "lg"</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">WeatherBadge</div>
+      <div class="comp-file">src/components/WeatherBadge.tsx</div>
+      <div class="comp-desc">Badge con ícono del clima y temperatura para actividades outdoor. Datos de Open-Meteo (gratis). Solo visible en categorías: trekking, kayak, ciclismo, outdoor.</div>
+      <div class="comp-props">props: lat, lng, date, category</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">VerifiedBadge</div>
+      <div class="comp-file">src/components/VerifiedBadge.tsx</div>
+      <div class="comp-desc">Badge de verificación para organizadores y conductores. Secondary color (#7BDA96) con ícono checkmark. Tooltip al hover con tipo de verificación.</div>
+      <div class="comp-props">props: type: "email" | "phone" | "driver" | "organizer"</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">SpotsBar</div>
+      <div class="comp-file">src/components/SpotsBar.tsx</div>
+      <div class="comp-desc">Barra de progreso de cupos. Verde cuando hay espacio, amber cuando quedan pocos (≤20%), rojo con "Lista de espera" cuando está lleno. Animación suave.</div>
+      <div class="comp-props">props: capacity, taken, showLabel</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL FEATURES -->
+<section class="section" id="social">
+  <div class="section-header">
+    <div class="phase-num">SF</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-amber">Mecánicas sociales adaptadas</span>
+      <h2 class="phase-title">Features sociales por plataforma</h2>
+      <span class="phase-sub">Tomamos la mecánica, la adaptamos al contexto de actividades</span>
+    </div>
+  </div>
+
+  <div class="social-grid">
+    <div class="social-card tag-ig"><div class="social-origin">Instagram</div><div class="social-name">Stories grupales post-evento <span class="badge badge-green">MVP v1</span></div><div class="social-desc">Después del evento, fotos colectivas de los participantes. Story compartida visible 48h solo para asistentes. Genera FOMO orgánico.</div><div class="social-phase">Story model con TTL 48h · Cloudinary · Celery expiration task</div></div>
+    <div class="social-card tag-ig"><div class="social-origin">Instagram</div><div class="social-name">Perfil — pasaporte de aventuras <span class="badge badge-green">MVP v1</span></div><div class="social-desc">Grid de fotos de actividades pasadas. Mapa del mundo con puntos visitados. Badges ganadas. Contadores públicos: actividades, km, personas conocidas.</div><div class="social-phase">PostGIS para km · Badge system · Cloudinary grid</div></div>
+    <div class="social-card tag-ig"><div class="social-origin">Instagram</div><div class="social-name">Feed visual de exploración <span class="badge badge-amber">v2</span></div><div class="social-desc">Grid de actividades por afinidad + ubicación. Algoritmo collaborative filtering. Actividades patrocinadas mezcladas orgánicamente.</div><div class="social-phase">Recommendation engine · Redis cache feeds</div></div>
+    <div class="social-card tag-td"><div class="social-origin">Tinder</div><div class="social-name">Perfil anónimo hasta confirmación <span class="badge badge-green">MVP v1</span></div><div class="social-desc">El participante aparece como avatar neutro hasta confirmar cupo. Al confirmar, perfil completo visible. Reduce no-shows hasta 40%.</div><div class="social-phase">Boolean is_revealed en ActivityParticipant · signal on status change</div></div>
+    <div class="social-card tag-td"><div class="social-origin">Tinder</div><div class="social-name">Swipe de actividades <span class="badge badge-amber">v2</span></div><div class="social-desc">Deslizás actividades. Swipe derecho = interés. Si N usuarios hacen match en la misma → notificación grupal. Crea urgencia y conexión.</div><div class="social-phase">Redis sorted sets · Celery batch notifications</div></div>
+    <div class="social-card tag-wa"><div class="social-origin">WhatsApp</div><div class="social-name">Chat grupal completo <span class="badge badge-green">MVP v1</span></div><div class="social-desc">Chat por actividad: responder, menciones @usuario, reacciones emoji, fotos, ubicación en vivo el día del evento. Se archiva automáticamente al finalizar.</div><div class="social-phase">Django Channels WebSocket · Redis pub/sub · Celery archiving</div></div>
+    <div class="social-card tag-wa"><div class="social-origin">WhatsApp</div><div class="social-name">Estados de disponibilidad <span class="badge badge-amber">v2</span></div><div class="social-desc">"Libre este finde", "Buscando trek para el sábado". Visible 24h para la red del usuario. El organizador puede invitar a usuarios con estado compatible.</div><div class="social-phase">Story-like model con TTL 24h · PostGIS para zona</div></div>
+    <div class="social-card tag-fb"><div class="social-origin">Facebook</div><div class="social-name">Páginas públicas SEO <span class="badge badge-green">MVP v1</span></div><div class="social-desc">Cada actividad tiene URL pública indexada por Google. Open Graph meta tags. Lista de quiénes van (opt-in). Botón "Me interesa". SEO orgánico gratuito.</div><div class="social-phase">Django public views · sitemap.xml dinámico · Open Graph</div></div>
+    <div class="social-card tag-ok"><div class="social-origin">Original</div><div class="social-name">Squads permanentes <span class="badge badge-amber">v2</span></div><div class="social-desc">Grupos de hasta 8 amigos. Cuando uno se anota, los demás reciben notificación especial. El Squad tiene prioridad de cupo 24h antes de apertura general.</div><div class="social-phase">Squad model · Priority queue · Push preferencial</div></div>
+    <div class="social-card tag-ok"><div class="social-origin">Original</div><div class="social-name">Módulo de transporte <span class="badge badge-green">MVP v1</span></div><div class="social-desc">Conductor verificado con datos de licencia, vehículo y seguro. Puntos de pickup en mapa. Split automático de costo. Botón de emergencia activo durante el viaje.</div><div class="social-phase">Stripe Connect P2P · PointField stops · Geolocation API</div></div>
+  </div>
+</section>
+
+<!-- FASE 1 -->
+<section class="section" id="fase1">
+  <div class="section-header">
+    <div class="phase-num">01</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-green">Semanas 1–4</span>
+      <h2 class="phase-title">Cimientos del proyecto</h2>
+      <span class="phase-sub">Setup, modelos, autenticación JWT, design system implementado</span>
+    </div>
+  </div>
+
+  <div class="tasks-grid">
+    <div class="task-group">
+      <div class="task-group-title col-green">Backend</div>
+      <div class="task security"><div class="task-ico s">🔐</div><div><div class="task-title">Modelo de usuario custom</div><div class="task-desc">AbstractBaseUser con email como campo primario. Campos: email, phone, full_name, avatar, bio, is_verified_email, is_verified_phone, role (user/organizer/driver), soft delete con deleted_at.</div><div class="task-tech">AbstractBaseUser + PermissionsMixin · AUTH_USER_MODEL</div></div></div>
+      <div class="task security"><div class="task-ico s">🔑</div><div><div class="task-title">JWT Auth con SimpleJWT</div><div class="task-desc">Access token 15 min en memoria, refresh token 7 días en HttpOnly cookie. Blacklist al logout. Rate limiting 5 intentos/hora en /token/.</div><div class="task-tech">djangorestframework-simplejwt · django-ratelimit</div></div></div>
+      <div class="task feature"><div class="task-ico f">📧</div><div><div class="task-title">Verificación email + teléfono</div><div class="task-desc">Email con token UUID + timestamp. OTP 6 dígitos por SMS. Sin verificación → no puede organizar actividades. Celery para expiración de tokens.</div><div class="task-tech">Resend · Twilio o WhatsApp Business API</div></div></div>
+      <div class="task infra"><div class="task-ico i">🐘</div><div><div class="task-title">PostgreSQL + PostGIS + Redis</div><div class="task-desc">GeoDjango con PostGIS. pg_trgm para búsqueda fuzzy (como ferrelonstock). Redis para cache y Celery broker. Settings separados dev/prod.</div><div class="task-tech">django.contrib.gis · celery · django-redis</div></div></div>
+      <div class="task feature"><div class="task-ico f">⚙️</div><div><div class="task-title">DRF + CORS + Swagger</div><div class="task-desc">API REST base. CORS configurado para el dominio del frontend. drf-spectacular para documentación automática en /api/docs/. Versionado de API: /api/v1/.</div><div class="task-tech">drf-spectacular · django-cors-headers</div></div></div>
+    </div>
+
+    <div class="task-group">
+      <div class="task-group-title col-amber">Frontend</div>
+      <div class="task infra"><div class="task-ico i">⚡</div><div><div class="task-title">Vite + React + TypeScript + Design System</div><div class="task-desc">Setup con path aliases. Tailwind con los 40+ tokens de color de Stitch. tokens.css, globals.css. Fonts: Epilogue, Plus Jakarta Sans, Space Grotesk.</div><div class="task-tech">Vite 5 · TypeScript strict · tailwind.config.ts con tokens Stitch</div></div></div>
+      <div class="task security"><div class="task-ico s">🛡️</div><div><div class="task-title">Auth segura — JWT en memoria</div><div class="task-desc">Access token en Zustand (NUNCA localStorage). Refresh token en HttpOnly cookie via interceptor Axios. PrivateRoute para rutas protegidas. Auto-redirect al expirar.</div><div class="task-tech">Zustand · Axios interceptors · React Router PrivateRoute</div></div></div>
+      <div class="task ux"><div class="task-ico u">🎨</div><div><div class="task-title">Componentes base del design system</div><div class="task-desc">CTAButton (gradient), CategoryChip (pill), GlassNav (glassmorphism), ActivityCard (skeleton), SpotsBar, VerifiedBadge, AvatarGroup. Todos tipados con TypeScript.</div><div class="task-tech">Tailwind tokens Stitch · Radix UI primitivos · react-hot-toast</div></div></div>
+      <div class="task ux"><div class="task-ico u">📱</div><div><div class="task-title">Onboarding (pantalla Stitch)</div><div class="task-desc">3 pasos del HTML de Stitch: datos básicos → intereses → ubicación. Animaciones Framer Motion entre pasos. Validación en tiempo real con Zod + React Hook Form.</div><div class="task-tech">framer-motion · react-hook-form · Zod</div></div></div>
+      <div class="task feature"><div class="task-ico f">🔗</div><div><div class="task-title">Servicio API centralizado</div><div class="task-desc">src/services/api.ts con Axios. Interceptors de request (inyectar JWT), response (manejo global 401/403/500). Retry con exponential backoff. Types TypeScript para todos los endpoints.</div><div class="task-tech">Axios · React Query · TypeScript generics</div></div></div>
+    </div>
+  </div>
+
+  <div class="sec-panel">
+    <div class="sec-title">🔒 Seguridad — Fase 1</div>
+    <div class="sec-grid">
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">JWT NUNCA en localStorage</div><div class="sec-note">Vulnerable a XSS. Access token solo en Zustand memory, refresh en HttpOnly cookie.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">HTTPS obligatorio desde día 1</div><div class="sec-note">SECURE_SSL_REDIRECT=True en prod. HSTS 1 año. Igual que ferrelonstock settings_prod.py.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Rate limiting en endpoints auth</div><div class="sec-note">Máx 5 intentos login por IP/hora. 3 reenvíos OTP por hora. django-ratelimit.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Contraseñas con Argon2</div><div class="sec-note">Más seguro que bcrypt. django[argon2] en dependencies. PASSWORD_HASHERS en settings.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">CORS estricto</div><div class="sec-note">Whitelist solo el dominio del frontend. Nunca CORS_ALLOW_ALL_ORIGINS=True en producción.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Variables de entorno separadas</div><div class="sec-note">SECRET_KEY, DB creds, API keys NUNCA en código. .env en .gitignore. django-environ.</div></div></div>
+    </div>
+  </div>
+
+  <div class="prompt-box">
+    <div class="prompt-lbl">Claude Code Prompt · Fase 1 — CustomUser + JWT</div>
+    <div class="prompt-text">Crea el modelo de usuario custom en `backend/users/models.py` para Aktivar.
+
+Modelo CustomUser (AbstractBaseUser + PermissionsMixin):
+- Campos: email (unique, primary), phone (unique, nullable), full_name, avatar (Cloudinary), bio (text), role (choices: user/organizer/driver), is_verified_email (bool, default False), is_verified_phone (bool, default False), is_active, created_at, updated_at, deleted_at (nullable, soft delete)
+- USERNAME_FIELD = 'email'
+- Manager CustomUserManager con create_user() y create_superuser()
+- Método property: is_deleted, display_name, can_organize (is_verified_email AND is_verified_phone AND role in ['organizer','driver'])
+
+Modelo UserProfile (OneToOne a CustomUser, auto-creado con signal):
+- location (PointField, nullable), location_name (str), bio_extended, website, instagram, total_activities (int, default 0), total_km (DecimalField, default 0), badges (JSONField, default [])
+
+Modelo DriverProfile (OneToOne a CustomUser con role=driver):
+- license_number, license_photo (Cloudinary), license_expiry (date), is_verified_driver (bool, default False), driver_rating (Decimal, default 5.0), total_trips (int, default 0)
+
+Configurar AUTH_USER_MODEL = 'users.CustomUser' en settings.py.
+Migraciones iniciales.
+Admin personalizado con list_display, list_filter, search_fields.
+Tests en users/tests/test_models.py cubriendo: creación user, soft delete, can_organize property, signal auto-creación de UserProfile.</div>
+  </div>
+</section>
+
+<!-- FASE 2 -->
+<section class="section" id="fase2">
+  <div class="section-header">
+    <div class="phase-num">02</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-amber">Semanas 5–9</span>
+      <h2 class="phase-title">Core de actividades + Mapas</div>
+      <span class="phase-sub">CRUD actividades, búsqueda geoespacial, feed visual, Home Feed de Stitch</span>
+    </div>
+  </div>
+
+  <div class="tasks-grid">
+    <div class="task-group">
+      <div class="task-group-title col-green">Backend</div>
+      <div class="task feature"><div class="task-ico f">🗺️</div><div><div class="task-title">Modelo Activity con GeoDjango</div><div class="task-desc">PointField para geolocalización. Categorías (trekking, festival, cine, deporte, viaje, social). Estado FSM (draft/published/cancelled/completed). Capacidad + lista de espera automática.</div><div class="task-tech">PointField · GeographicManager · django-fsm</div></div></div>
+      <div class="task feature"><div class="task-ico f">🔍</div><div><div class="task-title">API búsqueda geoespacial</div><div class="task-desc">GET /api/v1/activities/?lat=X&lng=Y&radius_km=50&category=trekking. Query dwithin() PostGIS. Paginación cursor (no offset). Cache Redis 5 min. Búsqueda fuzzy con pg_trgm.</div><div class="task-tech">dwithin() · django-filter · django-redis cache · pg_trgm</div></div></div>
+      <div class="task feature"><div class="task-ico f">👥</div><div><div class="task-title">Sistema de inscripción</div><div class="task-desc">ActivityParticipant: pending/confirmed/waitlisted/cancelled. Cupos automáticos. Celery task notifica lista de espera cuando se libera lugar. Django signals para side effects.</div><div class="task-tech">Django signals · Celery tasks · django-fsm</div></div></div>
+      <div class="task ux"><div class="task-ico u">🌤️</div><div><div class="task-title">Clima en actividades outdoor</div><div class="task-desc">Para categorías outdoor, agregar pronóstico del día del evento al serializer. Open-Meteo API (gratis, sin key). Async con httpx. Cache Redis 1 hora por coordenada.</div><div class="task-tech">httpx async · Open-Meteo free API · Redis cache</div></div></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title col-amber">Frontend</div>
+      <div class="task ux"><div class="task-ico u">🗺️</div><div><div class="task-title">FeedPage — pantalla Stitch implementada</div><div class="task-desc">Convertir home_feed_map_view/code.html a React. Vista split: cards + Mapbox. Hover en card → pin resaltado. Skeleton loading. Infinite scroll. Filtros en URL params.</div><div class="task-tech">Mapbox GL JS · React Query · Intersection Observer</div></div></div>
+      <div class="task ux"><div class="task-ico u">📋</div><div><div class="task-title">ActivityDetailPage — pantalla Stitch</div><div class="task-desc">Convertir activity_detail/code.html. Hero image, organizador, mapa encuentro, participantes, clima, botón JOIN gradient fijo. Share nativo con Web Share API.</div><div class="task-tech">Web Share API · Mapbox mini-map · React Query</div></div></div>
+      <div class="task ux"><div class="task-ico u">➕</div><div><div class="task-title">CreateActivityPage — pantalla Stitch</div><div class="task-desc">Convertir create_activity/code.html. Formulario 3 pasos con Framer Motion. Category chips, date picker, location picker con Mapbox, capacity slider, price toggle.</div><div class="task-tech">react-hook-form · Zod · framer-motion · Mapbox geocoder</div></div></div>
+      <div class="task feature"><div class="task-ico f">🔎</div><div><div class="task-title">Buscador con autocomplete Mapbox</div><div class="task-desc">Search bar con Mapbox Geocoder para sugerencias de lugares. Filtros combinables: categoría (chips), fecha (range), distancia (slider), precio (toggle), cupos disponibles.</div><div class="task-tech">@mapbox/mapbox-gl-geocoder · URL search params</div></div></div>
+    </div>
+  </div>
+
+  <div class="prompt-box">
+    <div class="prompt-lbl">Claude Code Prompt · Fase 2 — Búsqueda Geoespacial</div>
+    <div class="prompt-text">Crea el endpoint de búsqueda de actividades en `backend/activities/` usando GeoDjango + DRF.
+
+Modelo Activity:
+- title, description, category (choices), cover_image (Cloudinary), location (PointField), location_name (str), start_datetime, end_datetime, capacity (int), price (Decimal, default 0), is_free (bool), status (FSM: draft/published/cancelled/completed), organizer (FK CustomUser), created_at, updated_at
+
+ActivityFilter (django-filter):
+- lat + lng + radius_km → dwithin() query con PostGIS (usar Distance object)
+- category (MultipleChoiceFilter)
+- date_from, date_to (DateTimeFilter)
+- is_free (BooleanFilter)
+- has_spots → annotate spots_remaining = capacity - confirmed_count, filter > 0
+
+ActivitySerializer:
+- Todos los campos + distance_km (SerializerMethodField calculada con geodjango)
+- spots_remaining (property)
+- organizer_summary (nested: id, full_name, avatar, rating, total_activities)
+- weather (llamar Open-Meteo async si category in OUTDOOR_CATEGORIES)
+- participants_preview (primeros 5 avatares)
+
+ViewSet con:
+- list: paginación cursor, ordenar por distancia, cache Redis 5min
+- retrieve: detalle completo
+- create: solo usuarios verificados con rol organizer
+- update/partial_update: solo el organizador de la actividad
+- Acción custom join_activity y leave_activity
+
+Tests en activities/tests/: modelos, filtros geoespaciales, permisos, join/leave flow.</div>
+  </div>
+</section>
+
+<!-- FASE 3 -->
+<section class="section" id="fase3">
+  <div class="section-header">
+    <div class="phase-num">03</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-amber">Semanas 10–13</span>
+      <h2 class="phase-title">Social + Transporte + Chat</h2>
+      <span class="phase-sub">WebSocket real-time, módulo de transporte, reviews, páginas públicas SEO</span>
+    </div>
+  </div>
+
+  <div class="tasks-grid">
+    <div class="task-group">
+      <div class="task-group-title col-green">Chat + Transport Backend</div>
+      <div class="task feature"><div class="task-ico f">💬</div><div><div class="task-title">Django Channels — Chat WebSocket</div><div class="task-desc">ActivityChatConsumer con JWT auth en handshake. Solo participantes confirmados. Historial últimos 50 mensajes. "Está escribiendo..." con debounce. Mensajes de sistema automáticos (alguien se unió).</div><div class="task-tech">channels · channels-redis · @database_sync_to_async · Daphne</div></div></div>
+      <div class="task security"><div class="task-ico s">🪪</div><div><div class="task-title">Perfil de conductor verificado</div><div class="task-desc">DriverProfile con licencia, foto, fecha vencimiento, seguro. Admin review workflow manual antes del primer viaje. Sin aprobación → no puede crear viajes.</div><div class="task-tech">django-admin custom views · Cloudinary para docs</div></div></div>
+      <div class="task feature"><div class="task-ico f">🚗</div><div><div class="task-title">Modelos Trip + Vehicle + TripStop</div><div class="task-desc">Trip vinculado a Activity. TripStop con PointField + hora estimada. TripPassenger con stop_id. Costo total ÷ N pasajeros automático. Log inmutable de todos los viajes.</div><div class="task-tech">PointField · Decimal split calc · Signal log</div></div></div>
+      <div class="task feature"><div class="task-ico f">⭐</div><div><div class="task-title">Reviews bidireccionales</div><div class="task-desc">Organizer califica participantes y viceversa. Un review por par. Rating 1-5 + texto. Celery task abre ventana de review 24h después del evento. Rating promedio público.</div><div class="task-tech">Celery beat · Signal post-activity-completed</div></div></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title col-amber">Frontend Social</div>
+      <div class="task ux"><div class="task-ico u">💬</div><div><div class="task-title">Chat UI — estilo WhatsApp dark</div><div class="task-desc">Burbujas con avatar, timestamp Space Grotesk. Scroll automático. Fotos con preview. Responder a mensaje. Badge no-leídos en tarjeta de actividad. Reconexión automática con backoff.</div><div class="task-tech">useWebSocket hook · react-virtuoso · WebSocket API</div></div></div>
+      <div class="task ux"><div class="task-ico u">🚗</div><div><div class="task-title">TripDetailPage — pantalla Stitch</div><div class="task-desc">Convertir transport_module/code.html. Mapa de ruta con stops numerados. Driver card verificado. Vehicle data. Split calculator interactivo. Botón de emergencia.</div><div class="task-tech">Mapbox GL JS · Geolocation API · Stripe Connect</div></div></div>
+      <div class="task ux"><div class="task-ico u">👤</div><div><div class="task-title">ProfilePage — pantalla Stitch</div><div class="task-desc">Convertir user_profile/code.html. Grid de fotos pasaporte. Stats bar. Badges. Rating. Mapa de actividades pasadas. Seguir/Unfollow.</div><div class="task-tech">Mapbox markers históricos · Cloudinary grid</div></div></div>
+      <div class="task feature"><div class="task-ico f">🌐</div><div><div class="task-title">Páginas públicas SEO</div><div class="task-desc">URL pública de cada actividad indexable por Google. Open Graph meta tags en el HTML (SSR o pre-render). sitemap.xml dinámico. Contador "34 van · 128 interesados". Botón share nativo.</div><div class="task-tech">React Helmet · Open Graph · Web Share API</div></div></div>
+    </div>
+  </div>
+
+  <div class="sec-panel">
+    <div class="sec-title">🔒 Seguridad — Transporte</div>
+    <div class="sec-grid">
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Datos del conductor privados hasta confirmación</div><div class="sec-note">Licencia, patente y teléfono: campo privado, permisos DRF estrictos. Solo participantes confirmed del viaje.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Review manual de documentos</div><div class="sec-note">Admin review de carnet y seguro antes del primer viaje. No automatizar — la seguridad física no se delega a IA.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Log inmutable de viajes</div><div class="sec-note">Conductor, pasajeros, ruta y timestamps guardados aunque se cancele la actividad. Nunca soft delete en logs.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Contacto de emergencia obligatorio</div><div class="sec-note">Si el usuario no tiene contacto de emergencia registrado → no puede reservar asiento en ningún viaje.</div></div></div>
+    </div>
+  </div>
+
+  <div class="prompt-box">
+    <div class="prompt-lbl">Claude Code Prompt · Fase 3 — Chat WebSocket</div>
+    <div class="prompt-text">Implementa el chat en tiempo real para Aktivar usando Django Channels.
+
+`backend/chat/consumers.py` — ActivityChatConsumer:
+- Autenticación JWT en WebSocket handshake (scope['headers'] para el token)
+- Verificar que el usuario es participante confirmado de la actividad (is_participant check)
+- Si no autenticado o no participante → close WebSocket con code 4001
+- Group name: f"activity_{activity_id}_chat"
+- Al conectar: enviar historial últimos 50 mensajes (async DB query)
+- Recibir tipos de mensaje: text, image, location, typing_indicator
+- Typing indicator: difundir a grupo pero NO persistir en DB
+- Mensajes de sistema automáticos: "Ana se unió a la actividad", "El evento fue actualizado"
+- Persistir Message model: content, sender, activity, message_type, created_at
+- Usar @database_sync_to_async para TODAS las operaciones de DB
+
+`backend/chat/routing.py`:
+- URLRouter para ws/chat/activity/<activity_id>/
+
+`backend/aktivar/asgi.py`:
+- AuthMiddlewareStack + ProtocolTypeRouter (HTTP + WebSocket)
+
+Frontend `src/features/chat/hooks/useActivityChat.ts`:
+- WebSocket connection con JWT en query param
+- Reconexión automática con exponential backoff (500ms, 1s, 2s, 4s, máx 30s)
+- Estado: messages[], isConnected, typingUsers[]
+- sendMessage(), sendImage(), sendLocation(), sendTyping()
+- Optimistic updates: agregar mensaje localmente antes de confirmación del server</div>
+  </div>
+</section>
+
+<!-- FASE 4 -->
+<section class="section" id="fase4">
+  <div class="section-header">
+    <div class="phase-num">04</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-amber">Semanas 14–17</span>
+      <h2 class="phase-title">Monetización y pagos</h2>
+      <span class="phase-sub">Stripe Connect, suscripciones freemium, comisiones, notificaciones</span>
+    </div>
+  </div>
+
+  <div class="tasks-grid">
+    <div class="task-group">
+      <div class="task-group-title col-green">Pagos Backend</div>
+      <div class="task feature"><div class="task-ico f">💳</div><div><div class="task-title">Stripe Connect Express</div><div class="task-desc">Onboarding de organizadores como cuentas conectadas. Cobros directos a organizador con application_fee_amount automático (10%). Payout semanal automático.</div><div class="task-tech">stripe.Account.create · ConnectedAccount · Transfer</div></div></div>
+      <div class="task feature"><div class="task-ico f">🔄</div><div><div class="task-title">Suscripciones Stripe Billing</div><div class="task-desc">Plan Free (3 actividades/mes), Organizer ($9/mes), Explorer Premium ($4/mes). Webhook para sincronizar. Graceful downgrade al vencer. Primeros 3 meses Organizer gratis.</div><div class="task-tech">stripe.Subscription · stripe.Billing · Webhook endpoint</div></div></div>
+      <div class="task security"><div class="task-ico s">🔐</div><div><div class="task-title">Webhooks Stripe seguros</div><div class="task-desc">Verificar stripe-signature. Idempotencia con stripe_event_id (tabla StripeEvent). Celery task para procesamiento async. Retornar 200 inmediatamente.</div><div class="task-tech">stripe.Webhook.construct_event · Idempotency keys · Celery</div></div></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title col-amber">Pagos Frontend + Notificaciones</div>
+      <div class="task ux"><div class="task-ico u">💰</div><div><div class="task-title">Checkout embebido Stripe</div><div class="task-desc">Stripe Payment Element embebido (NO redirect). Resumen del evento antes de pagar. Confirmación con animación. Email de confirmación con QR automático. Precio siempre visible antes.</div><div class="task-tech">@stripe/react-stripe-js · @stripe/stripe-js · Resend QR</div></div></div>
+      <div class="task feature"><div class="task-ico f">🔔</div><div><div class="task-title">Push con OneSignal + Emails Resend</div><div class="task-desc">Push: actividad cercana, alguien se une, mensaje nuevo, recordatorio 24h, lugar liberado en espera. Respetar horario del usuario. Email: confirmación, recordatorio, review request post-evento.</div><div class="task-tech">OneSignal SDK · Resend · Celery beat scheduler</div></div></div>
+      <div class="task ux"><div class="task-ico u">📊</div><div><div class="task-title">Dashboard del organizador</div><div class="task-desc">Inscriptos por evento, ingresos, ratings promedio, tasa de retención. recharts para gráficos. Exportar CSV. Broadcast a seguidores (máx 2/semana).</div><div class="task-tech">recharts · react-csv · django-import-export</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FASE 5 -->
+<section class="section" id="fase5">
+  <div class="section-header">
+    <div class="phase-num">05</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-amber">Semanas 18–20</span>
+      <h2 class="phase-title">PWA, performance y deploy</h2>
+      <span class="phase-sub">Progressive Web App, optimización, CI/CD, producción</span>
+    </div>
+  </div>
+
+  <div class="tasks-grid">
+    <div class="task-group">
+      <div class="task-group-title col-green">PWA + Performance</div>
+      <div class="task ux"><div class="task-ico u">📱</div><div><div class="task-title">PWA instalable en Android e iOS</div><div class="task-desc">vite-plugin-pwa con service worker automático. Web App Manifest con icono Aktivar. Offline básico: ver actividades guardadas sin internet. Splash screen branded.</div><div class="task-tech">vite-plugin-pwa · Workbox · Web App Manifest</div></div></div>
+      <div class="task feature"><div class="task-ico f">⚡</div><div><div class="task-title">Performance optimización</div><div class="task-desc">Lazy loading de rutas con React.lazy + Suspense. Imágenes con loading="lazy". Select fields en DRF para reducir payload. DB indexes en campos de búsqueda. Lighthouse target: 90+ mobile.</div><div class="task-tech">React.lazy · Lighthouse CI · Django select_related</div></div></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title col-amber">Deploy + Monitoring</div>
+      <div class="task infra"><div class="task-ico i">🚀</div><div><div class="task-title">CI/CD GitHub Actions</div><div class="task-desc">Pipeline: test → lint → build → deploy. Django en Railway con PostgreSQL + Redis. Frontend en Vercel. Deploy automático desde main. Preview deployments en PRs.</div><div class="task-tech">GitHub Actions · Railway · Vercel · Docker</div></div></div>
+      <div class="task security"><div class="task-ico s">📡</div><div><div class="task-title">Monitoring con Sentry</div><div class="task-desc">Sentry en Django y React. Alertas de errores 500 en producción en tiempo real. Performance monitoring. Error boundaries en React. Logging estructurado con structlog.</div><div class="task-tech">sentry-sdk · structlog · Sentry React SDK</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTING -->
+<section class="section" id="testing">
+  <div class="section-header">
+    <div class="phase-num">TS</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-green">Inspirado en los 65 tests de ferrelonstock</span>
+      <h2 class="phase-title">Estrategia de testing</h2>
+      <span class="phase-sub">Objetivo: 100+ tests · pytest-django · Vitest · Playwright</span>
+    </div>
+  </div>
+
+  <div class="test-panel">
+    <div class="test-title">Tests por módulo — Backend (pytest-django)</div>
+    <table class="test-table">
+      <thead><tr><th>Módulo</th><th>Qué testear</th><th>Tests objetivo</th></tr></thead>
+      <tbody>
+        <tr><td>users/</td><td>CustomUser creación, soft delete, can_organize, signal UserProfile auto-create, JWT auth flow, rate limiting, email/phone verification</td><td>15 tests</td></tr>
+        <tr><td>activities/</td><td>Modelos, filtros geoespaciales (dwithin), permisos (solo organizador edita), join/leave flow, lista de espera automática, estado FSM, cache Redis</td><td>20 tests</td></tr>
+        <tr><td>transport/</td><td>DriverProfile verificación, Trip creación, TripStop, split cálculo, permisos (solo conductores verificados), log inmutable</td><td>12 tests</td></tr>
+        <tr><td>chat/</td><td>WebSocket consumer (con channels.testing), auth en handshake, solo participantes, persistencia mensajes, typing indicator no persiste</td><td>10 tests</td></tr>
+        <tr><td>reviews/</td><td>Un review por par, rating promedio, trigger Celery post-evento, reporte y moderación</td><td>8 tests</td></tr>
+        <tr><td>payments/</td><td>Webhook signature verification, idempotencia StripeEvent, suscripción graceful downgrade, Stripe Connect fee</td><td>10 tests</td></tr>
+        <tr><td>notifications/</td><td>Celery tasks, emails con Resend, push OneSignal, rate limiting broadcast (máx 2/semana)</td><td>8 tests</td></tr>
+        <tr><td>core/</td><td>Health check, sitemap.xml dinámico, páginas SEO públicas con Open Graph</td><td>5 tests</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="test-panel" style="margin-top:16px;">
+    <div class="test-title">Tests Frontend (Vitest + Testing Library) + E2E (Playwright)</div>
+    <table class="test-table">
+      <thead><tr><th>Capa</th><th>Qué testear</th><th>Herramienta</th></tr></thead>
+      <tbody>
+        <tr><td>Components</td><td>ActivityCard render, CategoryChip selected/unselected, SpotsBar colores por porcentaje, CTAButton estados loading/disabled, GlassNav active tab</td><td>Vitest + Testing Library</td></tr>
+        <tr><td>Hooks</td><td>useAuth token refresh, useActivities paginación cursor, useActivityChat reconexión WebSocket, useMapbox geolocalización</td><td>Vitest + MSW (mock API)</td></tr>
+        <tr><td>Stores</td><td>authStore JWT en memoria (nunca en localStorage), uiStore filtros persistidos en URL</td><td>Vitest</td></tr>
+        <tr><td>E2E críticos</td><td>Registro + verificación email completo, crear actividad + publicar, inscribirse a actividad + chat, crear viaje + reservar asiento, checkout Stripe test mode</td><td>Playwright</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prompt-box">
+    <div class="prompt-lbl">Claude Code Prompt · Tests — Activities</div>
+    <div class="prompt-text">Crea los tests para el módulo activities en `backend/activities/tests/`.
+
+test_models.py (12 tests):
+- test_activity_creation_valid
+- test_activity_requires_verified_organizer
+- test_activity_fsm_transitions (draft→published→completed, draft→cancelled)
+- test_spots_remaining_calculated_correctly
+- test_waitlist_auto_join_when_full
+- test_waitlist_notification_on_spot_freed (mock Celery task)
+- test_activity_geolocation_stored_as_point
+- test_category_choices_valid
+- test_activity_soft_delete_on_cancel
+- test_activity_str_representation
+- test_activity_is_free_when_price_zero
+- test_organizer_can_edit_own_activity
+
+test_views.py (8 tests con APIClient):
+- test_list_activities_with_geo_filter (dwithin query, use Point objects)
+- test_list_activities_cache_hit_on_second_request (assert cache used)
+- test_join_activity_increments_participant_count
+- test_join_full_activity_goes_to_waitlist
+- test_leave_activity_triggers_waitlist_notification
+- test_unverified_user_cannot_create_activity (403)
+- test_non_organizer_cannot_edit_activity (403)
+- test_activity_detail_includes_weather_for_outdoor_category
+
+Usar pytest-django, factory_boy para fixtures, Point de django.contrib.gis.geos para coordenadas.
+Todas las llamadas externas (Open-Meteo, OneSignal) deben ser mocked con unittest.mock.</div>
+  </div>
+</section>
+
+<!-- SEGURIDAD -->
+<section class="section" id="seguridad">
+  <div class="section-header">
+    <div class="phase-num">SE</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-red">Transversal a todas las fases</span>
+      <h2 class="phase-title">Seguridad completa</h2>
+      <span class="phase-sub">Mismos principios de ferrelonstock settings_prod.py + extras para red social</span>
+    </div>
+  </div>
+
+  <div class="sec-panel">
+    <div class="sec-title">🔒 Checklist completo — pre-launch</div>
+    <div class="sec-grid">
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Django DEBUG=False en producción</div><div class="sec-note">ALLOWED_HOSTS configurado. No exponer stack traces. SECURE_SSL_REDIRECT=True. HSTS 1 año.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Headers HTTP de seguridad</div><div class="sec-note">X-Frame-Options DENY, X-Content-Type-Options nosniff, CSP via django-csp, CSRF cookie secure.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Input sanitization</div><div class="sec-note">django-bleach para HTML en descripciones. Zod en frontend. DRF serializers como validación server-side.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Row Level Security en API</div><div class="sec-note">Permisos DRF: IsOrganizer, IsVerifiedUser, IsDriverVerified, IsParticipantConfirmed. Nunca filtrar solo en frontend.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Webhook Stripe firma verificada</div><div class="sec-note">stripe.Webhook.construct_event() en cada request. 200 inmediato, procesar async en Celery.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Backups automáticos DB</div><div class="sec-note">Railway backup diario. Export semanal a Cloudflare R2. Testar restore una vez por mes.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Moderación de contenido IA</div><div class="sec-note">Descripción de actividades pasan por OpenAI moderation endpoint antes de publicar. Flag automático para review manual.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">GDPR mínimo viable</div><div class="sec-note">DELETE /api/v1/users/me/ borra y anonimiza toda la data. Política de privacidad en /privacy. Cookie consent.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Datos del conductor protegidos</div><div class="sec-note">Licencia, patente, teléfono: accesibles solo para participantes confirmed del viaje. Nunca en respuestas públicas.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Monitoring Sentry en tiempo real</div><div class="sec-note">Alertas de errores 500 inmediatas. Performance monitoring. Error boundaries en React.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Throttling en endpoints sensibles</div><div class="sec-note">DEFAULT_THROTTLE_RATES: anon 100/day, user 1000/day. Custom: auth 5/hour, join_activity 10/hour.</div></div></div>
+      <div class="sec-item"><div class="sec-dot"></div><div><div class="sec-text">Dependencias actualizadas</div><div class="sec-note">Dependabot para alertas de seguridad en GitHub. pip-audit y npm audit en CI/CD pipeline.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ESCALABILIDAD -->
+<section class="section" id="escala">
+  <div class="section-header">
+    <div class="phase-num">ESC</div>
+    <div class="phase-info">
+      <span class="phase-eyebrow col-amber">Diseñado para crecer</span>
+      <h2 class="phase-title">Arquitectura escalable</h2>
+      <span class="phase-sub">3 tiers de crecimiento · Sin cambiar el stack core</span>
+    </div>
+  </div>
+
+  <div class="scale-grid">
+    <div class="scale-card tier1">
+      <div class="scale-tier t1">Tier 1 · MVP</div>
+      <div class="scale-users">0 – 10k usuarios</div>
+      <div class="scale-desc">Railway + Vercel + PostgreSQL gestionado. Un proceso Django. Redis shared. Cloudinary para media. Todo el stack actual sin cambios.</div>
+      <div class="scale-stack">
+        <span class="pill">Railway free tier</span><span class="pill">Vercel hobby</span>
+        <span class="pill">PostgreSQL managed</span><span class="pill">Redis shared</span>
+        <span class="pill">Cloudinary free</span><span class="pill">~$0/mes</span>
+      </div>
+    </div>
+    <div class="scale-card tier2">
+      <div class="scale-tier t2">Tier 2 · Crecimiento</div>
+      <div class="scale-users">10k – 100k usuarios</div>
+      <div class="scale-desc">Múltiples workers Django. Redis dedicado para cache + Celery. Read replica PostgreSQL para queries pesadas. CDN Cloudflare para assets. Índices DB optimizados.</div>
+      <div class="scale-stack">
+        <span class="pill">Railway paid</span><span class="pill">Redis dedicado</span>
+        <span class="pill">PG read replica</span><span class="pill">Cloudflare CDN</span>
+        <span class="pill">DB indexes audit</span><span class="pill">~$50-200/mes</span>
+      </div>
+    </div>
+    <div class="scale-card tier3">
+      <div class="scale-tier t3">Tier 3 · Escala</div>
+      <div class="scale-users">100k+ usuarios</div>
+      <div class="scale-desc">Migración a Kubernetes. Django separado del Celery worker. Chat en servicio independiente. ElasticSearch para búsqueda. PostGIS dedicado. Message queue (RabbitMQ).</div>
+      <div class="scale-stack">
+        <span class="pill">K8s / ECS</span><span class="pill">ElasticSearch</span>
+        <span class="pill">Chat microservice</span><span class="pill">RabbitMQ</span>
+        <span class="pill">PG horizontal</span><span class="pill">$500+/mes</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="rule-card do">
+      <div class="rule-label">Decisiones de diseño para escalar desde día 1</div>
+      <div class="rule-text">
+        • API versionada (/api/v1/) para cambios sin breaking changes<br>
+        • Paginación cursor (no offset) — escala a millones de registros<br>
+        • Cache Redis en queries frecuentes desde el MVP<br>
+        • Celery para toda operación que tarde más de 200ms<br>
+        • Cloudinary para media (nunca en el servidor)<br>
+        • PostGIS desde el inicio (migrar después es doloroso)<br>
+        • JWT stateless (sin sesiones en DB) — escala horizontal sin estado
+      </div>
+    </div>
+    <div class="rule-card dont">
+      <div class="rule-label">Trampas de escalabilidad a evitar</div>
+      <div class="rule-text">
+        • No usar select_related/prefetch_related → N+1 queries matan la DB<br>
+        • No procesar emails/push en el request handler → timeouts<br>
+        • No cargar imágenes originales sin redimensionar → bandwidth<br>
+        • No hacer queries geoespaciales sin índice GIST en PostGIS<br>
+        • No usar offset paginación en tablas grandes → lento<br>
+        • No guardar sesiones en DB con muchos usuarios → cuello de botella<br>
+        • No olvidar agregar indexes en FK y campos filtrados frecuentemente
+      </div>
+    </div>
+  </div>
+
+  <div class="prompt-box" style="margin-top:24px;">
+    <div class="prompt-lbl">Claude Code Prompt · Performance — DB Indexes + Query Optimization</div>
+    <div class="prompt-text">Crea una migration de optimización de performance para el proyecto Aktivar.
+
+`backend/activities/migrations/0010_add_performance_indexes.py`:
+
+Indexes a agregar:
+1. Activity.location → GistIndex (para queries geoespaciales dwithin())
+2. Activity.start_datetime → BTreeIndex (para filtros de fecha)
+3. Activity.category + status → MultiIndex (filtro combinado frecuente)
+4. Activity.organizer_id → BTreeIndex (FK siempre indexar)
+5. ActivityParticipant.activity_id + status → MultiIndex (spots_remaining calc)
+6. ActivityParticipant.user_id + status → MultiIndex (historial del usuario)
+7. Trip.activity_id → BTreeIndex
+8. TripPassenger.trip_id + user_id → UniqueIndex (no duplicados)
+9. Message.activity_id + created_at → MultiIndex (historial chat)
+10. CustomUser.email → BTreeIndex (ya unique pero verificar)
+
+Además, auditar estos ViewSets y agregar select_related/prefetch_related donde falten:
+- ActivityViewSet.list → select_related('organizer') + prefetch_related('participants', 'categories')
+- TripViewSet.retrieve → select_related('driver', 'vehicle') + prefetch_related('stops', 'passengers')
+- UserProfileViewSet.retrieve → prefetch_related('activities_organized', 'badges')
+
+Crear management command `check_query_count` que corra las queries principales y reporte el número de queries ejecutadas (usando django-debug-toolbar o QueryCount context manager).</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div>
+    <div class="footer-brand">AKT<em>IVAR</em></div>
+    <p class="footer-note">Roadmap maestro v2.0 — integra design system Stitch "The Editorial Wild", stack Django + React, estructura inspirada en ferrelonstock, features sociales multi-plataforma, seguridad por capa y arquitectura escalable en 3 tiers. Listo para Claude Code.</p>
+  </div>
+  <div class="footer-stats">
+    <div class="footer-stat"><span class="footer-stat-lbl">Dominio</span><span class="footer-stat-val" style="font-size:16px">aktivar.app</span></div>
+    <div class="footer-stat"><span class="footer-stat-lbl">Semanas</span><span class="footer-stat-val">20</span></div>
+    <div class="footer-stat"><span class="footer-stat-lbl">Fases</span><span class="footer-stat-val">5</span></div>
+    <div class="footer-stat"><span class="footer-stat-lbl">Pantallas Stitch</span><span class="footer-stat-val">6</span></div>
+    <div class="footer-stat"><span class="footer-stat-lbl">Componentes</span><span class="footer-stat-val">9+</span></div>
+    <div class="footer-stat"><span class="footer-stat-lbl">Tests objetivo</span><span class="footer-stat-val">100+</span></div>
+    <div class="footer-stat"><span class="footer-stat-lbl">Prompts Claude Code</span><span class="footer-stat-val">10+</span></div>
+    <div class="footer-stat"><span class="footer-stat-lbl">Costo infra MVP</span><span class="footer-stat-val">~$0/mes</span></div>
+  </div>
+</footer>
+
+</body>
+</html>
