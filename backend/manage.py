@@ -7,6 +7,8 @@ import sys
 
 def main():
     """Run administrative tasks."""
+    # Ensure Conda's lib directory doesn't shadow system libraries that need newer GLIBCXX
+    # Or try to fix the LD_LIBRARY_PATH if necessary, but usually updating conda packages is better.
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "aktivar.settings")
     try:
         from django.core.management import execute_from_command_line
