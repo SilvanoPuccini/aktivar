@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+frontend/dist/
+
+# Environment
+.env
+*.pyc
+__pycache__/
+*.sqlite3
+db.sqlite3
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
