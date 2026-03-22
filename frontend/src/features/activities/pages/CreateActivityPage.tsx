@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -14,13 +14,17 @@ import {
   Mountain,
   Backpack,
   Ruler,
+  Upload,
+  Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import CTAButton from '@/components/CTAButton';
 import CategoryChip from '@/components/CategoryChip';
 import ProgressDots from '@/components/ProgressDots';
-import { categories } from '@/data/categories';
+import { categories as fallbackCategories } from '@/data/categories';
+import { useCategories, useCreateActivity, useUploadImage } from '@/services/hooks';
+import { useAuthStore } from '@/stores/authStore';
 import type { Difficulty } from '@/types/activity';
 
 /* ------------------------------------------------------------------ */
@@ -101,6 +105,13 @@ const difficultyOptions: { value: Difficulty; label: string }[] = [
 /* ================================================================== */
 export default function CreateActivityPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
+  const { data: apiCategories } = useCategories();
+  const categories = apiCategories ?? fallbackCategories;
+  const createMutation = useCreateActivity();
+  const uploadMutation = useUploadImage();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -118,12 +129,66 @@ export default function CreateActivityPage() {
     setCurrentStep((s) => Math.max(s - 1, 0));
   };
 
-  const handleCreate = () => {
-    toast.success('¡Actividad creada!');
-    navigate('/');
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Show preview immediately
+    const previewUrl = URL.createObjectURL(file);
+    update('coverImage', previewUrl);
+
+    // Try to upload to server
+    uploadMutation.mutate(file, {
+      onSuccess: (data) => {
+        update('coverImage', data.url);
+        toast.success('Imagen subida');
+      },
+      onError: () => {
+        // Keep local preview, user can still provide URL
+        toast('Imagen guardada localmente', { icon: 'info' });
+      },
+    });
   };
 
-  const selectedCategory = categories.find((c) => c.id === formData.categoryId);
+  const handleCreate = () => {
+    if (!isAuthenticated) {
+      toast.error('Inicia sesión para crear actividades');
+      navigate('/login');
+      return;
+    }
+
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      category: formData.categoryId,
+      cover_image: formData.coverImage,
+      location_name: formData.locationName,
+      meeting_point: formData.meetingPoint,
+      start_datetime: formData.date && formData.startTime
+        ? `${formData.date}T${formData.startTime}:00Z`
+        : undefined,
+      end_datetime: formData.date && formData.endTime
+        ? `${formData.date}T${formData.endTime}:00Z`
+        : undefined,
+      capacity: formData.capacity,
+      price: formData.isFree ? 0 : formData.price,
+      difficulty: formData.difficulty,
+      distance_km: formData.distanceKm ? parseFloat(formData.distanceKm) : null,
+      what_to_bring: formData.whatToBring,
+    };
+
+    createMutation.mutate(payload, {
+      onSuccess: () => {
+        toast.success('Actividad creada!');
+        navigate('/');
+      },
+      onError: () => {
+        toast.error('Error al crear la actividad');
+      },
+    });
+  };
+
+  const selectedCategory = categories.find((c: { id: number }) => c.id === formData.categoryId);
 
   /* ---------------------------------------------------------------- */
   /*  Step 1 — ¿Qué actividad?                                        */
@@ -363,19 +428,47 @@ export default function CreateActivityPage() {
         Detalles finales
       </h2>
 
-      {/* Cover image URL */}
+      {/* Cover image upload */}
       <div>
         <label className={labelClasses}>
           <ImageIcon size={14} className="inline mr-1 -mt-0.5" />
-          Imagen de portada (URL)
+          Imagen de portada
         </label>
+
+        {/* Upload button */}
         <input
-          type="url"
-          className={inputClasses}
-          placeholder="https://res.cloudinary.com/..."
-          value={formData.coverImage}
-          onChange={(e) => update('coverImage', e.target.value)}
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleImageUpload}
         />
+
+        <div className="space-y-3">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#514533] bg-surface-container px-4 py-6 text-muted hover:border-primary hover:text-on-surface transition-colors"
+          >
+            {uploadMutation.isPending ? (
+              <Loader2 size={20} className="animate-spin" />
+            ) : (
+              <Upload size={20} />
+            )}
+            <span className="font-label text-sm">
+              {uploadMutation.isPending ? 'Subiendo...' : 'Subir imagen'}
+            </span>
+          </button>
+
+          {/* Or paste URL */}
+          <input
+            type="url"
+            className={inputClasses}
+            placeholder="O pega una URL de imagen..."
+            value={formData.coverImage.startsWith('blob:') ? '' : formData.coverImage}
+            onChange={(e) => update('coverImage', e.target.value)}
+          />
+        </div>
       </div>
 
       {/* What to bring */}
@@ -555,6 +648,7 @@ export default function CreateActivityPage() {
               <CTAButton
                 label="Crear Actividad"
                 onClick={handleCreate}
+                loading={createMutation.isPending}
                 fullWidth
                 icon={<Plus size={16} />}
               />

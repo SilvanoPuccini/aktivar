@@ -14,6 +14,7 @@ class OrganizerSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     full_name = serializers.CharField(read_only=True)
     avatar = serializers.URLField(read_only=True)
+    is_verified_email = serializers.BooleanField(read_only=True)
 
 
 class ActivityParticipantSerializer(serializers.ModelSerializer):
@@ -61,8 +62,15 @@ class ActivityListSerializer(serializers.ModelSerializer):
         ]
 
     def get_participants_preview(self, obj):
-        confirmed = obj.participants.filter(status='confirmed')[:5]
-        return [p.user.avatar for p in confirmed]
+        confirmed = obj.participants.filter(status='confirmed').select_related('user')[:5]
+        return [
+            {
+                'id': p.user.id,
+                'full_name': p.user.full_name,
+                'avatar': p.user.avatar,
+            }
+            for p in confirmed
+        ]
 
 
 class ActivityDetailSerializer(ActivityListSerializer):
