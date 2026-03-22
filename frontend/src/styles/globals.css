@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Grotesk:wght@300;400;500;700&display=swap');
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* Base Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility Classes */
+.glass {
+  background: rgba(17, 20, 15, 0.70);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.gradient-cta {
+  background: linear-gradient(135deg, #ffc56c, #f0a500);
+}
+
+.editorial-shadow {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-label {
+  font-family: var(--font-label);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333630;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #514533;
+}
+
+/* Selection */
+::selection {
+  background: #f0a500;
+  color: #442c00;
+}
+
+/* Focus */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Skeleton animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-container) 25%, var(--surface-container-high) 50%, var(--surface-container) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+/* Tailwind custom theme */
+@theme {
+  --color-surface-lowest: #0c0f0a;
+  --color-surface: #11140f;
+  --color-surface-container-low: #191c17;
+  --color-surface-container: #1d201b;
+  --color-surface-container-high: #282b25;
+  --color-surface-container-highest: #333630;
+  --color-primary: #ffc56c;
+  --color-primary-container: #f0a500;
+  --color-secondary: #7bda96;
+  --color-secondary-dim: #5bb876;
+  --color-on-surface: #e1e3da;
+  --color-on-surface-variant: #d6c4ac;
+  --color-muted: #9f8e79;
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-outline-variant: #514533;
+  --font-display: 'Epilogue', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-label: 'Space Grotesk', monospace;
+}
