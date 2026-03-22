@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aktivar - Transport Module</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Space_Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#7bda96",
+              "surface-container-low": "#191c17",
+              "tertiary-fixed-dim": "#b9ccb2",
+              "on-tertiary-fixed-variant": "#3b4b37",
+              "on-background": "#e1e3da",
+              "error": "#ffb4ab",
+              "outline": "#9f8e79",
+              "on-tertiary": "#253422",
+              "on-error-container": "#ffdad6",
+              "on-primary-fixed": "#281800",
+              "tertiary": "#c2d5bb",
+              "on-tertiary-container": "#394a36",
+              "primary-fixed-dim": "#ffba44",
+              "secondary-container": "#00733b",
+              "on-surface-variant": "#d6c4ac",
+              "primary": "#ffc56c",
+              "surface-container-high": "#282b25",
+              "surface-variant": "#333630",
+              "on-primary-container": "#5f3f00",
+              "surface-container": "#1d201b",
+              "on-primary": "#442c00",
+              "on-secondary-fixed": "#00210d",
+              "surface-container-highest": "#333630",
+              "secondary": "#7bda96",
+              "on-secondary": "#00391a",
+              "inverse-on-surface": "#2e312b",
+              "tertiary-fixed": "#d5e8cd",
+              "on-primary-fixed-variant": "#614000",
+              "outline-variant": "#514533",
+              "surface": "#11140f",
+              "surface-bright": "#373a34",
+              "inverse-surface": "#e1e3da",
+              "primary-container": "#f0a500",
+              "on-error": "#690005",
+              "surface-dim": "#11140f",
+              "surface-tint": "#ffba44",
+              "tertiary-container": "#a6b9a0",
+              "error-container": "#93000a",
+              "surface-container-lowest": "#0c0f0a",
+              "on-tertiary-fixed": "#101f0f",
+              "on-secondary-fixed-variant": "#005228",
+              "background": "#11140f",
+              "secondary-fixed": "#97f7b0",
+              "on-secondary-container": "#95f5ae",
+              "primary-fixed": "#ffddaf",
+              "inverse-primary": "#805600",
+              "on-surface": "#e1e3da"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(17, 20, 15, 0.7);
+            backdrop-filter: blur(20px);
+        }
+        .editorial-shadow {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .ghost-border {
+            border: 1px solid rgba(159, 142, 121, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body min-h-screen pb-24">
+<!-- TopAppBar -->
+<nav class="sticky top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-md flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#EDE9DF]">arrow_back</span>
+<span class="text-2xl font-black text-[#EDE9DF] tracking-tighter font-['Epilogue']">Ride Details</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#F0A500]">search</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile avatar circle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc8h3CpAu2JypShJ-EbbB9GCi0MQ7Ks0PCOuMX0Hn6CXXE_hBYGM6Du3Ri2cNMJ7ASRLMNir3QCbduYccQzKfJKOsa5tcVgY-Zc6qjFls5x8iNn7RVIM4TRm2_rorR4pPAmZ2oevm4DARfKq1Awa8EUmMN6LCKUWBj33mrP39NCNRVySSiFCrXweT43NhtDLbxfSGNCJCV560Y-MTpqLI0M6M10o8vEAgedRlQnaMfvto3jIk0NX4rIpGe5cC8z9VSRU1G_DvEWodb"/>
+</div>
+</div>
+</nav>
+<main class="max-w-2xl mx-auto px-6 pt-8">
+<!-- Transport Module Detail Card -->
+<section class="bg-surface-container-low rounded-xl overflow-hidden ghost-border editorial-shadow">
+<!-- Map Integration -->
+<div class="relative w-full h-64 bg-surface-container-highest">
+<img class="w-full h-full object-cover opacity-60" data-alt="Satellite map view of mountain route" data-location="Antioquia, Colombia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiDKmfm7Ud1GB2HhkXXuNoIoP5omRu0i_558gOLcTE4F2TJGTBDMBX-bHwuS-y9XNVvNHhyNZSUlJjAqAu9gZ_by8Brt_Qx_4YYhdQxX4x66RmqhkJSww-58mlXDl-I4p9qjFbDFIEW6puuGbeA8B8lAyAUfZlgXWuivcha0eN9nOEAnVuJooNNZEuHs-gbShwhJa7QDsVijCI6lDguTQfWD0Vhx56O6NdmP7qMQ8N3re1WrmQ5Mu2D80F0XXRgr1btpw_lX_Dabxe"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+<!-- Numbered Pins Overlay -->
+<div class="absolute top-12 left-20 flex flex-col items-center">
+<div class="w-8 h-8 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center font-label font-bold text-sm border-2 border-surface">1</div>
+<div class="h-12 w-0.5 bg-primary-container/40 dashed"></div>
+</div>
+<div class="absolute bottom-20 right-32">
+<div class="w-8 h-8 bg-secondary text-on-secondary rounded-full flex items-center justify-center font-label font-bold text-sm border-2 border-surface shadow-lg">2</div>
+</div>
+<div class="absolute bottom-4 left-6">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-primary">Live Route</span>
+<h2 class="font-headline font-bold text-xl text-on-surface">Canyon Expedition Base</h2>
+</div>
+</div>
+<!-- Content Body -->
+<div class="p-6 space-y-8">
+<!-- Driver & Vehicle Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<!-- Driver Info -->
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-16 h-16 rounded-xl object-cover ring-2 ring-secondary/20" data-alt="Professional driver portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKLz2NK3AzJbi5fYzZG2-eXy3Ca_6xwCaD3ftSJQlRv2Ear0JlFdCv3FMPAtdb8vWsN5DmaF_vGvTs3TXF2XYpbk14LboFczTciBcSxLZ4f9fTwY6y3EhbkCmut37Qs-xsc5xMQdpQQAvQKksdgT44nkklJVwVsV0Uu5rrgXT55xhwlp0jiOU3zlXf4jwUqDFMxmcXgk5RJ4tqKd_EEvVMR1LIX8zr37O2MODHoo8k1hLGq65bhE-pp3h3ujK7WohpSkvxiz8RUg0q"/>
+<div class="absolute -bottom-1 -right-1 bg-secondary text-on-secondary w-6 h-6 rounded-full flex items-center justify-center border-2 border-surface-container-low">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline font-bold text-lg text-[#EDE9DF]">Mateo Silva</h3>
+<div class="flex items-center text-[#F0A500]">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label text-sm font-bold ml-1">4.9</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-sm mt-1">
+<span class="material-symbols-outlined text-base">license</span>
+<span class="font-body">Pro-Guide Certified</span>
+</div>
+</div>
+</div>
+<!-- Vehicle Info -->
+<div class="bg-surface-container rounded-xl p-4 flex items-center gap-4 min-w-[200px]">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">directions_car</span>
+</div>
+<div>
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Toyota Land Cruiser</p>
+<p class="font-headline font-bold text-on-surface">Forest Green</p>
+<p class="font-label text-xs blur-[3px] select-none text-on-surface-variant opacity-50">ABC 1234</p>
+</div>
+</div>
+</div>
+<!-- Stats & Splitter (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Seats Counter -->
+<div class="bg-surface-container rounded-xl p-5 flex flex-col justify-between h-32">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Availability</span>
+<div class="flex items-end justify-between">
+<div class="flex gap-1.5">
+<div class="w-3 h-8 bg-secondary rounded-full"></div>
+<div class="w-3 h-8 bg-secondary rounded-full"></div>
+<div class="w-3 h-8 bg-surface-container-highest rounded-full"></div>
+<div class="w-3 h-8 bg-surface-container-highest rounded-full"></div>
+</div>
+<div class="text-right">
+<span class="font-headline text-3xl font-black text-on-surface">02</span>
+<span class="font-label text-sm text-on-surface-variant block">Seats Left</span>
+</div>
+</div>
+</div>
+<!-- Split Calculator -->
+<div class="bg-surface-container rounded-xl p-5 flex flex-col justify-between h-32">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Cost Split</span>
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label text-xs text-on-surface-variant">Total: $120.00</span>
+<div class="font-headline text-2xl font-bold text-primary mt-1">$30.00</div>
+</div>
+<div class="bg-surface-container-highest px-3 py-1.5 rounded-lg">
+<span class="font-label text-xs text-[#EDE9DF]">/ per person</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Action Area -->
+<div class="pt-4 flex flex-col gap-4">
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary py-5 rounded-full font-headline font-bold text-lg tracking-tight active:scale-95 transition-all shadow-lg flex items-center justify-center gap-3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+                        JOIN RIDE
+                    </button>
+<div class="flex items-center justify-between pt-2">
+<button class="flex items-center gap-2 text-error text-sm font-label font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-base">emergency</span>
+                            Emergency Assistance
+                        </button>
+<div class="flex -space-x-3">
+<img class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Passenger avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5RTbOgXEG5BRhQlh32A0PU1IDfn10WiJ1yX8-_F3U8O30eFFIprna_0krnTRcY-wmvu8VKznMmpwDVEm9UDWkZjDnC9WaPONPoH3c0pxW5-9mkZ0RgLeMzU3qyxiZVX7BmhaP4sA2UYMqBkY2rQtqmEthyUD8lFW5yBgz3S3_vnIoW0Irx6ehErb9IfgXkgHUqZiRql8e7JukoxAOkjkemL8v5xWb-KIoWPFJgUicP-y0beHhAr7JMoBukdRfZCtyWUbfy8Pd37bb"/>
+<img class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Passenger avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqHYz1gahFkPb2iSrIjuwHpFVQsCUwbi9INisktqqgCw-dhW0SqQHjz9lnM7FKdFysqScrZnDpKzCl8C3j4LPouTCSsurTKufjrAsbklZoCebBThL3xk98K0VJisTuxhWGP69MVQ8Xg47TU2U5SuhlGolF52bdsFRxTxOnHa7dfO0R6a3P9wITbl0ReYKC_nsHeh-5-nn_IzFLwh4N2HzZ2C93rwp7zjJ140E2t9UA_GIGppxdCkzOC3JdarJftbTOv7nGVcQhofAS"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low bg-surface-container-highest flex items-center justify-center text-[10px] font-bold">+2</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contextual Info -->
+<div class="mt-8 grid grid-cols-2 gap-6">
+<div class="space-y-2">
+<span class="font-label text-[10px] uppercase tracking-widest text-primary">Pickup point</span>
+<p class="font-body text-sm text-[#EDE9DF]">Plaza Central, Main Gates 08:30 AM</p>
+</div>
+<div class="space-y-2 text-right">
+<span class="font-label text-[10px] uppercase tracking-widest text-primary">Est. Arrival</span>
+<p class="font-body text-sm text-[#EDE9DF]">Base Camp Peak 11:45 AM</p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#11140f]/70 backdrop-blur-md z-50 rounded-t-2xl shadow-[0_-10px_30px_rgba(0,0,0,0.4)]">
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/60 transition-all duration-300 ease-out hover:bg-[#333630]" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/60 transition-all duration-300 ease-out hover:bg-[#333630]" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#F0A500] bg-[#1d201b] rounded-xl px-3 py-1 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">terrain</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Trips</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/60 transition-all duration-300 ease-out hover:bg-[#333630]" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Create</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/60 transition-all duration-300 ease-out hover:bg-[#333630]" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#7bda96",
+              "surface-container-low": "#191c17",
+              "tertiary-fixed-dim": "#b9ccb2",
+              "on-tertiary-fixed-variant": "#3b4b37",
+              "on-background": "#e1e3da",
+              "error": "#ffb4ab",
+              "outline": "#9f8e79",
+              "on-tertiary": "#253422",
+              "on-error-container": "#ffdad6",
+              "on-primary-fixed": "#281800",
+              "tertiary": "#c2d5bb",
+              "on-tertiary-container": "#394a36",
+              "primary-fixed-dim": "#ffba44",
+              "secondary-container": "#00733b",
+              "on-surface-variant": "#d6c4ac",
+              "primary": "#ffc56c",
+              "surface-container-high": "#282b25",
+              "surface-variant": "#333630",
+              "on-primary-container": "#5f3f00",
+              "surface-container": "#1d201b",
+              "on-primary": "#442c00",
+              "on-secondary-fixed": "#00210d",
+              "surface-container-highest": "#333630",
+              "secondary": "#7bda96",
+              "on-secondary": "#00391a",
+              "inverse-on-surface": "#2e312b",
+              "tertiary-fixed": "#d5e8cd",
+              "on-primary-fixed-variant": "#614000",
+              "outline-variant": "#514533",
+              "surface": "#11140f",
+              "surface-bright": "#373a34",
+              "inverse-surface": "#e1e3da",
+              "primary-container": "#f0a500",
+              "on-error": "#690005",
+              "surface-dim": "#11140f",
+              "surface-tint": "#ffba44",
+              "tertiary-container": "#a6b9a0",
+              "error-container": "#93000a",
+              "surface-container-lowest": "#0c0f0a",
+              "on-tertiary-fixed": "#101f0f",
+              "on-secondary-fixed-variant": "#005228",
+              "background": "#11140f",
+              "secondary-fixed": "#97f7b0",
+              "on-secondary-container": "#95f5ae",
+              "primary-fixed": "#ffddaf",
+              "inverse-primary": "#805600",
+              "on-surface": "#e1e3da"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30 min-h-screen">
+<!-- Top Navigation Anchor (Shared Component Mapping) -->
+<header class="sticky top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-md">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<button class="active:scale-95 duration-200 text-[#EDE9DF] flex items-center gap-2">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="text-2xl font-black text-[#EDE9DF] tracking-tighter font-headline">Aktivar</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-[#EDE9DF] hover:text-[#F0A500] transition-colors cursor-pointer">share</span>
+<span class="material-symbols-outlined text-[#EDE9DF] hover:text-[#F0A500] transition-colors cursor-pointer">favorite</span>
+</div>
+</div>
+</header>
+<main class="pb-32">
+<!-- Hero Section: Editorial Full-Width -->
+<section class="relative h-[486px] w-full overflow-hidden">
+<img alt="Mountain peaks at dawn" class="w-full h-full object-cover" data-alt="Majestic mountain landscape during golden hour" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkuv4r6QaiuNO5wLIkFA4AloRDqr9lfOz2sTBhxGO7G2tzr7YHOPzGqtwpet2Nuv7wSDt-kBu-mKZcp1Ij84kouFCsOswJ8w3Rh8juiK2VdFrMXAHKGnL57n8jG1AT5dVvYYVSwA8Toy194J7Zc6IZuO8RI5itLi1eOXgJC1CXOKDxv3I6gqByGiAhzuwDJbwR8PBehHpsqslkB_ZF_2bZvTGZJLqB3Mp7oK5WvhzMdW8CQbrSPgyKBzfkQA6DMgI5K-RvZrWreM6p"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full max-w-4xl">
+<div class="flex gap-2 mb-4">
+<span class="bg-secondary text-on-secondary px-4 py-1 rounded-full font-label text-xs uppercase tracking-widest font-bold">Advanced</span>
+<span class="bg-surface-container-highest/80 backdrop-blur text-primary px-4 py-1 rounded-full font-label text-xs uppercase tracking-widest font-bold">12.5 KM</span>
+</div>
+<h1 class="text-4xl md:text-6xl font-headline font-black text-on-surface leading-tight tracking-tighter">
+                    Volcán Acatenango <br/><span class="text-primary-container">Night Summit</span>
+</h1>
+</div>
+</section>
+<div class="px-6 -mt-4 relative z-10 space-y-10 max-w-5xl mx-auto">
+<!-- Organizer Card -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 space-y-8">
+<div class="bg-[#1d201b] rounded-xl p-6 border border-outline-variant/15">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Guide avatar" class="w-16 h-16 rounded-xl object-cover" data-alt="Professional mountain guide portrait photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxfAPVDat18mWmtXGQzoFWltL71i8Fy34TIgo8wi2oVgLtp_b_6FvgLucCYnqTLGDSEBZsnhQGQmAOw3FXSWEibkS-3GEVofNqfTNSpMGLCtbQ4JyJsLVNGNX60UWTUyAwK439ucVg5Qa2qBEv9FlFUEjfjtyFJ-IhilgoNbyTsYawfu00W0yk1eE0PKAnC8zVCbqy1sqXSm2CQaQYqlfOkP__D-sO3vJCno_mq-Iz28SAP45ScXaCqIbQl1gh0zhqQ8XfNvJ-FuV_"/>
+<div class="absolute -bottom-1 -right-1 bg-primary p-1 rounded-lg">
+<span class="material-symbols-outlined text-[14px] text-on-primary font-bold" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface">Mateo Estrada</h3>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant font-label">
+<span class="flex items-center text-primary-container"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9</span>
+<span>•</span>
+<span>142 Activities</span>
+</div>
+</div>
+</div>
+<button class="bg-surface-container-highest text-primary px-6 py-2 rounded-full font-bold text-sm hover:bg-surface-bright transition-colors">Follow</button>
+</div>
+<p class="text-on-surface-variant leading-relaxed">
+                            Certified high-altitude guide with 10 years of experience in the Guatemalan highlands. Specializing in volcanic summits and night photography expeditions.
+                        </p>
+</div>
+<!-- Description & Details -->
+<div class="space-y-4">
+<h2 class="font-headline font-bold text-2xl tracking-tight">The Experience</h2>
+<div class="bg-surface-container-low rounded-xl p-6 space-y-6">
+<p class="text-on-surface-variant leading-relaxed">
+                                Join us for a legendary ascent of Acatenango to witness the eruptions of Volcán de Fuego from the front row. We start the hike at midday, reaching the base camp by sunset. This is a high-intensity activity requiring good physical condition and cold-weather gear.
+                            </p>
+<!-- Participant Row -->
+<div class="pt-4 border-t border-outline-variant/10">
+<span class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-3">Expedition Team (8/12)</span>
+<div class="flex items-center">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="" class="inline-block h-10 w-10 rounded-xl ring-2 ring-surface object-cover" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD7U0voFoblS2zmPFNdQA8_bVoA1EW3m4Sc2Ra7LAs8JCd0IA8ycKn6bdPHZSou_Ut5YvajLjPFFXJvx-ZXiSJVmOY_V38F7HSOtv14X7J4Egb7k_LYQ3qWvyH0BhMOBl3XPnzLkBLxv9agqdKSayrAu0qHK2HI2WE1PwXQ6YdcgFE8mbM0KH9J_B038LTre2DOwDgcZ2hhA6Tsn2DFyqiFjW6QAGipRQ_6712qWFdyqiPFHvfBw8SbJeHyiNdB3qsRpcAeNTUy002"/>
+<img alt="" class="inline-block h-10 w-10 rounded-xl ring-2 ring-surface object-cover" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxUmaTY5s7q_Mhy626y98KvzIeCSIxIA6LWLjz4lEGgmqlhjE4vn21NlfIJ-Qb1kbV39bb8G5TiOf2j0n65AoXSSBiLCgrBgoSWiYgftZKtW4rJeX_A3AIISLFF0vxKEgaQI54mQexviFmOI6Cu1Y-GtYfBcBpO7vmy8f2D3FpHouAjRspY5nNlm_sV8KFeYh_POWye_jj6M_kg1PN9wCpkSx3MrW9rWQVk660y8PCs9ZlxwjwwqobnXE29DgclaABHZKnQSdYaLWZ"/>
+<img alt="" class="inline-block h-10 w-10 rounded-xl ring-2 ring-surface object-cover" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHQ8NUazVV8dCcwRZSdbXlazpqxY9Tv7QN8MizazMo116HnYjrcmADcdqxeFFuy3McywvSnDciuaBMXV8hPk9PpeuXJrnrtBHa5SeOOsyuGwhKdd056lTaEaQmp8isTnkvln2fWbPDmpIlZEkJpLCE104uYqaWV2t0rXlZiTYHkI-lWzQmF6OPJHrfZ62fC7_jWQ--50m_jZs1rIFa-CFKow5AS1l16Wcma0dileKpBn8L3qhM061KpwHgDqsLXhmYXaAMu54-0cgT"/>
+<div class="h-10 w-10 rounded-xl bg-surface-container-highest ring-2 ring-surface flex items-center justify-center text-xs font-bold text-primary">+5</div>
+</div>
+<span class="ml-4 text-sm text-on-surface-variant italic">Join the pack</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Transport & Map Column -->
+<aside class="space-y-6">
+<!-- Mini Map Card -->
+<div class="bg-[#1d201b] rounded-xl overflow-hidden border border-outline-variant/15">
+<div class="h-48 w-full bg-surface-container-highest relative">
+<img alt="Map preview" class="w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-500" data-location="Antigua Guatemala" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGkvYh3s85_gw6pSjsushZlkmimxZSHKY-CVbx81PSutS5Uk8BcfkD2hJ7yTEiIwb1EXDsoHnGBzSazbv8pINMIRqzpZMrYGF382zU1iB_pR6XMg3_TykTBu28rlA2WGdQfqLt8J2pHIxTSBrR6WcXiV_iOlOJ19gKKAnbqPEnUZELj9ivFMg-D7g6ZoroSclOSKS9eRNRx29dXcYjvJRShYnT-tY9c3q2PM2sJlLzQU_vS5j0pgja3zJ0JwcC87aAIoZL48l4A90-"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-primary-container p-3 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</div>
+<div class="p-4">
+<h4 class="font-headline font-bold text-on-surface">Meeting Point</h4>
+<p class="text-sm text-on-surface-variant">Central Park, Antigua Guatemala</p>
+<span class="text-[10px] font-label text-primary mt-2 block uppercase tracking-tighter">04:00 AM Departure</span>
+</div>
+</div>
+<!-- Transport Section Card -->
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant/15">
+<div class="flex items-center gap-3 mb-6">
+<div class="bg-secondary-container/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-secondary">directions_car</span>
+</div>
+<h4 class="font-headline font-bold">Group Transport</h4>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-bold text-on-surface">Toyota Hilux 4x4</p>
+<p class="text-xs text-on-surface-variant">Driver: Carlos Mendoza</p>
+</div>
+<span class="bg-surface-container-highest text-secondary-fixed-dim text-[10px] px-2 py-1 rounded-md font-label font-bold">3 SEATS LEFT</span>
+</div>
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant"></div>
+<span class="text-xs text-on-surface-variant">Pick-up: El Cafetalito (4:15 AM)</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant"></div>
+<span class="text-xs text-on-surface-variant">Pick-up: San Bartolo (4:30 AM)</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</section>
+</div>
+</main>
+<!-- Fixed CTA: Join Button -->
+<div class="fixed bottom-0 left-0 w-full bg-surface/80 backdrop-blur-xl border-t border-outline-variant/10 z-[60] px-6 py-4 md:py-6">
+<div class="max-w-5xl mx-auto flex items-center justify-between gap-6">
+<div class="flex flex-col">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Total Price</span>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-black font-headline text-on-surface">Q350</span>
+<span class="text-xs text-on-surface-variant">/person</span>
+</div>
+</div>
+<button class="flex-1 max-w-md bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-extrabold py-4 rounded-full shadow-lg shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                JOIN ACTIVITY
+                <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Bottom Navigation (Shared Component Integration) -->
+<!-- Suppressed on detail page per UX goal: focused task -->
+</body></html>
