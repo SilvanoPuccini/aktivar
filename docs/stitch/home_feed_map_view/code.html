@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aktivar - Home Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed-dim": "#7bda96",
+                        "surface-container-low": "#191c17",
+                        "tertiary-fixed-dim": "#b9ccb2",
+                        "on-tertiary-fixed-variant": "#3b4b37",
+                        "on-background": "#e1e3da",
+                        "error": "#ffb4ab",
+                        "outline": "#9f8e79",
+                        "on-tertiary": "#253422",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed": "#281800",
+                        "tertiary": "#c2d5bb",
+                        "on-tertiary-container": "#394a36",
+                        "primary-fixed-dim": "#ffba44",
+                        "secondary-container": "#00733b",
+                        "on-surface-variant": "#d6c4ac",
+                        "primary": "#ffc56c",
+                        "surface-container-high": "#282b25",
+                        "surface-variant": "#333630",
+                        "on-primary-container": "#5f3f00",
+                        "surface-container": "#1d201b",
+                        "on-primary": "#442c00",
+                        "on-secondary-fixed": "#00210d",
+                        "surface-container-highest": "#333630",
+                        "secondary": "#7bda96",
+                        "on-secondary": "#00391a",
+                        "inverse-on-surface": "#2e312b",
+                        "tertiary-fixed": "#d5e8cd",
+                        "on-primary-fixed-variant": "#614000",
+                        "outline-variant": "#514533",
+                        "surface": "#11140f",
+                        "surface-bright": "#373a34",
+                        "inverse-surface": "#e1e3da",
+                        "primary-container": "#f0a500",
+                        "on-error": "#690005",
+                        "surface-dim": "#11140f",
+                        "surface-tint": "#ffba44",
+                        "tertiary-container": "#a6b9a0",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#0c0f0a",
+                        "on-tertiary-fixed": "#101f0f",
+                        "on-secondary-fixed-variant": "#005228",
+                        "background": "#11140f",
+                        "secondary-fixed": "#97f7b0",
+                        "on-secondary-container": "#95f5ae",
+                        "primary-fixed": "#ffddaf",
+                        "inverse-primary": "#805600",
+                        "on-surface": "#e1e3da"
+                    },
+                    fontFamily: {
+                        "headline": ["Epilogue"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-md">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="User profile avatar smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrH53ReZ9olCf3A0WE2zvXhS3kuhX45mj0joEburGL0qfmLK73Uo2rkzKDwPMFUP5JOFNhour8PQrZl9KFMDJYSaoyLNMmR7_vNdEJmuYWqJpyQGenF_46p3qUgfsBP21tCK5NCE068YL1GEa1D985Ue0JdUwqJc6IxDh_3TmDT7yNPnIb9opgudi-xtVw51gbHHSV31O6mw0oXQp2bGl_KSnQ95bYGX2M_igXpAi7s2pqVY7PVL3FksGl69gBREL7pkgJFbk9BYG2"/>
+</div>
+<h1 class="text-2xl font-black text-[#EDE9DF] tracking-tighter font-headline">Aktivar</h1>
+</div>
+<div class="hidden md:flex items-center gap-8 font-label uppercase tracking-widest text-[12px]">
+<a class="text-[#F0A500] transition-colors" href="#">Home</a>
+<a class="text-[#EDE9DF] hover:text-[#F0A500] transition-colors" href="#">Explore</a>
+<a class="text-[#EDE9DF] hover:text-[#F0A500] transition-colors" href="#">Trips</a>
+<a class="text-[#EDE9DF] hover:text-[#F0A500] transition-colors" href="#">Profile</a>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest/30 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[#EDE9DF]">search</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex flex-col md:flex-row h-[calc(100vh-76px)] overflow-hidden">
+<!-- Left Side: Activity Cards Feed -->
+<section class="w-full md:w-1/2 lg:w-5/12 overflow-y-auto hide-scrollbar bg-surface relative z-10">
+<!-- Search & Filter Bar -->
+<div class="sticky top-0 z-20 bg-surface/90 backdrop-blur-md px-6 py-4 space-y-4">
+<div class="flex items-center gap-3 bg-surface-container-highest px-4 py-3 rounded-xl border border-[#2A3826]">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<input class="bg-transparent border-none outline-none text-on-surface font-label w-full placeholder:text-on-surface/40" placeholder="Antioquia, Colombia" type="text"/>
+<span class="material-symbols-outlined text-on-surface/60">tune</span>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+<button class="px-5 py-2 rounded-full bg-secondary text-on-secondary font-label text-sm font-bold whitespace-nowrap">TREKKING</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface/70 font-label text-sm font-bold whitespace-nowrap">MTB</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface/70 font-label text-sm font-bold whitespace-nowrap">CLIMBING</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface/70 font-label text-sm font-bold whitespace-nowrap">FESTIVAL</button>
+</div>
+</div>
+<div class="px-6 space-y-10 pb-32">
+<!-- Activity Card 1 -->
+<article class="group relative bg-surface-container rounded-[12px] overflow-hidden border border-[#2A3826] transition-all duration-300 hover:shadow-2xl">
+<div class="relative h-64 w-full">
+<img class="w-full h-full object-cover" data-alt="Hiker standing on mountain ridge overlooking valley" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAexF0lzwVUlwsEcXi7DOCGh0LFqgonCIAHV_YicWKqiPJ3qxe3RN-ToGgktvjgysvIQ2dtKYUsl-ojQoclMiX-EScjKZCv6gYJXw-RvqUyEZkRbLOgo579rMFzB-lQBFCcvOrhLoKavDIt7VL5nZUCkQZeXflVFbzrdCY2NVf3imyebuzo5X1maBSpnnU_Fwgj9tLQ87i_RO5xdltmYU5a0psjrj7B3Nj_fprDFjXEeENzOJ2W3KRAa5cKsJIbGTfr-bVhOyJNKdQ1"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60"></div>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-primary text-on-primary font-label text-[10px] font-bold rounded-full tracking-tighter">TREKKING</span>
+</div>
+<div class="absolute top-4 right-4 bg-surface-container/80 backdrop-blur-md p-2 rounded-lg flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm">wb_sunny</span>
+<span class="font-label text-xs font-bold text-[#EDE9DF]">22°C</span>
+</div>
+<div class="absolute bottom-4 right-4">
+<span class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label font-bold text-sm shadow-lg">$45.00</span>
+</div>
+</div>
+<div class="p-5 space-y-4">
+<div class="flex justify-between items-start">
+<h2 class="text-xl font-headline font-bold text-[#EDE9DF] leading-tight group-hover:text-primary transition-colors">Páramo del Sol: The Highland Expedition</h2>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Organizer profile headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYvy3Rsp2rtVuQqRKT30gl-gTeR2iePOdANfcmHydqPCmwRVo96K-5O0Rqi6SYc_afZTO2hViU6IeK2gfLuh_SmtACxYVLu01qtRNTUHMY4jHGpC23Z3seAVZkYNTR60CsizdjN_MaCsPlqhM015SAPVXAZ_Cnkd73qI_kBLBN8ir1XxOCGn-ci4wF26N7SrheByoirw3zgRpnnWnlDle6ZGb-UjkCg3RWmQSPmKvK6zjFBJeT8Lmi4ih8YmIaWal9ARpFmPCDIL7B"/>
+</div>
+<div>
+<p class="text-sm font-bold text-[#EDE9DF]">Mateo Silva</p>
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[12px]">star_half</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2 text-on-surface/60">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span class="text-xs font-label">OCT 24 • 06:00 AM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface/60">
+<span class="material-symbols-outlined text-lg">distance</span>
+<span class="text-xs font-label">12.5 KM</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-[11px] font-label font-bold uppercase tracking-wider">
+<span class="text-on-surface/50">Capacity</span>
+<span class="text-error">2 spots left</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full w-[85%]"></div>
+</div>
+</div>
+</div>
+</article>
+<!-- Activity Card 2 -->
+<article class="group relative bg-surface-container rounded-[12px] overflow-hidden border border-[#2A3826] transition-all duration-300 hover:shadow-2xl">
+<div class="relative h-64 w-full">
+<img class="w-full h-full object-cover" data-alt="Outdoor festival lights and people cheering" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn3Ld_s5qJBBLm_drdFHHa5fjR7bytntENEyFGy-Hvf-epWollScMsJsZ5IiMYxsExDbctxjU7i51b7OE4kEL-aFe2gFdcFQ8MSUu8-MWlMUnGI3vBkjCCs9u2zevm1dPPR0W9APrOBfB_PlFPR4RaF8HJlcb2AmWWjCIs9305a9UNJ7HJ5tLS7rp6TX3CzAeicLoJc7irXXQFoDq3LrETE0IzJ4ONuwD9GnCa0Kpg_wqseqmRfNsn-zdiDWoj6XGmZoiP-HEIN2ra"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60"></div>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-primary text-on-primary font-label text-[10px] font-bold rounded-full tracking-tighter">FESTIVAL</span>
+</div>
+<div class="absolute top-4 right-4 bg-surface-container/80 backdrop-blur-md p-2 rounded-lg flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm">cloud</span>
+<span class="font-label text-xs font-bold text-[#EDE9DF]">18°C</span>
+</div>
+<div class="absolute bottom-4 right-4">
+<span class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label font-bold text-sm shadow-lg">FREE</span>
+</div>
+</div>
+<div class="p-5 space-y-4">
+<h2 class="text-xl font-headline font-bold text-[#EDE9DF] leading-tight group-hover:text-primary transition-colors">Andean Solstice Celebration</h2>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Female guide profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUmHFkghdGM9VC56Mder1gy64Y8Fl5Hy6J6oiu2qoV-w1SHVQoK1DP4_0vQvhpR_c8IrKCqSMInPbRjBbcFf7CKifFeF0VRfX4mC9zE3ouLpAGjLQ-M1e7nVB2K-kbzZTdXy5bPmWOdy0yBr9VrZH-Z1isyitNhowk7ubhFiXK0_DKyGzSzw0QqQld7ANyo_pKa5vHIVoacXuUXjOraLR1XWcV0hfJo49P0DkxfCItj_ewB003ObjexueJnS_rFl2MeucPVdd1CA_T"/>
+</div>
+<div>
+<p class="text-sm font-bold text-[#EDE9DF]">Valeria Gomez</p>
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2 text-on-surface/60">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span class="text-xs font-label">DEC 21 • 04:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface/60">
+<span class="material-symbols-outlined text-lg">location_on</span>
+<span class="text-xs font-label">Santa Fe de Antioquia</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-[11px] font-label font-bold uppercase tracking-wider">
+<span class="text-on-surface/50">Capacity</span>
+<span class="text-on-surface/40">Limited spots</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full w-[40%]"></div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- Right Side: Interactive Map -->
+<section class="hidden md:block md:w-1/2 lg:w-7/12 h-full bg-surface-container-low relative">
+<div class="absolute inset-0 bg-[#191c17]" data-location="Antioquia, Colombia" style="">
+<img class="w-full h-full object-cover opacity-40 grayscale contrast-125" data-alt="Top-down abstract satellite view of mountain terrain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXxuSBu1fdF4oFcdkVferROQ5HdF8ohnldR2Fn-t4Kg83-f7xsJ_N3bfM-j8v1oIWuCeOhXuyMfTkkLHGbC3MxV6RKvCxZPcNNWm94s5gpVEaH0KyU1sUvFVudXNdEqZ46IX66PLsTcusD1okJfDl7C9QSg6Cbf1dYE3lgf5U2e4q8jNpD3fb2RWFktT8p9Im_tumZedf10oLqNXRaANvBt9vDJOFn3JGdcwkfdF6TS7ZZL7CmacWR5g2_AxCFGFFJpEPRKuAPdv6H"/>
+<!-- Map UI Elements Overlay -->
+<div class="absolute inset-0 pointer-events-none">
+<!-- Map Pin 1 -->
+<div class="absolute top-1/4 left-1/3 pointer-events-auto">
+<div class="relative group cursor-pointer">
+<div class="bg-primary p-1.5 rounded-full shadow-[0_0_20px_rgba(255,197,108,0.4)] animate-pulse">
+<span class="material-symbols-outlined text-on-primary text-xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface p-2 rounded-lg border border-[#2A3826] w-48 opacity-0 group-hover:opacity-100 transition-opacity">
+<p class="text-[10px] font-label font-bold text-primary mb-1 uppercase">TREKKING</p>
+<p class="text-xs font-headline font-bold text-[#EDE9DF]">Páramo del Sol</p>
+</div>
+</div>
+</div>
+<!-- Map Pin 2 -->
+<div class="absolute top-1/2 right-1/4 pointer-events-auto">
+<div class="relative group cursor-pointer">
+<div class="bg-secondary p-1.5 rounded-full shadow-[0_0_20px_rgba(123,218,150,0.4)]">
+<span class="material-symbols-outlined text-on-secondary text-xl" style="font-variation-settings: 'FILL' 1;">festival</span>
+</div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface p-2 rounded-lg border border-[#2A3826] w-48 opacity-0 group-hover:opacity-100 transition-opacity">
+<p class="text-[10px] font-label font-bold text-secondary mb-1 uppercase">FESTIVAL</p>
+<p class="text-xs font-headline font-bold text-[#EDE9DF]">Andean Solstice</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute bottom-8 right-8 flex flex-col gap-3">
+<button class="w-12 h-12 rounded-full bg-surface-container-highest/80 backdrop-blur-md flex items-center justify-center text-[#EDE9DF] border border-outline-variant/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-surface-container-highest/80 backdrop-blur-md flex items-center justify-center text-[#EDE9DF] border border-outline-variant/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-xl active:scale-95 transition-all">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#11140f]/70 backdrop-blur-md rounded-t-2xl z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.4)]">
+<a class="flex flex-col items-center justify-center text-[#F0A500] bg-[#1d201b] rounded-xl px-3 py-1 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-0.5">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/60 hover:bg-[#333630] transition-all duration-300" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-0.5">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/60 hover:bg-[#333630] transition-all duration-300" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-0.5">Create</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/60 hover:bg-[#333630] transition-all duration-300" href="#">
+<span class="material-symbols-outlined">terrain</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-0.5">Trips</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/60 hover:bg-[#333630] transition-all duration-300" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-0.5">Profile</span>
+</a>
+</nav>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed right-6 bottom-24 md:bottom-8 z-40 bg-gradient-to-br from-primary to-primary-container text-on-primary-container w-14 h-14 rounded-full flex items-center justify-center shadow-[0_10px_40px_rgba(240,165,0,0.4)] active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

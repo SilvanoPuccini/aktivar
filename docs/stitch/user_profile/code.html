@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aktivar - User Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #11140f;
+            color: #EDE9DF;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .editorial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .editorial-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "secondary-fixed-dim": "#7bda96",
+                "surface-container-low": "#191c17",
+                "tertiary-fixed-dim": "#b9ccb2",
+                "on-tertiary-fixed-variant": "#3b4b37",
+                "on-background": "#e1e3da",
+                "error": "#ffb4ab",
+                "outline": "#9f8e79",
+                "on-tertiary": "#253422",
+                "on-error-container": "#ffdad6",
+                "on-primary-fixed": "#281800",
+                "tertiary": "#c2d5bb",
+                "on-tertiary-container": "#394a36",
+                "primary-fixed-dim": "#ffba44",
+                "secondary-container": "#00733b",
+                "on-surface-variant": "#d6c4ac",
+                "primary": "#ffc56c",
+                "surface-container-high": "#282b25",
+                "surface-variant": "#333630",
+                "on-primary-container": "#5f3f00",
+                "surface-container": "#1d201b",
+                "on-primary": "#442c00",
+                "on-secondary-fixed": "#00210d",
+                "surface-container-highest": "#333630",
+                "secondary": "#7bda96",
+                "on-secondary": "#00391a",
+                "inverse-on-surface": "#2e312b",
+                "tertiary-fixed": "#d5e8cd",
+                "on-primary-fixed-variant": "#614000",
+                "outline-variant": "#514533",
+                "surface": "#11140f",
+                "surface-bright": "#373a34",
+                "inverse-surface": "#e1e3da",
+                "primary-container": "#f0a500",
+                "on-error": "#690005",
+                "surface-dim": "#11140f",
+                "surface-tint": "#ffba44",
+                "tertiary-container": "#a6b9a0",
+                "error-container": "#93000a",
+                "surface-container-lowest": "#0c0f0a",
+                "on-tertiary-fixed": "#101f0f",
+                "on-secondary-fixed-variant": "#005228",
+                "background": "#11140f",
+                "secondary-fixed": "#97f7b0",
+                "on-secondary-container": "#95f5ae",
+                "primary-fixed": "#ffddaf",
+                "inverse-primary": "#805600",
+                "on-surface": "#e1e3da"
+              },
+              fontFamily: {
+                "headline": ["Epilogue"],
+                "body": ["Plus Jakarta Sans"],
+                "label": ["Space Grotesk"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-md">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#F0A500]">arrow_back</span>
+<span class="text-2xl font-black text-[#EDE9DF] tracking-tighter font-['Epilogue']">Aktivar</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#EDE9DF]">search</span>
+<span class="material-symbols-outlined text-[#EDE9DF]">more_vert</span>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-6 pb-32">
+<!-- Profile Header -->
+<section class="mt-8 mb-12 flex flex-col items-center text-center">
+<div class="relative mb-6">
+<div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-primary to-secondary">
+<img alt="User Profile" class="w-full h-full object-cover rounded-full border-4 border-surface" data-alt="Portrait of an active outdoors woman smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp98R-YCO4WQuCb4iMSoDHGi7Pr6xHQOxafeHu5aaGkO0ZyOHJbV84cgY6lcBkCKAV0-Ttx8V1BzPZcNPo6sD-mp20RFx8pdqK5_7RYRdjb7u4TcdAX3tpLaHwLTM5dLEGwMFGU4k58E-lLj3BTlFHfLEuQjXzbHqcqb1CbQ5m3c-xo8KOF5SyCJ-3HUbYX9gZvKvohhTsYzOEEpk9XWL_cFR4SKYmyO1-1bPTRdHS0msK_EydobRcdDukCQkNKgvSKMDqcB299wTo"/>
+</div>
+<div class="absolute bottom-1 right-1 bg-primary text-on-primary rounded-full p-1 border-2 border-surface">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<h1 class="text-4xl font-headline font-extrabold tracking-tight mb-2">Elena Rivas</h1>
+<div class="flex items-center gap-2 mb-4 justify-center">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+<span class="text-xs font-label text-on-surface-variant uppercase tracking-widest">(4.8 • 124 reviews)</span>
+</div>
+<p class="max-w-md text-on-surface/80 leading-relaxed font-body mb-8">
+                Mountain guide and ultra-runner based in Patagonia. Exploring the limits of endurance across the Andes. 🏔️🏃‍♀️
+            </p>
+<!-- Stats Row -->
+<div class="grid grid-cols-3 w-full max-w-lg bg-surface-container rounded-xl py-6 gap-4">
+<div class="flex flex-col">
+<span class="text-2xl font-label font-bold text-primary">142</span>
+<span class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Activities</span>
+</div>
+<div class="flex flex-col border-x border-outline-variant/20">
+<span class="text-2xl font-label font-bold text-primary">2.4k</span>
+<span class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">KM traveled</span>
+</div>
+<div class="flex flex-col">
+<span class="text-2xl font-label font-bold text-primary">318</span>
+<span class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">People Met</span>
+</div>
+</div>
+</section>
+<!-- Achievements/Badges Row -->
+<section class="mb-12">
+<h3 class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-4">Top Achievements</h3>
+<div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+<div class="flex-shrink-0 flex items-center gap-3 bg-surface-container-high rounded-full pl-2 pr-5 py-2">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<span class="text-sm font-label font-bold">Summit Club</span>
+</div>
+<div class="flex-shrink-0 flex items-center gap-3 bg-surface-container-high rounded-full pl-2 pr-5 py-2">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">terrain</span>
+</div>
+<span class="text-sm font-label font-bold">Peak Hunter</span>
+</div>
+<div class="flex-shrink-0 flex items-center gap-3 bg-surface-container-high rounded-full pl-2 pr-5 py-2">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<span class="text-sm font-label font-bold">Fast Finisher</span>
+</div>
+</div>
+</section>
+<!-- Photo Grid -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<h2 class="text-2xl font-headline font-bold">Trail Memories</h2>
+<span class="text-sm font-label text-primary hover:underline cursor-pointer">View All</span>
+</div>
+<div class="editorial-grid">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img alt="Hiking trail" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Person hiking up a foggy mountain ridge" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSeD3xr1droy4W4q5hELwDxaNiak-El18An-s0e448ODYARrbGgrZRBPVzAHQlLokYPWvsLQGSV7U9ycdh3QkKUtUxanSPRYUb2HA-8m995j4SUaOr8qqjpkFADNriuvqP3KM6pUzWcEMMaZovWw_mbASVtBWHZ5InKEL9EmXHbc9nt5EDjhHNJRYpZt8NEt1mg4kI_d8iqAZeKsCAkLRDwWqLHWGZJip0zfIBnyMvbNbP7q72x-IEXI1BTE-PLNpQHR6P64ci0hkz"/>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img alt="Camping view" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Mountain lake reflection at dawn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl7mJxFoNa9moIGBncx4xSGiTbtLaclsyRp3cKqV3Y6q3XhAVuR9o3l0DtpPKZFFybOpmKrPLbp5vQvXYr3U5TJGf3mV-3DEJgbX1q0ScXA405kamwO13dGwERFM-_yuTiZ4pplYRFJwd2fWntNf2D7uDxKJe6TnnFXs-nGfi3xWRZqW9zk4ACYa1mOvp2o4QvnaPM5YG3oQCGbFLN3yrGmnr1Z8SYeum_8glWSp5xado5YC819vF5d4JSTVYbqykWekOkZZMX-XZB"/>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img alt="Biking" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Cyclist climbing a steep mountain road" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM7pcSBdaeAJAhLaihUVXDGRraQCsflSN67DjwbRYUKQ47BYrHHwHLMwvdGm-gkPLVMlInyB_gwPZijblRbV0caZFBbrz7CsUn3r96NAdl9uVRBfwoIQyZqqGiwy88CNWmdvxCyCMNbZLPSwi8RFgQMC-1y98feEvVjQxX8D-yt-_CALJn_cw2L_MNN2Z4EU0tOMCD2AQq4vMFb2sEHJO5BMGdbNG7CkYOnpjto6vaf_jjUvLhmbjltW6DNAQbSaqjx6-kFbd2LqSz"/>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img alt="Peak view" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Snow capped mountain range under clear sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt_rFe0NfA7ftIu5zE5nFO5uqYYy63Xfo3DegoxnhuvNKmGCvFzaPMG797ut_yC8xPy0NktXqQDnFmA1DGWRrSUOPEQvaj8fqZ1RNXxQPee138rYbrcBYjpXQI4W7FYfhDyXYlP9JNq4BZJ0TFKHu6PSBLv0_mby4lhlkmn0K0RWwb-BT213f4LfcirCY6iwjML2z0uaNXdQudIbrbmc4lbZNpMxtb6V8fZIXJncK_IdLsTVDqWZ5UYJZ13Hbpjifk-zjXW7HtyIsm"/>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container-highest">
+<img alt="Forest running" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Runner in a lush green pine forest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4FQqHFLIyCvhx579rkTITrNCHqmVyayZz-60AzD4DNtzUcv5sIry0Ys7QZKaRdcXbJ2Mk74PxC_KiwNtfz-ue0hzZrHJPzTFcM2VPRjYUifqkPhFxiOx0bM7d5d0L0hp-hAo5TnZp87JUuOSUahIqplX0v8u2fEJpOIv5HatYf5GES5kN7qQIv1jurs6cJS2SD8fQmaytN5m0SqnD0lVBC5LePkFgJX2I3muN60KTp_4Pz99OIChNNV_QrbQCOwHdbTDJDmLAdhSR"/>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container-highest flex items-center justify-center bg-gradient-to-br from-surface-container-high to-surface">
+<div class="text-center">
+<span class="material-symbols-outlined text-primary text-3xl mb-1">add_a_photo</span>
+<p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Add more</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-md rounded-t-2xl shadow-[0_-10px_30px_rgba(0,0,0,0.4)]">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2">
+<!-- Home -->
+<button class="flex flex-col items-center justify-center text-[#EDE9DF]/60 transition-all duration-300 ease-out hover:bg-[#333630] rounded-xl px-3 py-1">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">Home</span>
+</button>
+<!-- Explore -->
+<button class="flex flex-col items-center justify-center text-[#EDE9DF]/60 transition-all duration-300 ease-out hover:bg-[#333630] rounded-xl px-3 py-1">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">Explore</span>
+</button>
+<!-- Create -->
+<button class="flex flex-col items-center justify-center text-[#EDE9DF]/60 transition-all duration-300 ease-out hover:bg-[#333630] rounded-xl px-3 py-1">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">Create</span>
+</button>
+<!-- Trips -->
+<button class="flex flex-col items-center justify-center text-[#EDE9DF]/60 transition-all duration-300 ease-out hover:bg-[#333630] rounded-xl px-3 py-1">
+<span class="material-symbols-outlined">terrain</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">Trips</span>
+</button>
+<!-- Profile (ACTIVE) -->
+<button class="flex flex-col items-center justify-center text-[#F0A500] bg-[#1d201b] rounded-xl px-3 py-1 transition-all duration-300 ease-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">Profile</span>
+</button>
+</div>
+</nav>
+</body></html>
