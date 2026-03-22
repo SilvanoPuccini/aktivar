@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -23,7 +23,10 @@ import type { LucideIcon } from 'lucide-react';
 
 import CTAButton from '@/components/CTAButton';
 import ProgressDots from '@/components/ProgressDots';
+import ActivityMap from '@/components/ActivityMap';
 import { categories } from '@/data/categories';
+import api, { endpoints } from '@/services/api';
+import { useAuthStore } from '@/stores/authStore';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -88,10 +91,13 @@ const iconMap: Record<string, LucideIcon> = {
 /* ================================================================== */
 export default function OnboardingPage() {
   const navigate = useNavigate();
+  const { login: storeLogin } = useAuthStore();
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [formData, setFormData] = useState<OnboardingData>(initialData);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
 
   /* helpers */
   const update = <K extends keyof OnboardingData>(key: K, value: OnboardingData[K]) =>
@@ -115,9 +121,58 @@ export default function OnboardingPage() {
     setCurrentStep((s) => Math.max(s - 1, 0));
   };
 
-  const handleComplete = () => {
-    toast.success('¡Bienvenido!');
-    navigate('/');
+  const handleComplete = async () => {
+    if (!formData.name || !formData.email || !formData.password) {
+      toast.error('Completa todos los campos');
+      return;
+    }
+    if (formData.password.length < 8) {
+      toast.error('La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Register user
+      await api.post(endpoints.register, {
+        email: formData.email,
+        password: formData.password,
+        full_name: formData.name,
+      });
+
+      // Login to get token
+      const tokenRes = await api.post(endpoints.login, {
+        email: formData.email,
+        password: formData.password,
+      });
+      sessionStorage.setItem('aktivar_access_token', tokenRes.data.access);
+
+      // Update profile with location if provided
+      if (formData.location) {
+        await api.patch(endpoints.myProfile, {
+          location_name: formData.location,
+        });
+      }
+
+      // Fetch user data
+      const userRes = await api.get(endpoints.me);
+      storeLogin(userRes.data);
+
+      toast.success('Cuenta creada con exito!');
+      navigate('/');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: Record<string, string[]> } };
+      const data = error.response?.data;
+      if (data?.email) {
+        toast.error('Este email ya está registrado');
+      } else if (data?.password) {
+        toast.error(data.password[0]);
+      } else {
+        toast.error('Error al crear la cuenta');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const selectedCount = formData.selectedCategories.length;
@@ -189,6 +244,13 @@ export default function OnboardingPage() {
         fullWidth
         icon={<ArrowRight size={16} />}
       />
+
+      <p className="text-center text-sm text-muted font-body">
+        ¿Ya tienes cuenta?{' '}
+        <Link to="/login" className="text-primary hover:underline font-semibold">
+          Inicia sesión
+        </Link>
+      </p>
     </div>
   );
 
@@ -308,22 +370,40 @@ export default function OnboardingPage() {
         />
       </div>
 
-      {/* Map placeholder */}
-      <div className="rounded-2xl border border-[#514533] bg-surface-container h-48 flex flex-col items-center justify-center gap-3">
-        <div className="w-14 h-14 rounded-full bg-surface-container-highest flex items-center justify-center">
-          <MapPin size={28} className="text-muted" />
-        </div>
-        <p className="text-sm text-muted font-body">
-          Mapa no disponible en demo
-        </p>
+      {/* Map */}
+      <div className="rounded-2xl border border-[#514533] overflow-hidden h-48">
+        <ActivityMap
+          activities={[]}
+          singleMarker={
+            userCoords
+              ? { lat: userCoords[0], lng: userCoords[1], label: formData.location || 'Tu ubicación' }
+              : undefined
+          }
+          center={userCoords ?? [-33.4489, -70.6693]}
+          zoom={userCoords ? 13 : 4}
+        />
       </div>
 
       {/* Activate location button */}
       <CTAButton
-        label="Activar ubicación"
+        label="Usar mi ubicación"
         variant="secondary"
         onClick={() => {
-          update('location', 'Santiago, Chile');
+          if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                setUserCoords([pos.coords.latitude, pos.coords.longitude]);
+                update('location', `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
+              },
+              () => {
+                update('location', 'Santiago, Chile');
+                setUserCoords([-33.4489, -70.6693]);
+              },
+            );
+          } else {
+            update('location', 'Santiago, Chile');
+            setUserCoords([-33.4489, -70.6693]);
+          }
         }}
         fullWidth
         icon={<MapPin size={16} />}
@@ -333,6 +413,7 @@ export default function OnboardingPage() {
       <CTAButton
         label="Empezar a explorar"
         onClick={handleComplete}
+        loading={loading}
         fullWidth
         icon={<ArrowRight size={16} />}
       />

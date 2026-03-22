@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout } from '@/layouts/MainLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
 
@@ -11,6 +12,16 @@ const CreateActivityPage = lazy(() => import('@/features/activities/pages/Create
 const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'));
 const TripDetailPage = lazy(() => import('@/features/transport/pages/TripDetailPage'));
 const OnboardingPage = lazy(() => import('@/features/auth/pages/OnboardingPage'));
+const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 2,
+      retry: 1,
+    },
+  },
+});
 
 function LoadingFallback() {
   return (
@@ -29,11 +40,13 @@ function LoadingFallback() {
 
 export default function App() {
   return (
+    <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           {/* Auth routes (no bottom nav) */}
           <Route element={<AuthLayout />}>
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
           </Route>
 
@@ -75,5 +88,6 @@ export default function App() {
         }}
       />
     </BrowserRouter>
+    </QueryClientProvider>
   );
 }

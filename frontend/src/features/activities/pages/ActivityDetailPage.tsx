@@ -13,6 +13,7 @@ import {
   Check,
   Star,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 import CategoryChip from '@/components/CategoryChip';
 import CTAButton from '@/components/CTAButton';
@@ -21,7 +22,10 @@ import AvatarGroup from '@/components/AvatarGroup';
 import SpotsBar from '@/components/SpotsBar';
 import WeatherBadge from '@/components/WeatherBadge';
 import EmptyState from '@/components/EmptyState';
+import ActivityMap from '@/components/ActivityMap';
 import { mockActivities } from '@/data/activities';
+import { useActivity, useJoinActivity } from '@/services/hooks';
+import { useAuthStore } from '@/stores/authStore';
 
 const difficultyConfig: Record<string, { label: string; classes: string }> = {
   easy: { label: 'Fácil', classes: 'bg-secondary/20 text-secondary' },
@@ -38,11 +42,28 @@ const fadeUp = {
 export default function ActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
+  const { data: apiActivity } = useActivity(id);
+  const joinMutation = useJoinActivity();
 
+  // Use API data if available, fallback to mock
   const activity = useMemo(
-    () => mockActivities.find((a) => a.id === Number(id)),
-    [id],
+    () => apiActivity ?? mockActivities.find((a) => a.id === Number(id)),
+    [id, apiActivity],
   );
+
+  const handleJoin = () => {
+    if (!isAuthenticated) {
+      toast.error('Inicia sesión para unirte');
+      navigate('/login');
+      return;
+    }
+    if (!activity) return;
+    joinMutation.mutate(activity.id, {
+      onSuccess: () => toast.success('Te uniste a la actividad!'),
+      onError: () => toast.error('No se pudo unir a la actividad'),
+    });
+  };
 
   if (!activity) {
     return (
@@ -257,16 +278,26 @@ export default function ActivityDetailPage() {
           )}
         </motion.div>
 
-        {/* ---- Map placeholder ---- */}
-        <motion.div
-          variants={fadeUp}
-          className="mt-6 flex flex-col items-center justify-center gap-2 rounded-xl border border-outline-variant bg-surface-container-low p-8"
-        >
-          <MapPin size={36} className="text-muted" />
-          <p className="font-label text-sm text-muted">Punto de encuentro</p>
-          <p className="font-body text-xs text-on-surface-variant text-center">
+        {/* ---- Map ---- */}
+        <motion.div variants={fadeUp} className="mt-6">
+          <h2 className="mb-2 font-display text-lg font-semibold text-on-surface">
+            Punto de encuentro
+          </h2>
+          <p className="mb-3 font-body text-sm text-on-surface-variant">
             {activity.meeting_point}
           </p>
+          <div className="h-56 rounded-xl border border-outline-variant overflow-hidden">
+            <ActivityMap
+              activities={[]}
+              singleMarker={{
+                lat: activity.latitude,
+                lng: activity.longitude,
+                label: activity.meeting_point,
+              }}
+              center={[activity.latitude, activity.longitude]}
+              zoom={14}
+            />
+          </div>
         </motion.div>
       </motion.div>
 
@@ -286,9 +317,9 @@ export default function ActivityDetailPage() {
         </div>
 
         {isFull ? (
-          <CTAButton label="Lista de espera" variant="secondary" size="md" />
+          <CTAButton label="Lista de espera" variant="secondary" size="md" onClick={handleJoin} loading={joinMutation.isPending} />
         ) : (
-          <CTAButton label="¡Unirme!" variant="primary" size="md" />
+          <CTAButton label="¡Unirme!" variant="primary" size="md" onClick={handleJoin} loading={joinMutation.isPending} />
         )}
       </div>
     </div>
