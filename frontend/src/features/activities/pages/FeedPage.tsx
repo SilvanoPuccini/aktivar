@@ -1,13 +1,15 @@
 import { useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, SearchX } from 'lucide-react';
+import { SearchX } from 'lucide-react';
 import SearchBar from '@/components/SearchBar';
 import CategoryChip from '@/components/CategoryChip';
 import ActivityCard from '@/components/ActivityCard';
 import EmptyState from '@/components/EmptyState';
+import ActivityMap from '@/components/ActivityMap';
 import { mockActivities } from '@/data/activities';
-import { categories } from '@/data/categories';
+import { categories as fallbackCategories } from '@/data/categories';
+import { useActivities, useCategories } from '@/services/hooks';
 
 const containerVariants = {
   hidden: {},
@@ -28,6 +30,15 @@ export default function FeedPage() {
   const searchQuery = searchParams.get('q') ?? '';
   const selectedCategory = searchParams.get('cat') ?? null;
 
+  // Fetch from API with fallback to mock data
+  const { data: apiActivities } = useActivities({
+    search: searchQuery || undefined,
+    category: selectedCategory || undefined,
+  });
+  const { data: apiCategories } = useCategories();
+
+  const categories = apiCategories ?? fallbackCategories;
+
   function setSearchQuery(value: string) {
     setSearchParams((prev) => {
       if (value) prev.set('q', value);
@@ -45,7 +56,9 @@ export default function FeedPage() {
   }
 
   const filtered = useMemo(() => {
-    return mockActivities.filter((a) => {
+    // Use API data if available, fallback to mock
+    const activities = apiActivities ?? mockActivities;
+    return activities.filter((a) => {
       if (selectedCategory && a.category.slug !== selectedCategory) return false;
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
@@ -57,7 +70,7 @@ export default function FeedPage() {
       }
       return true;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, apiActivities]);
 
   return (
     <div className="min-h-screen bg-surface pb-24">
@@ -129,11 +142,13 @@ export default function FeedPage() {
           )}
         </div>
 
-        {/* Map placeholder — desktop only */}
+        {/* Interactive map — desktop only */}
         <div className="hidden lg:block lg:w-[40%] lg:flex-none">
-          <div className="sticky top-6 flex h-[calc(100vh-10rem)] flex-col items-center justify-center rounded-2xl border border-outline-variant bg-surface-container-low">
-            <MapPin size={48} className="text-muted" />
-            <p className="mt-3 font-label text-sm text-muted">Mapa próximamente</p>
+          <div className="sticky top-6 h-[calc(100vh-10rem)] rounded-2xl border border-outline-variant overflow-hidden">
+            <ActivityMap
+              activities={filtered}
+              onActivityClick={(id) => navigate(`/activity/${id}`)}
+            />
           </div>
         </div>
       </div>

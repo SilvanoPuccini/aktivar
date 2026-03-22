@@ -1,7 +1,10 @@
 import logging
+import uuid
 
+from django.conf import settings
 from django.db import connection
-from rest_framework.permissions import AllowAny
+from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -50,3 +53,53 @@ class HealthCheckView(APIView):
 
 
 health_check = HealthCheckView.as_view()
+
+
+class ImageUploadView(APIView):
+    """Upload an image to Cloudinary (or local storage in dev)."""
+
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        file = request.FILES.get('file')
+        if not file:
+            return Response(
+                {'detail': 'No file provided.'},
+                status=400,
+            )
+
+        # Validate file type
+        allowed_types = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+        if file.content_type not in allowed_types:
+            return Response(
+                {'detail': 'File type not allowed. Use JPEG, PNG, WebP, or GIF.'},
+                status=400,
+            )
+
+        # Max 10MB
+        if file.size > 10 * 1024 * 1024:
+            return Response(
+                {'detail': 'File too large. Max 10MB.'},
+                status=400,
+            )
+
+        try:
+            # Try Cloudinary upload
+            import cloudinary.uploader
+            result = cloudinary.uploader.upload(
+                file,
+                folder='aktivar',
+                public_id=f'{uuid.uuid4().hex}',
+                overwrite=True,
+                resource_type='image',
+            )
+            return Response({'url': result['secure_url']})
+        except Exception:
+            # Fallback: save to Django's default storage
+            from django.core.files.storage import default_storage
+            ext = file.name.split('.')[-1] if '.' in file.name else 'jpg'
+            filename = f'uploads/{uuid.uuid4().hex}.{ext}'
+            path = default_storage.save(filename, file)
+            url = request.build_absolute_uri(f'/media/{path}')
+            return Response({'url': url})

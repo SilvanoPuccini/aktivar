@@ -16,12 +16,16 @@ import {
   Compass,
   Flag,
   Car,
+  LogOut,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import StatCard from '@/components/StatCard';
 import CTAButton from '@/components/CTAButton';
 import { currentUser, mockUsers } from '@/data/users';
 import { mockActivities } from '@/data/activities';
+import { useCurrentUser } from '@/services/hooks';
+import { useAuthStore } from '@/stores/authStore';
 
 const badgeIconMap: Record<string, React.ReactNode> = {
   'mountain-snow': <Mountain size={20} />,
@@ -54,8 +58,18 @@ const pastActivityPhotos = mockActivities.slice(0, 9).map((a) => ({
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const user = currentUser;
+  const { isAuthenticated, logout } = useAuthStore();
+  const { data: apiUser } = useCurrentUser();
+
+  // Use API user if authenticated, fallback to mock
+  const user = apiUser ?? currentUser;
   const { profile } = user;
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Sesión cerrada');
+    navigate('/login');
+  };
 
   const memberSince = new Date(user.created_at).toLocaleDateString('es-CL', {
     year: 'numeric',
@@ -308,9 +322,25 @@ export default function ProfilePage() {
         </div>
       </motion.div>
 
-      {/* ---- Edit Profile CTA ---- */}
-      <div className="mx-4 mt-8 lg:mx-8">
-        <CTAButton label="Editar perfil" variant="secondary" fullWidth onClick={() => {}} />
+      {/* ---- Edit Profile / Auth CTAs ---- */}
+      <div className="mx-4 mt-8 lg:mx-8 space-y-3">
+        {isAuthenticated ? (
+          <>
+            <CTAButton label="Editar perfil" variant="secondary" fullWidth onClick={() => {}} />
+            <CTAButton
+              label="Cerrar sesión"
+              variant="danger"
+              fullWidth
+              onClick={handleLogout}
+              icon={<LogOut size={16} />}
+            />
+          </>
+        ) : (
+          <>
+            <CTAButton label="Iniciar sesión" variant="primary" fullWidth onClick={() => navigate('/login')} />
+            <CTAButton label="Crear cuenta" variant="secondary" fullWidth onClick={() => navigate('/onboarding')} />
+          </>
+        )}
       </div>
     </div>
   );
