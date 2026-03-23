@@ -14,6 +14,7 @@ const TripDetailPage = lazy(() => import('@/features/transport/pages/TripDetailP
 const ExplorePage = lazy(() => import('@/features/explore/pages/ExplorePage'));
 const ChatPage = lazy(() => import('@/features/chat/pages/ChatPage'));
 const NotificationsPage = lazy(() => import('@/features/notifications/pages/NotificationsPage'));
+const PaymentPage = lazy(() => import('@/features/payments/pages/PaymentPage'));
 const OnboardingPage = lazy(() => import('@/features/auth/pages/OnboardingPage'));
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
 
@@ -29,13 +30,25 @@ const queryClient = new QueryClient({
 function LoadingFallback() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface">
-      <div className="flex flex-col items-center gap-4">
-        <div className="font-display text-4xl font-black text-on-surface">
+      <div className="flex flex-col items-center gap-6">
+        <div className="font-headline text-4xl font-black text-on-surface tracking-tight">
           AKT<span className="text-primary">IVAR</span>
         </div>
-        <div className="h-1 w-32 overflow-hidden rounded-full bg-surface-container-highest">
-          <div className="h-full w-1/2 animate-pulse rounded-full bg-primary" />
+        <div className="h-0.5 w-32 overflow-hidden rounded-full bg-surface-container-highest">
+          <div
+            className="h-full w-1/3 rounded-full"
+            style={{
+              background: 'linear-gradient(90deg, #ffc56c, #f0a500)',
+              animation: 'loading-slide 1.2s ease-in-out infinite',
+            }}
+          />
         </div>
+        <style>{`
+          @keyframes loading-slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+          }
+        `}</style>
       </div>
     </div>
   );
@@ -62,6 +75,7 @@ export default function App() {
             <Route path="/trip/:id" element={<TripDetailPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/chat/:activityId" element={<ChatPage />} />
+            <Route path="/payment/:activityId" element={<PaymentPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
           </Route>
         </Routes>
@@ -75,9 +89,11 @@ export default function App() {
           style: {
             background: '#1d201b',
             color: '#e1e3da',
-            border: '1px solid #514533',
+            border: '1px solid rgba(81,69,51,0.2)',
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            borderRadius: '12px',
+            borderRadius: '16px',
+            padding: '12px 16px',
+            fontSize: '14px',
           },
           success: {
             iconTheme: {

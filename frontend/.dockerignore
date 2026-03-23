@@ -1,0 +1,42 @@
+# =============================================================================
+# Frontend .dockerignore
+# Exclude files not needed in the Docker image
+# =============================================================================
+
+# Dependencies (will be installed fresh via npm ci)
+node_modules/
+
+# Build output (will be rebuilt in container)
+dist/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+*.md
+LICENSE
+
+# Testing
+coverage/
+.nyc_output/

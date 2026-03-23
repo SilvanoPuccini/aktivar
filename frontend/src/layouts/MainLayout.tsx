@@ -24,16 +24,23 @@ export function MainLayout() {
       create: '/create',
       trips: '/',
       profile: '/profile',
+      notifications: '/notifications',
     };
     navigate(routes[tab] || '/');
   };
 
-  // Hide bottom nav on activity detail page (per Stitch UX: focused task)
-  const hideNav = location.pathname.startsWith('/activity/');
+  // Hide bottom nav on focused pages
+  const hideNav =
+    location.pathname.startsWith('/activity/') ||
+    location.pathname.startsWith('/chat/') ||
+    location.pathname.startsWith('/payment/');
 
   return (
     <div className="min-h-screen bg-surface">
-      <Outlet />
+      {/* Desktop: offset content for sidebar */}
+      <div className="md:pl-16">
+        <Outlet />
+      </div>
       {!hideNav && (
         <GlassNav
           activeTab={getActiveTab()}
