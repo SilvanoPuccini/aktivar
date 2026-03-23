@@ -40,6 +40,7 @@ export function useWebSocket({
   const onOpenRef = useRef(onOpen);
   const onCloseRef = useRef(onClose);
   const onErrorRef = useRef(onError);
+  const connectRef = useRef<() => void>(() => {});
 
   useEffect(() => { onMessageRef.current = onMessage; }, [onMessage]);
   useEffect(() => { onOpenRef.current = onOpen; }, [onOpen]);
@@ -79,7 +80,7 @@ export function useWebSocket({
         if (reconnectCountRef.current < reconnectAttempts) {
           reconnectCountRef.current += 1;
           reconnectTimerRef.current = setTimeout(() => {
-            connect();
+            connectRef.current();
           }, reconnectInterval);
         }
       };
@@ -94,6 +95,8 @@ export function useWebSocket({
       setStatus('error');
     }
   }, [url, enabled, reconnectAttempts, reconnectInterval]);
+
+  connectRef.current = connect;
 
   useEffect(() => {
     connect();

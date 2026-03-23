@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Bell, MessageCircle, UserPlus, Clock, ArrowLeft, CheckCheck } from 'lucide-react';
@@ -189,18 +189,17 @@ export default function NotificationsPage() {
   const markRead = useMarkNotificationRead();
   const markAllRead = useMarkAllNotificationsRead();
 
-  // Populate notifications from API or fallback to mock
-  useEffect(() => {
-    if (initialized) return;
-
-    if (apiNotifications && apiNotifications.length > 0) {
-      setNotifications(apiNotifications.map(mapApiToLocal));
-      setInitialized(true);
-    } else if (isError) {
-      setNotifications(mockNotifications);
-      setInitialized(true);
-    }
-  }, [apiNotifications, isError, initialized]);
+  // Populate notifications from API or fallback to mock (sync during render to avoid cascading effects)
+  const prevApiRef = useRef<AppNotification[] | undefined>();
+  if (!initialized && apiNotifications && apiNotifications.length > 0 && prevApiRef.current !== apiNotifications) {
+    prevApiRef.current = apiNotifications;
+    setNotifications(apiNotifications.map(mapApiToLocal));
+    setInitialized(true);
+  }
+  if (!initialized && isError) {
+    setNotifications(mockNotifications);
+    setInitialized(true);
+  }
 
   // Fallback after a timeout
   useEffect(() => {

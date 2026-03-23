@@ -1,3 +1,9 @@
 from django.test import TestCase
 
-# Create your tests here.
+
+class SmokeTest(TestCase):
+    """Basic smoke test to verify Django setup."""
+
+    def test_django_settings_configured(self):
+        from django.conf import settings
+        self.assertTrue(settings.configured)

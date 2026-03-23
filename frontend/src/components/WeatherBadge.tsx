@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Sun, Cloud, CloudRain, Snowflake, CloudSun } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -17,7 +18,7 @@ function getWeatherIcon(description: string): LucideIcon {
 }
 
 export default function WeatherBadge({ temp, description }: WeatherBadgeProps) {
-  const Icon = getWeatherIcon(description);
+  const Icon = useMemo(() => getWeatherIcon(description), [description]);
 
   return (
     <div className="inline-flex items-center gap-1.5 rounded-full bg-surface-container-high px-3 py-1 font-[Space_Grotesk] text-xs text-muted">
