@@ -12,10 +12,16 @@ declare module '@stripe/stripe-js' {
     create: (type: string, options?: Record<string, unknown>) => StripeElement;
   }
 
+  interface StripeElementChangeEvent {
+    complete: boolean;
+    error?: { message: string };
+  }
+
   interface StripeElement {
     mount: (domElement: string | HTMLElement) => void;
     unmount: () => void;
     destroy: () => void;
+    on: (event: string, handler: (event: StripeElementChangeEvent) => void) => void;
   }
 
   export function loadStripe(publishableKey: string): Promise<Stripe | null>;
