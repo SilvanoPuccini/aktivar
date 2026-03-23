@@ -60,7 +60,6 @@ interface ActivityCardProps {
 export default function ActivityCard({
   activity,
   onClick,
-  onJoin,
   variant = 'feed',
 }: ActivityCardProps) {
   const startDate = new Date(activity.start_datetime);
