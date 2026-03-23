@@ -39,8 +39,8 @@ export default function PaymentPage() {
   const [paymentState, setPaymentState] = useState<PaymentState>('loading');
   const [errorMessage, setErrorMessage] = useState('');
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [stripe, setStripe] = useState<any>(null);
-  const [elements, setElements] = useState<any>(null);
+  const [stripe, setStripe] = useState<import('@stripe/stripe-js').Stripe | null>(null);
+  const [elements, setElements] = useState<import('@stripe/stripe-js').StripeElements | null>(null);
   const [cardComplete, setCardComplete] = useState(false);
 
   // Load Stripe.js dynamically
@@ -52,8 +52,8 @@ export default function PaymentPage() {
     }
 
     let cancelled = false;
-    import('@stripe/stripe-js').then(({ loadStripe }: { loadStripe: (key: string) => Promise<unknown> }) => {
-      loadStripe(stripeKey).then((stripeInstance: unknown) => {
+    import('@stripe/stripe-js').then(({ loadStripe }) => {
+      loadStripe(stripeKey).then((stripeInstance) => {
         if (!cancelled && stripeInstance) {
           setStripe(stripeInstance);
         }
@@ -112,7 +112,7 @@ export default function PaymentPage() {
     const mountPoint = document.getElementById('stripe-payment-element');
     if (mountPoint) {
       cardElement.mount(mountPoint);
-      cardElement.on('change', (event: any) => {
+      cardElement.on('change', (event: import('@stripe/stripe-js').StripeElementChangeEvent) => {
         setCardComplete(event.complete);
         if (event.error) {
           setErrorMessage(event.error.message);
