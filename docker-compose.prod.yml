@@ -1,0 +1,166 @@
+# =============================================================================
+# Aktivar Docker Compose - Production Override
+# Adds: SSL/TLS via Certbot, Celery Beat, resource limits, logging
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — production hardening
+  # ---------------------------------------------------------------------------
+  db:
+    restart: always
+    environment:
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1.0"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Redis — production hardening
+  # ---------------------------------------------------------------------------
+  redis:
+    restart: always
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Django Backend — production mode
+  # ---------------------------------------------------------------------------
+  backend:
+    restart: always
+    environment:
+      DEBUG: "False"
+      DJANGO_SETTINGS_MODULE: "aktivar.settings"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1.0"
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # Celery Worker — production
+  # ---------------------------------------------------------------------------
+  celery:
+    restart: always
+    command: celery -A aktivar worker --loglevel=warning --concurrency=4
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Celery Beat — periodic task scheduler
+  # ---------------------------------------------------------------------------
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    env_file: .env
+    environment:
+      DATABASE_URL: postgis://${POSTGRES_USER:-aktivar}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-aktivar}
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A aktivar beat --loglevel=warning --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.25"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Frontend — production
+  # ---------------------------------------------------------------------------
+  frontend:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
+
+  # ---------------------------------------------------------------------------
+  # Nginx — SSL with Certbot
+  # ---------------------------------------------------------------------------
+  nginx:
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - static_files:/var/www/static:ro
+      - media_files:/var/www/media:ro
+      - certbot_www:/var/www/certbot:ro
+      - certbot_conf:/etc/letsencrypt:ro
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  # ---------------------------------------------------------------------------
+  # Certbot — automatic SSL certificate renewal
+  # ---------------------------------------------------------------------------
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - certbot_www:/var/www/certbot
+      - certbot_conf:/etc/letsencrypt
+    # Run certificate renewal every 12 hours
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done"
+    depends_on:
+      - nginx
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_files:
+  media_files:
+  certbot_www:
+    driver: local
+  certbot_conf:
+    driver: local

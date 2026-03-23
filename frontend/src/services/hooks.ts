@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api, { endpoints } from './api';
+import analytics from '@/lib/analytics';
 import type { Activity, Category } from '@/types/activity';
 import type { User } from '@/types/user';
 import type { ChatMessage } from '@/types/chat';
@@ -63,6 +64,7 @@ export function useJoinActivity() {
       return res.data;
     },
     onSuccess: (_data, activityId) => {
+      analytics.activityJoined(activityId);
       queryClient.invalidateQueries({ queryKey: ['activity', String(activityId)] });
       queryClient.invalidateQueries({ queryKey: ['activities'] });
     },
@@ -258,6 +260,7 @@ interface PaymentIntent {
 export function useCreatePaymentIntent() {
   return useMutation<PaymentIntent, Error, { activityId: number; amount: number }>({
     mutationFn: async ({ activityId, amount }) => {
+      analytics.paymentStarted(amount);
       const res = await api.post(`${endpoints.payments}create-intent/`, {
         activity_id: activityId,
         amount,
