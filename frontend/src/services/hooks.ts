@@ -349,3 +349,84 @@ export function usePushSubscription() {
     },
   });
 }
+
+// ---- Social Features ----
+
+export function useActivityStories(activityId: number | undefined) {
+  return useQuery({
+    queryKey: ['stories', activityId],
+    queryFn: async () => {
+      const res = await api.get(`${endpoints.activities}${activityId}/stories/`);
+      return res.data.results ?? res.data;
+    },
+    enabled: !!activityId,
+  });
+}
+
+export function useSquads() {
+  return useQuery({
+    queryKey: ['squads'],
+    queryFn: async () => {
+      const res = await api.get(`${endpoints.activities.replace('activities/', 'squads/')}`);
+      return res.data.results ?? res.data;
+    },
+  });
+}
+
+export function useAvailabilityStatuses(params?: { lat?: number; lng?: number; radius_km?: number }) {
+  return useQuery({
+    queryKey: ['availability', params],
+    queryFn: async () => {
+      const res = await api.get(`${endpoints.activities.replace('activities/', 'availability/')}`, { params });
+      return res.data.results ?? res.data;
+    },
+  });
+}
+
+export function useSwipeActivity() {
+  return useMutation({
+    mutationFn: async ({ activityId, interested }: { activityId: number; interested: boolean }) => {
+      const res = await api.post(`${endpoints.activities.replace('activities/', 'swipes/')}`, {
+        activity: activityId,
+        interested,
+      });
+      return res.data;
+    },
+  });
+}
+
+export function useEmergencyContact() {
+  return useQuery({
+    queryKey: ['emergencyContact'],
+    queryFn: async () => {
+      const res = await api.get(`${endpoints.trips.replace('trips/', 'emergency-contacts/')}`);
+      return res.data;
+    },
+    enabled: !!sessionStorage.getItem('aktivar_access_token'),
+  });
+}
+
+export function useTripSplit(tripId: string | undefined) {
+  return useQuery({
+    queryKey: ['tripSplit', tripId],
+    queryFn: async () => {
+      const res = await api.get(`${endpoints.trips}${tripId}/split/`);
+      return res.data;
+    },
+    enabled: !!tripId,
+    refetchInterval: 10000, // Refresh every 10s for real-time split
+  });
+}
+
+export function useTriggerEmergency() {
+  return useMutation({
+    mutationFn: async ({ tripId, latitude, longitude, message }: {
+      tripId: number; latitude: number; longitude: number; message?: string;
+    }) => {
+      const res = await api.post(`${endpoints.trips}${tripId}/emergency/`, {
+        latitude, longitude, message,
+      });
+      return res.data;
+    },
+  });
+}

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class Vehicle(models.Model):
@@ -99,3 +100,43 @@ class TripPassenger(models.Model):
     class Meta:
         unique_together = ['trip', 'user']
         ordering = ['booked_at']
+
+
+class EmergencyContact(models.Model):
+    """Required emergency contact before booking a trip."""
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='emergency_contact'
+    )
+    contact_name = models.CharField(max_length=150)
+    contact_phone = models.CharField(max_length=20)
+    relationship = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Emergency: {self.contact_name} ({self.relationship}) for {self.user}"
+
+
+class EmergencyAlert(models.Model):
+    """SOS alert triggered during an active trip."""
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='emergency_alerts')
+    triggered_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='emergency_alerts'
+    )
+    latitude = models.DecimalField(max_digits=10, decimal_places=7)
+    longitude = models.DecimalField(max_digits=10, decimal_places=7)
+    message = models.TextField(blank=True, default='')
+    resolved = models.BooleanField(default=False)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def resolve(self):
+        self.resolved = True
+        self.resolved_at = timezone.now()
+        self.save(update_fields=['resolved', 'resolved_at'])
+
+    def __str__(self):
+        return f"Emergency on {self.trip} by {self.triggered_by}"

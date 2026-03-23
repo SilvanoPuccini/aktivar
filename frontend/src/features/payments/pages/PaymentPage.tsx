@@ -52,8 +52,8 @@ export default function PaymentPage() {
     }
 
     let cancelled = false;
-    import('@stripe/stripe-js').then(({ loadStripe }) => {
-      loadStripe(stripeKey).then((stripeInstance) => {
+    import('@stripe/stripe-js').then(({ loadStripe }: { loadStripe: (key: string) => Promise<unknown> }) => {
+      loadStripe(stripeKey).then((stripeInstance: unknown) => {
         if (!cancelled && stripeInstance) {
           setStripe(stripeInstance);
         }
