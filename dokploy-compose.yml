@@ -106,8 +106,8 @@ services:
   nginx:
     image: nginx:alpine
     restart: always
-    ports:
-      - "80:80"
+    expose:
+      - "80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - static_files:/var/www/static:ro
