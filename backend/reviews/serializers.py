@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from core.sanitization import SanitizeMixin
+
 from .models import Report, Review
 
 
@@ -27,7 +29,9 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'reviewer', 'created_at']
 
 
-class ReviewCreateSerializer(serializers.ModelSerializer):
+class ReviewCreateSerializer(SanitizeMixin, serializers.ModelSerializer):
+    sanitize_fields = ['comment']
+
     class Meta:
         model = Review
         fields = ['reviewee', 'rating', 'comment']
@@ -69,7 +73,9 @@ class ReportSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'reporter', 'status', 'created_at', 'resolved_at']
 
 
-class ReportCreateSerializer(serializers.ModelSerializer):
+class ReportCreateSerializer(SanitizeMixin, serializers.ModelSerializer):
+    sanitize_fields = ['description']
+
     class Meta:
         model = Report
         fields = ['reported_user', 'activity', 'reason', 'description']

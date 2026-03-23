@@ -1,9 +1,13 @@
 from rest_framework import serializers
 
+from core.sanitization import SanitizeMixin
+
 from .models import CustomUser, DriverProfile, UserProfile
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(SanitizeMixin, serializers.ModelSerializer):
+    sanitize_fields = ['bio_extended', 'location_name']
+
     class Meta:
         model = UserProfile
         fields = [
@@ -71,7 +75,8 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(SanitizeMixin, serializers.ModelSerializer):
+    sanitize_fields = ['full_name']
     password = serializers.CharField(write_only=True, min_length=8)
     phone = serializers.CharField(required=False, allow_blank=True)
 
