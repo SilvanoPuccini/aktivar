@@ -109,6 +109,48 @@ export function useUpdateProfile() {
   });
 }
 
+// ---- Verification ----
+
+export function useRequestEmailVerification() {
+  return useMutation<void, Error, void>({
+    mutationFn: async () => {
+      await api.post(endpoints.verifyEmailRequest);
+    },
+  });
+}
+
+export function useVerifyEmail() {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: async (token: string) => {
+      await api.post(endpoints.verifyEmailConfirm, { token });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+    },
+  });
+}
+
+export function useRequestPhoneVerification() {
+  return useMutation<void, Error, string>({
+    mutationFn: async (phone: string) => {
+      await api.post(endpoints.verifyPhoneRequest, { phone });
+    },
+  });
+}
+
+export function useVerifyPhone() {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: async (otp: string) => {
+      await api.post(endpoints.verifyPhoneConfirm, { otp });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+    },
+  });
+}
+
 // ---- Trips ----
 
 export function useTrips() {

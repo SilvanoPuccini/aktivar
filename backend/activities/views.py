@@ -3,6 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from users.views import JoinRateThrottle
+
 from .filters import ActivityFilter
 from .models import Activity, ActivityParticipant, Category
 from .serializers import (
@@ -43,7 +45,7 @@ class ActivityViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(organizer=self.request.user)
 
-    @action(detail=True, methods=['post'], url_path='join')
+    @action(detail=True, methods=['post'], url_path='join', throttle_classes=[JoinRateThrottle])
     def join_activity(self, request, pk=None):
         activity = self.get_object()
         user = request.user
