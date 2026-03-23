@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api, { endpoints } from './api';
-import type { Activity } from '@/types/activity';
+import type { Activity, Category } from '@/types/activity';
 import type { User } from '@/types/user';
 import type { ChatMessage } from '@/types/chat';
 
@@ -32,7 +32,7 @@ export function useActivity(id: string | undefined) {
 }
 
 export function useCategories() {
-  return useQuery({
+  return useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: async () => {
       const res = await api.get(endpoints.categories);

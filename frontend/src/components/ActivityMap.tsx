@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, ZoomControl, CircleMarker } from 'react-leaflet';
+import { useEffect, useMemo } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Activity } from '@/types/activity';
@@ -213,27 +213,6 @@ function MapEvents({ onMapMove }: { onMapMove?: (bounds: L.LatLngBounds, center:
   return null;
 }
 
-// Activity count badge shown at lower zoom levels
-function ClusterBadge({ count, position }: { count: number; position: [number, number] }) {
-  return (
-    <CircleMarker
-      center={position}
-      radius={Math.min(20 + count, 35)}
-      pathOptions={{
-        fillColor: '#ffc56c',
-        fillOpacity: 0.85,
-        color: '#11140f',
-        weight: 2,
-      }}
-    >
-      <Popup>
-        <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, fontWeight: 600, textAlign: 'center' }}>
-          {count} actividades en esta zona
-        </div>
-      </Popup>
-    </CircleMarker>
-  );
-}
 
 export default function ActivityMap({
   activities,
@@ -248,7 +227,6 @@ export default function ActivityMap({
   interactive = true,
 }: ActivityMapProps) {
   const defaultCenter: [number, number] = center ?? [-33.4489, -70.6693];
-  const popupRefs = useRef<Record<number, L.Popup>>({});
 
   // Memoize markers
   const markers = useMemo(

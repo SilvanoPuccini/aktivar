@@ -49,7 +49,7 @@ export async function subscribeToPush(): Promise<PushSubscription | null> {
       // Subscribe to push notifications
       subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey,
+        applicationServerKey: applicationServerKey.buffer.slice(0) as ArrayBuffer,
       });
     } else {
       // If no VAPID key, try subscribing without it (for development)
