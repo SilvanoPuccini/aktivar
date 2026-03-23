@@ -49,6 +49,8 @@ django-fsm>=3.0,<4.0
 
 # Security
 argon2-cffi>=23.1,<24.0
+django-bleach>=3.1,<4.0
+sentry-sdk[django]>=2.0,<3.0
 
 # Testing
 pytest>=8.0,<9.0

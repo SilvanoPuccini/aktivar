@@ -263,6 +263,25 @@ STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
 STRIPE_PRICE_ORGANIZER = env("STRIPE_PRICE_ORGANIZER", default="")
 STRIPE_PRICE_EXPLORER = env("STRIPE_PRICE_EXPLORER", default="")
 
+# ── Input Sanitization (django-bleach) ──────────────────────────────
+BLEACH_ALLOWED_TAGS = ["b", "i", "u", "em", "strong", "a", "br", "p"]
+BLEACH_ALLOWED_ATTRIBUTES = {"a": ["href", "title", "target"]}
+BLEACH_ALLOWED_PROTOCOLS = ["http", "https"]
+BLEACH_STRIP_TAGS = True
+BLEACH_STRIP_COMMENTS = True
+
+# ── Sentry Monitoring ──────────────────────────────────────────────
+SENTRY_DSN = env("SENTRY_DSN", default="")
+if SENTRY_DSN:
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        traces_sample_rate=0.1 if not DEBUG else 1.0,
+        profiles_sample_rate=0.1 if not DEBUG else 1.0,
+        send_default_pii=False,
+        environment="development" if DEBUG else "production",
+    )
+
 # drf-spectacular
 SPECTACULAR_SETTINGS = {
     "TITLE": "AKTIVAR API",

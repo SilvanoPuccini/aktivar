@@ -1,6 +1,8 @@
 from django.utils import timezone
 from rest_framework import serializers
 
+from core.sanitization import SanitizeMixin
+
 from .models import Activity, ActivityParticipant, Category
 
 
@@ -94,7 +96,10 @@ class ActivityDetailSerializer(ActivityListSerializer):
         fields = ActivityListSerializer.Meta.fields + ['participants']
 
 
-class ActivityCreateSerializer(serializers.ModelSerializer):
+class ActivityCreateSerializer(SanitizeMixin, serializers.ModelSerializer):
+    sanitize_fields = ['title', 'location_name', 'meeting_point', 'what_to_bring']
+    rich_text_fields = ['description']
+
     class Meta:
         model = Activity
         fields = [
