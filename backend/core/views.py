@@ -55,6 +55,72 @@ class HealthCheckView(APIView):
 health_check = HealthCheckView.as_view()
 
 
+class SitemapView(APIView):
+    """Dynamic sitemap.xml for SEO with published activities."""
+
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get(self, request, *args, **kwargs):
+        from activities.models import Activity
+        from django.http import HttpResponse
+
+        frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:5173')
+        activities = Activity.objects.filter(status='published').order_by('-created_at')[:500]
+
+        xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+        xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+
+        # Home page
+        xml += f'  <url><loc>{frontend_url}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>\n'
+
+        # Activity pages
+        for activity in activities:
+            xml += f'  <url>'
+            xml += f'<loc>{frontend_url}/activity/{activity.id}</loc>'
+            xml += f'<lastmod>{activity.updated_at.strftime("%Y-%m-%d")}</lastmod>'
+            xml += f'<changefreq>weekly</changefreq>'
+            xml += f'<priority>0.8</priority>'
+            xml += f'</url>\n'
+
+        xml += '</urlset>'
+
+        return HttpResponse(xml, content_type='application/xml')
+
+
+class OpenGraphActivityView(APIView):
+    """Return Open Graph meta tags for an activity (for social sharing / SEO crawlers)."""
+
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get(self, request, activity_id, *args, **kwargs):
+        from activities.models import Activity
+
+        try:
+            activity = Activity.objects.select_related('organizer', 'category').get(
+                id=activity_id, status='published'
+            )
+        except Activity.DoesNotExist:
+            return Response({'detail': 'Activity not found.'}, status=404)
+
+        frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:5173')
+        return Response({
+            'og:title': activity.title,
+            'og:description': activity.description[:200],
+            'og:image': activity.cover_image,
+            'og:url': f'{frontend_url}/activity/{activity.id}',
+            'og:type': 'website',
+            'og:site_name': 'Aktivar',
+            'activity:organizer': activity.organizer.full_name,
+            'activity:category': activity.category.name,
+            'activity:date': activity.start_datetime.isoformat(),
+            'activity:location': activity.location_name,
+            'activity:spots_remaining': activity.spots_remaining,
+            'activity:confirmed_count': activity.confirmed_count,
+        })
+
+
 class ImageUploadView(APIView):
     """Upload an image to Cloudinary (or local storage in dev)."""
 

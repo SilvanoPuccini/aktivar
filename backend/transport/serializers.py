@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Trip, TripPassenger, TripStop, Vehicle
+from .models import EmergencyAlert, EmergencyContact, Trip, TripPassenger, TripStop, Vehicle
 
 
 class VehicleSerializer(serializers.ModelSerializer):
@@ -175,3 +175,28 @@ class TripCreateSerializer(serializers.ModelSerializer):
             for stop_data in stops_data:
                 TripStop.objects.create(trip=instance, **stop_data)
         return instance
+
+
+class EmergencyContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmergencyContact
+        fields = [
+            'id', 'user', 'contact_name', 'contact_phone',
+            'relationship', 'created_at', 'updated_at',
+        ]
+        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
+
+
+class EmergencyAlertSerializer(serializers.ModelSerializer):
+    triggered_by_name = serializers.CharField(
+        source='triggered_by.full_name', read_only=True
+    )
+
+    class Meta:
+        model = EmergencyAlert
+        fields = [
+            'id', 'trip', 'triggered_by', 'triggered_by_name',
+            'latitude', 'longitude', 'message',
+            'resolved', 'resolved_at', 'created_at',
+        ]
+        read_only_fields = ['id', 'triggered_by', 'created_at']

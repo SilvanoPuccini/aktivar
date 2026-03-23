@@ -250,6 +250,9 @@ TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER", default="")
 ONESIGNAL_APP_ID = env("ONESIGNAL_APP_ID", default="")
 ONESIGNAL_REST_API_KEY = env("ONESIGNAL_REST_API_KEY", default="")
 
+# OpenAI (content moderation)
+OPENAI_API_KEY = env("OPENAI_API_KEY", default="")
+
 # Frontend URL (for email links)
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:5173")
 

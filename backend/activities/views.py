@@ -43,6 +43,18 @@ class ActivityViewSet(viewsets.ModelViewSet):
         return [IsAuthenticated()]
 
     def perform_create(self, serializer):
+        # Content moderation before publishing
+        from .social_views import ContentModerationMixin
+        moderator = ContentModerationMixin()
+        description = serializer.validated_data.get('description', '')
+        title = serializer.validated_data.get('title', '')
+        is_safe, categories = moderator.moderate_content(f"{title} {description}")
+        if not is_safe:
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError({
+                'detail': 'Content flagged by moderation.',
+                'categories': categories,
+            })
         serializer.save(organizer=self.request.user)
 
     @action(detail=True, methods=['post'], url_path='join', throttle_classes=[JoinRateThrottle])
@@ -117,3 +129,50 @@ class ActivityViewSet(viewsets.ModelViewSet):
         )
         serializer = ActivityParticipantSerializer(participants, many=True)
         return Response(serializer.data)
+
+    # ── FSM Transition Endpoints ──────────────────────────────────
+
+    @action(detail=True, methods=['post'], url_path='publish')
+    def publish_activity(self, request, pk=None):
+        activity = self.get_object()
+        if activity.organizer != request.user:
+            return Response(
+                {'detail': 'Only the organizer can publish this activity.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        try:
+            activity.publish()
+            activity.save()
+            return Response({'detail': 'Activity published.', 'status': activity.status})
+        except (ValueError, Exception) as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'], url_path='cancel')
+    def cancel_activity(self, request, pk=None):
+        activity = self.get_object()
+        if activity.organizer != request.user:
+            return Response(
+                {'detail': 'Only the organizer can cancel this activity.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        try:
+            activity.cancel()
+            activity.save()
+            return Response({'detail': 'Activity cancelled.', 'status': activity.status})
+        except (ValueError, Exception) as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'], url_path='complete')
+    def complete_activity(self, request, pk=None):
+        activity = self.get_object()
+        if activity.organizer != request.user:
+            return Response(
+                {'detail': 'Only the organizer can complete this activity.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        try:
+            activity.complete()
+            activity.save()
+            return Response({'detail': 'Activity completed.', 'status': activity.status})
+        except (ValueError, Exception) as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
