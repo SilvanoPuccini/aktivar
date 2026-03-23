@@ -49,8 +49,8 @@ jobs:
 
       - name: Run tests
         env:
-          # Use SQLite for CI to avoid needing a PostgreSQL service
-          DATABASE_URL: "sqlite:///db.sqlite3"
+          DB_ENGINE: "django.db.backends.sqlite3"
+          DB_NAME: "db.sqlite3"
           SECRET_KEY: "ci-test-secret-key-not-for-production"
           DJANGO_SETTINGS_MODULE: "aktivar.settings"
           DEBUG: "True"
