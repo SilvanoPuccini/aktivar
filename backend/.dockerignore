@@ -1,0 +1,53 @@
+# =============================================================================
+# Backend .dockerignore
+# Exclude files not needed in the Docker image
+# =============================================================================
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.eggs/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+
+# Testing / CI
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (secrets should come from env vars, not files in image)
+.env
+.env.*
+!.env.example
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+*.md
+docs/
+LICENSE
