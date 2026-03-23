@@ -16,7 +16,7 @@ function getWeatherIcon(description: string): LucideIcon {
   return Sun;
 }
 
-function renderWeatherIcon(description: string): JSX.Element {
+function renderWeatherIcon(description: string) {
   const IconComponent = getWeatherIcon(description);
   return <IconComponent size={14} />;
 }
