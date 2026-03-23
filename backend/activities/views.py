@@ -23,6 +23,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
+    pagination_class = None
 
     @method_decorator(cache_page(60 * 30))  # 30 min cache
     def list(self, request, *args, **kwargs):
