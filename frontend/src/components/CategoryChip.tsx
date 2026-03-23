@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   Mountain,
@@ -44,14 +43,17 @@ const sizeClasses = {
 
 const iconSizes = { sm: 14, md: 16 } as const;
 
+function renderIcon(name: string, size: number) {
+  const IconComponent = getIcon(name);
+  return <IconComponent size={size} />;
+}
+
 export default function CategoryChip({
   category,
   selected = false,
   onClick,
   size = 'md',
 }: CategoryChipProps) {
-  const Icon = useMemo(() => getIcon(category.icon), [category.icon]);
-
   return (
     <motion.button
       type="button"
@@ -64,7 +66,7 @@ export default function CategoryChip({
           : 'bg-surface-container-highest text-on-surface-variant'
       }`}
     >
-      <Icon size={iconSizes[size]} />
+      {renderIcon(category.icon, iconSizes[size])}
       <span>{category.name}</span>
     </motion.button>
   );

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Sun, Cloud, CloudRain, Snowflake, CloudSun } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -17,12 +16,15 @@ function getWeatherIcon(description: string): LucideIcon {
   return Sun;
 }
 
-export default function WeatherBadge({ temp, description }: WeatherBadgeProps) {
-  const Icon = useMemo(() => getWeatherIcon(description), [description]);
+function renderWeatherIcon(description: string) {
+  const IconComponent = getWeatherIcon(description);
+  return <IconComponent size={14} />;
+}
 
+export default function WeatherBadge({ temp, description }: WeatherBadgeProps) {
   return (
     <div className="inline-flex items-center gap-1.5 rounded-full bg-surface-container-high px-3 py-1 font-[Space_Grotesk] text-xs text-muted">
-      <Icon size={14} />
+      {renderWeatherIcon(description)}
       <span>{temp}°C</span>
       <span className="text-on-surface-variant">{description}</span>
     </div>
