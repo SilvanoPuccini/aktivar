@@ -207,6 +207,9 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "anon": "100/day",
         "user": "1000/day",
+        "auth": "5/hour",
+        "otp": "3/hour",
+        "join": "10/hour",
     },
 }
 
@@ -233,6 +236,27 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
+
+# Resend (transactional emails)
+RESEND_API_KEY = env("RESEND_API_KEY", default="")
+RESEND_FROM_EMAIL = env("RESEND_FROM_EMAIL", default="Aktivar <noreply@aktivar.app>")
+
+# Twilio (phone OTP)
+TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID", default="")
+TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN", default="")
+TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER", default="")
+
+# OneSignal (push notifications)
+ONESIGNAL_APP_ID = env("ONESIGNAL_APP_ID", default="")
+ONESIGNAL_REST_API_KEY = env("ONESIGNAL_REST_API_KEY", default="")
+
+# Frontend URL (for email links)
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:5173")
+
+# Stripe
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
+STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY", default="")
+STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
 
 # drf-spectacular
 SPECTACULAR_SETTINGS = {

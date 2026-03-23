@@ -41,6 +41,9 @@ whitenoise>=6.6,<7.0
 # Admin extras
 django-import-export>=4.0,<5.0
 
+# HTTP Requests (for Resend, OneSignal, Twilio API calls)
+requests>=2.31,<3.0
+
 # Security
 argon2-cffi>=23.1,<24.0
 

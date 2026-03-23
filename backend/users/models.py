@@ -1,3 +1,6 @@
+import secrets
+import string
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.db.models.signals import post_save
@@ -115,6 +118,77 @@ class DriverProfile(models.Model):
 
     def __str__(self):
         return f"Driver: {self.user.display_name}"
+
+
+class EmailVerificationToken(models.Model):
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='email_tokens'
+    )
+    token = models.CharField(max_length=64, unique=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    used_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    @property
+    def is_expired(self):
+        from datetime import timedelta
+        return timezone.now() > self.created_at + timedelta(hours=24)
+
+    @property
+    def is_valid(self):
+        return not self.is_expired and self.used_at is None
+
+    def mark_used(self):
+        self.used_at = timezone.now()
+        self.save(update_fields=['used_at'])
+
+    @classmethod
+    def create_for_user(cls, user):
+        token = secrets.token_urlsafe(48)
+        return cls.objects.create(user=user, token=token)
+
+    def __str__(self):
+        return f"EmailToken for {self.user.email}"
+
+
+class PhoneVerificationOTP(models.Model):
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='phone_otps'
+    )
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    used_at = models.DateTimeField(null=True, blank=True)
+    attempts = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    @property
+    def is_expired(self):
+        from datetime import timedelta
+        return timezone.now() > self.created_at + timedelta(minutes=10)
+
+    @property
+    def is_valid(self):
+        return not self.is_expired and self.used_at is None and self.attempts < 5
+
+    def mark_used(self):
+        self.used_at = timezone.now()
+        self.save(update_fields=['used_at'])
+
+    def increment_attempts(self):
+        self.attempts += 1
+        self.save(update_fields=['attempts'])
+
+    @classmethod
+    def create_for_user(cls, user):
+        otp = ''.join(secrets.choice(string.digits) for _ in range(6))
+        return cls.objects.create(user=user, otp=otp)
+
+    def __str__(self):
+        return f"OTP for {self.user.phone}"
 
 
 @receiver(post_save, sender=CustomUser)

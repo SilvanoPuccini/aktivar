@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CreditCard, Lock, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
@@ -7,22 +7,7 @@ import { mockActivities } from '@/data/activities';
 import CTAButton from '@/components/CTAButton';
 import toast from 'react-hot-toast';
 
-/**
- * NOTE: This payment page uses a simulated card form.
- * In production, replace the MockCardForm with Stripe Elements:
- *
- * import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
- * import { loadStripe } from '@stripe/stripe-js';
- *
- * const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
- *
- * Wrap the form with:
- * <Elements stripe={stripePromise} options={{ clientSecret }}>
- *   <CardElement />
- * </Elements>
- */
-
-type PaymentState = 'idle' | 'processing' | 'success' | 'error';
+type PaymentState = 'loading' | 'ready' | 'processing' | 'success' | 'error';
 
 function formatCLP(amount: number): string {
   return new Intl.NumberFormat('es-CL', {
@@ -32,68 +17,154 @@ function formatCLP(amount: number): string {
   }).format(amount);
 }
 
+// Stripe Elements styles matching our design system
+const stripeElementStyle = {
+  base: {
+    color: '#e1e3da',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontSize: '14px',
+    '::placeholder': { color: '#9f8e79' },
+  },
+  invalid: { color: '#ffb4ab' },
+};
+
 export default function PaymentPage() {
   const { activityId } = useParams<{ activityId: string }>();
   const navigate = useNavigate();
   const { data: apiActivity } = useActivity(activityId);
   const createPaymentIntent = useCreatePaymentIntent();
 
-  // Fallback to mock data
   const activity = apiActivity ?? mockActivities.find((a) => a.id === Number(activityId)) ?? mockActivities[0];
 
-  const [paymentState, setPaymentState] = useState<PaymentState>('idle');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiry, setExpiry] = useState('');
-  const [cvc, setCvc] = useState('');
-  const [cardName, setCardName] = useState('');
+  const [paymentState, setPaymentState] = useState<PaymentState>('loading');
   const [errorMessage, setErrorMessage] = useState('');
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [stripe, setStripe] = useState<any>(null);
+  const [elements, setElements] = useState<any>(null);
+  const [cardComplete, setCardComplete] = useState(false);
 
-  const formatCardNumber = (value: string) => {
-    const digits = value.replace(/\D/g, '').slice(0, 16);
-    return digits.replace(/(.{4})/g, '$1 ').trim();
-  };
-
-  const formatExpiry = (value: string) => {
-    const digits = value.replace(/\D/g, '').slice(0, 4);
-    if (digits.length >= 3) {
-      return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  // Load Stripe.js dynamically
+  useEffect(() => {
+    const stripeKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+    if (!stripeKey) {
+      setPaymentState('ready');
+      return;
     }
-    return digits;
-  };
 
-  const isFormValid = () => {
-    const digits = cardNumber.replace(/\s/g, '');
-    return digits.length === 16 && expiry.length === 5 && cvc.length >= 3 && cardName.trim().length > 0;
-  };
+    let cancelled = false;
+    import('@stripe/stripe-js').then(({ loadStripe }) => {
+      loadStripe(stripeKey).then((stripeInstance) => {
+        if (!cancelled && stripeInstance) {
+          setStripe(stripeInstance);
+        }
+      });
+    }).catch(() => {
+      // Stripe.js not available, fall back to basic mode
+      if (!cancelled) setPaymentState('ready');
+    });
+
+    return () => { cancelled = true; };
+  }, []);
+
+  // Create PaymentIntent on mount
+  useEffect(() => {
+    if (!activity?.price) {
+      setPaymentState('ready');
+      return;
+    }
+
+    createPaymentIntent.mutateAsync({
+      activityId: Number(activityId),
+      amount: activity.price,
+    }).then((data) => {
+      setClientSecret(data.client_secret);
+      setPaymentState('ready');
+    }).catch(() => {
+      setPaymentState('ready');
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activityId, activity?.price]);
+
+  // Mount Stripe Elements when both stripe and clientSecret are available
+  useEffect(() => {
+    if (!stripe || !clientSecret) return;
+
+    const elementsInstance = stripe.elements({
+      clientSecret,
+      appearance: {
+        theme: 'night',
+        variables: {
+          colorPrimary: '#ffc56c',
+          colorBackground: '#333630',
+          colorText: '#e1e3da',
+          colorDanger: '#ffb4ab',
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          borderRadius: '12px',
+        },
+      },
+    });
+
+    const cardElement = elementsInstance.create('payment', {
+      style: stripeElementStyle,
+    });
+
+    // Mount to DOM
+    const mountPoint = document.getElementById('stripe-payment-element');
+    if (mountPoint) {
+      cardElement.mount(mountPoint);
+      cardElement.on('change', (event: any) => {
+        setCardComplete(event.complete);
+        if (event.error) {
+          setErrorMessage(event.error.message);
+        } else {
+          setErrorMessage('');
+        }
+      });
+    }
+
+    setElements(elementsInstance);
+
+    return () => { cardElement.unmount(); };
+  }, [stripe, clientSecret]);
 
   const handlePayment = async () => {
-    if (!isFormValid()) return;
-
     setPaymentState('processing');
     setErrorMessage('');
 
+    // If Stripe is available, use real payment confirmation
+    if (stripe && elements && clientSecret) {
+      try {
+        const { error } = await stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: `${window.location.origin}/activity/${activityId}`,
+          },
+          redirect: 'if_required',
+        });
+
+        if (error) {
+          setPaymentState('error');
+          setErrorMessage(error.message || 'Error al procesar el pago.');
+          return;
+        }
+
+        setPaymentState('success');
+        toast.success('Pago realizado exitosamente');
+      } catch {
+        setPaymentState('error');
+        setErrorMessage('Error al procesar el pago. Intenta nuevamente.');
+      }
+      return;
+    }
+
+    // Fallback: no Stripe key configured (dev mode)
     try {
-      // Call backend to create payment intent
-      await createPaymentIntent.mutateAsync({
-        activityId: Number(activityId),
-        amount: activity.price,
-      });
-
-      /**
-       * In production with Stripe, you would:
-       * 1. Get the clientSecret from createPaymentIntent response
-       * 2. Call stripe.confirmCardPayment(clientSecret, { payment_method: { card: elements.getElement(CardElement) } })
-       * 3. Handle the result
-       */
-
-      // Simulate payment processing delay
       await new Promise((resolve) => setTimeout(resolve, 2000));
-
       setPaymentState('success');
-      toast.success('Pago realizado exitosamente');
+      toast.success('Pago simulado exitosamente (modo desarrollo)');
     } catch {
       setPaymentState('error');
-      setErrorMessage('Error al procesar el pago. Verifica los datos de tu tarjeta e intenta nuevamente.');
+      setErrorMessage('Error al procesar el pago.');
     }
   };
 
@@ -148,6 +219,10 @@ export default function PaymentPage() {
       </div>
     );
   }
+
+  const isPayButtonDisabled = stripe
+    ? !cardComplete || paymentState === 'processing'
+    : paymentState === 'processing';
 
   return (
     <div className="min-h-screen bg-surface pb-24">
@@ -212,7 +287,7 @@ export default function PaymentPage() {
           </div>
         </motion.div>
 
-        {/* Card Form (Simulated - replace with Stripe Elements in production) */}
+        {/* Stripe Payment Element */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -222,73 +297,34 @@ export default function PaymentPage() {
           <div className="flex items-center gap-2 mb-2">
             <CreditCard size={18} className="text-primary" />
             <h3 className="font-display text-sm font-bold text-on-surface">
-              Datos de la tarjeta
+              Datos de pago
             </h3>
           </div>
 
-          {/* Card Number */}
-          <div>
-            <label className="font-label text-xs text-muted block mb-1.5">
-              Numero de tarjeta
-            </label>
-            <input
-              type="text"
-              value={cardNumber}
-              onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
-              placeholder="1234 5678 9012 3456"
-              maxLength={19}
-              className="w-full rounded-xl bg-surface-container-high border border-outline-variant px-4 py-3 text-sm text-on-surface placeholder:text-muted font-body outline-none focus:border-primary transition-colors"
-            />
-          </div>
-
-          {/* Name on Card */}
-          <div>
-            <label className="font-label text-xs text-muted block mb-1.5">
-              Nombre en la tarjeta
-            </label>
-            <input
-              type="text"
-              value={cardName}
-              onChange={(e) => setCardName(e.target.value)}
-              placeholder="CATALINA REYES"
-              className="w-full rounded-xl bg-surface-container-high border border-outline-variant px-4 py-3 text-sm text-on-surface placeholder:text-muted font-body outline-none focus:border-primary transition-colors uppercase"
-            />
-          </div>
-
-          {/* Expiry & CVC */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="font-label text-xs text-muted block mb-1.5">
-                Vencimiento
-              </label>
-              <input
-                type="text"
-                value={expiry}
-                onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-                placeholder="MM/YY"
-                maxLength={5}
-                className="w-full rounded-xl bg-surface-container-high border border-outline-variant px-4 py-3 text-sm text-on-surface placeholder:text-muted font-body outline-none focus:border-primary transition-colors"
-              />
-            </div>
-            <div>
-              <label className="font-label text-xs text-muted block mb-1.5">
-                CVC
-              </label>
-              <input
-                type="text"
-                value={cvc}
-                onChange={(e) => setCvc(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                placeholder="123"
-                maxLength={4}
-                className="w-full rounded-xl bg-surface-container-high border border-outline-variant px-4 py-3 text-sm text-on-surface placeholder:text-muted font-body outline-none focus:border-primary transition-colors"
-              />
-            </div>
+          {/* Stripe mounts here when available */}
+          <div id="stripe-payment-element" className="min-h-[120px]">
+            {paymentState === 'loading' && (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="animate-spin text-primary" size={24} />
+                <span className="ml-2 text-sm text-muted">Cargando...</span>
+              </div>
+            )}
+            {!stripe && paymentState === 'ready' && (
+              <div className="rounded-xl bg-surface-container-high/50 px-4 py-6 text-center">
+                <p className="text-xs text-muted font-label">
+                  Modo desarrollo — Stripe no configurado
+                </p>
+                <p className="text-xs text-on-surface-variant mt-1">
+                  Configura VITE_STRIPE_PUBLIC_KEY para activar pagos reales
+                </p>
+              </div>
+            )}
           </div>
         </motion.div>
 
         {/* Error message */}
         <AnimatePresence>
-          {paymentState === 'error' && errorMessage && (
+          {(paymentState === 'error' || errorMessage) && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -305,7 +341,7 @@ export default function PaymentPage() {
         <div className="flex items-center justify-center gap-2 py-2">
           <Lock size={12} className="text-muted" />
           <p className="font-label text-[10px] text-muted uppercase tracking-wider">
-            Pago seguro con cifrado SSL
+            {stripe ? 'Pago seguro con Stripe' : 'Pago seguro con cifrado SSL'}
           </p>
         </div>
 
@@ -320,7 +356,7 @@ export default function PaymentPage() {
           fullWidth
           size="lg"
           loading={paymentState === 'processing'}
-          disabled={!isFormValid() || paymentState === 'processing'}
+          disabled={isPayButtonDisabled}
           onClick={handlePayment}
           icon={paymentState === 'processing' ? <Loader2 className="animate-spin" size={18} /> : <CreditCard size={18} />}
         />
