@@ -106,7 +106,7 @@ export default function ActivityCard({
   return (
     <article
       onClick={onClick}
-      className="group relative bg-surface-container rounded-[12px] overflow-hidden border border-[#2A3826] transition-all duration-300 hover:shadow-2xl cursor-pointer"
+      className="group relative bg-surface-container rounded-2xl overflow-hidden border border-outline-variant/10 transition-all duration-300 hover:shadow-2xl hover:border-outline-variant/20 cursor-pointer"
     >
       {/* cover image */}
       <div className="relative h-64 w-full">
@@ -142,7 +142,7 @@ export default function ActivityCard({
       </div>
 
       {/* body */}
-      <div className="p-5 space-y-4">
+      <div className="p-5 space-y-4 pt-5">
         <h2 className="text-xl font-headline font-bold text-[#EDE9DF] leading-tight group-hover:text-primary transition-colors">
           {activity.title}
         </h2>
