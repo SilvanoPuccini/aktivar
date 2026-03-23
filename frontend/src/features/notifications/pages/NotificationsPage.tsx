@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Bell, MessageCircle, UserPlus, Clock, ArrowLeft, CheckCheck } from 'lucide-react';
@@ -181,42 +181,40 @@ const itemVariants = {
 
 export default function NotificationsPage() {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState<LocalNotification[]>([]);
-  const [initialized, setInitialized] = useState(false);
+  const [readIds, setReadIds] = useState<Set<number>>(new Set());
+  const [allMarkedRead, setAllMarkedRead] = useState(false);
+  const [timedOut, setTimedOut] = useState(false);
 
   // API hooks
   const { data: apiNotifications, isError } = useNotifications();
   const markRead = useMarkNotificationRead();
   const markAllRead = useMarkAllNotificationsRead();
 
-  // Populate notifications from API or fallback to mock (sync during render to avoid cascading effects)
-  const prevApiRef = useRef<AppNotification[] | undefined>();
-  if (!initialized && apiNotifications && apiNotifications.length > 0 && prevApiRef.current !== apiNotifications) {
-    prevApiRef.current = apiNotifications;
-    setNotifications(apiNotifications.map(mapApiToLocal));
-    setInitialized(true);
-  }
-  if (!initialized && isError) {
-    setNotifications(mockNotifications);
-    setInitialized(true);
-  }
-
-  // Fallback after a timeout
+  // Fallback timeout — if API hasn't responded in 2s, use mock data
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!initialized) {
-        setNotifications(mockNotifications);
-        setInitialized(true);
-      }
-    }, 2000);
+    const timeout = setTimeout(() => setTimedOut(true), 2000);
     return () => clearTimeout(timeout);
-  }, [initialized]);
+  }, []);
+
+  // Derive notifications from API data or mock fallback
+  const notifications = useMemo(() => {
+    let base: LocalNotification[];
+    if (apiNotifications && apiNotifications.length > 0) {
+      base = apiNotifications.map(mapApiToLocal);
+    } else if (isError || timedOut) {
+      base = mockNotifications;
+    } else {
+      return []; // Still loading
+    }
+    return base.map((n) => ({
+      ...n,
+      isRead: allMarkedRead || readIds.has(n.id) || n.isRead,
+    }));
+  }, [apiNotifications, isError, timedOut, readIds, allMarkedRead]);
 
   const handleNotificationClick = (notification: LocalNotification) => {
     // Mark as read locally
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === notification.id ? { ...n, isRead: true } : n)),
-    );
+    setReadIds((prev) => new Set(prev).add(notification.id));
 
     // Mark as read on the API
     markRead.mutate(notification.id);
@@ -230,7 +228,7 @@ export default function NotificationsPage() {
   };
 
   const handleMarkAllRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    setAllMarkedRead(true);
     markAllRead.mutate();
   };
 

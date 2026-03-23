@@ -40,68 +40,71 @@ export function useWebSocket({
   const onOpenRef = useRef(onOpen);
   const onCloseRef = useRef(onClose);
   const onErrorRef = useRef(onError);
-  const connectRef = useRef<() => void>(() => {});
 
   useEffect(() => { onMessageRef.current = onMessage; }, [onMessage]);
   useEffect(() => { onOpenRef.current = onOpen; }, [onOpen]);
   useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
   useEffect(() => { onErrorRef.current = onError; }, [onError]);
 
-  const connect = useCallback(() => {
+  useEffect(() => {
     if (!enabled) return;
 
-    try {
-      setStatus('connecting');
-      const ws = new WebSocket(url);
+    let cancelled = false;
+    reconnectCountRef.current = 0;
 
-      ws.onopen = () => {
-        setStatus('connected');
-        reconnectCountRef.current = 0;
-        onOpenRef.current?.();
-      };
+    function doConnect() {
+      if (cancelled) return;
 
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          setLastMessage(data);
-          onMessageRef.current?.(data);
-        } catch {
-          // Non-JSON message
-          setLastMessage(event.data);
-          onMessageRef.current?.(event.data);
-        }
-      };
+      try {
+        if (!cancelled) setStatus('connecting');
+        const ws = new WebSocket(url);
 
-      ws.onclose = () => {
-        setStatus('disconnected');
-        onCloseRef.current?.();
+        ws.onopen = () => {
+          if (cancelled) { ws.close(); return; }
+          setStatus('connected');
+          reconnectCountRef.current = 0;
+          onOpenRef.current?.();
+        };
 
-        // Attempt reconnection
-        if (reconnectCountRef.current < reconnectAttempts) {
-          reconnectCountRef.current += 1;
-          reconnectTimerRef.current = setTimeout(() => {
-            connectRef.current();
-          }, reconnectInterval);
-        }
-      };
+        ws.onmessage = (event) => {
+          if (cancelled) return;
+          try {
+            const data = JSON.parse(event.data);
+            setLastMessage(data);
+            onMessageRef.current?.(data);
+          } catch {
+            setLastMessage(event.data);
+            onMessageRef.current?.(event.data);
+          }
+        };
 
-      ws.onerror = (event) => {
-        setStatus('error');
-        onErrorRef.current?.(event);
-      };
+        ws.onclose = () => {
+          if (cancelled) return;
+          setStatus('disconnected');
+          onCloseRef.current?.();
 
-      wsRef.current = ws;
-    } catch {
-      setStatus('error');
+          if (reconnectCountRef.current < reconnectAttempts) {
+            reconnectCountRef.current += 1;
+            reconnectTimerRef.current = setTimeout(doConnect, reconnectInterval);
+          }
+        };
+
+        ws.onerror = (event) => {
+          if (cancelled) return;
+          setStatus('error');
+          onErrorRef.current?.(event);
+        };
+
+        wsRef.current = ws;
+      } catch {
+        if (!cancelled) setStatus('error');
+      }
     }
-  }, [url, enabled, reconnectAttempts, reconnectInterval]);
 
-  connectRef.current = connect;
-
-  useEffect(() => {
-    connect();
+    doConnect();
 
     return () => {
+      cancelled = true;
       if (reconnectTimerRef.current) {
         clearTimeout(reconnectTimerRef.current);
       }
@@ -110,7 +113,7 @@ export function useWebSocket({
         wsRef.current = null;
       }
     };
-  }, [connect]);
+  }, [url, enabled, reconnectAttempts, reconnectInterval]);
 
   const sendMessage = useCallback((data: unknown) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
