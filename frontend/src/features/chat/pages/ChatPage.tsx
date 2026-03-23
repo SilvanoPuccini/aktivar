@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Send, Image, MapPin, Smile, Wifi, WifiOff } from 'lucide-react';
 import { useWebSocket, type ConnectionStatus } from '@/services/useWebSocket';
 import { useMessages, useActivity } from '@/services/hooks';
+import api from '@/services/api';
 import { mockUsers } from '@/data/users';
 import type { ChatMessage } from '@/types/chat';
 
@@ -157,6 +158,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [typingUsers, setTypingUsers] = useState<TypingUser[]>([]);
+  const [reactionPickerMsgId, setReactionPickerMsgId] = useState<number | null>(null);
   const [usedFallback, setUsedFallback] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -250,6 +252,35 @@ export default function ChatPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, typingUsers]);
+
+  const handleReaction = (messageId: number, emoji: string) => {
+    // Optimistic update: toggle reaction locally
+    setMessages((prev) =>
+      prev.map((msg) => {
+        if (msg.id !== messageId) return msg;
+        const existing = msg.reactions?.find(
+          (r) => r.emoji === emoji && r.user_id === currentUserId
+        );
+        if (existing) {
+          return {
+            ...msg,
+            reactions: (msg.reactions || []).filter(
+              (r) => !(r.emoji === emoji && r.user_id === currentUserId)
+            ),
+          };
+        }
+        return {
+          ...msg,
+          reactions: [
+            ...(msg.reactions || []),
+            { id: Date.now(), emoji, user_id: currentUserId },
+          ],
+        };
+      })
+    );
+    // Send reaction via API
+    api.post(`/chat/messages/${messageId}/reactions/`, { emoji }).catch(() => {});
+  };
 
   const handleSend = () => {
     if (!inputValue.trim()) return;
@@ -350,7 +381,7 @@ export default function ChatPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, ease: 'easeOut' }}
-                className={`flex gap-2 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}
+                className={`group relative flex gap-2 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 {/* Avatar */}
                 {!isOwn && (
@@ -388,7 +419,59 @@ export default function ChatPage() {
                   >
                     {formatTime(msg.created_at)}
                   </p>
+
+                  {/* Reaction badges */}
+                  {msg.reactions && msg.reactions.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {Object.entries(
+                        msg.reactions.reduce((acc: Record<string, number>, r: { emoji: string }) => {
+                          acc[r.emoji] = (acc[r.emoji] || 0) + 1;
+                          return acc;
+                        }, {})
+                      ).map(([emoji, count]) => (
+                        <span
+                          key={emoji}
+                          className="inline-flex items-center gap-0.5 rounded-full bg-surface-container-highest/60 px-1.5 py-0.5 text-[10px] cursor-pointer hover:bg-surface-container-highest transition-colors"
+                          onClick={() => handleReaction(msg.id, emoji)}
+                        >
+                          {emoji} {count as number > 1 && <span className="font-label text-muted">{count as number}</span>}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
+                {/* Quick reaction button */}
+                <button
+                  type="button"
+                  onClick={() => setReactionPickerMsgId(reactionPickerMsgId === msg.id ? null : msg.id)}
+                  className="self-end opacity-0 group-hover:opacity-100 transition-opacity mb-1 cursor-pointer"
+                >
+                  <Smile size={14} className="text-muted hover:text-primary" />
+                </button>
+
+                {/* Emoji picker */}
+                {reactionPickerMsgId === msg.id && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className={`absolute ${isOwn ? 'right-12' : 'left-12'} bottom-0 z-20 flex gap-1 rounded-full bg-surface-container-high px-2 py-1 shadow-lg border border-outline-variant`}
+                  >
+                    {['👍', '❤️', '😂', '🔥', '🎉', '👏'].map((emoji) => (
+                      <button
+                        key={emoji}
+                        type="button"
+                        onClick={() => {
+                          handleReaction(msg.id, emoji);
+                          setReactionPickerMsgId(null);
+                        }}
+                        className="text-lg hover:scale-125 transition-transform cursor-pointer"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
               </motion.div>
             );
           })}

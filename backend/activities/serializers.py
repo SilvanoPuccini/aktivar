@@ -1,6 +1,8 @@
 from django.utils import timezone
 from rest_framework import serializers
 
+from core.sanitization import SanitizeMixin
+
 from .models import Activity, ActivityParticipant, Category
 
 
@@ -31,6 +33,7 @@ class ActivityListSerializer(serializers.ModelSerializer):
     organizer = OrganizerSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
     participants_preview = serializers.SerializerMethodField()
+    weather = serializers.SerializerMethodField()
 
     class Meta:
         model = Activity
@@ -59,6 +62,7 @@ class ActivityListSerializer(serializers.ModelSerializer):
             'spots_remaining',
             'confirmed_count',
             'participants_preview',
+            'weather',
         ]
 
     def get_participants_preview(self, obj):
@@ -72,6 +76,18 @@ class ActivityListSerializer(serializers.ModelSerializer):
             for p in confirmed
         ]
 
+    def get_weather(self, obj):
+        """Fetch weather for outdoor categories only."""
+        if not hasattr(obj, 'category') or not obj.category.is_outdoor:
+            return None
+        try:
+            from .weather import get_weather_for_activity
+            return get_weather_for_activity(
+                obj.latitude, obj.longitude, obj.start_datetime
+            )
+        except Exception:
+            return None
+
 
 class ActivityDetailSerializer(ActivityListSerializer):
     participants = ActivityParticipantSerializer(many=True, read_only=True)
@@ -80,7 +96,10 @@ class ActivityDetailSerializer(ActivityListSerializer):
         fields = ActivityListSerializer.Meta.fields + ['participants']
 
 
-class ActivityCreateSerializer(serializers.ModelSerializer):
+class ActivityCreateSerializer(SanitizeMixin, serializers.ModelSerializer):
+    sanitize_fields = ['title', 'location_name', 'meeting_point', 'what_to_bring']
+    rich_text_fields = ['description']
+
     class Meta:
         model = Activity
         fields = [

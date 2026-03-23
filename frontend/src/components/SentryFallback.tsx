@@ -1,0 +1,16 @@
+export default function SentryFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-surface text-on-surface">
+      <div className="text-center space-y-4 px-6">
+        <h1 className="text-2xl font-bold">Algo salió mal</h1>
+        <p className="text-gray-400">Estamos trabajando para solucionarlo.</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-6 py-2 rounded-full bg-primary text-on-primary font-semibold"
+        >
+          Reintentar
+        </button>
+      </div>
+    </div>
+  )
+}

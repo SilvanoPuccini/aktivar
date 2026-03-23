@@ -1,8 +1,135 @@
-// Aktivar Push Notifications Service Worker
+// Aktivar Service Worker — PWA + Push Notifications + Offline Support
 
-const CACHE_NAME = 'aktivar-notifications-v1';
+const CACHE_VERSION = 'v2';
+const STATIC_CACHE = `aktivar-static-${CACHE_VERSION}`;
+const API_CACHE = `aktivar-api-${CACHE_VERSION}`;
+const IMAGE_CACHE = `aktivar-images-${CACHE_VERSION}`;
 
-// Handle push events from the server
+// Static assets to pre-cache on install
+const PRECACHE_URLS = [
+  '/',
+  '/favicon.svg',
+  '/manifest.json',
+];
+
+// ── Install: pre-cache shell ──────────────────────────────────────
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(STATIC_CACHE).then((cache) => {
+      return cache.addAll(PRECACHE_URLS).catch(() => {
+        // Graceful: don't block install if some assets fail
+        console.log('[SW] Some precache assets failed, continuing...');
+      });
+    })
+  );
+  self.skipWaiting();
+});
+
+// ── Activate: clean old caches ────────────────────────────────────
+
+self.addEventListener('activate', (event) => {
+  const currentCaches = [STATIC_CACHE, API_CACHE, IMAGE_CACHE];
+  event.waitUntil(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
+        cacheNames
+          .filter((name) => !currentCaches.includes(name))
+          .map((name) => caches.delete(name))
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+// ── Fetch: network-first for API, cache-first for assets ──────────
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Skip non-GET requests
+  if (request.method !== 'GET') return;
+
+  // API requests: network-first with stale cache fallback
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(networkFirstWithCache(request, API_CACHE, 60 * 5));
+    return;
+  }
+
+  // Image requests: cache-first
+  if (
+    request.destination === 'image' ||
+    url.pathname.match(/\.(png|jpg|jpeg|webp|svg|gif|ico)$/)
+  ) {
+    event.respondWith(cacheFirstWithNetwork(request, IMAGE_CACHE));
+    return;
+  }
+
+  // Navigation requests: network-first, fallback to cached shell
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).catch(() => caches.match('/'))
+    );
+    return;
+  }
+
+  // Static assets (JS, CSS): stale-while-revalidate
+  event.respondWith(staleWhileRevalidate(request, STATIC_CACHE));
+});
+
+// ── Caching strategies ────────────────────────────────────────────
+
+async function networkFirstWithCache(request, cacheName, maxAgeSec) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(cacheName);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    return new Response(JSON.stringify({ detail: 'Sin conexión' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
+
+async function cacheFirstWithNetwork(request, cacheName) {
+  const cached = await caches.match(request);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(cacheName);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    return new Response('', { status: 408 });
+  }
+}
+
+async function staleWhileRevalidate(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(request);
+
+  const networkPromise = fetch(request).then((response) => {
+    if (response.ok) {
+      cache.put(request, response.clone());
+    }
+    return response;
+  }).catch(() => cached);
+
+  return cached || networkPromise;
+}
+
+// ── Push Notifications ────────────────────────────────────────────
+
 self.addEventListener('push', (event) => {
   let data = {
     title: 'Aktivar',
@@ -23,7 +150,6 @@ self.addEventListener('push', (event) => {
         url: payload.url || data.url,
       };
     } catch {
-      // If JSON parsing fails, use the text
       data.body = event.data.text() || data.body;
     }
   }
@@ -33,19 +159,10 @@ self.addEventListener('push', (event) => {
     icon: data.icon,
     badge: data.badge,
     vibrate: [100, 50, 100],
-    data: {
-      url: data.url,
-      dateOfArrival: Date.now(),
-    },
+    data: { url: data.url, dateOfArrival: Date.now() },
     actions: [
-      {
-        action: 'open',
-        title: 'Ver',
-      },
-      {
-        action: 'dismiss',
-        title: 'Cerrar',
-      },
+      { action: 'open', title: 'Ver' },
+      { action: 'dismiss', title: 'Cerrar' },
     ],
     tag: 'aktivar-notification',
     renotify: true,
@@ -54,25 +171,19 @@ self.addEventListener('push', (event) => {
   event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
-// Handle notification click events
+// ── Notification Click ────────────────────────────────────────────
+
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const action = event.action;
-  const notificationData = event.notification.data;
+  if (event.action === 'dismiss') return;
 
-  if (action === 'dismiss') {
-    return;
-  }
-
-  // Open the relevant page when the notification is clicked
-  const targetUrl = notificationData?.url || '/';
+  const targetUrl = event.notification.data?.url || '/';
 
   event.waitUntil(
     self.clients
       .matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
-        // If there's already a window open, navigate it
         for (const client of clientList) {
           if ('focus' in client) {
             client.focus();
@@ -80,7 +191,6 @@ self.addEventListener('notificationclick', (event) => {
             return;
           }
         }
-        // Otherwise open a new window
         if (self.clients.openWindow) {
           return self.clients.openWindow(targetUrl);
         }
@@ -88,27 +198,6 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Handle notification close events (for analytics)
-self.addEventListener('notificationclose', (event) => {
-  // Could send analytics data here
-  console.log('[SW] Notification closed:', event.notification.tag);
-});
-
-// Service worker install
-self.addEventListener('install', () => {
-  self.skipWaiting();
-});
-
-// Service worker activate
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) =>
-      Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      )
-    )
-  );
-  self.clients.claim();
+self.addEventListener('notificationclose', () => {
+  // Analytics hook point
 });
