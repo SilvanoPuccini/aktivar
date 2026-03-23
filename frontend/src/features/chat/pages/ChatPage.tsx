@@ -232,14 +232,6 @@ export default function ChatPage() {
     reconnectInterval: 2000,
   });
 
-  // If WebSocket fails and HTTP data arrives, use it
-  useEffect(() => {
-    if (messages.length === 0 && httpMessages && httpMessages.length > 0 && (status === 'error' || status === 'disconnected')) {
-      setMessages(httpMessages);
-      setUsedFallback(true);
-    }
-  }, [httpMessages, status, messages.length]);
-
   // Last resort: if after 3s no messages, load mock data
   useEffect(() => {
     const timeout = setTimeout(() => {
