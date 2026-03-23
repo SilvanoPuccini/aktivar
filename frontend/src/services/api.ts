@@ -92,6 +92,10 @@ export const endpoints = {
   // Notifications
   notifications: '/notifications/',
 
+  // Connect
+  connectOnboarding: '/payments/connect/onboarding/',
+  connectDashboard: '/payments/connect/dashboard/',
+
   // Health
   health: '/health/',
 } as const;

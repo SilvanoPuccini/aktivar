@@ -5,6 +5,16 @@ from django.db.models import Count, F, Q
 
 from .models import Activity
 
+# Check if PostGIS/GIS is available
+try:
+    from django.contrib.gis.db.models.functions import Distance
+    from django.contrib.gis.geos import Point
+    from django.contrib.gis.measure import D
+
+    HAS_GIS = True
+except ImportError:
+    HAS_GIS = False
+
 
 class ActivityFilter(django_filters.FilterSet):
     category = django_filters.CharFilter(field_name='category__slug')
@@ -59,9 +69,11 @@ class ActivityFilter(django_filters.FilterSet):
 
     def filter_by_distance(self, queryset, name, value):
         """
-        Simple Haversine-like distance filter.
+        Geospatial distance filter.
+
+        When PostGIS is available, uses dwithin() with Distance objects for
+        precise geodetic calculations. Falls back to Haversine bounding box.
         Only applies when all three params (lat, lng, radius_km) are present.
-        We process once on the first param encountered and skip on the rest.
         """
         params = self.data
         lat = params.get('lat')
@@ -79,17 +91,55 @@ class ActivityFilter(django_filters.FilterSet):
         lng = float(lng)
         radius_km = float(radius_km)
 
-        # Approximate degree offsets for bounding box
+        if HAS_GIS:
+            return self._filter_postgis(queryset, lat, lng, radius_km)
+        return self._filter_bounding_box(queryset, lat, lng, radius_km)
+
+    @staticmethod
+    def _filter_postgis(queryset, lat, lng, radius_km):
+        """PostGIS dwithin() with Distance objects — precise geodetic filter."""
+        user_point = Point(lng, lat, srid=4326)
+
+        # Build a Point expression from lat/lng DecimalFields
+        from django.contrib.gis.db.models.functions import Distance
+        from django.db.models import Value
+        from django.contrib.gis.geos import Point as GEOSPoint
+
+        # Annotate each activity with computed distance
+        queryset = queryset.extra(
+            select={
+                'distance_m': (
+                    "ST_Distance("
+                    "ST_SetSRID(ST_MakePoint(longitude::float, latitude::float), 4326)::geography,"
+                    "ST_SetSRID(ST_MakePoint(%s, %s), 4326)::geography"
+                    ")"
+                ),
+            },
+            select_params=[lng, lat],
+        ).extra(
+            where=[
+                "ST_DWithin("
+                "ST_SetSRID(ST_MakePoint(longitude::float, latitude::float), 4326)::geography,"
+                "ST_SetSRID(ST_MakePoint(%s, %s), 4326)::geography,"
+                "%s"
+                ")"
+            ],
+            params=[lng, lat, radius_km * 1000],  # meters
+        )
+
+        return queryset
+
+    @staticmethod
+    def _filter_bounding_box(queryset, lat, lng, radius_km):
+        """Haversine bounding box fallback for non-PostGIS databases."""
         lat_offset = radius_km / 111.0
         lng_offset = radius_km / (
             111.0 * max(math.cos(math.radians(lat)), 0.001)
         )
 
-        queryset = queryset.filter(
+        return queryset.filter(
             latitude__gte=lat - lat_offset,
             latitude__lte=lat + lat_offset,
             longitude__gte=lng - lng_offset,
             longitude__lte=lng + lng_offset,
         )
-
-        return queryset

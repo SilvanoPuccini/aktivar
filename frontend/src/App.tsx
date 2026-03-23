@@ -17,6 +17,7 @@ const NotificationsPage = lazy(() => import('@/features/notifications/pages/Noti
 const PaymentPage = lazy(() => import('@/features/payments/pages/PaymentPage'));
 const OnboardingPage = lazy(() => import('@/features/auth/pages/OnboardingPage'));
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
+const OrganizerDashboardPage = lazy(() => import('@/features/dashboard/pages/OrganizerDashboardPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -77,6 +78,7 @@ export default function App() {
             <Route path="/chat/:activityId" element={<ChatPage />} />
             <Route path="/payment/:activityId" element={<PaymentPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/dashboard" element={<OrganizerDashboardPage />} />
           </Route>
         </Routes>
       </Suspense>

@@ -97,6 +97,8 @@ class UserProfile(models.Model):
     total_activities = models.PositiveIntegerField(default=0)
     total_km = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total_people_met = models.PositiveIntegerField(default=0)
+    avg_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    total_reviews = models.PositiveIntegerField(default=0)
     badges = models.JSONField(default=list, blank=True)
 
     def __str__(self):

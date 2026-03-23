@@ -1,6 +1,13 @@
+import logging
+
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Avg
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+
+logger = logging.getLogger(__name__)
 
 
 class Review(models.Model):
@@ -75,3 +82,32 @@ class Report(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+
+# ── Signal: Update avg_rating on UserProfile after review save/delete ──
+
+def _update_reviewee_rating(reviewee_id):
+    """Recalculate avg_rating and total_reviews for a user."""
+    from users.models import UserProfile
+
+    agg = Review.objects.filter(reviewee_id=reviewee_id).aggregate(
+        avg=Avg('rating'),
+        count=models.Count('id'),
+    )
+    try:
+        profile = UserProfile.objects.get(user_id=reviewee_id)
+        profile.avg_rating = round(agg['avg'] or 0, 2)
+        profile.total_reviews = agg['count'] or 0
+        profile.save(update_fields=['avg_rating', 'total_reviews'])
+    except UserProfile.DoesNotExist:
+        logger.warning('UserProfile not found for user %d', reviewee_id)
+
+
+@receiver(post_save, sender=Review)
+def update_rating_on_review_save(sender, instance, **kwargs):
+    _update_reviewee_rating(instance.reviewee_id)
+
+
+@receiver(post_delete, sender=Review)
+def update_rating_on_review_delete(sender, instance, **kwargs):
+    _update_reviewee_rating(instance.reviewee_id)
