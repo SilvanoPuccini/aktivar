@@ -43,7 +43,7 @@ const sizeClasses = {
 
 const iconSizes = { sm: 14, md: 16 } as const;
 
-function renderIcon(name: string, size: number): JSX.Element {
+function renderIcon(name: string, size: number) {
   const IconComponent = getIcon(name);
   return <IconComponent size={size} />;
 }
