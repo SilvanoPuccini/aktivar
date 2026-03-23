@@ -18,9 +18,12 @@ env = environ.Env(
     CORS_ALLOWED_ORIGINS=(list, ["http://localhost:5173"]),
     SECRET_KEY=(str, "django-insecure-change-me-in-production"),
     CLOUDINARY_URL=(str, ""),
+    DB_ENGINE=(str, "django.contrib.gis.db.backends.postgis"),
 )
 
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+_env_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(_env_file):
+    environ.Env.read_env(_env_file)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
@@ -100,9 +103,10 @@ WSGI_APPLICATION = "aktivar.wsgi.application"
 ASGI_APPLICATION = "aktivar.asgi.application"
 
 # Database
+_db_engine = env("DB_ENGINE", default="django.contrib.gis.db.backends.postgis")
 DATABASES = {
     "default": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "ENGINE": _db_engine,
         "NAME": env("DB_NAME", default="aktivar_db"),
         "USER": env("DB_USER", default="aktivar"),
         "PASSWORD": env("DB_PASSWORD", default="aktivar_dev_2025"),
@@ -110,6 +114,14 @@ DATABASES = {
         "PORT": env("DB_PORT", default="5432"),
     }
 }
+
+# When using SQLite (CI), remove GIS from INSTALLED_APPS since GDAL is not available
+if "sqlite" in _db_engine:
+    DATABASES["default"] = {
+        "ENGINE": _db_engine,
+        "NAME": BASE_DIR / env("DB_NAME", default="db.sqlite3"),
+    }
+    INSTALLED_APPS = [app for app in INSTALLED_APPS if app != "django.contrib.gis"]
 
 # Caches
 CACHES = {
