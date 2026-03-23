@@ -1,0 +1,112 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "retry": "Reintentar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "search": "Buscar",
+    "noResults": "Sin resultados",
+    "seeAll": "Ver todo",
+    "close": "Cerrar"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "register": "Crear cuenta",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "welcomeBack": "¡Hola de nuevo!",
+    "createAccount": "Únete a la comunidad outdoor"
+  },
+  "nav": {
+    "feed": "Inicio",
+    "explore": "Explorar",
+    "create": "Crear",
+    "chat": "Chat",
+    "profile": "Perfil",
+    "notifications": "Notificaciones"
+  },
+  "activity": {
+    "joinActivity": "Unirme",
+    "leaveActivity": "Salir",
+    "createActivity": "Crear actividad",
+    "published": "Publicada",
+    "draft": "Borrador",
+    "completed": "Completada",
+    "cancelled": "Cancelada",
+    "spotsRemaining": "{{count}} cupo(s) disponible(s)",
+    "full": "Cupos llenos",
+    "free": "Gratis",
+    "difficulty": {
+      "easy": "Fácil",
+      "moderate": "Moderado",
+      "hard": "Difícil",
+      "expert": "Experto"
+    },
+    "participants": "Participantes",
+    "organizer": "Organizador",
+    "meetingPoint": "Punto de encuentro",
+    "whatToBring": "Qué llevar",
+    "weather": "Clima"
+  },
+  "transport": {
+    "trips": "Viajes",
+    "bookSeat": "Reservar asiento",
+    "cancelBooking": "Cancelar reserva",
+    "seatsRemaining": "{{count}} asiento(s)",
+    "driver": "Conductor",
+    "vehicle": "Vehículo",
+    "emergencyAlert": "Alerta de emergencia",
+    "splitCost": "Dividir costo"
+  },
+  "profile": {
+    "editProfile": "Editar perfil",
+    "activities": "Actividades",
+    "reviews": "Reseñas",
+    "badges": "Insignias",
+    "rating": "Calificación",
+    "km": "km recorridos",
+    "peopleMet": "Personas conocidas",
+    "verifyEmail": "Verificar email",
+    "verifyPhone": "Verificar teléfono"
+  },
+  "dashboard": {
+    "title": "Dashboard Organizador",
+    "subtitle": "Resumen de tus actividades y métricas",
+    "exportCSV": "Exportar CSV",
+    "totalActivities": "Actividades",
+    "participants": "Participantes",
+    "revenue": "Ingresos",
+    "rating": "Rating",
+    "revenueBreakdown": "Desglose de ingresos",
+    "grossTotal": "Total bruto",
+    "platformFee": "Comisión plataforma",
+    "netPayout": "Tu pago neto",
+    "byStatus": "Por estado",
+    "recentActivities": "Actividades recientes"
+  },
+  "chat": {
+    "typeMessage": "Escribe un mensaje...",
+    "send": "Enviar",
+    "reactions": "Reacciones",
+    "typing": "{{name}} está escribiendo..."
+  },
+  "payment": {
+    "pay": "Pagar",
+    "processing": "Procesando...",
+    "success": "Pago exitoso",
+    "error": "Error en el pago",
+    "total": "Total"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "No tienes notificaciones",
+    "markAllRead": "Marcar todo como leído"
+  }
+}
