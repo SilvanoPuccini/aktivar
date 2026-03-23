@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import * as Sentry from '@sentry/react'
+import './i18n'
 import './styles/globals.css'
 import App from './App.tsx'
 import SentryFallback from './components/SentryFallback.tsx'
