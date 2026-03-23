@@ -1,12 +1,14 @@
 from django.db.models import Q
-from rest_framework import status, viewsets
+from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
-from .models import Trip, TripPassenger, Vehicle
+from .models import EmergencyAlert, EmergencyContact, Trip, TripPassenger, Vehicle
 from .permissions import IsDriverVerified, IsTripDriver
 from .serializers import (
+    EmergencyAlertSerializer,
+    EmergencyContactSerializer,
     TripCreateSerializer,
     TripDetailSerializer,
     TripListSerializer,
@@ -132,3 +134,91 @@ class TripViewSet(viewsets.ModelViewSet):
         trips = (driven | booked).distinct().order_by('-departure_time')
         serializer = TripListSerializer(trips, many=True, context={'request': request})
         return Response(serializer.data)
+
+    @action(detail=True, methods=['get'], url_path='split')
+    def split_calculator(self, request, pk=None):
+        """Real-time split calculation based on confirmed passengers."""
+        trip = self.get_object()
+        confirmed = trip.passengers.filter(status='confirmed').count()
+        total_people = confirmed + 1  # +1 for driver if splitting equally
+        total_cost = float(trip.price_per_passenger) * float(trip.available_seats)
+        per_person = round(total_cost / total_people, 0) if total_people > 0 else 0
+        return Response({
+            'total_cost': total_cost,
+            'confirmed_passengers': confirmed,
+            'total_people': total_people,
+            'cost_per_person': per_person,
+            'price_per_passenger': float(trip.price_per_passenger),
+        })
+
+    @action(detail=True, methods=['post'], url_path='emergency', permission_classes=[IsAuthenticated])
+    def trigger_emergency(self, request, pk=None):
+        """Trigger an emergency alert during an active trip."""
+        trip = self.get_object()
+
+        # Verify user is driver or confirmed passenger
+        is_driver = trip.driver == request.user
+        is_passenger = trip.passengers.filter(
+            user=request.user, status='confirmed'
+        ).exists()
+        if not is_driver and not is_passenger:
+            return Response(
+                {'detail': 'Only trip participants can trigger emergency.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        lat = request.data.get('latitude', 0)
+        lng = request.data.get('longitude', 0)
+        message = request.data.get('message', 'Emergency alert triggered')
+
+        alert = EmergencyAlert.objects.create(
+            trip=trip,
+            triggered_by=request.user,
+            latitude=lat,
+            longitude=lng,
+            message=message,
+        )
+
+        # Notify all trip participants + emergency contacts
+        from notifications.tasks import send_notification
+        participants = [trip.driver_id]
+        participants.extend(
+            trip.passengers.filter(status='confirmed').values_list('user_id', flat=True)
+        )
+        for uid in set(participants):
+            if uid != request.user.id:
+                send_notification.delay(
+                    uid, 'system',
+                    'EMERGENCIA en viaje',
+                    f'{request.user.display_name} activó una alerta de emergencia.',
+                    {'trip_id': trip.id, 'alert_id': alert.id, 'lat': str(lat), 'lng': str(lng)},
+                )
+
+        return Response(
+            {'detail': 'Emergency alert sent.', 'alert_id': alert.id},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+# ── Emergency Contact ─────────────────────────────────────────────
+
+class EmergencyContactViewSet(
+    mixins.RetrieveModelMixin, mixins.CreateModelMixin,
+    mixins.UpdateModelMixin, viewsets.GenericViewSet
+):
+    """Manage user's emergency contact (required for trip booking)."""
+    serializer_class = EmergencyContactSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return EmergencyContact.objects.filter(user=self.request.user)
+
+    def get_object(self):
+        obj, _ = EmergencyContact.objects.get_or_create(
+            user=self.request.user,
+            defaults={'contact_name': '', 'contact_phone': '', 'relationship': ''},
+        )
+        return obj
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

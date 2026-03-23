@@ -65,6 +65,10 @@ export const endpoints = {
   users: '/users/',
   me: '/users/me/',
   myProfile: '/users/me/profile/',
+  verifyEmailRequest: '/users/verify-email/request/',
+  verifyEmailConfirm: '/users/verify-email/confirm/',
+  verifyPhoneRequest: '/users/verify-phone/request/',
+  verifyPhoneConfirm: '/users/verify-phone/confirm/',
 
   // Activities
   activities: '/activities/',
@@ -87,6 +91,10 @@ export const endpoints = {
 
   // Notifications
   notifications: '/notifications/',
+
+  // Connect
+  connectOnboarding: '/payments/connect/onboarding/',
+  connectDashboard: '/payments/connect/dashboard/',
 
   // Health
   health: '/health/',

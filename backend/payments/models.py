@@ -24,6 +24,14 @@ class Payment(models.Model):
     stripe_payment_intent_id = models.CharField(
         max_length=255, unique=True, null=True, blank=True
     )
+    platform_fee = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0,
+        help_text='Platform fee (10% of amount)',
+    )
+    organizer_payout = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0,
+        help_text='Amount transferred to organizer via Connect',
+    )
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default='pending'
     )
@@ -56,6 +64,23 @@ class Subscription(models.Model):
     current_period_end = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class ConnectAccount(models.Model):
+    """Stripe Connect Express account for organizers."""
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name='connect_account',
+    )
+    stripe_account_id = models.CharField(max_length=255, unique=True)
+    charges_enabled = models.BooleanField(default=False)
+    payouts_enabled = models.BooleanField(default=False)
+    onboarding_complete = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Connect: {self.user.email} ({self.stripe_account_id})"
 
 
 class StripeEvent(models.Model):

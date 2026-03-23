@@ -207,6 +207,9 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "anon": "100/day",
         "user": "1000/day",
+        "auth": "5/hour",
+        "otp": "3/hour",
+        "join": "10/hour",
     },
 }
 
@@ -233,6 +236,51 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
+
+# Resend (transactional emails)
+RESEND_API_KEY = env("RESEND_API_KEY", default="")
+RESEND_FROM_EMAIL = env("RESEND_FROM_EMAIL", default="Aktivar <noreply@aktivar.app>")
+
+# Twilio (phone OTP)
+TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID", default="")
+TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN", default="")
+TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER", default="")
+
+# OneSignal (push notifications)
+ONESIGNAL_APP_ID = env("ONESIGNAL_APP_ID", default="")
+ONESIGNAL_REST_API_KEY = env("ONESIGNAL_REST_API_KEY", default="")
+
+# OpenAI (content moderation)
+OPENAI_API_KEY = env("OPENAI_API_KEY", default="")
+
+# Frontend URL (for email links)
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:5173")
+
+# Stripe
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
+STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY", default="")
+STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
+STRIPE_PRICE_ORGANIZER = env("STRIPE_PRICE_ORGANIZER", default="")
+STRIPE_PRICE_EXPLORER = env("STRIPE_PRICE_EXPLORER", default="")
+
+# ── Input Sanitization (django-bleach) ──────────────────────────────
+BLEACH_ALLOWED_TAGS = ["b", "i", "u", "em", "strong", "a", "br", "p"]
+BLEACH_ALLOWED_ATTRIBUTES = {"a": ["href", "title", "target"]}
+BLEACH_ALLOWED_PROTOCOLS = ["http", "https"]
+BLEACH_STRIP_TAGS = True
+BLEACH_STRIP_COMMENTS = True
+
+# ── Sentry Monitoring ──────────────────────────────────────────────
+SENTRY_DSN = env("SENTRY_DSN", default="")
+if SENTRY_DSN:
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        traces_sample_rate=0.1 if not DEBUG else 1.0,
+        profiles_sample_rate=0.1 if not DEBUG else 1.0,
+        send_default_pii=False,
+        environment="development" if DEBUG else "production",
+    )
 
 # drf-spectacular
 SPECTACULAR_SETTINGS = {

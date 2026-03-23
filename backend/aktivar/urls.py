@@ -16,10 +16,18 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+from users.views import AuthRateThrottle
+
+
+# Apply rate limiting to auth token endpoints
+class ThrottledTokenObtainPairView(TokenObtainPairView):
+    throttle_classes = [AuthRateThrottle]
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # JWT Authentication
-    path("api/v1/auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    # JWT Authentication (rate limited)
+    path("api/v1/auth/token/", ThrottledTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/v1/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/v1/auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     # API v1 - App routes
