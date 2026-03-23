@@ -350,6 +350,19 @@ export function usePushSubscription() {
   });
 }
 
+// ---- Organizer Dashboard ----
+
+export function useOrganizerDashboard() {
+  return useQuery(({
+    queryKey: ['organizerDashboard'],
+    queryFn: async () => {
+      const res = await api.get(`${endpoints.activities}dashboard/`);
+      return res.data;
+    },
+    enabled: !!sessionStorage.getItem('aktivar_access_token'),
+  }));
+}
+
 // ---- Social Features ----
 
 export function useActivityStories(activityId: number | undefined) {
