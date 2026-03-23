@@ -25,7 +25,6 @@ describe('SpotsBar', () => {
 
   it('uses green color when plenty of spots remaining', () => {
     const { container } = render(<SpotsBar capacity={100} taken={10} />)
-    const bar = container.querySelector('[style]') as HTMLElement
     // Inner bar with backgroundColor
     const innerBar = container.querySelectorAll('[style]')[1] as HTMLElement
     expect(innerBar.style.backgroundColor).toBe('rgb(123, 218, 150)')  // #7bda96

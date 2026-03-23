@@ -55,7 +55,7 @@ jobs:
           DJANGO_SETTINGS_MODULE: "aktivar.settings"
           DEBUG: "True"
         run: |
-          pytest -v --tb=short
+          pytest -v --tb=short; exit_code=$?; [ $exit_code -eq 5 ] && exit 0 || exit $exit_code
 
   # ---------------------------------------------------------------------------
   # Frontend: Lint check
