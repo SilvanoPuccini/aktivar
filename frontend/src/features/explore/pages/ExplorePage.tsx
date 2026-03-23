@@ -88,7 +88,7 @@ export default function ExplorePage() {
     }
   }, []);
 
-  const handleMapMove = useCallback((_bounds: L.LatLngBounds, _center: L.LatLng, _zoom: number) => {
+  const handleMapMove = useCallback((_bounds: L.LatLngBounds) => {
     // Count visible activities within bounds
     const count = filtered.filter((a) =>
       a.latitude && a.longitude && _bounds.contains([a.latitude, a.longitude])
