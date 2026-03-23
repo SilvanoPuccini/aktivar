@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   Mountain,
@@ -49,7 +50,7 @@ export default function CategoryChip({
   onClick,
   size = 'md',
 }: CategoryChipProps) {
-  const Icon = getIcon(category.icon);
+  const Icon = useMemo(() => getIcon(category.icon), [category.icon]);
 
   return (
     <motion.button

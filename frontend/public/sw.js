@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-globals */
-
 // Aktivar Push Notifications Service Worker
 
 const CACHE_NAME = 'aktivar-notifications-v1';
