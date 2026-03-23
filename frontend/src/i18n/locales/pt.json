@@ -1,0 +1,112 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "error": "Algo deu errado",
+    "retry": "Tentar novamente",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "search": "Buscar",
+    "noResults": "Sem resultados",
+    "seeAll": "Ver tudo",
+    "close": "Fechar"
+  },
+  "auth": {
+    "login": "Entrar",
+    "logout": "Sair",
+    "register": "Criar conta",
+    "email": "E-mail",
+    "password": "Senha",
+    "forgotPassword": "Esqueceu sua senha?",
+    "welcomeBack": "Bem-vindo de volta!",
+    "createAccount": "Junte-se à comunidade outdoor"
+  },
+  "nav": {
+    "feed": "Início",
+    "explore": "Explorar",
+    "create": "Criar",
+    "chat": "Chat",
+    "profile": "Perfil",
+    "notifications": "Notificações"
+  },
+  "activity": {
+    "joinActivity": "Participar",
+    "leaveActivity": "Sair",
+    "createActivity": "Criar atividade",
+    "published": "Publicada",
+    "draft": "Rascunho",
+    "completed": "Concluída",
+    "cancelled": "Cancelada",
+    "spotsRemaining": "{{count}} vaga(s) disponível(is)",
+    "full": "Vagas esgotadas",
+    "free": "Grátis",
+    "difficulty": {
+      "easy": "Fácil",
+      "moderate": "Moderado",
+      "hard": "Difícil",
+      "expert": "Especialista"
+    },
+    "participants": "Participantes",
+    "organizer": "Organizador",
+    "meetingPoint": "Ponto de encontro",
+    "whatToBring": "O que levar",
+    "weather": "Clima"
+  },
+  "transport": {
+    "trips": "Viagens",
+    "bookSeat": "Reservar assento",
+    "cancelBooking": "Cancelar reserva",
+    "seatsRemaining": "{{count}} assento(s)",
+    "driver": "Motorista",
+    "vehicle": "Veículo",
+    "emergencyAlert": "Alerta de emergência",
+    "splitCost": "Dividir custo"
+  },
+  "profile": {
+    "editProfile": "Editar perfil",
+    "activities": "Atividades",
+    "reviews": "Avaliações",
+    "badges": "Insígnias",
+    "rating": "Avaliação",
+    "km": "km percorridos",
+    "peopleMet": "Pessoas conhecidas",
+    "verifyEmail": "Verificar e-mail",
+    "verifyPhone": "Verificar telefone"
+  },
+  "dashboard": {
+    "title": "Painel do Organizador",
+    "subtitle": "Resumo das suas atividades e métricas",
+    "exportCSV": "Exportar CSV",
+    "totalActivities": "Atividades",
+    "participants": "Participantes",
+    "revenue": "Receita",
+    "rating": "Avaliação",
+    "revenueBreakdown": "Detalhamento da receita",
+    "grossTotal": "Total bruto",
+    "platformFee": "Taxa da plataforma",
+    "netPayout": "Seu pagamento líquido",
+    "byStatus": "Por status",
+    "recentActivities": "Atividades recentes"
+  },
+  "chat": {
+    "typeMessage": "Escreva uma mensagem...",
+    "send": "Enviar",
+    "reactions": "Reações",
+    "typing": "{{name}} está digitando..."
+  },
+  "payment": {
+    "pay": "Pagar",
+    "processing": "Processando...",
+    "success": "Pagamento realizado",
+    "error": "Erro no pagamento",
+    "total": "Total"
+  },
+  "notifications": {
+    "title": "Notificações",
+    "empty": "Você não tem notificações",
+    "markAllRead": "Marcar tudo como lido"
+  }
+}
