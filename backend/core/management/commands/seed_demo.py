@@ -304,12 +304,12 @@ class Command(BaseCommand):
         vehicle, _ = Vehicle.objects.get_or_create(
             owner=driver,
             defaults={
-                'make': 'Toyota',
-                'model': 'Hilux',
+                'brand': 'Toyota',
+                'model_name': 'Hilux',
                 'year': 2022,
                 'color': 'Blanco',
-                'license_plate': 'AB-1234',
-                'seats': 4,
+                'plate': 'AB-1234',
+                'capacity': 4,
             },
         )
 
@@ -319,6 +319,12 @@ class Command(BaseCommand):
             activity=trip_activity,
             defaults={
                 'vehicle': vehicle,
+                'origin_name': 'Metro Tobalaba, Santiago',
+                'origin_latitude': Decimal('-33.4207'),
+                'origin_longitude': Decimal('-70.6005'),
+                'destination_name': trip_activity.location_name if hasattr(trip_activity, 'location_name') else 'Cajón del Maipo',
+                'destination_latitude': Decimal('-33.5960'),
+                'destination_longitude': Decimal('-70.0780'),
                 'departure_time': trip_activity.start_datetime - timedelta(hours=1),
                 'available_seats': 3,
                 'price_per_passenger': Decimal('5000'),
