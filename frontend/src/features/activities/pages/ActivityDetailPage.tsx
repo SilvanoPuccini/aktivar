@@ -105,7 +105,7 @@ export default function ActivityDetailPage() {
   return (
     <div className="min-h-screen bg-surface pb-32">
       {/* ---- Glassmorphism Header ---- */}
-      <header className="sticky top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-md">
+      <header className="sticky top-0 w-full z-50 bg-[#0c0f0a]/80 backdrop-blur-xl border-b border-outline-variant/10">
         <div className="flex justify-between items-center px-6 py-4 w-full">
           <button
             type="button"
@@ -184,7 +184,7 @@ export default function ActivityDetailPage() {
               {/* Organizer Card */}
               <motion.div
                 variants={fadeUp}
-                className="bg-[#1d201b] rounded-xl p-6 border border-outline-variant/15"
+                className="bg-surface-container/60 rounded-2xl p-6 border border-outline-variant/10"
               >
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-4">
@@ -321,7 +321,7 @@ export default function ActivityDetailPage() {
               {/* Mini Map Card */}
               <motion.div
                 variants={fadeUp}
-                className="bg-[#1d201b] rounded-xl overflow-hidden border border-outline-variant/15"
+                className="bg-surface-container/60 rounded-2xl overflow-hidden border border-outline-variant/10"
               >
                 <div className="h-48 w-full relative">
                   <ActivityMap
@@ -352,7 +352,7 @@ export default function ActivityDetailPage() {
               {/* Transport Card */}
               <motion.div
                 variants={fadeUp}
-                className="bg-surface-container rounded-xl p-6 border border-outline-variant/15"
+                className="bg-surface-container/60 rounded-2xl p-6 border border-outline-variant/10"
               >
                 <div className="flex items-center gap-3 mb-6">
                   <div className="bg-secondary-container/20 p-2 rounded-lg">
@@ -386,7 +386,7 @@ export default function ActivityDetailPage() {
               {/* Meta Info Card */}
               <motion.div
                 variants={fadeUp}
-                className="bg-surface-container-low rounded-xl p-6 space-y-4"
+                className="bg-surface-container/40 rounded-2xl p-6 space-y-4 border border-outline-variant/10"
               >
                 <div className="flex items-center gap-3 text-on-surface-variant">
                   <Calendar size={18} className="shrink-0 text-primary" />
@@ -419,7 +419,7 @@ export default function ActivityDetailPage() {
       </main>
 
       {/* ---- Fixed Bottom CTA ---- */}
-      <div className="fixed bottom-0 left-0 w-full bg-surface/80 backdrop-blur-xl border-t border-outline-variant/10 z-[60] px-6 py-4 md:py-6">
+      <div className="fixed bottom-0 left-0 w-full z-[60] px-6 py-4 md:py-5" style={{ background: 'rgba(12,15,10,0.90)', backdropFilter: 'blur(24px)', borderTop: '1px solid rgba(81,69,51,0.1)' }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-6">
           <div className="flex flex-col">
             <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">

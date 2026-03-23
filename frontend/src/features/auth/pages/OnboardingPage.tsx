@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
+  ArrowLeft,
   Eye,
   EyeOff,
   MapPin,
@@ -17,6 +18,10 @@ import {
   Trophy,
   Tent,
   Loader2,
+  User,
+  Mail,
+  Lock,
+  Compass,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { LucideIcon } from 'lucide-react';
@@ -46,25 +51,25 @@ const initialData: OnboardingData = {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Shared classes (Stitch design)                                     */
+/*  Shared classes                                                     */
 /* ------------------------------------------------------------------ */
 const inputClasses =
-  'w-full bg-surface-container-highest border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-on-surface-variant/40 outline-none transition-colors duration-200 font-body';
+  'w-full bg-surface-container-highest/60 border border-outline-variant/20 rounded-2xl px-5 py-4 text-on-surface placeholder:text-muted/60 focus:border-primary/60 focus:bg-surface-container-highest/80 focus:ring-2 focus:ring-primary/20 outline-none transition-all duration-300 font-body text-[15px]';
 
 const labelClasses =
-  'block font-label uppercase tracking-widest text-xs text-primary-fixed-dim px-1 mb-2';
+  'block font-label text-[10px] uppercase tracking-[0.2em] text-muted mb-3';
 
 /* ------------------------------------------------------------------ */
-/*  Slide animation variants                                           */
+/*  Animation variants                                                 */
 /* ------------------------------------------------------------------ */
 const slideVariants = {
   enter: (direction: number) => ({
-    x: direction > 0 ? 300 : -300,
+    x: direction > 0 ? 200 : -200,
     opacity: 0,
   }),
   center: { x: 0, opacity: 1 },
   exit: (direction: number) => ({
-    x: direction > 0 ? -300 : 300,
+    x: direction > 0 ? -200 : 200,
     opacity: 0,
   }),
 };
@@ -85,7 +90,7 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Gradient backgrounds per category for interest cards                */
+/*  Gradient backgrounds per category                                  */
 /* ------------------------------------------------------------------ */
 const categoryGradients: Record<string, string> = {
   trekking: 'linear-gradient(160deg, #2d5a27 0%, #1a3518 40%, #0c1a0a 100%)',
@@ -128,52 +133,58 @@ export default function OnboardingPage() {
   };
 
   const next = () => {
+    if (currentStep === 0) {
+      if (!formData.name.trim()) {
+        toast.error('Ingresa tu nombre');
+        return;
+      }
+      if (!formData.email.trim() || !formData.email.includes('@')) {
+        toast.error('Ingresa un email válido');
+        return;
+      }
+      if (formData.password.length < 8) {
+        toast.error('La contraseña debe tener al menos 8 caracteres');
+        return;
+      }
+    }
+    if (currentStep === 1 && formData.selectedCategories.length < 3) {
+      toast.error('Selecciona al menos 3 categorías');
+      return;
+    }
     setDirection(1);
     setCurrentStep((s) => Math.min(s + 1, 2));
   };
+
   const prev = () => {
     setDirection(-1);
     setCurrentStep((s) => Math.max(s - 1, 0));
   };
 
   const handleComplete = async () => {
-    if (!formData.name || !formData.email || !formData.password) {
-      toast.error('Completa todos los campos');
-      return;
-    }
-    if (formData.password.length < 8) {
-      toast.error('La contraseña debe tener al menos 8 caracteres');
-      return;
-    }
-
     setLoading(true);
     try {
-      // Register user
       await api.post(endpoints.register, {
         email: formData.email,
         password: formData.password,
         full_name: formData.name,
       });
 
-      // Login to get token
       const tokenRes = await api.post(endpoints.login, {
         email: formData.email,
         password: formData.password,
       });
       sessionStorage.setItem('aktivar_access_token', tokenRes.data.access);
 
-      // Update profile with location if provided
       if (formData.location) {
         await api.patch(endpoints.myProfile, {
           location_name: formData.location,
         });
       }
 
-      // Fetch user data
       const userRes = await api.get(endpoints.me);
       storeLogin(userRes.data);
 
-      toast.success('Cuenta creada con exito!');
+      toast.success('Cuenta creada con éxito!');
       navigate('/');
     } catch (err: unknown) {
       const error = err as { response?: { data?: Record<string, string[]> } };
@@ -218,79 +229,128 @@ export default function OnboardingPage() {
   const selectedCount = formData.selectedCategories.length;
 
   /* ---------------------------------------------------------------- */
-  /*  Step 1 — BECOME THE PATHFINDER                                   */
+  /*  Step 1 — Create your account                                     */
   /* ---------------------------------------------------------------- */
   const step1 = (
-    <section className="w-full space-y-12">
+    <section className="w-full space-y-10">
       {/* Hero headline */}
       <div className="space-y-4">
-        <h1 className="text-5xl md:text-7xl font-headline font-black tracking-tight leading-[0.9] text-on-surface">
-          BECOME THE <br />
-          <span className="text-primary italic">PATHFINDER.</span>
+        <h1 className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-[0.95] text-on-surface">
+          Crea tu<br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-container">
+            cuenta.
+          </span>
         </h1>
-        <p className="text-on-surface-variant text-lg md:text-xl max-w-md font-body leading-relaxed">
-          Join Latin America's elite outdoor community. Let's start with the basics.
+        <p className="text-on-surface-variant text-base md:text-lg max-w-md font-body leading-relaxed">
+          Únete a la comunidad outdoor más grande de Latinoamérica.
+          Solo necesitamos lo básico para empezar.
         </p>
       </div>
 
-      {/* Form fields — 2-col grid on md */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <div className="space-y-2">
-          <label className={labelClasses}>Nombre</label>
+      {/* Form fields */}
+      <div className="space-y-5">
+        <div>
+          <label className={labelClasses}>
+            <User size={12} className="inline mr-1.5 -mt-0.5" />
+            Nombre completo
+          </label>
           <input
             type="text"
             className={inputClasses}
-            placeholder="Tu nombre completo"
+            placeholder="Ej: Catalina Reyes"
             value={formData.name}
             onChange={(e) => update('name', e.target.value)}
+            autoComplete="name"
           />
         </div>
 
-        <div className="space-y-2">
-          <label className={labelClasses}>Email</label>
+        <div>
+          <label className={labelClasses}>
+            <Mail size={12} className="inline mr-1.5 -mt-0.5" />
+            Email
+          </label>
           <input
             type="email"
             className={inputClasses}
-            placeholder="correo@ejemplo.com"
+            placeholder="tu@email.com"
             value={formData.email}
             onChange={(e) => update('email', e.target.value)}
+            autoComplete="email"
           />
         </div>
 
-        <div className="space-y-2 md:col-span-2">
-          <label className={labelClasses}>Contraseña</label>
+        <div>
+          <label className={labelClasses}>
+            <Lock size={12} className="inline mr-1.5 -mt-0.5" />
+            Contraseña
+          </label>
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
-              className={`${inputClasses} pr-12`}
+              className={`${inputClasses} pr-14`}
               placeholder="Mínimo 8 caracteres"
               value={formData.password}
               onChange={(e) => update('password', e.target.value)}
+              autoComplete="new-password"
             />
             <button
               type="button"
               onClick={() => setShowPassword((s) => !s)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 hover:text-on-surface transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-on-surface transition-colors p-1"
               aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
+          {/* Password strength indicator */}
+          <div className="mt-3 flex gap-1.5">
+            {[0, 1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+                  formData.password.length >= (i + 1) * 3
+                    ? i < 2
+                      ? 'bg-error'
+                      : i < 3
+                        ? 'bg-primary'
+                        : 'bg-secondary'
+                    : 'bg-surface-container-highest'
+                }`}
+              />
+            ))}
+          </div>
+          <p className="mt-2 font-label text-[10px] tracking-wider text-muted">
+            {formData.password.length === 0
+              ? ''
+              : formData.password.length < 6
+                ? 'Muy corta'
+                : formData.password.length < 8
+                  ? 'Casi...'
+                  : formData.password.length < 12
+                    ? 'Buena'
+                    : 'Excelente'}
+          </p>
         </div>
       </div>
 
       {/* CTA */}
-      <button
+      <motion.button
         onClick={next}
-        className="w-full md:w-max px-12 py-5 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-extrabold text-lg rounded-full shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3 cursor-pointer"
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        className="w-full py-4 rounded-2xl font-headline font-extrabold text-base uppercase tracking-wider text-on-primary flex items-center justify-center gap-3 cursor-pointer transition-all"
+        style={{
+          background: 'linear-gradient(135deg, #ffc56c, #f0a500)',
+          boxShadow: '0 8px 32px rgba(240, 165, 0, 0.25)',
+        }}
       >
-        CONTINUE JOURNEY
-        <ArrowRight size={20} strokeWidth={3} />
-      </button>
+        Continuar
+        <ArrowRight size={18} strokeWidth={2.5} />
+      </motion.button>
 
-      <p className="text-sm text-on-surface-variant/60 font-body">
+      <p className="text-center text-sm text-muted font-body">
         ¿Ya tienes cuenta?{' '}
-        <Link to="/login" className="text-primary hover:underline font-semibold">
+        <Link to="/login" className="text-primary hover:text-primary-container font-semibold transition-colors">
           Inicia sesión
         </Link>
       </p>
@@ -298,23 +358,37 @@ export default function OnboardingPage() {
   );
 
   /* ---------------------------------------------------------------- */
-  /*  Step 2 — SELECT YOUR TERRAIN                                     */
+  /*  Step 2 — Select your interests                                   */
   /* ---------------------------------------------------------------- */
   const step2 = (
     <section className="w-full space-y-8">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-headline font-bold text-on-surface">
-            SELECT YOUR TERRAIN
-          </h2>
-          <p className="text-on-surface-variant font-label text-sm uppercase tracking-widest">
-            Selecciona al menos 3 — {selectedCount}/3
-          </p>
+      <div className="space-y-3">
+        <h2 className="text-3xl md:text-4xl font-headline font-black text-on-surface tracking-tight">
+          ¿Qué te <span className="text-primary">apasiona</span>?
+        </h2>
+        <p className="text-on-surface-variant font-body text-base">
+          Selecciona al menos 3 categorías para personalizar tu experiencia.
+        </p>
+        {/* Counter */}
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={`w-8 h-1.5 rounded-full transition-colors duration-300 ${
+                  i < selectedCount ? 'bg-primary' : 'bg-surface-container-highest'
+                }`}
+              />
+            ))}
+          </div>
+          <span className="font-label text-xs text-muted">
+            {selectedCount}/3 mínimo
+          </span>
         </div>
       </div>
 
-      {/* Category grid — tall image cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Category grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {categories.map((cat) => {
           const isSelected = formData.selectedCategories.includes(cat.id);
           const Icon = iconMap[cat.icon.toLowerCase()] ?? Mountain;
@@ -324,15 +398,15 @@ export default function OnboardingPage() {
               key={cat.id}
               type="button"
               onClick={() => toggleCategory(cat.id)}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className={`group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer transition-all ${
+              className={`group relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ${
                 isSelected
-                  ? 'ring-2 ring-primary'
-                  : 'hover:ring-2 hover:ring-primary/50'
+                  ? 'ring-2 ring-primary ring-offset-2 ring-offset-surface'
+                  : 'hover:ring-1 hover:ring-primary/30'
               }`}
             >
-              {/* Background — gradient with icon overlay */}
+              {/* Background gradient */}
               <div
                 className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
                 style={{
@@ -342,28 +416,28 @@ export default function OnboardingPage() {
                 }}
               />
 
-              {/* Large faded icon in the center */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                <Icon size={64} style={{ color: cat.color }} />
+              {/* Large icon */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-15 group-hover:opacity-25 transition-opacity">
+                <Icon size={56} style={{ color: cat.color }} />
               </div>
 
-              {/* Bottom gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent" />
+              {/* Bottom gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f0a] via-transparent to-transparent" />
 
-              {/* Checkmark badge (selected) */}
+              {/* Checkmark */}
               {isSelected && (
                 <motion.div
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="absolute top-4 right-4 bg-primary text-on-primary rounded-full p-1 shadow-xl"
+                  className="absolute top-3 right-3 bg-primary text-on-primary rounded-full p-1.5 shadow-xl"
                 >
-                  <Check size={16} strokeWidth={3} />
+                  <Check size={14} strokeWidth={3} />
                 </motion.div>
               )}
 
-              {/* Category name at bottom-left */}
-              <div className="absolute bottom-4 left-4">
-                <span className="font-headline text-xl text-[#EDE9DF]">{cat.name}</span>
+              {/* Category name */}
+              <div className="absolute bottom-3 left-3 right-3">
+                <span className="font-headline text-base font-bold text-on-surface">{cat.name}</span>
               </div>
             </motion.button>
           );
@@ -373,47 +447,53 @@ export default function OnboardingPage() {
   );
 
   /* ---------------------------------------------------------------- */
-  /*  Step 3 — LOCATE YOUR SQUAD                                       */
+  /*  Step 3 — Location                                                */
   /* ---------------------------------------------------------------- */
   const step3 = (
-    <section className="w-full flex flex-col md:flex-row gap-12 items-center">
-      {/* Left — text + GPS button */}
-      <div className="flex-1 space-y-6">
-        <h2 className="text-4xl font-headline font-bold text-on-surface">
-          LOCATE YOUR SQUAD
+    <section className="w-full space-y-8">
+      <div className="space-y-3">
+        <h2 className="text-3xl md:text-4xl font-headline font-black text-on-surface tracking-tight">
+          ¿Desde <span className="text-secondary">dónde</span> exploras?
         </h2>
-        <p className="text-on-surface-variant leading-relaxed font-body">
-          Aktivar works best when we know where the trails are. Enable location to see
-          nearby groups and active routes.
+        <p className="text-on-surface-variant font-body text-base leading-relaxed">
+          Aktivar funciona mejor cuando sabemos tu ubicación.
+          Así te mostramos actividades y grupos cercanos.
         </p>
-
-        {/* Location text input */}
-        <div className="space-y-2">
-          <label className={labelClasses}>
-            <MapPin size={14} className="inline mr-1 -mt-0.5" />
-            Ciudad o región
-          </label>
-          <input
-            type="text"
-            className={inputClasses}
-            placeholder="Ej: Santiago, Chile"
-            value={formData.location}
-            onChange={(e) => update('location', e.target.value)}
-          />
-        </div>
-
-        {/* GPS Button */}
-        <button
-          onClick={handleGPS}
-          className="bg-surface-container-highest text-primary font-headline font-bold px-8 py-4 rounded-full flex items-center gap-3 cursor-pointer hover:bg-surface-container-high transition-colors"
-        >
-          <MapPin size={20} />
-          ENABLE GPS
-        </button>
       </div>
 
-      {/* Right — map with pulsing dot */}
-      <div className="flex-1 w-full aspect-square md:aspect-video rounded-3xl overflow-hidden bg-surface-container-high relative border border-outline-variant/15">
+      {/* Location input */}
+      <div>
+        <label className={labelClasses}>
+          <MapPin size={12} className="inline mr-1.5 -mt-0.5" />
+          Ciudad o región
+        </label>
+        <input
+          type="text"
+          className={inputClasses}
+          placeholder="Ej: Santiago, Chile"
+          value={formData.location}
+          onChange={(e) => update('location', e.target.value)}
+        />
+      </div>
+
+      {/* GPS Button */}
+      <motion.button
+        onClick={handleGPS}
+        disabled={gpsAcquiring}
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-surface-container-high/60 border border-outline-variant/20 text-on-surface font-headline font-bold text-sm uppercase tracking-wider cursor-pointer hover:bg-surface-container-high transition-all disabled:opacity-60"
+      >
+        {gpsAcquiring ? (
+          <Loader2 size={18} className="animate-spin text-primary" />
+        ) : (
+          <MapPin size={18} className="text-primary" />
+        )}
+        {gpsAcquiring ? 'Obteniendo ubicación...' : 'Usar mi ubicación actual'}
+      </motion.button>
+
+      {/* Map */}
+      <div className="w-full aspect-video rounded-2xl overflow-hidden bg-surface-container-high relative border border-outline-variant/15">
         <div className="w-full h-full">
           <ActivityMap
             activities={[]}
@@ -431,25 +511,25 @@ export default function OnboardingPage() {
           />
         </div>
 
-        {/* Pulsing dot overlay (when no coords yet) */}
+        {/* Pulsing dot overlay */}
         {!userCoords && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center animate-pulse">
+            <div className="w-20 h-20 bg-primary/15 rounded-full flex items-center justify-center animate-pulse">
               <div
-                className="w-8 h-8 bg-primary rounded-full"
-                style={{ boxShadow: '0 0 20px rgba(240,165,0,0.6)' }}
+                className="w-6 h-6 bg-primary rounded-full"
+                style={{ boxShadow: '0 0 20px rgba(240,165,0,0.5)' }}
               />
             </div>
           </div>
         )}
 
-        {/* GPS status label */}
-        <div className="absolute bottom-4 right-4 bg-surface/80 backdrop-blur-sm px-4 py-2 rounded-lg font-label text-xs tracking-widest text-[#EDE9DF]">
+        {/* GPS status */}
+        <div className="absolute bottom-3 right-3 bg-surface/80 backdrop-blur-sm px-3 py-1.5 rounded-lg font-label text-[10px] tracking-[0.15em] text-on-surface-variant">
           {gpsAcquiring
-            ? 'GPS_SIGNAL: ACQUIRING...'
+            ? 'ADQUIRIENDO...'
             : userCoords
-              ? 'GPS_SIGNAL: LOCKED'
-              : 'GPS_SIGNAL: WAITING...'}
+              ? 'UBICACIÓN FIJADA'
+              : 'ESPERANDO...'}
         </div>
       </div>
     </section>
@@ -462,41 +542,64 @@ export default function OnboardingPage() {
   /* ================================================================ */
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#0c0f0a]">
-      {/* Mesh gradient background */}
+      {/* Background mesh */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background: [
-            'radial-gradient(at 0% 0%, rgba(240, 165, 0, 0.1) 0px, transparent 50%)',
-            'radial-gradient(at 100% 100%, rgba(123, 218, 150, 0.05) 0px, transparent 50%)',
+            'radial-gradient(at 0% 0%, rgba(240, 165, 0, 0.06) 0px, transparent 50%)',
+            'radial-gradient(at 100% 100%, rgba(123, 218, 150, 0.04) 0px, transparent 50%)',
           ].join(', '),
         }}
       />
 
-      {/* ---- Header: brand + progress dots ---- */}
-      <header className="sticky top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-md flex justify-between items-center px-6 py-4">
-        <div className="text-2xl font-black text-[#EDE9DF] tracking-tighter font-headline">
-          Aktivar
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex space-x-2">
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                layout
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === currentStep
-                    ? 'w-8 bg-primary-container'
-                    : 'w-2 bg-surface-container-highest'
-                }`}
-              />
-            ))}
+      {/* Header */}
+      <header className="sticky top-0 w-full z-50 bg-[#0c0f0a]/80 backdrop-blur-xl border-b border-outline-variant/10">
+        <div className="flex justify-between items-center px-6 py-4 max-w-4xl mx-auto">
+          <div className="flex items-center gap-4">
+            {currentStep > 0 && (
+              <button
+                onClick={prev}
+                className="p-2 -ml-2 rounded-xl hover:bg-surface-container-high/50 transition-colors cursor-pointer"
+                aria-label="Volver"
+              >
+                <ArrowLeft size={20} className="text-on-surface" />
+              </button>
+            )}
+            <div className="flex items-center gap-2">
+              <Mountain size={20} className="text-primary" />
+              <span className="font-headline text-lg font-black tracking-tight text-on-surface">
+                Aktivar
+              </span>
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1.5">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  layout
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === currentStep
+                      ? 'w-8 bg-primary'
+                      : i < currentStep
+                        ? 'w-4 bg-secondary'
+                        : 'w-4 bg-surface-container-highest'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="font-label text-[10px] text-muted tracking-wider">
+              {currentStep + 1}/3
+            </span>
           </div>
         </div>
       </header>
 
-      {/* ---- Main content ---- */}
-      <main className="flex-grow flex flex-col items-center justify-center px-6 py-12 max-w-4xl mx-auto w-full relative z-10">
+      {/* Main content */}
+      <main className="flex-grow flex flex-col items-center justify-center px-6 py-10 max-w-2xl mx-auto w-full relative z-10">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={currentStep}
@@ -513,40 +616,53 @@ export default function OnboardingPage() {
         </AnimatePresence>
       </main>
 
-      {/* ---- Footer ---- */}
-      <footer className="p-6 md:p-12 flex justify-between items-center bg-surface-container-lowest relative z-10">
-        <div className="hidden md:block">
-          <p className="font-label text-xs text-on-surface-variant/40 tracking-[0.2em]">
-            AKTIVAR // LATAM OUTDOORS
-          </p>
-        </div>
-        <div className="flex gap-6 items-center">
-          {currentStep > 0 && (
-            <button
-              onClick={prev}
-              className="text-on-surface-variant font-label text-sm uppercase tracking-widest hover:text-on-surface transition-colors cursor-pointer"
-            >
-              Back
-            </button>
-          )}
-          {currentStep === 2 ? (
-            <button
-              onClick={handleComplete}
-              disabled={loading}
-              className="text-primary font-label text-sm uppercase tracking-widest font-bold cursor-pointer disabled:opacity-50 flex items-center gap-2"
-            >
-              {loading && <Loader2 size={14} className="animate-spin" />}
-              Empezar a explorar
-            </button>
-          ) : (
-            <button
-              onClick={next}
-              disabled={currentStep === 1 && selectedCount < 3}
-              className="text-primary font-label text-sm uppercase tracking-widest font-bold cursor-pointer disabled:opacity-50"
-            >
-              {currentStep === 1 && selectedCount < 3 ? `Select ${3 - selectedCount} more` : 'Skip for now'}
-            </button>
-          )}
+      {/* Footer */}
+      <footer className="px-6 py-6 border-t border-outline-variant/10 bg-[#0c0f0a]/80 backdrop-blur-xl relative z-10">
+        <div className="max-w-2xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Compass size={14} className="text-secondary/60" />
+            <span className="font-label text-[10px] text-muted/40 tracking-[0.15em] hidden md:block">
+              AKTIVAR // LATAM OUTDOORS
+            </span>
+          </div>
+
+          <div className="flex gap-4 items-center">
+            {currentStep === 2 ? (
+              <motion.button
+                onClick={handleComplete}
+                disabled={loading}
+                whileHover={loading ? undefined : { scale: 1.02 }}
+                whileTap={loading ? undefined : { scale: 0.98 }}
+                className="px-8 py-3 rounded-2xl font-headline font-extrabold text-sm uppercase tracking-wider text-on-primary flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #ffc56c, #f0a500)',
+                  boxShadow: '0 6px 24px rgba(240, 165, 0, 0.2)',
+                }}
+              >
+                {loading && <Loader2 size={16} className="animate-spin" />}
+                {loading ? 'Creando...' : 'Empezar a explorar'}
+                {!loading && <ArrowRight size={16} />}
+              </motion.button>
+            ) : currentStep === 1 ? (
+              <motion.button
+                onClick={next}
+                disabled={selectedCount < 3}
+                whileHover={selectedCount < 3 ? undefined : { scale: 1.02 }}
+                whileTap={selectedCount < 3 ? undefined : { scale: 0.98 }}
+                className="px-8 py-3 rounded-2xl font-headline font-extrabold text-sm uppercase tracking-wider text-on-primary flex items-center gap-2 cursor-pointer disabled:opacity-40 transition-all"
+                style={{
+                  background: selectedCount >= 3
+                    ? 'linear-gradient(135deg, #ffc56c, #f0a500)'
+                    : 'rgba(255, 197, 108, 0.2)',
+                  boxShadow: selectedCount >= 3 ? '0 6px 24px rgba(240, 165, 0, 0.2)' : 'none',
+                  color: selectedCount >= 3 ? '#442c00' : 'rgba(255, 197, 108, 0.5)',
+                }}
+              >
+                Continuar
+                <ArrowRight size={16} />
+              </motion.button>
+            ) : null}
+          </div>
         </div>
       </footer>
     </div>
