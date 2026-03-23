@@ -1,3 +1,4 @@
+/// <reference types="vitest/globals" />
 import '@testing-library/jest-dom'
 
 // Mock matchMedia
@@ -21,8 +22,6 @@ class MockIntersectionObserver {
   readonly rootMargin: string = ''
   readonly thresholds: ReadonlyArray<number> = []
 
-  constructor(private callback: IntersectionObserverCallback) {}
-
   observe = vi.fn()
   unobserve = vi.fn()
   disconnect = vi.fn()
@@ -36,8 +35,6 @@ Object.defineProperty(window, 'IntersectionObserver', {
 
 // Mock ResizeObserver
 class MockResizeObserver {
-  constructor(private callback: ResizeObserverCallback) {}
-
   observe = vi.fn()
   unobserve = vi.fn()
   disconnect = vi.fn()

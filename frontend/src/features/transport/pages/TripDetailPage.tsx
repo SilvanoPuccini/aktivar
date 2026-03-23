@@ -3,11 +3,9 @@ import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   MapPin,
-  Clock,
   Car,
   Star,
   Shield,
-  Users,
   AlertTriangle,
   Search,
   Zap,
@@ -38,7 +36,6 @@ export default function TripDetailPage() {
   }
 
   const departureDate = new Date(trip.departure_time);
-  const formattedDate = format(departureDate, "EEEE d 'de' MMMM, yyyy", { locale: es });
   const formattedTime = format(departureDate, 'HH:mm', { locale: es });
   const arrivalDate = trip.estimated_arrival ? new Date(trip.estimated_arrival) : null;
   const formattedArrival = arrivalDate ? format(arrivalDate, 'HH:mm', { locale: es }) : null;

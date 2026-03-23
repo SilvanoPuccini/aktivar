@@ -19,8 +19,6 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-import CategoryChip from '@/components/CategoryChip';
-import VerifiedBadge from '@/components/VerifiedBadge';
 import WeatherBadge from '@/components/WeatherBadge';
 import EmptyState from '@/components/EmptyState';
 import ActivityMap from '@/components/ActivityMap';
