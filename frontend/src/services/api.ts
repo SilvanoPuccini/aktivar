@@ -10,6 +10,27 @@ const api = axios.create({
   },
 });
 
+type RetryableRequestConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
+
+let isRefreshingToken = false;
+let pendingRefreshSubscribers: Array<(token: string) => void> = [];
+
+const subscribeTokenRefresh = (callback: (token: string) => void) => {
+  pendingRefreshSubscribers.push(callback);
+};
+
+const publishTokenRefresh = (token: string) => {
+  pendingRefreshSubscribers.forEach((callback) => callback(token));
+  pendingRefreshSubscribers = [];
+};
+
+const clearAuthAndRedirect = () => {
+  sessionStorage.removeItem('aktivar_access_token');
+  window.location.href = '/onboarding';
+};
+
 // Request interceptor: inject JWT token
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -27,24 +48,45 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const status = error.response?.status;
+    const originalRequest = error.config as RetryableRequestConfig | undefined;
 
-    if (status === 401) {
-      // Token expired — try refresh
+    if (
+      status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes(endpoints.refresh)
+    ) {
+      originalRequest._retry = true;
+
+      if (isRefreshingToken) {
+        return new Promise((resolve) => {
+          subscribeTokenRefresh((newToken: string) => {
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            }
+            resolve(api(originalRequest));
+          });
+        });
+      }
+
+      isRefreshingToken = true;
       try {
         const refreshResponse = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {}, {
           withCredentials: true,
         });
         const newToken = refreshResponse.data.access;
         sessionStorage.setItem('aktivar_access_token', newToken);
+        publishTokenRefresh(newToken);
 
         // Retry original request
-        if (error.config) {
-          error.config.headers.Authorization = `Bearer ${newToken}`;
-          return api(error.config);
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
         }
+        return api(originalRequest);
       } catch {
-        sessionStorage.removeItem('aktivar_access_token');
-        window.location.href = '/onboarding';
+        clearAuthAndRedirect();
+      } finally {
+        isRefreshingToken = false;
       }
     }
 
