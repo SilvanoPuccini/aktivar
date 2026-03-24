@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import CustomUser, EmailVerificationToken, PhoneVerificationOTP
 from .serializers import (
@@ -25,8 +26,17 @@ logger = logging.getLogger(__name__)
 
 class AuthRateThrottle(AnonRateThrottle):
     """5 requests/hour for auth endpoints (login, register)."""
-    rate = '5/hour'
+    rate = '30/hour'
     scope = 'auth'
+
+    def allow_request(self, request, view):
+        try:
+            return super().allow_request(request, view)
+        except Exception:
+            logger.exception(
+                "Auth throttling cache failure; allowing request to avoid auth outage"
+            )
+            return True
 
 
 class OTPRateThrottle(UserRateThrottle):
@@ -39,6 +49,27 @@ class JoinRateThrottle(UserRateThrottle):
     """10 requests/hour for join-activity actions."""
     rate = '10/hour'
     scope = 'join'
+
+
+class AuthTokenObtainPairView(TokenObtainPairView):
+    """JWT login endpoint with throttling and structured logging."""
+
+    throttle_classes = [AuthRateThrottle]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            response = super().post(request, *args, **kwargs)
+        except Exception:
+            logger.exception("JWT login failed unexpectedly")
+            raise
+
+        if response.status_code >= 400:
+            logger.warning(
+                "JWT login rejected status=%s ip=%s",
+                response.status_code,
+                request.META.get("REMOTE_ADDR", "unknown"),
+            )
+        return response
 
 
 # ── User ViewSet ──────────────────────────────────────────────────
@@ -86,6 +117,21 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
     permission_classes = [AllowAny]
     throttle_classes = [AuthRateThrottle]
+
+    def create(self, request, *args, **kwargs):
+        try:
+            response = super().create(request, *args, **kwargs)
+        except Exception:
+            logger.exception("User registration failed unexpectedly")
+            raise
+
+        if response.status_code >= 400:
+            logger.warning(
+                "User registration rejected status=%s ip=%s",
+                response.status_code,
+                request.META.get("REMOTE_ADDR", "unknown"),
+            )
+        return response
 
 
 # ── Email Verification ───────────────────────────────────────────
