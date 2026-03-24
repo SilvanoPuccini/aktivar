@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 import pytest
+from django.test import override_settings
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APIRequestFactory, force_authenticate
@@ -221,6 +222,14 @@ def test_registration_serializer_handles_duplicate_phone():
 
 
 @pytest.mark.django_db
+@override_settings(
+    CACHES={
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "test-auth-flow-cache",
+        }
+    }
+)
 def test_auth_flow_register_login_profile():
     factory = APIRequestFactory()
 
