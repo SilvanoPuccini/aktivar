@@ -229,6 +229,16 @@ SIMPLE_JWT = {
 # CORS
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS")
 
+# CSRF trusted origins (needed for admin and API from external IPs/domains)
+CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=",".join(CORS_ALLOWED_ORIGINS))
+if isinstance(CSRF_TRUSTED_ORIGINS, str):
+    CSRF_TRUSTED_ORIGINS = [o.strip() for o in CSRF_TRUSTED_ORIGINS.split(",") if o.strip()]
+
+# Security flags (default safe for HTTP; set True in .env when you have SSL)
+SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=False)
+SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=not DEBUG)
+CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=not DEBUG)
+
 # Celery
 CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://127.0.0.1:6379/0")
 CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="redis://127.0.0.1:6379/0")
