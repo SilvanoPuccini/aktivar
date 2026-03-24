@@ -84,6 +84,12 @@ class UserRegistrationSerializer(SanitizeMixin, serializers.ModelSerializer):
         model = CustomUser
         fields = ['email', 'password', 'full_name', 'phone']
 
+    def validate_phone(self, value):
+        """Convert empty phone to None to avoid unique constraint violations."""
+        if not value:
+            return None
+        return value
+
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data)
 

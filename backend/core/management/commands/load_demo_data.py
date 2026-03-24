@@ -127,16 +127,17 @@ class Command(BaseCommand):
         from activities.models import Category
 
         categories = [
-            {'name': 'Trekking', 'slug': 'trekking', 'icon': 'mountain', 'color': '#7BDA96', 'is_outdoor': True, 'order': 1},
-            {'name': 'Festival', 'slug': 'festival', 'icon': 'music', 'color': '#FFC56C', 'is_outdoor': True, 'order': 2},
-            {'name': 'Ciclismo', 'slug': 'ciclismo', 'icon': 'bike', 'color': '#5B9CF6', 'is_outdoor': True, 'order': 3},
-            {'name': 'Kayak', 'slug': 'kayak', 'icon': 'waves', 'color': '#4ECDC4', 'is_outdoor': True, 'order': 4},
-            {'name': 'Cine', 'slug': 'cine', 'icon': 'film', 'color': '#FFB4AB', 'is_outdoor': False, 'order': 5},
-            {'name': 'Viaje', 'slug': 'viaje', 'icon': 'plane', 'color': '#D6C4AC', 'is_outdoor': True, 'order': 6},
-            {'name': 'Social', 'slug': 'social', 'icon': 'users', 'color': '#E1E3DA', 'is_outdoor': False, 'order': 7},
-            {'name': 'Deporte', 'slug': 'deporte', 'icon': 'trophy', 'color': '#F0A500', 'is_outdoor': True, 'order': 8},
-            {'name': 'Camping', 'slug': 'camping', 'icon': 'tent', 'color': '#7BDA96', 'is_outdoor': True, 'order': 9},
-            {'name': 'Surf', 'slug': 'surf', 'icon': 'waves', 'color': '#5B9CF6', 'is_outdoor': True, 'order': 10},
+            {'name': 'Running', 'slug': 'running', 'icon': 'zap', 'color': '#FF9800', 'is_outdoor': True, 'order': 1},
+            {'name': 'Trekking', 'slug': 'trekking', 'icon': 'mountain', 'color': '#7BDA96', 'is_outdoor': True, 'order': 2},
+            {'name': 'Festival', 'slug': 'festival', 'icon': 'music', 'color': '#FFC56C', 'is_outdoor': True, 'order': 3},
+            {'name': 'Ciclismo', 'slug': 'ciclismo', 'icon': 'bike', 'color': '#5B9CF6', 'is_outdoor': True, 'order': 4},
+            {'name': 'Kayak', 'slug': 'kayak', 'icon': 'waves', 'color': '#4ECDC4', 'is_outdoor': True, 'order': 5},
+            {'name': 'Cine', 'slug': 'cine', 'icon': 'film', 'color': '#FFB4AB', 'is_outdoor': False, 'order': 6},
+            {'name': 'Viaje', 'slug': 'viaje', 'icon': 'plane', 'color': '#D6C4AC', 'is_outdoor': True, 'order': 7},
+            {'name': 'Social', 'slug': 'social', 'icon': 'users', 'color': '#E1E3DA', 'is_outdoor': False, 'order': 8},
+            {'name': 'Deporte', 'slug': 'deporte', 'icon': 'trophy', 'color': '#F0A500', 'is_outdoor': True, 'order': 9},
+            {'name': 'Camping', 'slug': 'camping', 'icon': 'tent', 'color': '#7BDA96', 'is_outdoor': True, 'order': 10},
+            {'name': 'Surf', 'slug': 'surf', 'icon': 'waves', 'color': '#5B9CF6', 'is_outdoor': True, 'order': 11},
         ]
 
         for data in categories:
