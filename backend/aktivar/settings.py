@@ -104,6 +104,7 @@ ASGI_APPLICATION = "aktivar.asgi.application"
 
 # Database
 _db_engine = env("DB_ENGINE", default="django.contrib.gis.db.backends.postgis")
+_database_url = env("DATABASE_URL", default="")
 DATABASES = {
     "default": {
         "ENGINE": _db_engine,
@@ -115,6 +116,10 @@ DATABASES = {
     }
 }
 
+# If DATABASE_URL is provided (Dokploy/12-factor style), prefer it.
+if _database_url:
+    DATABASES["default"] = env.db("DATABASE_URL")
+
 # When using SQLite (CI), remove GIS from INSTALLED_APPS since GDAL is not available
 if "sqlite" in _db_engine:
     DATABASES["default"] = {
@@ -124,10 +129,11 @@ if "sqlite" in _db_engine:
     INSTALLED_APPS = [app for app in INSTALLED_APPS if app != "django.contrib.gis"]
 
 # Caches
+_redis_url = env("REDIS_URL", default="redis://127.0.0.1:6379/0")
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_CACHE_URL", default="redis://127.0.0.1:6379/1"),
+        "LOCATION": env("REDIS_CACHE_URL", default=_redis_url),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -139,7 +145,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [env("REDIS_CHANNEL_URL", default="redis://127.0.0.1:6379/2")],
+            "hosts": [env("REDIS_CHANNEL_URL", default=_redis_url)],
         },
     },
 }
@@ -243,8 +249,8 @@ SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=not DEBUG)
 CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=not DEBUG)
 
 # Celery
-CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://127.0.0.1:6379/0")
-CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="redis://127.0.0.1:6379/0")
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default=_redis_url)
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default=_redis_url)
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
