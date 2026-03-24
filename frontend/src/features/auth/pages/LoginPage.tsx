@@ -29,16 +29,20 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isEmailTouched, setIsEmailTouched] = useState(false);
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const isFormValid = normalizedEmail.length > 0 && password.length > 0;
 
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!isFormValid) {
       toast.error('Completa todos los campos');
       return;
     }
 
     setLoading(true);
     try {
-      const tokenRes = await api.post(endpoints.login, { email, password });
+      const tokenRes = await api.post(endpoints.login, { email: normalizedEmail, password });
       sessionStorage.setItem('aktivar_access_token', tokenRes.data.access);
 
       const userRes = await api.get(endpoints.me);
@@ -56,6 +60,14 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgotPassword = () => {
+    if (!normalizedEmail) {
+      toast('Ingresa tu email para recuperar tu contraseña', { icon: '📩' });
+      return;
+    }
+    window.location.href = `mailto:soporte@aktivar.app?subject=Recuperar%20contrase%C3%B1a&body=Hola%20equipo%20Aktivar,%20necesito%20recuperar%20mi%20contrase%C3%B1a%20para%20${encodeURIComponent(normalizedEmail)}.`;
   };
 
   return (
@@ -162,7 +174,15 @@ export default function LoginPage() {
           </motion.div>
 
           {/* Form */}
-          <motion.div className="space-y-7" custom={2} variants={fadeUp}>
+          <motion.form
+            className="space-y-7"
+            custom={2}
+            variants={fadeUp}
+            onSubmit={(e) => {
+              e.preventDefault();
+              void handleLogin();
+            }}
+          >
             {/* Email */}
             <div>
               <label className={labelClasses}>Email</label>
@@ -172,8 +192,9 @@ export default function LoginPage() {
                 placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                onBlur={() => setIsEmailTouched(true)}
                 autoComplete="email"
+                aria-invalid={isEmailTouched && normalizedEmail.length === 0}
               />
             </div>
 
@@ -183,6 +204,7 @@ export default function LoginPage() {
                 <label className={labelClasses + ' mb-0'}>Contraseña</label>
                 <button
                   type="button"
+                  onClick={handleForgotPassword}
                   className="font-label text-[10px] uppercase tracking-[0.15em] text-primary hover:text-primary-container transition-colors"
                 >
                   Olvidé mi contraseña
@@ -195,7 +217,6 @@ export default function LoginPage() {
                   placeholder="Tu contraseña"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                   autoComplete="current-password"
                 />
                 <button
@@ -211,9 +232,8 @@ export default function LoginPage() {
 
             {/* Login button */}
             <motion.button
-              type="button"
-              onClick={handleLogin}
-              disabled={loading}
+              type="submit"
+              disabled={loading || !isFormValid}
               whileHover={loading ? undefined : { scale: 1.01 }}
               whileTap={loading ? undefined : { scale: 0.99 }}
               className="w-full py-4 rounded-2xl font-headline font-extrabold text-base uppercase tracking-wider text-on-primary flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
@@ -229,7 +249,7 @@ export default function LoginPage() {
               )}
               {loading ? 'Ingresando...' : 'Iniciar sesión'}
             </motion.button>
-          </motion.div>
+          </motion.form>
 
           {/* Divider */}
           <motion.div className="flex items-center gap-4" custom={3} variants={fadeUp}>
