@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CreditCard, Lock, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useActivity, useCreatePaymentIntent } from '@/services/hooks';
-import { mockActivities } from '@/data/activities';
 import CTAButton from '@/components/CTAButton';
 import toast from 'react-hot-toast';
 
@@ -34,7 +33,15 @@ export default function PaymentPage() {
   const { data: apiActivity } = useActivity(activityId);
   const createPaymentIntent = useCreatePaymentIntent();
 
-  const activity = apiActivity ?? mockActivities.find((a) => a.id === Number(activityId)) ?? mockActivities[0];
+  const activity = apiActivity;
+
+  if (!activity) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface">
+        <div className="animate-pulse text-muted">Cargando actividad...</div>
+      </div>
+    );
+  }
 
   const [paymentState, setPaymentState] = useState<PaymentState>('loading');
   const [errorMessage, setErrorMessage] = useState('');

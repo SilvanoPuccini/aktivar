@@ -1,10 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Bell, MessageCircle, UserPlus, Clock, ArrowLeft, CheckCheck } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { mockUsers } from '@/data/users';
-import { mockActivities } from '@/data/activities';
 import EmptyState from '@/components/EmptyState';
 import {
   useNotifications,
@@ -43,99 +41,6 @@ const notificationColors: Record<NotificationType, string> = {
   spot_opened: 'text-primary',
 };
 
-// Mock notifications as fallback
-const mockNotifications: LocalNotification[] = [
-  {
-    id: 1,
-    type: 'join',
-    actor: { id: mockUsers[2].id, full_name: mockUsers[2].full_name, avatar: mockUsers[2].avatar },
-    activityId: mockActivities[0].id,
-    description: `${mockUsers[2].full_name} se unio a ${mockActivities[0].title}`,
-    timestamp: 'hace 15 min',
-    isRead: false,
-  },
-  {
-    id: 2,
-    type: 'message',
-    actor: { id: mockUsers[1].id, full_name: mockUsers[1].full_name, avatar: mockUsers[1].avatar },
-    activityId: mockActivities[0].id,
-    description: `${mockUsers[1].full_name} envio un mensaje en ${mockActivities[0].title}`,
-    timestamp: 'hace 1h',
-    isRead: false,
-  },
-  {
-    id: 3,
-    type: 'reminder',
-    actor: { id: mockUsers[0].id, full_name: mockUsers[0].full_name, avatar: mockUsers[0].avatar },
-    activityId: mockActivities[0].id,
-    description: `${mockActivities[0].title} comienza manana a las 7:00`,
-    timestamp: 'hace 2h',
-    isRead: false,
-  },
-  {
-    id: 4,
-    type: 'join',
-    actor: { id: mockUsers[4].id, full_name: mockUsers[4].full_name, avatar: mockUsers[4].avatar },
-    activityId: mockActivities[5].id,
-    description: `${mockUsers[4].full_name} se unio a ${mockActivities[5].title}`,
-    timestamp: 'hace 3h',
-    isRead: true,
-  },
-  {
-    id: 5,
-    type: 'spot_opened',
-    actor: { id: mockUsers[3].id, full_name: mockUsers[3].full_name, avatar: mockUsers[3].avatar },
-    activityId: mockActivities[1].id,
-    description: `Se abrio un cupo en ${mockActivities[1].title}`,
-    timestamp: 'hace 5h',
-    isRead: true,
-  },
-  {
-    id: 6,
-    type: 'message',
-    actor: { id: mockUsers[5].id, full_name: mockUsers[5].full_name, avatar: mockUsers[5].avatar },
-    activityId: mockActivities[0].id,
-    description: `${mockUsers[5].full_name} respondio en el chat de ${mockActivities[0].title}`,
-    timestamp: 'ayer',
-    isRead: true,
-  },
-  {
-    id: 7,
-    type: 'join',
-    actor: { id: mockUsers[8].id, full_name: mockUsers[8].full_name, avatar: mockUsers[8].avatar },
-    activityId: mockActivities[5].id,
-    description: `${mockUsers[8].full_name} se unio a ${mockActivities[5].title}`,
-    timestamp: 'ayer',
-    isRead: true,
-  },
-  {
-    id: 8,
-    type: 'reminder',
-    actor: { id: mockUsers[0].id, full_name: mockUsers[0].full_name, avatar: mockUsers[0].avatar },
-    activityId: mockActivities[1].id,
-    description: `No olvides confirmar tu asistencia a ${mockActivities[1].title}`,
-    timestamp: 'hace 2 dias',
-    isRead: true,
-  },
-  {
-    id: 9,
-    type: 'spot_opened',
-    actor: { id: mockUsers[6].id, full_name: mockUsers[6].full_name, avatar: mockUsers[6].avatar },
-    activityId: mockActivities[7].id,
-    description: `Se abrieron 3 cupos en ${mockActivities[7].title}`,
-    timestamp: 'hace 3 dias',
-    isRead: true,
-  },
-  {
-    id: 10,
-    type: 'message',
-    actor: { id: mockUsers[7].id, full_name: mockUsers[7].full_name, avatar: mockUsers[7].avatar },
-    activityId: mockActivities[1].id,
-    description: `${mockUsers[7].full_name} compartio la ubicacion en ${mockActivities[1].title}`,
-    timestamp: 'hace 4 dias',
-    isRead: true,
-  },
-];
 
 function mapApiToLocal(apiNotification: AppNotification): LocalNotification {
   const now = new Date();
@@ -183,34 +88,21 @@ export default function NotificationsPage() {
   const navigate = useNavigate();
   const [readIds, setReadIds] = useState<Set<number>>(new Set());
   const [allMarkedRead, setAllMarkedRead] = useState(false);
-  const [timedOut, setTimedOut] = useState(false);
 
   // API hooks
-  const { data: apiNotifications, isError } = useNotifications();
+  const { data: apiNotifications } = useNotifications();
   const markRead = useMarkNotificationRead();
   const markAllRead = useMarkAllNotificationsRead();
 
-  // Fallback timeout — if API hasn't responded in 2s, use mock data
-  useEffect(() => {
-    const timeout = setTimeout(() => setTimedOut(true), 2000);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  // Derive notifications from API data or mock fallback
+  // Derive notifications from API data
   const notifications = useMemo(() => {
-    let base: LocalNotification[];
-    if (apiNotifications && apiNotifications.length > 0) {
-      base = apiNotifications.map(mapApiToLocal);
-    } else if (isError || timedOut) {
-      base = mockNotifications;
-    } else {
-      return []; // Still loading
-    }
+    if (!apiNotifications || apiNotifications.length === 0) return [];
+    const base = apiNotifications.map(mapApiToLocal);
     return base.map((n) => ({
       ...n,
       isRead: allMarkedRead || readIds.has(n.id) || n.isRead,
     }));
-  }, [apiNotifications, isError, timedOut, readIds, allMarkedRead]);
+  }, [apiNotifications, readIds, allMarkedRead]);
 
   const handleNotificationClick = (notification: LocalNotification) => {
     // Mark as read locally

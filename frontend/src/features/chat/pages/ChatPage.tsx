@@ -3,96 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Send, Image, MapPin, Smile, Wifi, WifiOff } from 'lucide-react';
 import { useWebSocket, type ConnectionStatus } from '@/services/useWebSocket';
-import { useMessages, useActivity } from '@/services/hooks';
+import { useMessages, useActivity, useCurrentUser } from '@/services/hooks';
 import api from '@/services/api';
-import { mockUsers } from '@/data/users';
 import type { ChatMessage } from '@/types/chat';
-
-const currentUserId = mockUsers[0].id;
-
-// Fallback mock messages mapped to ChatMessage type
-const mockChatMessages: ChatMessage[] = [
-  {
-    id: 1,
-    author: { id: mockUsers[1].id, full_name: mockUsers[1].full_name, avatar: mockUsers[1].avatar },
-    content: '\u00a1Hola a todos! \u00bfListos para la actividad?',
-    message_type: 'text',
-    created_at: '2026-03-22T10:30:00Z',
-    reactions: [],
-  },
-  {
-    id: 2,
-    author: { id: mockUsers[0].id, full_name: mockUsers[0].full_name, avatar: mockUsers[0].avatar },
-    content: '\u00a1S\u00ed! Ya tengo todo preparado. Zapatillas de trekking, agua y snacks.',
-    message_type: 'text',
-    created_at: '2026-03-22T10:32:00Z',
-    reactions: [],
-  },
-  {
-    id: 3,
-    author: { id: mockUsers[2].id, full_name: mockUsers[2].full_name, avatar: mockUsers[2].avatar },
-    content: '\u00bfAlguien sabe si hay estacionamiento cerca del punto de encuentro?',
-    message_type: 'text',
-    created_at: '2026-03-22T10:35:00Z',
-    reactions: [],
-  },
-  {
-    id: 4,
-    author: { id: mockUsers[5].id, full_name: mockUsers[5].full_name, avatar: mockUsers[5].avatar },
-    content: 'S\u00ed, hay un estacionamiento gratuito a 200 metros. Yo puedo llevar a 3 personas desde el metro.',
-    message_type: 'text',
-    created_at: '2026-03-22T10:37:00Z',
-    reactions: [],
-  },
-  {
-    id: 5,
-    author: { id: mockUsers[0].id, full_name: mockUsers[0].full_name, avatar: mockUsers[0].avatar },
-    content: '\u00a1Genial Andr\u00e9s! Yo necesito que me lleven \ud83d\ude4b\u200d\u2640\ufe0f',
-    message_type: 'text',
-    created_at: '2026-03-22T10:38:00Z',
-    reactions: [],
-  },
-  {
-    id: 6,
-    author: { id: mockUsers[4].id, full_name: mockUsers[4].full_name, avatar: mockUsers[4].avatar },
-    content: '\u00bfA qu\u00e9 hora nos juntamos exactamente? El evento dice 7:00 pero \u00bfllegamos antes?',
-    message_type: 'text',
-    created_at: '2026-03-22T10:42:00Z',
-    reactions: [],
-  },
-  {
-    id: 7,
-    author: { id: mockUsers[1].id, full_name: mockUsers[1].full_name, avatar: mockUsers[1].avatar },
-    content: 'Yo dir\u00eda llegar 6:45 para organizarnos y partir todos juntos.',
-    message_type: 'text',
-    created_at: '2026-03-22T10:44:00Z',
-    reactions: [],
-  },
-  {
-    id: 8,
-    author: { id: mockUsers[0].id, full_name: mockUsers[0].full_name, avatar: mockUsers[0].avatar },
-    content: 'Perfecto, nos vemos a las 6:45 entonces. \u00a1No olviden bloqueador solar!',
-    message_type: 'text',
-    created_at: '2026-03-22T10:45:00Z',
-    reactions: [],
-  },
-  {
-    id: 9,
-    author: { id: mockUsers[2].id, full_name: mockUsers[2].full_name, avatar: mockUsers[2].avatar },
-    content: '\u00a1Listo! Llevo mi c\u00e1mara tambi\u00e9n para sacar fotos del grupo en la cumbre \ud83d\udcf8',
-    message_type: 'text',
-    created_at: '2026-03-22T10:48:00Z',
-    reactions: [],
-  },
-  {
-    id: 10,
-    author: { id: mockUsers[5].id, full_name: mockUsers[5].full_name, avatar: mockUsers[5].avatar },
-    content: 'Revisen el clima ma\u00f1ana por si acaso. Vi que podr\u00eda haber algo de viento.',
-    message_type: 'text',
-    created_at: '2026-03-22T11:02:00Z',
-    reactions: [],
-  },
-];
 
 function formatTime(dateStr: string): string {
   return new Date(dateStr).toLocaleTimeString('es-CL', {
@@ -159,14 +72,17 @@ export default function ChatPage() {
   const [inputValue, setInputValue] = useState('');
   const [typingUsers, setTypingUsers] = useState<TypingUser[]>([]);
   const [reactionPickerMsgId, setReactionPickerMsgId] = useState<number | null>(null);
-  const [usedFallback, setUsedFallback] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Get the current user from the API
+  const { data: currentUser } = useCurrentUser();
+  const currentUserId = currentUser?.id ?? 0;
+
   // Fetch activity details for the header
   const { data: activity } = useActivity(activityId);
-  const activityTitle = activity?.title ?? (activityId === '1' ? 'Trekking Cerro Manquehue' : `Actividad #${activityId}`);
-  const participantCount = activity?.confirmed_count ?? 13;
+  const activityTitle = activity?.title ?? `Actividad #${activityId}`;
+  const participantCount = activity?.confirmed_count ?? 0;
 
   // HTTP fetch for initial messages (used as secondary fallback)
   const { data: httpMessages } = useMessages(activityId ? Number(activityId) : undefined);
@@ -210,18 +126,16 @@ export default function ChatPage() {
   }, []);
 
   const handleWsError = useCallback(() => {
-    // Fall back to mock data if WebSocket fails
-    if (messages.length === 0) {
-      setMessages(httpMessages ?? mockChatMessages);
-      setUsedFallback(true);
+    // Fall back to HTTP messages if WebSocket fails
+    if (messages.length === 0 && httpMessages) {
+      setMessages(httpMessages);
     }
   }, [messages.length, httpMessages]);
 
   const handleWsClose = useCallback(() => {
-    // If we never got messages, use fallback
-    if (messages.length === 0) {
-      setMessages(httpMessages ?? mockChatMessages);
-      setUsedFallback(true);
+    // If we never got messages, use HTTP fallback
+    if (messages.length === 0 && httpMessages) {
+      setMessages(httpMessages);
     }
   }, [messages.length, httpMessages]);
 
@@ -234,16 +148,12 @@ export default function ChatPage() {
     reconnectInterval: 2000,
   });
 
-  // Last resort: if after 3s no messages, load mock data
+  // If HTTP messages arrive and we have nothing yet, use them
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (messages.length === 0) {
-        setMessages(mockChatMessages);
-        setUsedFallback(true);
-      }
-    }, 3000);
-    return () => clearTimeout(timeout);
-  }, [messages.length]);
+    if (messages.length === 0 && httpMessages && httpMessages.length > 0) {
+      setMessages(httpMessages);
+    }
+  }, [messages.length, httpMessages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -301,8 +211,8 @@ export default function ChatPage() {
       id: Date.now(),
       author: {
         id: currentUserId,
-        full_name: mockUsers[0].full_name,
-        avatar: mockUsers[0].avatar,
+        full_name: currentUser?.full_name ?? 'Tú',
+        avatar: currentUser?.avatar ?? '',
       },
       content,
       message_type: 'text',
@@ -311,12 +221,6 @@ export default function ChatPage() {
     };
     setMessages((prev) => [...prev, optimisticMsg]);
     setInputValue('');
-
-    // Simulate typing indicator when using fallback
-    if (usedFallback) {
-      setTypingUsers([{ id: mockUsers[1].id, full_name: mockUsers[1].full_name, avatar: mockUsers[1].avatar }]);
-      setTimeout(() => setTypingUsers([]), 2000);
-    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

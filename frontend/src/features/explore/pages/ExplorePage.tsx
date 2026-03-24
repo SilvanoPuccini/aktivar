@@ -6,8 +6,6 @@ import ActivityMap from '@/components/ActivityMap';
 import SearchBar from '@/components/SearchBar';
 import CategoryChip from '@/components/CategoryChip';
 import ActivityCard from '@/components/ActivityCard';
-import { mockActivities } from '@/data/activities';
-import { categories as fallbackCategories } from '@/data/categories';
 import { useActivities, useCategories } from '@/services/hooks';
 
 export default function ExplorePage() {
@@ -27,8 +25,8 @@ export default function ExplorePage() {
   });
   const { data: apiCategories } = useCategories();
 
-  const categories = apiCategories ?? fallbackCategories;
-  const activities = apiActivities ?? mockActivities;
+  const categories = apiCategories ?? [];
+  const activities = apiActivities ?? [];
 
   const filtered = useMemo(() => {
     return activities.filter((a) => {

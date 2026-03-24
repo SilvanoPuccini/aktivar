@@ -6,8 +6,6 @@ import ActivityCard from '@/components/ActivityCard';
 import ActivityCardSkeleton from '@/components/ActivityCardSkeleton';
 import EmptyState from '@/components/EmptyState';
 import ActivityMap from '@/components/ActivityMap';
-import { mockActivities } from '@/data/activities';
-import { categories as fallbackCategories } from '@/data/categories';
 import { useActivities, useCategories } from '@/services/hooks';
 
 const containerVariants = {
@@ -36,7 +34,7 @@ export default function FeedPage() {
   });
   const { data: apiCategories } = useCategories();
 
-  const categories = apiCategories ?? fallbackCategories;
+  const categories = apiCategories ?? [];
 
   function setSearchQuery(value: string) {
     setSearchParams((prev) => {
@@ -55,8 +53,7 @@ export default function FeedPage() {
   }
 
   const filtered = useMemo(() => {
-    // Use API data if available, fallback to mock
-    const activities = apiActivities ?? mockActivities;
+    const activities = apiActivities ?? [];
     return activities.filter((a) => {
       if (selectedCategory && a.category.slug !== selectedCategory) return false;
       if (searchQuery) {

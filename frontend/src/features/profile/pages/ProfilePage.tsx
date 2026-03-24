@@ -19,8 +19,6 @@ import {
   Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { currentUser } from '@/data/users';
-import { mockActivities } from '@/data/activities';
 import { useCurrentUser } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
 import api, { endpoints } from '@/services/api';
@@ -45,20 +43,36 @@ const badgeColorMap: Record<string, string> = {
   route: 'bg-secondary/15 text-secondary',
 };
 
-const pastActivityPhotos = mockActivities.slice(0, 5).map((a) => ({
-  id: a.id,
-  title: a.title,
-  cover_image: a.cover_image,
-}));
-
 export default function ProfilePage() {
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuthStore();
-  const { data: apiUser } = useCurrentUser();
+  const { data: user, isLoading } = useCurrentUser();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const user = apiUser ?? currentUser;
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface">
+        <div className="animate-pulse text-muted">Cargando perfil...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-surface px-6 gap-4">
+        <h2 className="font-headline text-xl font-bold text-on-surface">Inicia sesión</h2>
+        <p className="text-sm text-muted text-center">Necesitas una cuenta para ver tu perfil.</p>
+        <button
+          onClick={() => navigate('/login')}
+          className="px-6 py-3 rounded-full font-headline font-bold text-sm text-on-primary cursor-pointer"
+          style={{ background: 'linear-gradient(135deg, #ffc56c, #f0a500)' }}
+        >
+          Iniciar sesión
+        </button>
+      </div>
+    );
+  }
   const { profile } = user;
 
   // Edit form state
@@ -91,8 +105,8 @@ export default function ProfilePage() {
     }
   };
 
-  const rating = 4.8;
-  const reviewCount = 124;
+  const rating = profile?.avg_rating ?? 0;
+  const reviewCount = profile?.total_activities ?? 0;
   const filledStars = Math.floor(rating);
 
   const fadeUp = {
@@ -398,27 +412,11 @@ export default function ProfilePage() {
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            {pastActivityPhotos.map((photo) => (
-              <motion.div
-                key={photo.id}
-                whileHover={{ scale: 1.03 }}
-                className="aspect-square cursor-pointer overflow-hidden rounded-xl bg-surface-container-highest"
-                onClick={() => navigate(`/activity/${photo.id}`)}
-              >
-                <img
-                  src={photo.cover_image}
-                  alt={photo.title}
-                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
-                  loading="lazy"
-                />
-              </motion.div>
-            ))}
-
-            <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-surface-container/40 border border-outline-variant/10 border-dashed cursor-pointer hover:bg-surface-container/60 transition-colors">
-              <div className="text-center">
-                <Camera size={22} className="mx-auto mb-1 text-primary/60" />
-                <p className="font-label text-[9px] uppercase tracking-[0.15em] text-muted">
-                  Agregar
+            <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-surface-container/40 border border-outline-variant/10 border-dashed cursor-pointer hover:bg-surface-container/60 transition-colors col-span-3">
+              <div className="text-center py-8">
+                <Camera size={22} className="mx-auto mb-2 text-primary/60" />
+                <p className="font-label text-xs text-muted">
+                  Las fotos de tus actividades aparecerán aquí
                 </p>
               </div>
             </div>
