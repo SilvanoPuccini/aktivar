@@ -1,68 +1,117 @@
-# Aktivar — Guía de Despliegue (VPS)
+# Aktivar — Guía de Despliegue
 
 ## Requisitos
 
 - **VPS** con mínimo 2GB RAM, 2 vCPU (CubePath, DigitalOcean, Hetzner, etc.)
 - **Ubuntu 22.04+** o Debian 12+
 - **Docker** y **Docker Compose v2** (el script los instala si no los tenés)
+- **No necesitás comprar dominio** — hay opciones gratis
 
-## Opción 1: Deploy rápido (solo IP, sin dominio)
+---
 
-Conectate al VPS por SSH y ejecutá:
+## Opción A: Deploy en CubePath con Dokploy (Recomendada)
 
+Dokploy ya está instalado en CubePath. Te da un **subdominio gratis automático** con traefik.me.
+
+### Paso a paso:
+
+1. **Entrá al panel de Dokploy** en tu VPS de CubePath
+   - URL: `http://TU_IP_VPS:3000` (o el puerto que tenga Dokploy)
+
+2. **Crear proyecto:**
+   - Click en "Create Project"
+   - Nombre: `aktivar`
+
+3. **Agregar servicio Docker Compose:**
+   - Dentro del proyecto → "Add Service" → "Docker Compose"
+   - En "Source": seleccionar "Git" y poner la URL del repo
+   - En "Compose Path": escribir `dokploy-compose.yml`
+
+4. **Configurar variables de entorno:**
+   - Ir a la pestaña "Environment"
+   - Agregar estas dos variables **obligatorias**:
+   ```
+   SECRET_KEY=cambia-esto-a-algo-random-de-50-caracteres
+   POSTGRES_PASSWORD=una-contraseña-segura-aqui
+   ```
+
+5. **Asignar dominio gratis:**
+   - Ir a la pestaña "Domains"
+   - Click en "Add Domain"
+   - Click en el icono de dado 🎲 → genera algo como: `aktivar-abc123-TU-IP.traefik.me`
+   - Container Port: `80`
+   - Service Name: `nginx`
+   - HTTPS: `OFF`
+   - Click "Create"
+
+6. **Deploy:**
+   - Click en "Deploy"
+   - Esperar 5-10 minutos (la primera vez descarga y compila todo)
+
+7. **Listo!** Abrí tu navegador en la URL que generó traefik.me
+
+### Resumen de lo que pasa automáticamente:
+- PostgreSQL + PostGIS se crea dentro de Docker (no hay que instalar BD aparte)
+- Redis se levanta solo
+- Las migraciones de Django corren automáticas
+- Los datos demo se cargan solos
+- Frontend React se compila y sirve
+
+---
+
+## Opción B: Deploy con DuckDNS (Dominio gratis legible)
+
+Si querés un dominio más profesional como `aktivar.duckdns.org` (gratis para siempre):
+
+### Paso 1: Crear subdominio en DuckDNS
+1. Andá a https://www.duckdns.org
+2. Iniciá sesión con Google o GitHub (gratis)
+3. Creá un subdominio (ej: `aktivar`)
+4. Copiá tu token del dashboard
+
+### Paso 2: Configurar en el VPS
 ```bash
-# 1. Clonar el repositorio
+# Conectate por SSH al VPS
+ssh root@TU_IP_VPS
+
+# Clonar el repo
 git clone https://github.com/SilvanoPuccini/aktivar.git
 cd aktivar
 
-# 2. Correr el script de deploy
+# Configurar DuckDNS
+bash setup-duckdns.sh aktivar TU_TOKEN_DE_DUCKDNS
+
+# Desplegar
+bash deploy.sh aktivar.duckdns.org
+```
+
+Tu app estará disponible en: `http://aktivar.duckdns.org`
+
+---
+
+## Opción C: Deploy rápido solo con IP
+
+Si solo querés probar rápido sin ningún dominio:
+
+```bash
+ssh root@TU_IP_VPS
+git clone https://github.com/SilvanoPuccini/aktivar.git
+cd aktivar
 bash deploy.sh
 ```
 
-Eso es todo. El script:
-- Instala Docker si no está
-- Genera el `.env` con contraseñas seguras automáticas
-- Levanta PostgreSQL + PostGIS, Redis, Backend, Frontend, Nginx, Celery
-- Te muestra la URL para acceder
+Accedé en: `http://TU_IP_DEL_VPS`
 
-Después de que termine, abrí tu navegador en: `http://TU_IP_DEL_VPS`
-
-## Opción 2: Deploy con dominio + SSL (producción real)
-
-```bash
-# 1. Comprá un dominio (ej: aktivar.com en Namecheap, Cloudflare, etc.)
-
-# 2. En el panel DNS del dominio, creá un registro A:
-#    Tipo: A | Nombre: @ | Valor: TU_IP_DEL_VPS | TTL: 300
-#    Tipo: A | Nombre: www | Valor: TU_IP_DEL_VPS | TTL: 300
-
-# 3. Esperá 5-10 minutos a que propague el DNS
-
-# 4. En el VPS:
-git clone https://github.com/SilvanoPuccini/aktivar.git
-cd aktivar
-bash deploy.sh aktivar.com
-```
-
-El script automáticamente:
-- Configura HTTPS con certificado SSL gratuito (Let's Encrypt)
-- Redirige HTTP → HTTPS
-- Configura renovación automática del certificado
-
-## Agregar SSL después (si ya desplegaste sin dominio)
-
-```bash
-# Cuando tengas el dominio y DNS apuntando al VPS:
-bash deploy.sh --ssl tudominio.com
-```
+---
 
 ## Base de datos
 
-**PostgreSQL + PostGIS corre dentro de Docker.** No necesitás instalar ni configurar nada por separado.
+**PostgreSQL + PostGIS corre DENTRO de Docker.** No necesitás instalar ni configurar nada por separado.
 
-- Los datos persisten en un volumen Docker (`postgres_data`)
 - Se crea automáticamente al primer deploy
-- Las migraciones corren automáticas al iniciar
+- Las migraciones corren solas al iniciar
+- Los datos persisten en un volumen Docker (`postgres_data`)
+- Si reiniciás o actualizás, los datos NO se pierden
 
 ### Comandos útiles de BD
 
@@ -86,7 +135,7 @@ docker compose exec db psql -U aktivar aktivar -c "\dt"
 docker compose exec backend python manage.py createsuperuser
 ```
 
-Después accedé a `http://TU_IP/admin/` con ese usuario.
+Después accedé a `http://TU_DOMINIO/admin/`
 
 ## Comandos del día a día
 
@@ -94,10 +143,10 @@ Después accedé a `http://TU_IP/admin/` con ese usuario.
 # Ver estado de los contenedores
 docker compose ps
 
-# Ver logs en vivo (todos los servicios)
+# Ver logs en vivo
 docker compose logs -f
 
-# Ver logs solo del backend
+# Solo backend
 docker compose logs backend -f
 
 # Reiniciar un servicio
@@ -123,16 +172,8 @@ docker compose up -d --build
 
 ## Configurar servicios externos
 
-Editá el archivo `.env` en el VPS y reiniciá:
+Editá el `.env` en el VPS (o las env vars en Dokploy):
 
-```bash
-nano .env   # o vim .env
-
-# Después de editar:
-docker compose restart backend celery
-```
-
-### Servicios opcionales:
 | Servicio | Variable | Para qué |
 |----------|----------|----------|
 | Stripe | `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY` | Pagos |
@@ -145,32 +186,39 @@ docker compose restart backend celery
 ## Troubleshooting
 
 ```bash
-# Si un contenedor no levanta, ver los logs:
+# Si un contenedor no levanta:
 docker compose logs <servicio> --tail=100
 
 # Si la BD no conecta:
 docker compose logs db --tail=50
 
 # Recrear todo desde cero (BORRA DATOS):
-docker compose down -v
-bash deploy.sh
+docker compose down -v && bash deploy.sh
 
 # Ver uso de recursos:
 docker stats
 ```
 
-## Arquitectura del deploy
+## Arquitectura
 
 ```
-Internet → Nginx (puerto 80/443)
-              ├── /api/*    → Django Backend (Daphne :8000)
-              ├── /admin/*  → Django Backend
-              ├── /ws/*     → Django Channels (WebSocket)
-              ├── /static/* → Archivos estáticos (volumen)
-              ├── /media/*  → Archivos subidos (volumen)
-              └── /*        → React Frontend (SPA)
+Internet → Traefik (Dokploy) → Nginx (puerto 80)
+                                  ├── /api/*    → Django Backend (Daphne :8000)
+                                  ├── /admin/*  → Django Backend
+                                  ├── /ws/*     → Django Channels (WebSocket)
+                                  ├── /static/* → Archivos estáticos
+                                  ├── /media/*  → Archivos subidos
+                                  └── /*        → React Frontend (SPA)
 
 Backend → PostgreSQL + PostGIS (volumen persistente)
-       → Redis (cache + Celery broker)
+       → Redis (cache + Celery broker + WebSocket)
        → Celery Worker (tareas async)
 ```
+
+## Comparación de opciones de dominio gratis
+
+| Opción | Dominio ejemplo | HTTPS | Profesionalismo |
+|--------|----------------|-------|-----------------|
+| traefik.me (Dokploy) | `aktivar-abc-1-2-3-4.traefik.me` | No | Medio |
+| DuckDNS | `aktivar.duckdns.org` | Sí (Let's Encrypt) | Alto |
+| Solo IP | `http://123.45.67.89` | No | Bajo |
