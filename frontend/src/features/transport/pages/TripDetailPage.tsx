@@ -14,13 +14,21 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import toast from 'react-hot-toast';
 import EmptyState from '@/components/EmptyState';
-import { mockTrips } from '@/data/trips';
+import { useTrip, useBookSeat } from '@/services/hooks';
 
 export default function TripDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { data: trip, isLoading } = useTrip(id);
+  const bookSeat = useBookSeat();
 
-  const trip = mockTrips.find((t) => t.id === Number(id));
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface">
+        <div className="animate-pulse text-muted">Cargando viaje...</div>
+      </div>
+    );
+  }
 
   if (!trip) {
     return (
@@ -43,10 +51,10 @@ export default function TripDetailPage() {
   const costPerPerson = trip.seats_taken > 0
     ? Math.round(totalCost)
     : totalCost;
-  const spotsLeft = trip.seats_remaining;
-  const confirmedPassengers = trip.passengers.filter((p) => p.status === 'confirmed');
+  const spotsLeft = trip.seats_remaining ?? (trip.available_seats - (trip.seats_taken ?? 0));
+  const confirmedPassengers = (trip.passengers ?? []).filter((p: { status: string }) => p.status === 'confirmed');
   const totalSeats = trip.available_seats;
-  const seatsTaken = trip.seats_taken;
+  const seatsTaken = trip.seats_taken ?? 0;
 
   return (
     <div className="min-h-screen bg-surface pb-24">
@@ -248,12 +256,17 @@ export default function TripDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               {/* JOIN RIDE Button */}
               <button
-                onClick={() =>
-                  spotsLeft > 0
-                    ? toast.success('Asiento reservado exitosamente')
-                    : toast.error('No hay cupos disponibles')
-                }
-                disabled={spotsLeft === 0}
+                onClick={() => {
+                  if (spotsLeft > 0) {
+                    bookSeat.mutate(trip.id, {
+                      onSuccess: () => toast.success('Asiento reservado exitosamente'),
+                      onError: () => toast.error('No se pudo reservar el asiento'),
+                    });
+                  } else {
+                    toast.error('No hay cupos disponibles');
+                  }
+                }}
+                disabled={spotsLeft === 0 || bookSeat.isPending}
                 className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-primary to-primary-container py-5 font-headline text-lg font-bold tracking-tight text-on-primary shadow-lg transition-all active:scale-95 disabled:opacity-50"
               >
                 <Zap size={22} className="fill-current" />
@@ -265,7 +278,7 @@ export default function TripDetailPage() {
                 {/* Emergency Button */}
                 <button
                   className="flex items-center gap-2 font-label text-sm font-bold uppercase tracking-widest text-error opacity-60 transition-opacity hover:opacity-100"
-                  onClick={() => toast.error('Funci\u00f3n de emergencia no disponible en demo')}
+                  onClick={() => toast('Mantén presionado 3 segundos para activar emergencia')}
                 >
                   <AlertTriangle size={16} />
                   Emergencia
@@ -273,7 +286,7 @@ export default function TripDetailPage() {
 
                 {/* Passenger Avatars */}
                 <div className="flex -space-x-3">
-                  {confirmedPassengers.slice(0, 3).map((passenger) => (
+                  {confirmedPassengers.slice(0, 3).map((passenger: { id: number; user: { avatar: string; full_name: string } }) => (
                     <img
                       key={passenger.id}
                       src={passenger.user.avatar}
@@ -286,9 +299,9 @@ export default function TripDetailPage() {
                       +{confirmedPassengers.length - 3}
                     </div>
                   )}
-                  {trip.passengers.filter((p) => p.status === 'pending').length > 0 && confirmedPassengers.length <= 3 && (
+                  {(trip.passengers ?? []).filter((p: { status: string }) => p.status === 'pending').length > 0 && confirmedPassengers.length <= 3 && (
                     <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface-container-low bg-surface-container-highest text-[10px] font-bold text-on-surface">
-                      +{trip.passengers.filter((p) => p.status === 'pending').length}
+                      +{(trip.passengers ?? []).filter((p: { status: string }) => p.status === 'pending').length}
                     </div>
                   )}
                 </div>

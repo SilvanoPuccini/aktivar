@@ -8,6 +8,7 @@ export interface UserProfile {
   total_activities: number;
   total_km: number;
   total_people_met: number;
+  avg_rating?: number;
   badges: Badge[];
 }
 

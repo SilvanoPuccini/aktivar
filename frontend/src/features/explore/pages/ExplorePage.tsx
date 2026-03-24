@@ -6,8 +6,6 @@ import ActivityMap from '@/components/ActivityMap';
 import SearchBar from '@/components/SearchBar';
 import CategoryChip from '@/components/CategoryChip';
 import ActivityCard from '@/components/ActivityCard';
-import { mockActivities } from '@/data/activities';
-import { categories as fallbackCategories } from '@/data/categories';
 import { useActivities, useCategories } from '@/services/hooks';
 
 export default function ExplorePage() {
@@ -27,10 +25,10 @@ export default function ExplorePage() {
   });
   const { data: apiCategories } = useCategories();
 
-  const categories = apiCategories ?? fallbackCategories;
-  const activities = apiActivities ?? mockActivities;
+  const categories = apiCategories ?? [];
 
   const filtered = useMemo(() => {
+    const activities = apiActivities ?? [];
     return activities.filter((a) => {
       if (selectedCategory && a.category.slug !== selectedCategory) return false;
       if (searchQuery) {
@@ -43,7 +41,7 @@ export default function ExplorePage() {
       }
       return true;
     });
-  }, [activities, selectedCategory, searchQuery]);
+  }, [apiActivities, selectedCategory, searchQuery]);
 
   const selectedActivity = useMemo(
     () => filtered.find((a) => a.id === selectedActivityId) ?? null,
