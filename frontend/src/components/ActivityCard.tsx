@@ -141,7 +141,7 @@ export default function ActivityCard({
       </div>
 
       {/* body */}
-      <div className="p-5 space-y-4 pt-5">
+      <div className="p-6 space-y-5">
         <h2 className="text-xl font-headline font-bold text-[#EDE9DF] leading-tight group-hover:text-primary transition-colors">
           {activity.title}
         </h2>
