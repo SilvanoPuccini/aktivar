@@ -3,6 +3,7 @@ from datetime import timedelta
 import pytest
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
+from rest_framework.test import APIRequestFactory, force_authenticate
 
 from users.models import (
     CustomUser,
@@ -11,6 +12,7 @@ from users.models import (
     UserProfile,
 )
 from users.serializers import UserRegistrationSerializer
+from users.views import RegisterView, UserViewSet, AuthTokenObtainPairView
 
 
 # ── CustomUser creation ──────────────────────────────────────────
@@ -216,3 +218,41 @@ def test_registration_serializer_handles_duplicate_phone():
     with pytest.raises(ValidationError) as exc:
         serializer.save()
     assert "phone" in exc.value.detail
+
+
+@pytest.mark.django_db
+def test_auth_flow_register_login_profile():
+    factory = APIRequestFactory()
+
+    register_view = RegisterView.as_view()
+    register_request = factory.post(
+        "/api/v1/users/register/",
+        {
+            "email": "flow@example.com",
+            "password": "password123",
+            "full_name": "Flow User",
+        },
+        format="json",
+    )
+    register_response = register_view(register_request)
+    assert register_response.status_code == 201
+
+    login_view = AuthTokenObtainPairView.as_view()
+    login_request = factory.post(
+        "/api/v1/auth/token/",
+        {"email": "flow@example.com", "password": "password123"},
+        format="json",
+    )
+    login_response = login_view(login_request)
+    assert login_response.status_code == 200
+    assert "access" in login_response.data
+
+    user = CustomUser.objects.get(email="flow@example.com")
+    me_view = UserViewSet.as_view({"get": "me"})
+    me_request = factory.get("/api/v1/users/me/")
+    force_authenticate(me_request, user=user)
+    me_response = me_view(me_request)
+
+    assert me_response.status_code == 200
+    assert me_response.data["email"] == "flow@example.com"
+    assert me_response.data["full_name"] == "Flow User"

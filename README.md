@@ -157,7 +157,7 @@ pytest --cov=. --cov-report=term-missing
 bash scripts/smoke_tests.sh https://tu-dominio.com
 
 # Opcional: validar login también
-AUTH_EMAIL=demo@aktivar.app AUTH_PASSWORD=aktivar2024 \
+AUTH_EMAIL=tu_email_de_prueba AUTH_PASSWORD=tu_password_de_prueba \
   bash scripts/smoke_tests.sh https://tu-dominio.com
 ```
 
