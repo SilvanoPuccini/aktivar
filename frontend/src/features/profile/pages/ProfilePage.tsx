@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -50,6 +50,21 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // Edit form state — initialized to '' and synced when user data loads
+  const [editBio, setEditBio] = useState('');
+  const [editLocation, setEditLocation] = useState('');
+  const [editInstagram, setEditInstagram] = useState('');
+  const [editWebsite, setEditWebsite] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      setEditBio(user.bio ?? '');
+      setEditLocation(user.profile.location_name ?? '');
+      setEditInstagram(user.profile.instagram ?? '');
+      setEditWebsite(user.profile.website ?? '');
+    }
+  }, [user]);
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface">
@@ -74,12 +89,6 @@ export default function ProfilePage() {
     );
   }
   const { profile } = user;
-
-  // Edit form state
-  const [editBio, setEditBio] = useState(user.bio);
-  const [editLocation, setEditLocation] = useState(profile.location_name);
-  const [editInstagram, setEditInstagram] = useState(profile.instagram);
-  const [editWebsite, setEditWebsite] = useState(profile.website);
 
   const handleLogout = () => {
     logout();

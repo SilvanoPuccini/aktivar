@@ -30,18 +30,8 @@ const stripeElementStyle = {
 export default function PaymentPage() {
   const { activityId } = useParams<{ activityId: string }>();
   const navigate = useNavigate();
-  const { data: apiActivity } = useActivity(activityId);
+  const { data: activity } = useActivity(activityId);
   const createPaymentIntent = useCreatePaymentIntent();
-
-  const activity = apiActivity;
-
-  if (!activity) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-surface">
-        <div className="animate-pulse text-muted">Cargando actividad...</div>
-      </div>
-    );
-  }
 
   const [paymentState, setPaymentState] = useState<PaymentState>('loading');
   const [errorMessage, setErrorMessage] = useState('');
@@ -133,6 +123,14 @@ export default function PaymentPage() {
 
     return () => { cardElement.unmount(); };
   }, [stripe, clientSecret]);
+
+  if (!activity) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface">
+        <div className="animate-pulse text-muted">Cargando actividad...</div>
+      </div>
+    );
+  }
 
   const handlePayment = async () => {
     setPaymentState('processing');

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Send, Image, MapPin, Smile, Wifi, WifiOff } from 'lucide-react';
@@ -123,7 +123,7 @@ export default function ChatPage() {
         }, 3000);
       }
     }
-  }, []);
+  }, [currentUserId]);
 
   const handleWsError = useCallback(() => {
     // Fall back to HTTP messages if WebSocket fails
@@ -148,12 +148,11 @@ export default function ChatPage() {
     reconnectInterval: 2000,
   });
 
-  // If HTTP messages arrive and we have nothing yet, use them
-  useEffect(() => {
-    if (messages.length === 0 && httpMessages && httpMessages.length > 0) {
-      setMessages(httpMessages);
-    }
-  }, [messages.length, httpMessages]);
+  // Derive displayed messages: prefer WebSocket messages, fall back to HTTP
+  const displayedMessages = useMemo(
+    () => (messages.length > 0 ? messages : (httpMessages ?? [])),
+    [messages, httpMessages],
+  );
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -161,7 +160,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, typingUsers]);
+  }, [displayedMessages, typingUsers]);
 
   const handleReaction = (messageId: number, emoji: string) => {
     // Optimistic update: toggle reaction locally
@@ -277,7 +276,7 @@ export default function ChatPage() {
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
         <AnimatePresence initial={false}>
-          {messages.map((msg) => {
+          {displayedMessages.map((msg) => {
             const isOwn = msg.author.id === currentUserId;
             return (
               <motion.div
