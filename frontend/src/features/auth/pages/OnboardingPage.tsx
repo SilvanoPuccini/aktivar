@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
   ArrowLeft,
+  Plus,
   Eye,
   EyeOff,
   MapPin,
@@ -48,7 +49,7 @@ const initialData: OnboardingData = {
   email: '',
   password: '',
   selectedCategories: [],
-  location: '',
+  location: 'Bariloche, Argentina',
 };
 
 /* ------------------------------------------------------------------ */
@@ -121,6 +122,7 @@ export default function OnboardingPage() {
   const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
   const [gpsAcquiring, setGpsAcquiring] = useState(false);
+  const [customInterests, setCustomInterests] = useState<string[]>([]);
 
   /* helpers */
   const update = <K extends keyof OnboardingData>(key: K, value: OnboardingData[K]) =>
@@ -150,9 +152,12 @@ export default function OnboardingPage() {
         return;
       }
     }
-    if (currentStep === 1 && formData.selectedCategories.length < 3) {
-      toast.error('Selecciona al menos 3 categorías');
-      return;
+    if (currentStep === 1) {
+      const totalSelected = formData.selectedCategories.length + customInterests.length;
+      if (totalSelected < 3) {
+        toast.error('Selecciona al menos 3 categorías');
+        return;
+      }
     }
     setDirection(1);
     setCurrentStep((s) => Math.min(s + 1, 2));
@@ -166,21 +171,24 @@ export default function OnboardingPage() {
   const handleComplete = async () => {
     setLoading(true);
     try {
+      const normalizedEmail = formData.email.trim().toLowerCase();
+      const normalizedName = formData.name.trim();
+
       await api.post(endpoints.register, {
-        email: formData.email,
+        email: normalizedEmail,
         password: formData.password,
-        full_name: formData.name,
+        full_name: normalizedName,
       });
 
       const tokenRes = await api.post(endpoints.login, {
-        email: formData.email,
+        email: normalizedEmail,
         password: formData.password,
       });
       sessionStorage.setItem('aktivar_access_token', tokenRes.data.access);
 
       if (formData.location) {
         await api.patch(endpoints.myProfile, {
-          location_name: formData.location,
+          location_name: formData.location.trim(),
         });
       }
 
@@ -190,12 +198,20 @@ export default function OnboardingPage() {
       toast.success('Cuenta creada con éxito!');
       navigate('/');
     } catch (err: unknown) {
-      const error = err as { response?: { data?: Record<string, string[]> } };
+      const error = err as { response?: { data?: Record<string, string[] | string>; status?: number } };
       const data = error.response?.data;
       if (data?.email) {
         toast.error('Este email ya está registrado');
+      } else if (error.response?.status === 429) {
+        toast.error('Demasiados intentos. Espera unos minutos y vuelve a intentar.');
+      } else if (data?.phone) {
+        toast.error(Array.isArray(data.phone) ? data.phone[0] : String(data.phone));
       } else if (data?.password) {
-        toast.error(data.password[0]);
+        toast.error(Array.isArray(data.password) ? data.password[0] : String(data.password));
+      } else if (data?.detail) {
+        toast.error(Array.isArray(data.detail) ? data.detail[0] : String(data.detail));
+      } else if (error.response?.status === 500) {
+        toast.error('Error interno del servidor al registrar. Intenta nuevamente en 1 minuto.');
       } else {
         toast.error('Error al crear la cuenta');
       }
@@ -204,8 +220,27 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleGPS = () => {
+  const handleGPS = async () => {
     setGpsAcquiring(true);
+    const fallbackToBariloche = () => {
+      update('location', 'Bariloche, Argentina');
+      setUserCoords([-41.1335, -71.3103]);
+      setGpsAcquiring(false);
+    };
+
+    if ('permissions' in navigator) {
+      try {
+        const result = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+        if (result.state === 'denied') {
+          toast('Permiso de ubicación bloqueado. Usando Bariloche por defecto.', { icon: '📍' });
+          fallbackToBariloche();
+          return;
+        }
+      } catch {
+        // Continue with normal flow if permission query is unsupported
+      }
+    }
+
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -216,20 +251,26 @@ export default function OnboardingPage() {
           );
           setGpsAcquiring(false);
         },
-        () => {
-          update('location', 'Santiago, Chile');
-          setUserCoords([-33.4489, -70.6693]);
-          setGpsAcquiring(false);
-        },
+        fallbackToBariloche,
       );
     } else {
-      update('location', 'Santiago, Chile');
-      setUserCoords([-33.4489, -70.6693]);
-      setGpsAcquiring(false);
+      fallbackToBariloche();
     }
   };
 
-  const selectedCount = formData.selectedCategories.length;
+  const addCustomInterest = () => {
+    const interest = window.prompt('¿Qué otra actividad te apasiona?');
+    if (!interest) return;
+    const normalized = interest.trim();
+    if (!normalized) return;
+    if (customInterests.some((i) => i.toLowerCase() === normalized.toLowerCase())) {
+      toast('Esa pasión ya está agregada', { icon: 'ℹ️' });
+      return;
+    }
+    setCustomInterests((prev) => [...prev, normalized]);
+  };
+
+  const selectedCount = formData.selectedCategories.length + customInterests.length;
 
   /* ---------------------------------------------------------------- */
   /*  Step 1 — Create your account                                     */
@@ -445,7 +486,37 @@ export default function OnboardingPage() {
             </motion.button>
           );
         })}
+        <motion.button
+          type="button"
+          onClick={addCustomInterest}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          className="group relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:ring-1 hover:ring-primary/40 bg-surface-container-highest/70 border border-outline-variant/20"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/15 to-secondary/10" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="h-12 w-12 rounded-2xl bg-surface/80 flex items-center justify-center border border-outline-variant/25">
+              <Plus size={24} className="text-primary" />
+            </div>
+          </div>
+          <div className="absolute bottom-3 left-3 right-3">
+            <span className="font-headline text-base font-bold text-on-surface">Agregar otra</span>
+          </div>
+        </motion.button>
       </div>
+
+      {customInterests.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {customInterests.map((interest) => (
+            <span
+              key={interest}
+              className="px-3 py-1.5 rounded-full bg-secondary/20 text-secondary font-label text-xs tracking-wider uppercase"
+            >
+              {interest}
+            </span>
+          ))}
+        </div>
+      )}
     </section>
   );
 
@@ -473,7 +544,7 @@ export default function OnboardingPage() {
         <input
           type="text"
           className={inputClasses}
-          placeholder="Ej: Santiago, Chile"
+          placeholder="Ej: Bariloche, Argentina"
           value={formData.location}
           onChange={(e) => update('location', e.target.value)}
         />
@@ -509,7 +580,7 @@ export default function OnboardingPage() {
                   }
                 : undefined
             }
-            center={userCoords ?? [-33.4489, -70.6693]}
+            center={userCoords ?? [-41.1335, -71.3103]}
             zoom={userCoords ? 13 : 4}
           />
         </div>

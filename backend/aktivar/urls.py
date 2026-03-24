@@ -7,23 +7,17 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
 )
 
-from users.views import AuthRateThrottle
-
-
-# Apply rate limiting to auth token endpoints
-class ThrottledTokenObtainPairView(TokenObtainPairView):
-    throttle_classes = [AuthRateThrottle]
+from users.views import AuthTokenObtainPairView
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     # JWT Authentication (rate limited)
-    path("api/v1/auth/token/", ThrottledTokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/v1/auth/token/", AuthTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/v1/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/v1/auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     # API v1 - App routes
