@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class AuthRateThrottle(AnonRateThrottle):
     """5 requests/hour for auth endpoints (login, register)."""
-    rate = '5/hour'
+    rate = '30/hour'
     scope = 'auth'
 
 

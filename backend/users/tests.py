@@ -2,6 +2,7 @@ from datetime import timedelta
 
 import pytest
 from django.utils import timezone
+from rest_framework.exceptions import ValidationError
 
 from users.models import (
     CustomUser,
@@ -9,6 +10,7 @@ from users.models import (
     PhoneVerificationOTP,
     UserProfile,
 )
+from users.serializers import UserRegistrationSerializer
 
 
 # ── CustomUser creation ──────────────────────────────────────────
@@ -171,3 +173,46 @@ def test_phone_otp_expired_after_10_min():
     otp.refresh_from_db()
     assert otp.is_expired is True
     assert otp.is_valid is False
+
+
+# ── Registration robustness ──────────────────────────────────────
+
+
+@pytest.mark.django_db
+def test_registration_serializer_handles_duplicate_email():
+    CustomUser.objects.create_user(
+        email="repeat@example.com", password="password123", full_name="First User"
+    )
+
+    serializer = UserRegistrationSerializer(
+        data={
+            "email": "repeat@example.com",
+            "password": "password123",
+            "full_name": "Second User",
+        }
+    )
+    assert not serializer.is_valid()
+    assert "email" in serializer.errors
+
+
+@pytest.mark.django_db
+def test_registration_serializer_handles_duplicate_phone():
+    CustomUser.objects.create_user(
+        email="phone1@example.com",
+        password="password123",
+        full_name="Phone One",
+        phone="+5491111111111",
+    )
+
+    serializer = UserRegistrationSerializer(
+        data={
+            "email": "phone2@example.com",
+            "password": "password123",
+            "full_name": "Phone Two",
+            "phone": "+5491111111111",
+        }
+    )
+    assert serializer.is_valid(), serializer.errors
+    with pytest.raises(ValidationError) as exc:
+        serializer.save()
+    assert "phone" in exc.value.detail
