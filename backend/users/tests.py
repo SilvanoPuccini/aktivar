@@ -14,6 +14,7 @@ from users.models import (
 )
 from users.serializers import UserRegistrationSerializer
 from users.views import RegisterView, UserViewSet, AuthTokenObtainPairView
+from rest_framework.throttling import AnonRateThrottle
 
 
 # ── CustomUser creation ──────────────────────────────────────────
@@ -265,3 +266,17 @@ def test_auth_flow_register_login_profile():
     assert me_response.status_code == 200
     assert me_response.data["email"] == "flow@example.com"
     assert me_response.data["full_name"] == "Flow User"
+
+
+@pytest.mark.django_db
+def test_auth_rate_throttle_allows_request_when_cache_fails(monkeypatch):
+    factory = APIRequestFactory()
+    request = factory.post("/api/v1/users/register/", {}, format="json")
+
+    def broken_allow_request(self, request, view):
+        raise RuntimeError("cache down")
+
+    monkeypatch.setattr(AnonRateThrottle, "allow_request", broken_allow_request)
+
+    throttle = RegisterView.throttle_classes[0]()
+    assert throttle.allow_request(request, RegisterView()) is True
