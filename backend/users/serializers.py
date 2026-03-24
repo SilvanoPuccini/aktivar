@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from rest_framework import serializers
 
 from core.sanitization import SanitizeMixin
@@ -91,7 +92,15 @@ class UserRegistrationSerializer(SanitizeMixin, serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        return CustomUser.objects.create_user(**validated_data)
+        try:
+            return CustomUser.objects.create_user(**validated_data)
+        except IntegrityError as exc:
+            error_msg = str(exc).lower()
+            if 'email' in error_msg:
+                raise serializers.ValidationError({'email': ['Este email ya está registrado.']}) from exc
+            if 'phone' in error_msg:
+                raise serializers.ValidationError({'phone': ['Este teléfono ya está registrado.']}) from exc
+            raise serializers.ValidationError({'detail': 'No se pudo crear el usuario por un conflicto de datos.'}) from exc
 
 
 class LoginSerializer(serializers.Serializer):
