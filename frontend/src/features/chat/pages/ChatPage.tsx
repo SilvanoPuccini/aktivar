@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Send, Image, MapPin, Smile, Wifi, WifiOff } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useWebSocket, type ConnectionStatus } from '@/services/useWebSocket';
 import { useMessages, useActivity, useCurrentUser } from '@/services/hooks';
 import api from '@/services/api';
@@ -88,7 +89,8 @@ export default function ChatPage() {
   const { data: httpMessages } = useMessages(activityId ? Number(activityId) : undefined);
 
   // WebSocket connection
-  const wsUrl = `ws://${window.location.host}/ws/chat/activity/${activityId}/`;
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+  const wsUrl = `${wsProtocol}://${window.location.host}/ws/chat/activity/${activityId}/`;
 
   const handleWsMessage = useCallback((data: unknown) => {
     const msg = data as { type?: string; [key: string]: unknown };
@@ -101,7 +103,7 @@ export default function ChatPage() {
       }
     } else if (msg.type === 'message') {
       // New incoming message
-      const chatMsg = msg as unknown as ChatMessage;
+      const chatMsg = (msg.message as ChatMessage | undefined) ?? (msg as unknown as ChatMessage);
       if (chatMsg.id && chatMsg.author) {
         setMessages((prev) => {
           // Avoid duplicates
@@ -110,7 +112,16 @@ export default function ChatPage() {
         });
       }
     } else if (msg.type === 'typing') {
-      const user = msg.user as TypingUser | undefined;
+      const userFromPayload = msg.user as TypingUser | undefined;
+      const user =
+        userFromPayload
+        ?? (msg.user_id
+          ? {
+            id: msg.user_id as number,
+            full_name: (msg.full_name as string) ?? 'Participante',
+            avatar: '',
+          }
+          : undefined);
       if (user && user.id !== currentUserId) {
         setTypingUsers((prev) => {
           if (prev.some((u) => u.id === user.id)) return prev;
@@ -203,23 +214,11 @@ export default function ChatPage() {
         message_type: 'text',
         content,
       });
+      setInputValue('');
+      return;
     }
 
-    // Optimistically add the message locally
-    const optimisticMsg: ChatMessage = {
-      id: Date.now(),
-      author: {
-        id: currentUserId,
-        full_name: currentUser?.full_name ?? 'Tú',
-        avatar: currentUser?.avatar ?? '',
-      },
-      content,
-      message_type: 'text',
-      created_at: new Date().toISOString(),
-      reactions: [],
-    };
-    setMessages((prev) => [...prev, optimisticMsg]);
-    setInputValue('');
+    toast.error('Sin conexión al chat. Reintentando…');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -383,11 +382,17 @@ export default function ChatPage() {
         {/* Typing indicator */}
         {typingUsers.length > 0 && (
           <div className="flex items-center gap-2">
-            <img
-              src={typingUsers[0].avatar}
-              alt={typingUsers[0].full_name}
-              className="h-7 w-7 rounded-full object-cover border border-outline-variant"
-            />
+            {typingUsers[0].avatar ? (
+              <img
+                src={typingUsers[0].avatar}
+                alt={typingUsers[0].full_name}
+                className="h-7 w-7 rounded-full object-cover border border-outline-variant"
+              />
+            ) : (
+              <div className="h-7 w-7 rounded-full border border-outline-variant bg-surface-container-high flex items-center justify-center font-label text-[9px] text-muted">
+                {typingUsers[0].full_name.slice(0, 2).toUpperCase()}
+              </div>
+            )}
             <div className="rounded-2xl bg-surface-container-high px-3 py-2 rounded-bl-md">
               <TypingIndicator userName={typingUsers[0].full_name} />
             </div>
