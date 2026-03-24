@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
@@ -22,7 +21,6 @@ import toast from 'react-hot-toast';
 import WeatherBadge from '@/components/WeatherBadge';
 import EmptyState from '@/components/EmptyState';
 import ActivityMap from '@/components/ActivityMap';
-import { mockActivities } from '@/data/activities';
 import { useActivity, useJoinActivity } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -45,11 +43,7 @@ export default function ActivityDetailPage() {
   const { data: apiActivity } = useActivity(id);
   const joinMutation = useJoinActivity();
 
-  // Use API data if available, fallback to mock
-  const activity = useMemo(
-    () => apiActivity ?? mockActivities.find((a) => a.id === Number(id)),
-    [id, apiActivity],
-  );
+  const activity = apiActivity ?? null;
 
   const handleJoin = () => {
     if (!isAuthenticated) {
