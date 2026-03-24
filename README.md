@@ -161,6 +161,20 @@ AUTH_EMAIL=tu_email_de_prueba AUTH_PASSWORD=tu_password_de_prueba \
   bash scripts/smoke_tests.sh https://tu-dominio.com
 ```
 
+### Verificación guiada auth/register en VPS (500 troubleshooting)
+
+```bash
+# Control de conexión total (DNS + HTTPS + API + register probe)
+bash scripts/vps_connection_check.sh https://tu-dominio.com
+
+# Opcional: validar login con usuario real
+AUTH_EMAIL=tu_email_de_prueba AUTH_PASSWORD=tu_password_de_prueba \
+  bash scripts/vps_connection_check.sh https://tu-dominio.com
+```
+
+Checklist operativo completo:
+- `docs/vps-auth-debug-checklist.md`
+
 ---
 
 ## 🏁 Hackatón CubePath 2026 — cierre de entrega
