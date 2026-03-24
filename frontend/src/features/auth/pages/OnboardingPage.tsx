@@ -48,7 +48,7 @@ const initialData: OnboardingData = {
   email: '',
   password: '',
   selectedCategories: [],
-  location: '',
+  location: 'Bariloche, Argentina',
 };
 
 /* ------------------------------------------------------------------ */
@@ -166,21 +166,24 @@ export default function OnboardingPage() {
   const handleComplete = async () => {
     setLoading(true);
     try {
+      const normalizedEmail = formData.email.trim().toLowerCase();
+      const normalizedName = formData.name.trim();
+
       await api.post(endpoints.register, {
-        email: formData.email,
+        email: normalizedEmail,
         password: formData.password,
-        full_name: formData.name,
+        full_name: normalizedName,
       });
 
       const tokenRes = await api.post(endpoints.login, {
-        email: formData.email,
+        email: normalizedEmail,
         password: formData.password,
       });
       sessionStorage.setItem('aktivar_access_token', tokenRes.data.access);
 
       if (formData.location) {
         await api.patch(endpoints.myProfile, {
-          location_name: formData.location,
+          location_name: formData.location.trim(),
         });
       }
 
@@ -190,12 +193,18 @@ export default function OnboardingPage() {
       toast.success('Cuenta creada con éxito!');
       navigate('/');
     } catch (err: unknown) {
-      const error = err as { response?: { data?: Record<string, string[]> } };
+      const error = err as { response?: { data?: Record<string, string[] | string>; status?: number } };
       const data = error.response?.data;
       if (data?.email) {
         toast.error('Este email ya está registrado');
+      } else if (data?.phone) {
+        toast.error(Array.isArray(data.phone) ? data.phone[0] : String(data.phone));
       } else if (data?.password) {
-        toast.error(data.password[0]);
+        toast.error(Array.isArray(data.password) ? data.password[0] : String(data.password));
+      } else if (data?.detail) {
+        toast.error(Array.isArray(data.detail) ? data.detail[0] : String(data.detail));
+      } else if (error.response?.status === 500) {
+        toast.error('Error interno del servidor al registrar. Intenta nuevamente en 1 minuto.');
       } else {
         toast.error('Error al crear la cuenta');
       }
@@ -204,8 +213,27 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleGPS = () => {
+  const handleGPS = async () => {
     setGpsAcquiring(true);
+    const fallbackToBariloche = () => {
+      update('location', 'Bariloche, Argentina');
+      setUserCoords([-41.1335, -71.3103]);
+      setGpsAcquiring(false);
+    };
+
+    if ('permissions' in navigator) {
+      try {
+        const result = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+        if (result.state === 'denied') {
+          toast('Permiso de ubicación bloqueado. Usando Bariloche por defecto.', { icon: '📍' });
+          fallbackToBariloche();
+          return;
+        }
+      } catch {
+        // Continue with normal flow if permission query is unsupported
+      }
+    }
+
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -216,16 +244,10 @@ export default function OnboardingPage() {
           );
           setGpsAcquiring(false);
         },
-        () => {
-          update('location', 'Santiago, Chile');
-          setUserCoords([-33.4489, -70.6693]);
-          setGpsAcquiring(false);
-        },
+        fallbackToBariloche,
       );
     } else {
-      update('location', 'Santiago, Chile');
-      setUserCoords([-33.4489, -70.6693]);
-      setGpsAcquiring(false);
+      fallbackToBariloche();
     }
   };
 
@@ -473,7 +495,7 @@ export default function OnboardingPage() {
         <input
           type="text"
           className={inputClasses}
-          placeholder="Ej: Santiago, Chile"
+          placeholder="Ej: Bariloche, Argentina"
           value={formData.location}
           onChange={(e) => update('location', e.target.value)}
         />
