@@ -54,6 +54,8 @@ export default function LoginPage() {
       const error = err as { response?: { status?: number } };
       if (error.response?.status === 401) {
         toast.error('Email o contraseña incorrectos');
+      } else if (error.response?.status === 429) {
+        toast.error('Demasiados intentos. Espera unos minutos y vuelve a intentar.');
       } else {
         toast.error('Error de conexión');
       }
