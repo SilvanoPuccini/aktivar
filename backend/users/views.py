@@ -29,6 +29,15 @@ class AuthRateThrottle(AnonRateThrottle):
     rate = '30/hour'
     scope = 'auth'
 
+    def allow_request(self, request, view):
+        try:
+            return super().allow_request(request, view)
+        except Exception:
+            logger.exception(
+                "Auth throttling cache failure; allowing request to avoid auth outage"
+            )
+            return True
+
 
 class OTPRateThrottle(UserRateThrottle):
     """3 requests/hour for OTP/verification requests."""
