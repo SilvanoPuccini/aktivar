@@ -148,6 +148,13 @@ export default function CreateActivityPage() {
     setCurrentStep((s) => Math.max(s - 1, 0));
   };
 
+  const toIsoDateTime = (date: string, time: string): string | undefined => {
+    if (!date || !time) return undefined;
+    const localDate = new Date(`${date}T${time}:00`);
+    if (Number.isNaN(localDate.getTime())) return undefined;
+    return localDate.toISOString();
+  };
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -176,19 +183,42 @@ export default function CreateActivityPage() {
       return;
     }
 
+    if (!formData.categoryId || !formData.title.trim() || !formData.description.trim()) {
+      toast.error('Completa título, categoría y descripción');
+      setCurrentStep(0);
+      return;
+    }
+
+    if (!formData.date || !formData.startTime || !formData.locationName.trim()) {
+      toast.error('Completa fecha, hora de inicio y ubicación');
+      setCurrentStep(1);
+      return;
+    }
+
+    const startIso = toIsoDateTime(formData.date, formData.startTime);
+    const endIso = toIsoDateTime(formData.date, formData.endTime);
+
+    if (!startIso) {
+      toast.error('La fecha/hora de inicio no es válida');
+      setCurrentStep(1);
+      return;
+    }
+
+    if (endIso && new Date(endIso) <= new Date(startIso)) {
+      toast.error('La hora de fin debe ser posterior al inicio');
+      setCurrentStep(1);
+      return;
+    }
+
     const payload = {
-      title: formData.title,
-      description: formData.description,
+      title: formData.title.trim(),
+      description: formData.description.trim(),
       category: formData.categoryId,
       cover_image: formData.coverImage,
-      location_name: formData.locationName,
-      meeting_point: formData.meetingPoint,
-      start_datetime: formData.date && formData.startTime
-        ? `${formData.date}T${formData.startTime}:00Z`
-        : undefined,
-      end_datetime: formData.date && formData.endTime
-        ? `${formData.date}T${formData.endTime}:00Z`
-        : undefined,
+      location_name: formData.locationName.trim(),
+      meeting_point: formData.meetingPoint.trim(),
+      start_datetime: startIso,
+      end_datetime: endIso,
       capacity: formData.capacity,
       price: formData.isFree ? 0 : formData.price,
       difficulty: formData.difficulty,
