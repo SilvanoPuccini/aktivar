@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import type { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import EmptyState from '@/components/EmptyState';
 import { useTrip, useBookSeat } from '@/services/hooks';
@@ -55,6 +56,18 @@ export default function TripDetailPage() {
   const confirmedPassengers = (trip.passengers ?? []).filter((p: { status: string }) => p.status === 'confirmed');
   const totalSeats = trip.available_seats;
   const seatsTaken = trip.seats_taken ?? 0;
+  const pendingPassengersCount = (trip.passengers ?? []).filter((p: { status: string }) => p.status === 'pending').length;
+  const bookingDisabled = spotsLeft === 0 || bookSeat.isPending;
+  const bookingLabel = bookSeat.isPending
+    ? 'RESERVANDO...'
+    : spotsLeft > 0
+      ? 'RESERVAR ASIENTO'
+      : 'SIN CUPOS';
+
+  const getApiErrorMessage = (error: unknown) => {
+    const axiosError = error as AxiosError<{ detail?: string; [key: string]: unknown }>;
+    return axiosError.response?.data?.detail || 'No se pudo reservar el asiento';
+  };
 
   return (
     <div className="min-h-screen bg-surface pb-24">
@@ -260,17 +273,17 @@ export default function TripDetailPage() {
                   if (spotsLeft > 0) {
                     bookSeat.mutate(trip.id, {
                       onSuccess: () => toast.success('Asiento reservado exitosamente'),
-                      onError: () => toast.error('No se pudo reservar el asiento'),
+                      onError: (error) => toast.error(getApiErrorMessage(error)),
                     });
                   } else {
                     toast.error('No hay cupos disponibles');
                   }
                 }}
-                disabled={spotsLeft === 0 || bookSeat.isPending}
+                disabled={bookingDisabled}
                 className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-primary to-primary-container py-5 font-headline text-lg font-bold tracking-tight text-on-primary shadow-lg transition-all active:scale-95 disabled:opacity-50"
               >
                 <Zap size={22} className="fill-current" />
-                {spotsLeft > 0 ? 'RESERVAR ASIENTO' : 'SIN CUPOS'}
+                {bookingLabel}
               </button>
 
               {/* Emergency + Passenger Avatars Row */}
@@ -299,9 +312,9 @@ export default function TripDetailPage() {
                       +{confirmedPassengers.length - 3}
                     </div>
                   )}
-                  {(trip.passengers ?? []).filter((p: { status: string }) => p.status === 'pending').length > 0 && confirmedPassengers.length <= 3 && (
+                  {pendingPassengersCount > 0 && confirmedPassengers.length <= 3 && (
                     <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface-container-low bg-surface-container-highest text-[10px] font-bold text-on-surface">
-                      +{(trip.passengers ?? []).filter((p: { status: string }) => p.status === 'pending').length}
+                      +{pendingPassengersCount}
                     </div>
                   )}
                 </div>

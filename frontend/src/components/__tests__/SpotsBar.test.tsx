@@ -1,3 +1,4 @@
+import React from 'react'
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import SpotsBar from '../SpotsBar'
@@ -24,27 +25,26 @@ describe('SpotsBar', () => {
   })
 
   it('uses green color when plenty of spots remaining', () => {
-    const { container } = render(<SpotsBar capacity={100} taken={10} />)
-    // Inner bar with backgroundColor
-    const innerBar = container.querySelectorAll('[style]')[1] as HTMLElement
+    render(<SpotsBar capacity={100} taken={10} />)
+    const innerBar = screen.getByTestId('spots-bar-fill') as HTMLElement
     expect(innerBar.style.backgroundColor).toBe('rgb(123, 218, 150)')  // #7bda96
   })
 
   it('uses amber color when remaining spots are 20% or less', () => {
-    const { container } = render(<SpotsBar capacity={100} taken={85} />)
-    const innerBar = container.querySelectorAll('[style]')[1] as HTMLElement
+    render(<SpotsBar capacity={100} taken={85} />)
+    const innerBar = screen.getByTestId('spots-bar-fill') as HTMLElement
     expect(innerBar.style.backgroundColor).toBe('rgb(255, 197, 108)')  // #ffc56c
   })
 
   it('uses red color when spots are nearly full (less than 5%)', () => {
-    const { container } = render(<SpotsBar capacity={100} taken={97} />)
-    const innerBar = container.querySelectorAll('[style]')[1] as HTMLElement
+    render(<SpotsBar capacity={100} taken={97} />)
+    const innerBar = screen.getByTestId('spots-bar-fill') as HTMLElement
     expect(innerBar.style.backgroundColor).toBe('rgb(255, 180, 171)')  // #ffb4ab
   })
 
   it('uses red color when completely full', () => {
-    const { container } = render(<SpotsBar capacity={10} taken={10} />)
-    const innerBar = container.querySelectorAll('[style]')[1] as HTMLElement
+    render(<SpotsBar capacity={10} taken={10} />)
+    const innerBar = screen.getByTestId('spots-bar-fill') as HTMLElement
     expect(innerBar.style.backgroundColor).toBe('rgb(255, 180, 171)')  // #ffb4ab
   })
 
