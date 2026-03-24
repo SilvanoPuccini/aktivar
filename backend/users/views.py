@@ -53,9 +53,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return [IsAuthenticated()]
 
     def perform_create(self, serializer):
-        reg_serializer = UserRegistrationSerializer(data=self.request.data)
-        reg_serializer.is_valid(raise_exception=True)
-        reg_serializer.save()
+        serializer.save()
 
     def get_serializer_class(self):
         if self.action == 'create':

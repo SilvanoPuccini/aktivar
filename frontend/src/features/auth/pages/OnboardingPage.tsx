@@ -17,6 +17,7 @@ import {
   Users,
   Trophy,
   Tent,
+  Zap,
   Loader2,
   User,
   Mail,
@@ -78,6 +79,7 @@ const slideVariants = {
 /*  Icon map for category cards                                        */
 /* ------------------------------------------------------------------ */
 const iconMap: Record<string, LucideIcon> = {
+  zap: Zap,
   mountain: Mountain,
   music: Music,
   bike: Bike,
@@ -93,6 +95,7 @@ const iconMap: Record<string, LucideIcon> = {
 /*  Gradient backgrounds per category                                  */
 /* ------------------------------------------------------------------ */
 const categoryGradients: Record<string, string> = {
+  running: 'linear-gradient(160deg, #5a3a00 0%, #352200 40%, #1a1100 100%)',
   trekking: 'linear-gradient(160deg, #2d5a27 0%, #1a3518 40%, #0c1a0a 100%)',
   festival: 'linear-gradient(160deg, #5a4a27 0%, #352c15 40%, #1a150a 100%)',
   ciclismo: 'linear-gradient(160deg, #273a5a 0%, #152235 40%, #0a111a 100%)',
@@ -248,7 +251,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Form fields */}
-      <div className="space-y-5">
+      <div className="space-y-6">
         <div>
           <label className={labelClasses}>
             <User size={12} className="inline mr-1.5 -mt-0.5" />
@@ -388,7 +391,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Category grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {categories.map((cat) => {
           const isSelected = formData.selectedCategories.includes(cat.id);
           const Icon = iconMap[cat.icon.toLowerCase()] ?? Mountain;

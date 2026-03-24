@@ -55,14 +55,15 @@ class Command(BaseCommand):
 
         # ── Categories ─────────────────────────────────────────────
         categories_data = [
-            {'name': 'Senderismo', 'slug': 'senderismo', 'icon': 'mountain', 'color': '#4CAF50', 'is_outdoor': True, 'order': 1},
-            {'name': 'Escalada', 'slug': 'escalada', 'icon': 'trending-up', 'color': '#FF5722', 'is_outdoor': True, 'order': 2},
-            {'name': 'Ciclismo', 'slug': 'ciclismo', 'icon': 'bike', 'color': '#2196F3', 'is_outdoor': True, 'order': 3},
-            {'name': 'Kayak', 'slug': 'kayak', 'icon': 'waves', 'color': '#00BCD4', 'is_outdoor': True, 'order': 4},
+            {'name': 'Running', 'slug': 'running', 'icon': 'zap', 'color': '#FF9800', 'is_outdoor': True, 'order': 1},
+            {'name': 'Senderismo', 'slug': 'senderismo', 'icon': 'mountain', 'color': '#4CAF50', 'is_outdoor': True, 'order': 2},
+            {'name': 'Escalada', 'slug': 'escalada', 'icon': 'trending-up', 'color': '#FF5722', 'is_outdoor': True, 'order': 3},
+            {'name': 'Ciclismo', 'slug': 'ciclismo', 'icon': 'bike', 'color': '#2196F3', 'is_outdoor': True, 'order': 4},
             {'name': 'Trail Running', 'slug': 'trail-running', 'icon': 'zap', 'color': '#FF9800', 'is_outdoor': True, 'order': 5},
-            {'name': 'Camping', 'slug': 'camping', 'icon': 'tent', 'color': '#795548', 'is_outdoor': True, 'order': 6},
-            {'name': 'Surf', 'slug': 'surf', 'icon': 'waves', 'color': '#009688', 'is_outdoor': True, 'order': 7},
-            {'name': 'Yoga Outdoor', 'slug': 'yoga-outdoor', 'icon': 'heart', 'color': '#E91E63', 'is_outdoor': True, 'order': 8},
+            {'name': 'Kayak', 'slug': 'kayak', 'icon': 'waves', 'color': '#00BCD4', 'is_outdoor': True, 'order': 6},
+            {'name': 'Camping', 'slug': 'camping', 'icon': 'tent', 'color': '#795548', 'is_outdoor': True, 'order': 7},
+            {'name': 'Surf', 'slug': 'surf', 'icon': 'waves', 'color': '#009688', 'is_outdoor': True, 'order': 8},
+            {'name': 'Yoga Outdoor', 'slug': 'yoga-outdoor', 'icon': 'heart', 'color': '#E91E63', 'is_outdoor': True, 'order': 9},
         ]
         categories = {}
         for cat_data in categories_data:
