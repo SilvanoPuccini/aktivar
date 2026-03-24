@@ -38,17 +38,19 @@ export default function FeedPage() {
 
   function setSearchQuery(value: string) {
     setSearchParams((prev) => {
-      if (value) prev.set('q', value);
-      else prev.delete('q');
-      return prev;
+      const next = new URLSearchParams(prev);
+      if (value) next.set('q', value);
+      else next.delete('q');
+      return next;
     });
   }
 
   function setSelectedCategory(slug: string | null) {
     setSearchParams((prev) => {
-      if (slug) prev.set('cat', slug);
-      else prev.delete('cat');
-      return prev;
+      const next = new URLSearchParams(prev);
+      if (slug) next.set('cat', slug);
+      else next.delete('cat');
+      return next;
     });
   }
 
