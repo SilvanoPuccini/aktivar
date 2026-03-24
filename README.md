@@ -150,6 +150,42 @@ pytest -v
 pytest --cov=. --cov-report=term-missing
 ```
 
+### Smoke tests sobre dominio real (VPS / CubePath)
+
+```bash
+# Desde la raíz del repo:
+bash scripts/smoke_tests.sh https://tu-dominio.com
+
+# Opcional: validar login también
+AUTH_EMAIL=tu_email_de_prueba AUTH_PASSWORD=tu_password_de_prueba \
+  bash scripts/smoke_tests.sh https://tu-dominio.com
+```
+
+### Verificación guiada auth/register en VPS (500 troubleshooting)
+
+```bash
+# Control de conexión total (DNS + HTTPS + API + register probe)
+bash scripts/vps_connection_check.sh https://tu-dominio.com
+
+# Opcional: validar login con usuario real
+AUTH_EMAIL=tu_email_de_prueba AUTH_PASSWORD=tu_password_de_prueba \
+  bash scripts/vps_connection_check.sh https://tu-dominio.com
+```
+
+Checklist operativo completo:
+- `docs/vps-auth-debug-checklist.md`
+
+---
+
+## 🏁 Hackatón CubePath 2026 — cierre de entrega
+
+Para registrar la participación final, seguí este checklist operativo:
+
+- **Checklist completo:** `docs/hackathon-submission-checklist.md`
+- **Auditoría + plan de ejecución:** `docs/project-audit-2026-03.md`
+
+Recordatorio de fecha límite del evento: **31 de marzo de 2026, 23:59:59 (CET)**.
+
 ---
 
 ## 📝 API Documentation
