@@ -1,16 +1,34 @@
 # =============================================================================
 # Aktivar — Dokploy / CubePath Deployment
 # Single-file compose for one-click deploy via Dokploy
+#
+# HOW TO DEPLOY ON DOKPLOY:
+# 1. In Dokploy → Create Project → Docker Compose
+# 2. Paste this repo URL or upload this file
+# 3. Set environment variables (see below)
+# 4. Go to Domains tab → click dice icon 🎲 → generates free traefik.me subdomain
+# 5. Set Container Port: 80, Service: nginx, HTTPS: off
+# 6. Deploy!
+#
+# REQUIRED ENV VARS (set in Dokploy → Environment):
+#   SECRET_KEY=<random-string-50-chars>
+#   POSTGRES_PASSWORD=<strong-password>
+#
+# OPTIONAL ENV VARS:
+#   STRIPE_SECRET_KEY, RESEND_API_KEY, TWILIO_*, SENTRY_DSN, etc.
 # =============================================================================
 
 services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL 16 + PostGIS (database — runs inside Docker)
+  # ---------------------------------------------------------------------------
   db:
     image: postgis/postgis:16-3.4
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-aktivar}
       POSTGRES_USER: ${POSTGRES_USER:-aktivar}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in Dokploy env vars}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -20,6 +38,9 @@ services:
       retries: 5
       start_period: 30s
 
+  # ---------------------------------------------------------------------------
+  # Redis 7 (cache + Celery broker + WebSocket channels)
+  # ---------------------------------------------------------------------------
   redis:
     image: redis:7-alpine
     restart: always
@@ -32,6 +53,9 @@ services:
       timeout: 5s
       retries: 5
 
+  # ---------------------------------------------------------------------------
+  # Django Backend (Daphne ASGI — handles HTTP + WebSocket)
+  # ---------------------------------------------------------------------------
   backend:
     build:
       context: ./backend
@@ -42,13 +66,17 @@ services:
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/1
-      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY}
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in Dokploy env vars}
       DEBUG: "False"
       ALLOWED_HOSTS: ${ALLOWED_HOSTS:-*}
-      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-*}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:-}
+      FRONTEND_URL: ${FRONTEND_URL:-}
       DJANGO_SETTINGS_MODULE: aktivar.settings
-      # Optional services (leave empty if not using)
+      SECURE_SSL_REDIRECT: "False"
+      SESSION_COOKIE_SECURE: "False"
+      CSRF_COOKIE_SECURE: "False"
+      # Optional services
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
@@ -74,6 +102,9 @@ services:
              python manage.py seed_demo --skip-if-exists 2>/dev/null || true &&
              daphne -b 0.0.0.0 -p 8000 --access-log - aktivar.asgi:application"
 
+  # ---------------------------------------------------------------------------
+  # Celery Worker (async tasks: emails, notifications, etc.)
+  # ---------------------------------------------------------------------------
   celery:
     build:
       context: ./backend
@@ -93,6 +124,9 @@ services:
         condition: service_healthy
     command: celery -A aktivar worker --loglevel=info --concurrency=2
 
+  # ---------------------------------------------------------------------------
+  # React Frontend (Vite build → served by internal Nginx)
+  # ---------------------------------------------------------------------------
   frontend:
     build:
       context: ./frontend
@@ -103,6 +137,11 @@ services:
         VITE_SENTRY_DSN: ${VITE_SENTRY_DSN:-}
     restart: always
 
+  # ---------------------------------------------------------------------------
+  # Nginx Reverse Proxy
+  # Dokploy's Traefik routes traffic here via the dokploy-network.
+  # Dokploy injects labels automatically when you assign a domain.
+  # ---------------------------------------------------------------------------
   nginx:
     image: nginx:alpine
     restart: always
@@ -115,7 +154,22 @@ services:
     depends_on:
       - backend
       - frontend
+    networks:
+      - default
+      - dokploy-network
 
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  default:
+    driver: bridge
+  dokploy-network:
+    external: true
+
+# =============================================================================
+# Persistent volumes (data survives container restarts)
+# =============================================================================
 volumes:
   postgres_data:
   redis_data:
