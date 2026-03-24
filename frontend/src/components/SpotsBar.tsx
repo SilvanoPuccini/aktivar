@@ -22,6 +22,7 @@ export default function SpotsBar({ capacity, taken, showLabel = true }: SpotsBar
       <div className="h-1 w-full rounded-full bg-surface-container-highest overflow-hidden">
         <div
           className="h-full rounded-full"
+          data-testid="spots-bar-fill"
           style={{
             width: `${Math.min(percentage, 100)}%`,
             backgroundColor: barColor,
