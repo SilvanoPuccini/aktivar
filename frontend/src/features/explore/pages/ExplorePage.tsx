@@ -26,9 +26,9 @@ export default function ExplorePage() {
   const { data: apiCategories } = useCategories();
 
   const categories = apiCategories ?? [];
-  const activities = apiActivities ?? [];
 
   const filtered = useMemo(() => {
+    const activities = apiActivities ?? [];
     return activities.filter((a) => {
       if (selectedCategory && a.category.slug !== selectedCategory) return false;
       if (searchQuery) {
@@ -41,7 +41,7 @@ export default function ExplorePage() {
       }
       return true;
     });
-  }, [activities, selectedCategory, searchQuery]);
+  }, [apiActivities, selectedCategory, searchQuery]);
 
   const selectedActivity = useMemo(
     () => filtered.find((a) => a.id === selectedActivityId) ?? null,
