@@ -154,9 +154,9 @@ export default function LoginPage() {
       </div>
 
       {/* Right side — Login form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 md:px-12 py-12">
         <motion.div
-          className="w-full max-w-[420px] space-y-10"
+          className="w-full max-w-md mx-auto space-y-10"
           initial="hidden"
           animate="visible"
         >

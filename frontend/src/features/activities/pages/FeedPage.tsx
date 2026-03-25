@@ -75,7 +75,7 @@ export default function FeedPage() {
       {/* ---- Left Side: Activity Cards Feed ---- */}
       <section className="w-full md:w-1/2 lg:w-5/12 overflow-y-auto hide-scrollbar bg-surface relative z-10">
         {/* Sticky Search & Filter Bar */}
-        <div className="sticky top-0 z-20 bg-[#11140f]/90 backdrop-blur-xl px-6 pt-6 pb-4 space-y-4 border-b border-outline-variant/10">
+        <div className="sticky top-0 z-20 bg-[#11140f]/90 backdrop-blur-xl px-6 md:px-8 pt-6 pb-4 space-y-4 border-b border-outline-variant/10">
           {/* Search input */}
           <div className="flex items-center gap-3 bg-surface-container-highest px-4 py-3 rounded-xl border border-[#2A3826]">
             <MapPin size={20} className="text-primary shrink-0" />
@@ -122,9 +122,9 @@ export default function FeedPage() {
         </div>
 
         {/* Cards list */}
-        <div className="px-6 space-y-8 pt-6 pb-32">
+        <div className="px-6 md:px-8 pt-6 pb-32">
           {isLoading && !apiActivities ? (
-            <div className="space-y-10">
+            <div className="space-y-8 max-w-2xl mx-auto">
               {Array.from({ length: 3 }).map((_, i) => (
                 <ActivityCardSkeleton key={i} />
               ))}
@@ -144,7 +144,7 @@ export default function FeedPage() {
             />
           ) : (
             <motion.div
-              className="space-y-10"
+              className="space-y-8 max-w-2xl mx-auto"
               variants={containerVariants}
               initial="hidden"
               animate="show"
