@@ -6,7 +6,7 @@ from .views import ReportViewSet, ReviewViewSet
 app_name = 'reviews'
 
 router = DefaultRouter()
-router.register(r'reviews', ReviewViewSet, basename='review')
+router.register(r'', ReviewViewSet, basename='review')
 router.register(r'reports', ReportViewSet, basename='report')
 
 urlpatterns = [
