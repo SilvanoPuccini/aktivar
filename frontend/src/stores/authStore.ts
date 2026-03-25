@@ -24,6 +24,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: () => {
     sessionStorage.removeItem('aktivar_access_token');
+    sessionStorage.removeItem('aktivar_refresh_token');
     set({ user: null, isAuthenticated: false });
   },
 

@@ -97,10 +97,22 @@ services:
       redis:
         condition: service_healthy
     command: >
-      sh -c "python manage.py migrate --noinput &&
-             python manage.py collectstatic --noinput &&
-             python manage.py seed_demo --skip-if-exists 2>/dev/null || true &&
-             daphne -b 0.0.0.0 -p 8000 --access-log - aktivar.asgi:application"
+      sh -c "
+        echo '=== Running migrations ===' &&
+        python manage.py migrate --noinput &&
+        echo '=== Collecting static files ===' &&
+        python manage.py collectstatic --noinput &&
+        echo '=== Seeding demo data ===' &&
+        (python manage.py seed_demo --skip-if-exists 2>&1 || echo 'Seed skipped or failed (non-fatal)') &&
+        echo '=== Starting Daphne on port 8000 ===' &&
+        daphne -b 0.0.0.0 -p 8000 --access-log - aktivar.asgi:application
+      "
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health/')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
   # ---------------------------------------------------------------------------
   # Celery Worker (async tasks: emails, notifications, etc.)
@@ -152,8 +164,10 @@ services:
       - static_files:/var/www/static:ro
       - media_files:/var/www/media:ro
     depends_on:
-      - backend
-      - frontend
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
     networks:
       - default
       - dokploy-network
