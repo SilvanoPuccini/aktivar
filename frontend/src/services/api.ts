@@ -92,29 +92,29 @@ export const endpoints = {
   verifyPhoneRequest: '/users/verify-phone/request/',
   verifyPhoneConfirm: '/users/verify-phone/confirm/',
 
-  // Activities
+  // Activities (included at /api/v1/activities/)
   activities: '/activities/',
-  categories: '/categories/',
+  categories: '/activities/categories/',
 
-  // Transport
-  trips: '/trips/',
-  vehicles: '/vehicles/',
+  // Transport (included at /api/v1/transport/)
+  trips: '/transport/trips/',
+  vehicles: '/transport/vehicles/',
 
-  // Chat
+  // Chat (included at /api/v1/chat/)
   messages: (activityId: number) => `/chat/activities/${activityId}/messages/`,
 
-  // Reviews
+  // Reviews (included at /api/v1/reviews/)
   reviews: '/reviews/',
-  reports: '/reports/',
+  reports: '/reviews/reports/',
 
-  // Payments
+  // Payments (included at /api/v1/payments/)
   payments: '/payments/',
-  subscriptions: '/subscriptions/',
+  subscriptions: '/payments/subscriptions/',
 
-  // Notifications
+  // Notifications (included at /api/v1/notifications/)
   notifications: '/notifications/',
 
-  // Connect
+  // Connect (included at /api/v1/payments/)
   connectOnboarding: '/payments/connect/onboarding/',
   connectDashboard: '/payments/connect/dashboard/',
 
