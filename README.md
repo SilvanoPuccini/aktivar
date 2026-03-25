@@ -262,4 +262,4 @@ MIT
 
 ---
 
-Built for the outdoor community. From Bariloche to the world.
+Built for the outdoor community. From Argentina to the world.
