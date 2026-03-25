@@ -137,7 +137,7 @@ services:
     command: celery -A aktivar worker --loglevel=info --concurrency=2
 
   # ---------------------------------------------------------------------------
-  # React Frontend (Vite build → served by internal Nginx)
+  # React Frontend (Vite build → served by isolated Nginx container)
   # ---------------------------------------------------------------------------
   frontend:
     build:
@@ -148,6 +148,14 @@ services:
         VITE_STRIPE_PUBLIC_KEY: ${VITE_STRIPE_PUBLIC_KEY:-}
         VITE_SENTRY_DSN: ${VITE_SENTRY_DSN:-}
     restart: always
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   # ---------------------------------------------------------------------------
   # Nginx Reverse Proxy
@@ -167,7 +175,7 @@ services:
       backend:
         condition: service_healthy
       frontend:
-        condition: service_started
+        condition: service_healthy
     networks:
       - default
       - dokploy-network
