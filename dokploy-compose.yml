@@ -137,7 +137,8 @@ services:
     command: celery -A aktivar worker --loglevel=info --concurrency=2
 
   # ---------------------------------------------------------------------------
-  # React Frontend (Vite build → served by internal Nginx)
+  # React Frontend (Vite build → files copied to shared volume)
+  # The reverse-proxy nginx serves these files directly — no extra container.
   # ---------------------------------------------------------------------------
   frontend:
     build:
@@ -147,7 +148,10 @@ services:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api/v1}
         VITE_STRIPE_PUBLIC_KEY: ${VITE_STRIPE_PUBLIC_KEY:-}
         VITE_SENTRY_DSN: ${VITE_SENTRY_DSN:-}
-    restart: always
+    restart: "no"
+    volumes:
+      - frontend_dist:/frontend
+    entrypoint: ["sh", "-c", "cp -r /usr/share/nginx/html/* /frontend/ && echo '=== Frontend files copied to shared volume ==='"]
 
   # ---------------------------------------------------------------------------
   # Nginx Reverse Proxy
@@ -163,11 +167,12 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - static_files:/var/www/static:ro
       - media_files:/var/www/media:ro
+      - frontend_dist:/var/www/frontend:ro
     depends_on:
       backend:
         condition: service_healthy
       frontend:
-        condition: service_started
+        condition: service_completed_successfully
     networks:
       - default
       - dokploy-network
@@ -189,3 +194,4 @@ volumes:
   redis_data:
   static_files:
   media_files:
+  frontend_dist:
