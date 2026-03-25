@@ -83,7 +83,7 @@ export default function FeedPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Antioquia, Colombia"
+              placeholder="Bariloche, Argentina"
               className="bg-transparent border-none outline-none text-on-surface font-label w-full placeholder:text-on-surface/40"
             />
             <SlidersHorizontal size={20} className="text-on-surface/60 shrink-0 cursor-pointer" />
