@@ -217,14 +217,14 @@ export default function OnboardingPage() {
           setGpsAcquiring(false);
         },
         () => {
-          update('location', 'Santiago, Chile');
-          setUserCoords([-33.4489, -70.6693]);
+          update('location', 'Bariloche, Argentina');
+          setUserCoords([-41.1335, -71.3103]);
           setGpsAcquiring(false);
         },
       );
     } else {
-      update('location', 'Santiago, Chile');
-      setUserCoords([-33.4489, -70.6693]);
+      update('location', 'Bariloche, Argentina');
+      setUserCoords([-41.1335, -71.3103]);
       setGpsAcquiring(false);
     }
   };
@@ -509,7 +509,7 @@ export default function OnboardingPage() {
                   }
                 : undefined
             }
-            center={userCoords ?? [-33.4489, -70.6693]}
+            center={userCoords ?? [-41.1335, -71.3103]}
             zoom={userCoords ? 13 : 4}
           />
         </div>

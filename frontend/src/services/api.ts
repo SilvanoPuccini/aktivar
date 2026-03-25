@@ -22,13 +22,20 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Auth endpoints that should NOT trigger the 401 refresh/redirect interceptor
+const AUTH_ENDPOINTS = ['/auth/token/', '/users/register/'];
+
 // Response interceptor: handle errors globally
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const status = error.response?.status;
+    const requestUrl = error.config?.url ?? '';
 
-    if (status === 401) {
+    // Skip token refresh for auth endpoints — let the caller handle errors
+    const isAuthRequest = AUTH_ENDPOINTS.some((ep) => requestUrl.includes(ep));
+
+    if (status === 401 && !isAuthRequest) {
       // Token expired — try refresh
       try {
         const refreshResponse = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {}, {
@@ -44,7 +51,10 @@ api.interceptors.response.use(
         }
       } catch {
         sessionStorage.removeItem('aktivar_access_token');
-        window.location.href = '/onboarding';
+        // Only redirect if we're not already on an auth page
+        if (!window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/onboarding')) {
+          window.location.href = '/login';
+        }
       }
     }
 
