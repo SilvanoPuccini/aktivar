@@ -226,7 +226,7 @@ export default function ActivityMap({
   onMapMove,
   interactive = true,
 }: ActivityMapProps) {
-  const defaultCenter: [number, number] = center ?? [-33.4489, -70.6693];
+  const defaultCenter: [number, number] = center ?? [-41.1335, -71.3103];
 
   // Memoize markers
   const markers = useMemo(

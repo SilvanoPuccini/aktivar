@@ -251,10 +251,16 @@ export default function OnboardingPage() {
           );
           setGpsAcquiring(false);
         },
-        fallbackToBariloche,
+        () => {
+          update('location', 'Bariloche, Argentina');
+          setUserCoords([-41.1335, -71.3103]);
+          setGpsAcquiring(false);
+        },
       );
     } else {
-      fallbackToBariloche();
+      update('location', 'Bariloche, Argentina');
+      setUserCoords([-41.1335, -71.3103]);
+      setGpsAcquiring(false);
     }
   };
 
