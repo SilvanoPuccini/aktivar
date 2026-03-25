@@ -110,19 +110,23 @@ export default function GlassNav({
         })}
       </nav>
 
-      {/* Desktop side nav - minimal */}
-      <nav className="hidden md:flex fixed left-0 top-0 bottom-0 w-16 flex-col items-center py-6 z-50 border-r border-outline-variant/10"
+      {/* Desktop top header bar */}
+      <nav
+        className="hidden md:flex fixed top-0 left-0 right-0 h-[60px] items-center justify-between px-6 z-50 border-b border-outline-variant/10"
         style={{
           background: 'rgba(12, 15, 10, 0.90)',
           backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
         }}
       >
-        {/* Logo */}
-        <div className="mb-8">
+        {/* Logo - left */}
+        <div className="flex items-center gap-2">
           <Mountain size={22} className="text-primary" />
+          <span className="text-on-surface font-semibold text-lg tracking-tight">Aktivar</span>
         </div>
 
-        <div className="flex-1 flex flex-col items-center gap-2">
+        {/* Tabs - center */}
+        <div className="flex items-center gap-1">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.key;
             const Icon = tab.icon;
@@ -133,12 +137,13 @@ export default function GlassNav({
                   key={tab.key}
                   type="button"
                   onClick={() => onTabChange(tab.key)}
-                  className="my-2 w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer"
+                  className="mx-1 px-4 py-1.5 rounded-full flex items-center gap-2 cursor-pointer"
                   style={{
                     background: 'linear-gradient(135deg, #ffc56c, #f0a500)',
                   }}
                 >
-                  <Plus size={18} className="text-on-primary" strokeWidth={2.5} />
+                  <Plus size={16} className="text-on-primary" strokeWidth={2.5} />
+                  <span className="text-on-primary text-sm font-semibold">{tab.label}</span>
                 </button>
               );
             }
@@ -148,26 +153,35 @@ export default function GlassNav({
                 key={tab.key}
                 type="button"
                 onClick={() => onTabChange(tab.key)}
-                className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+                className={`relative flex items-center gap-2 px-4 py-2 transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-surface-container-high text-primary'
-                    : 'text-on-surface/40 hover:bg-surface-container/50 hover:text-on-surface/60'
+                    ? 'text-primary'
+                    : 'text-on-surface/40 hover:text-on-surface/60'
                 }`}
-                title={tab.label}
               >
                 <Icon size={18} fill={isActive ? 'currentColor' : 'none'} strokeWidth={isActive ? 2 : 1.5} />
+                <span className={`text-sm font-medium ${isActive ? 'text-primary' : ''}`}>{tab.label}</span>
 
                 {tab.key === 'home' && notificationCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[14px] h-3.5 px-0.5 rounded-full bg-error text-[8px] font-bold text-on-error leading-none">
+                  <span className="absolute top-0.5 right-0.5 flex items-center justify-center min-w-[14px] h-3.5 px-0.5 rounded-full bg-error text-[8px] font-bold text-on-error leading-none">
                     {notificationCount > 9 ? '9+' : notificationCount}
                   </span>
+                )}
+
+                {/* Active indicator - bottom line */}
+                {isActive && (
+                  <motion.div
+                    layoutId="desktopNavIndicator"
+                    className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full bg-primary"
+                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  />
                 )}
               </button>
             );
           })}
         </div>
 
-        {/* Notifications at bottom */}
+        {/* Notifications - right */}
         <button
           type="button"
           onClick={() => onTabChange('notifications')}
@@ -176,7 +190,7 @@ export default function GlassNav({
         >
           <Bell size={18} />
           {notificationCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-error" />
+            <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-error" />
           )}
         </button>
       </nav>
