@@ -10,6 +10,16 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
+# Declare build args so Vite can use them at build time
+ARG VITE_API_BASE_URL=/api/v1
+ARG VITE_STRIPE_PUBLIC_KEY=
+ARG VITE_SENTRY_DSN=
+
+# Make them available as env vars during build
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_STRIPE_PUBLIC_KEY=$VITE_STRIPE_PUBLIC_KEY
+ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
+
 # Copy dependency manifests first for layer caching
 COPY package.json package-lock.json ./
 
