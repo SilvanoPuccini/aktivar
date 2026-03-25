@@ -185,6 +185,9 @@ export default function OnboardingPage() {
         password: formData.password,
       });
       sessionStorage.setItem('aktivar_access_token', tokenRes.data.access);
+      if (tokenRes.data.refresh) {
+        sessionStorage.setItem('aktivar_refresh_token', tokenRes.data.refresh);
+      }
 
       if (formData.location) {
         await api.patch(endpoints.myProfile, {
