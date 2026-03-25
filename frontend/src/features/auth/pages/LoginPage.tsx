@@ -44,6 +44,9 @@ export default function LoginPage() {
     try {
       const tokenRes = await api.post(endpoints.login, { email: normalizedEmail, password });
       sessionStorage.setItem('aktivar_access_token', tokenRes.data.access);
+      if (tokenRes.data.refresh) {
+        sessionStorage.setItem('aktivar_refresh_token', tokenRes.data.refresh);
+      }
 
       const userRes = await api.get(endpoints.me);
       storeLogin(userRes.data);

@@ -14,7 +14,14 @@ from rest_framework_simplejwt.views import (
 from users.views import AuthTokenObtainPairView
 
 
+def health_check(request):
+    """Lightweight health endpoint — no auth, no DB."""
+    from django.http import JsonResponse
+    return JsonResponse({"status": "ok"})
+
+
 urlpatterns = [
+    path("api/v1/health/", health_check, name="health_check"),
     path("admin/", admin.site.urls),
     # JWT Authentication (rate limited)
     path("api/v1/auth/token/", AuthTokenObtainPairView.as_view(), name="token_obtain_pair"),
