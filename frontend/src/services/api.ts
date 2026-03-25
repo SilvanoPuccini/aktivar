@@ -10,6 +10,27 @@ const api = axios.create({
   },
 });
 
+type RetryableRequestConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
+
+let isRefreshingToken = false;
+let pendingRefreshSubscribers: Array<(token: string) => void> = [];
+
+const subscribeTokenRefresh = (callback: (token: string) => void) => {
+  pendingRefreshSubscribers.push(callback);
+};
+
+const publishTokenRefresh = (token: string) => {
+  pendingRefreshSubscribers.forEach((callback) => callback(token));
+  pendingRefreshSubscribers = [];
+};
+
+const clearAuthAndRedirect = () => {
+  sessionStorage.removeItem('aktivar_access_token');
+  window.location.href = '/onboarding';
+};
+
 // Request interceptor: inject JWT token
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -43,12 +64,13 @@ api.interceptors.response.use(
         });
         const newToken = refreshResponse.data.access;
         sessionStorage.setItem('aktivar_access_token', newToken);
+        publishTokenRefresh(newToken);
 
         // Retry original request
-        if (error.config) {
-          error.config.headers.Authorization = `Bearer ${newToken}`;
-          return api(error.config);
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
         }
+        return api(originalRequest);
       } catch {
         sessionStorage.removeItem('aktivar_access_token');
         // Only redirect if we're not already on an auth page
