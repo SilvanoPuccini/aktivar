@@ -682,7 +682,7 @@ export default function OnboardingPage() {
       </header>
 
       {/* Main content */}
-      <main className="flex-grow flex flex-col items-center justify-center px-6 py-10 max-w-2xl mx-auto w-full relative z-10">
+      <main className="flex-grow flex flex-col items-center justify-center px-6 md:px-10 py-10 max-w-lg mx-auto w-full relative z-10">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={currentStep}

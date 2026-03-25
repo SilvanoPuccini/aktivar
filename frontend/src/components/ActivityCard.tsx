@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { BadgeCheck, Star, Sun, Cloud, Calendar, Route } from 'lucide-react';
+import { BadgeCheck, Star, Sun, Cloud, Calendar, Route, MapPin } from 'lucide-react';
 import type { Activity } from '@/types/activity';
 import SpotsBar from './SpotsBar';
 import CategoryChip from './CategoryChip';
@@ -108,7 +108,7 @@ export default function ActivityCard({
       className="group relative bg-surface-container rounded-2xl overflow-hidden border border-outline-variant/10 transition-all duration-300 hover:shadow-2xl hover:border-outline-variant/20 cursor-pointer"
     >
       {/* cover image */}
-      <div className="relative h-64 w-full">
+      <div className="relative h-56 md:h-72 w-full">
         <img
           src={activity.cover_image}
           alt={activity.title}
@@ -141,10 +141,16 @@ export default function ActivityCard({
       </div>
 
       {/* body */}
-      <div className="p-6 space-y-5">
+      <div className="p-7 space-y-5">
         <h2 className="text-xl font-headline font-bold text-[#EDE9DF] leading-tight group-hover:text-primary transition-colors">
           {activity.title}
         </h2>
+
+        {/* Location */}
+        <div className="flex items-center gap-2 text-on-surface/50">
+          <MapPin size={16} className="shrink-0" />
+          <span className="text-sm font-label truncate">{activity.location_name}</span>
+        </div>
 
         {/* organizer row */}
         <div className="flex items-center gap-3">

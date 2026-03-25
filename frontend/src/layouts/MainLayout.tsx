@@ -37,8 +37,8 @@ export function MainLayout() {
 
   return (
     <div className="min-h-screen bg-surface">
-      {/* Desktop: offset content for sidebar */}
-      <div className="md:pl-16">
+      {/* Desktop: offset content for top header */}
+      <div className="md:pt-16">
         <Outlet />
       </div>
       {!hideNav && (
