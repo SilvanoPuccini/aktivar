@@ -6,7 +6,7 @@ from .views import NotificationViewSet, PushSubscriptionViewSet
 app_name = 'notifications'
 
 router = DefaultRouter()
-router.register(r'notifications', NotificationViewSet, basename='notification')
+router.register(r'', NotificationViewSet, basename='notification')
 router.register(r'push-subscriptions', PushSubscriptionViewSet, basename='push-subscription')
 
 urlpatterns = [
