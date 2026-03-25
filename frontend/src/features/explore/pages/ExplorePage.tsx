@@ -63,7 +63,7 @@ export default function ExplorePage() {
           setIsLocating(false);
         },
         () => {
-          setMapCenter([-33.4489, -70.6693]);
+          setMapCenter([-41.1335, -71.3103]);
           setIsLocating(false);
         },
         { enableHighAccuracy: true, timeout: 10000 },
