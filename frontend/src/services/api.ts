@@ -36,13 +36,24 @@ api.interceptors.response.use(
     const isAuthRequest = AUTH_ENDPOINTS.some((ep) => requestUrl.includes(ep));
 
     if (status === 401 && !isAuthRequest) {
-      // Token expired — try refresh
+      // Token expired — try refresh using stored refresh token
+      const refreshToken = sessionStorage.getItem('aktivar_refresh_token');
+      if (!refreshToken) {
+        sessionStorage.removeItem('aktivar_access_token');
+        if (!window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/onboarding')) {
+          window.location.href = '/login';
+        }
+        return Promise.reject(error);
+      }
       try {
-        const refreshResponse = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {}, {
-          withCredentials: true,
+        const refreshResponse = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {
+          refresh: refreshToken,
         });
         const newToken = refreshResponse.data.access;
         sessionStorage.setItem('aktivar_access_token', newToken);
+        if (refreshResponse.data.refresh) {
+          sessionStorage.setItem('aktivar_refresh_token', refreshResponse.data.refresh);
+        }
 
         // Retry original request
         if (error.config) {
@@ -51,6 +62,7 @@ api.interceptors.response.use(
         }
       } catch {
         sessionStorage.removeItem('aktivar_access_token');
+        sessionStorage.removeItem('aktivar_refresh_token');
         // Only redirect if we're not already on an auth page
         if (!window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/onboarding')) {
           window.location.href = '/login';

@@ -236,12 +236,25 @@ SIMPLE_JWT = {
 }
 
 # CORS
-CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS")
+_cors_origins = env("CORS_ALLOWED_ORIGINS")
+if _cors_origins == ["*"] or _cors_origins == "*":
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGINS = []
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = _cors_origins
 
 # CSRF trusted origins (needed for admin and API from external IPs/domains)
-CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=",".join(CORS_ALLOWED_ORIGINS))
-if isinstance(CSRF_TRUSTED_ORIGINS, str):
-    CSRF_TRUSTED_ORIGINS = [o.strip() for o in CSRF_TRUSTED_ORIGINS.split(",") if o.strip()]
+_csrf_raw = env("CSRF_TRUSTED_ORIGINS", default="")
+if _csrf_raw and _csrf_raw != "*":
+    if isinstance(_csrf_raw, str):
+        CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_raw.split(",") if o.strip()]
+    else:
+        CSRF_TRUSTED_ORIGINS = _csrf_raw
+elif CORS_ALLOWED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+else:
+    CSRF_TRUSTED_ORIGINS = []
 
 # Security flags (default safe for HTTP; set True in .env when you have SSL)
 SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=False)
