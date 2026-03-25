@@ -1,0 +1,27 @@
+# Root .dockerignore — used by nginx/Dockerfile (context: .)
+# Only frontend/ and nginx/ are needed for the build
+
+# Exclude backend (has its own Dockerfile with its own context)
+backend/
+
+# Exclude node_modules (npm ci installs fresh)
+frontend/node_modules/
+frontend/dist/
+
+# Git
+.git/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Env files
+.env
+.env.*
+
+# Docker files
+docker-compose*.yml
+dokploy-compose.yml
