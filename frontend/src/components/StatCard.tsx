@@ -8,14 +8,14 @@ interface StatCardProps {
 
 export default function StatCard({ icon, value, label }: StatCardProps) {
   return (
-    <div className="flex flex-col items-center gap-2 rounded-xl bg-surface-container p-5">
+    <div className="flex flex-col items-center gap-2.5 rounded-2xl bg-surface-container/60 border border-outline-variant/10 p-6">
       <div className="text-primary">{icon}</div>
 
-      <span className="font-[Epilogue] text-2xl font-bold text-on-surface leading-none">
+      <span className="font-headline text-2xl font-black text-on-surface leading-none">
         {value}
       </span>
 
-      <span className="font-[Space_Grotesk] text-xs uppercase tracking-wider text-muted">
+      <span className="font-label text-[10px] uppercase tracking-[0.15em] text-muted">
         {label}
       </span>
     </div>
