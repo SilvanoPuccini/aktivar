@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
   ArrowRight,
+  ArrowLeft,
   Plus,
   MapPin,
   Clock,
@@ -31,11 +32,9 @@ import type { Difficulty } from '@/types/activity';
 /*  Form data shape                                                    */
 /* ------------------------------------------------------------------ */
 interface FormData {
-  // Step 1
   categoryId: number | null;
   title: string;
   description: string;
-  // Step 2
   date: string;
   startTime: string;
   endTime: string;
@@ -45,7 +44,6 @@ interface FormData {
   isFree: boolean;
   price: number;
   difficulty: Difficulty;
-  // Step 3
   coverImage: string;
   whatToBring: string;
   distanceKm: string;
@@ -73,10 +71,10 @@ const initialFormData: FormData = {
 /*  Shared input classes                                                */
 /* ------------------------------------------------------------------ */
 const inputClasses =
-  'w-full bg-surface-container-highest border-none focus:ring-1 focus:ring-primary/40 rounded-xl px-6 py-4 text-on-surface placeholder:text-on-surface/20 font-body outline-none transition-colors duration-200';
+  'w-full bg-surface-container-highest/60 border border-outline-variant/15 focus:ring-2 focus:ring-primary/30 focus:border-primary/40 rounded-xl px-5 py-4 text-on-surface placeholder:text-on-surface/25 font-body outline-none transition-all duration-200';
 
 const labelClasses =
-  'block font-label text-xs uppercase tracking-widest text-on-surface-variant';
+  'block font-label text-xs uppercase tracking-widest text-on-surface-variant mb-2';
 
 /* ------------------------------------------------------------------ */
 /*  Slide animation variants                                           */
@@ -100,7 +98,6 @@ const difficultyOptions: { value: Difficulty; label: string }[] = [
   { value: 'expert', label: 'Experto' },
 ];
 
-/* Step headings configuration */
 const stepHeadings: { prefix: string; accent: string; suffix?: string; subtitle: string }[] = [
   {
     prefix: 'Define the',
@@ -135,7 +132,6 @@ export default function CreateActivityPage() {
   const [direction, setDirection] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
 
-  /* helpers */
   const update = <K extends keyof FormData>(key: K, value: FormData[K]) =>
     setFormData((prev) => ({ ...prev, [key]: value }));
 
@@ -159,18 +155,15 @@ export default function CreateActivityPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Show preview immediately
     const previewUrl = URL.createObjectURL(file);
     update('coverImage', previewUrl);
 
-    // Try to upload to server
     uploadMutation.mutate(file, {
       onSuccess: (data) => {
         update('coverImage', data.url);
         toast.success('Imagen subida');
       },
       onError: () => {
-        // Keep local preview, user can still provide URL
         toast('Imagen guardada localmente', { icon: 'info' });
       },
     });
@@ -243,9 +236,8 @@ export default function CreateActivityPage() {
   /*  Step 1 — Define the Adventure                                    */
   /* ---------------------------------------------------------------- */
   const step1 = (
-    <div className="space-y-10">
-      {/* Title input */}
-      <section className="space-y-4">
+    <div className="space-y-8">
+      <section className="space-y-3">
         <label className={labelClasses}>Título de la actividad</label>
         <input
           type="text"
@@ -256,8 +248,7 @@ export default function CreateActivityPage() {
         />
       </section>
 
-      {/* Category chips */}
-      <section className="space-y-4">
+      <section className="space-y-3">
         <label className={labelClasses}>Tipo de actividad</label>
         <div className="flex overflow-x-auto gap-3 pb-2 no-scrollbar">
           {categories.map((cat) => (
@@ -271,8 +262,7 @@ export default function CreateActivityPage() {
         </div>
       </section>
 
-      {/* Description */}
-      <section className="space-y-4">
+      <section className="space-y-3">
         <label className={labelClasses}>Descripción</label>
         <textarea
           rows={4}
@@ -289,10 +279,9 @@ export default function CreateActivityPage() {
   /*  Step 2 — Set the Details                                         */
   /* ---------------------------------------------------------------- */
   const step2 = (
-    <div className="space-y-10">
-      {/* Date & Time Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
+    <div className="space-y-8">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="space-y-3">
           <label className={labelClasses}>Fecha</label>
           <div className="relative">
             <input
@@ -301,10 +290,10 @@ export default function CreateActivityPage() {
               value={formData.date}
               onChange={(e) => update('date', e.target.value)}
             />
-            <Calendar size={20} className="absolute right-4 top-4 text-on-surface-variant pointer-events-none" />
+            <Calendar size={18} className="absolute right-4 top-4 text-on-surface-variant pointer-events-none" />
           </div>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-3">
           <label className={labelClasses}>Hora inicio</label>
           <div className="relative">
             <input
@@ -313,55 +302,47 @@ export default function CreateActivityPage() {
               value={formData.startTime}
               onChange={(e) => update('startTime', e.target.value)}
             />
-            <Clock size={20} className="absolute right-4 top-4 text-on-surface-variant pointer-events-none" />
+            <Clock size={18} className="absolute right-4 top-4 text-on-surface-variant pointer-events-none" />
           </div>
         </div>
       </section>
 
-      {/* End time */}
-      <section className="space-y-4">
+      <section className="space-y-3">
         <label className={labelClasses}>Hora fin</label>
-        <div className="relative">
+        <div className="relative max-w-xs">
           <input
             type="time"
             className={`${inputClasses} font-label`}
             value={formData.endTime}
             onChange={(e) => update('endTime', e.target.value)}
           />
-          <Clock size={20} className="absolute right-4 top-4 text-on-surface-variant pointer-events-none" />
+          <Clock size={18} className="absolute right-4 top-4 text-on-surface-variant pointer-events-none" />
         </div>
       </section>
 
-      {/* Map Picker Bento */}
-      <section className="space-y-4">
+      <section className="space-y-3">
         <label className={labelClasses}>Punto de encuentro</label>
-        <div className="relative h-64 w-full rounded-2xl overflow-hidden bg-surface-container-low group">
-          {/* Map background image */}
+        <div className="relative h-56 w-full rounded-2xl overflow-hidden bg-surface-container-low group border border-outline-variant/10">
           <div className="w-full h-full bg-surface-container-highest flex items-center justify-center">
             <div className="absolute inset-0 bg-gradient-to-br from-surface-container-low to-surface-container opacity-80" />
-            {/* Grid pattern to simulate topo map */}
             <div className="absolute inset-0 opacity-10" style={{
               backgroundImage: 'linear-gradient(rgba(255,197,108,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,197,108,0.3) 1px, transparent 1px)',
               backgroundSize: '40px 40px',
             }} />
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-surface to-transparent" />
-
-          {/* Pulsing location pin */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="bg-primary/20 p-4 rounded-full animate-pulse">
               <div className="bg-primary p-3 rounded-full shadow-lg">
-                <MapPin size={24} className="text-on-primary" />
+                <MapPin size={22} className="text-on-primary" />
               </div>
             </div>
           </div>
-
-          {/* Search input overlay */}
           <div className="absolute bottom-4 left-4 right-4">
             <div className="relative">
               <input
                 type="text"
-                className="w-full bg-surface-container/90 backdrop-blur-md border-none focus:ring-1 focus:ring-primary/40 rounded-xl px-4 py-3 text-sm font-body text-on-surface placeholder:text-on-surface/30"
+                className="w-full bg-surface-container/90 backdrop-blur-md border border-outline-variant/10 focus:ring-1 focus:ring-primary/40 rounded-xl px-4 py-3 text-sm font-body text-on-surface placeholder:text-on-surface/30"
                 placeholder="Buscar trailhead o coordenada..."
                 value={formData.locationName}
                 onChange={(e) => update('locationName', e.target.value)}
@@ -372,8 +353,7 @@ export default function CreateActivityPage() {
         </div>
       </section>
 
-      {/* Meeting point text */}
-      <section className="space-y-4">
+      <section className="space-y-3">
         <label className={labelClasses}>Punto de encuentro (detalle)</label>
         <input
           type="text"
@@ -384,16 +364,14 @@ export default function CreateActivityPage() {
         />
       </section>
 
-      {/* Capacity & Pricing Bento */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Capacity Slider Card */}
-        <div className="bg-surface-container p-6 rounded-2xl space-y-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="bg-surface-container/60 p-6 rounded-2xl space-y-5 border border-outline-variant/10">
           <div className="flex justify-between items-center">
-            <label className={labelClasses}>
+            <label className={`${labelClasses} mb-0`}>
               <Users size={14} className="inline mr-1 -mt-0.5" />
               Capacidad
             </label>
-            <span className="font-label text-primary font-bold">{formData.capacity} exploradores</span>
+            <span className="font-label text-primary font-bold text-sm">{formData.capacity} exploradores</span>
           </div>
           <input
             type="range"
@@ -409,20 +387,19 @@ export default function CreateActivityPage() {
           </div>
         </div>
 
-        {/* Price Toggle Card */}
-        <div className="bg-surface-container p-6 rounded-2xl flex flex-col justify-between">
+        <div className="bg-surface-container/60 p-6 rounded-2xl flex flex-col justify-between border border-outline-variant/10">
           <label className={labelClasses}>
             <DollarSign size={14} className="inline mr-1 -mt-0.5" />
             Precio
           </label>
-          <div className="flex p-1 bg-surface-container-highest rounded-xl mt-4">
+          <div className="flex p-1 bg-surface-container-highest rounded-xl mt-3">
             <button
               type="button"
               onClick={() => {
                 update('isFree', true);
                 update('price', 0);
               }}
-              className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${
+              className={`flex-1 py-2.5 rounded-lg font-bold text-sm transition-all ${
                 formData.isFree
                   ? 'bg-surface-container text-primary'
                   : 'text-on-surface-variant hover:text-on-surface'
@@ -433,7 +410,7 @@ export default function CreateActivityPage() {
             <button
               type="button"
               onClick={() => update('isFree', false)}
-              className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${
+              className={`flex-1 py-2.5 rounded-lg font-bold text-sm transition-all ${
                 !formData.isFree
                   ? 'bg-surface-container text-primary'
                   : 'text-on-surface-variant hover:text-on-surface'
@@ -470,8 +447,7 @@ export default function CreateActivityPage() {
         </div>
       </section>
 
-      {/* Difficulty */}
-      <section className="space-y-4">
+      <section className="space-y-3">
         <label className={labelClasses}>
           <Mountain size={14} className="inline mr-1 -mt-0.5" />
           Dificultad
@@ -482,7 +458,7 @@ export default function CreateActivityPage() {
               key={opt.value}
               type="button"
               onClick={() => update('difficulty', opt.value)}
-              className={`px-5 py-3 rounded-full font-medium text-sm transition-all active:scale-95 ${
+              className={`px-5 py-3 rounded-xl font-medium text-sm transition-all active:scale-95 ${
                 formData.difficulty === opt.value
                   ? 'bg-secondary text-on-secondary'
                   : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-bright'
@@ -500,9 +476,8 @@ export default function CreateActivityPage() {
   /*  Step 3 — Final Touches                                           */
   /* ---------------------------------------------------------------- */
   const step3 = (
-    <div className="space-y-10">
-      {/* Photo Upload */}
-      <section className="space-y-4">
+    <div className="space-y-8">
+      <section className="space-y-3">
         <label className={labelClasses}>Imagen de portada</label>
 
         <input
@@ -514,7 +489,7 @@ export default function CreateActivityPage() {
         />
 
         {formData.coverImage ? (
-          <div className="relative w-full aspect-video rounded-2xl overflow-hidden group">
+          <div className="relative w-full aspect-video rounded-2xl overflow-hidden group border border-outline-variant/10">
             <img
               src={formData.coverImage}
               alt="preview"
@@ -532,7 +507,7 @@ export default function CreateActivityPage() {
         ) : (
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="w-full aspect-video md:aspect-[21/9] border-2 border-dashed border-outline-variant/30 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-surface-container transition-colors cursor-pointer group"
+            className="w-full aspect-video md:aspect-[21/9] border-2 border-dashed border-outline-variant/25 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-surface-container transition-colors cursor-pointer group"
           >
             {uploadMutation.isPending ? (
               <div className="bg-surface-container-highest p-4 rounded-full">
@@ -550,7 +525,6 @@ export default function CreateActivityPage() {
           </div>
         )}
 
-        {/* Or paste URL */}
         <input
           type="url"
           className={inputClasses}
@@ -560,8 +534,7 @@ export default function CreateActivityPage() {
         />
       </section>
 
-      {/* Description (detailed) */}
-      <section className="space-y-4">
+      <section className="space-y-3">
         <label className={labelClasses}>
           <Backpack size={14} className="inline mr-1 -mt-0.5" />
           Qué llevar
@@ -575,8 +548,7 @@ export default function CreateActivityPage() {
         />
       </section>
 
-      {/* Distance */}
-      <section className="space-y-4">
+      <section className="space-y-3">
         <label className={labelClasses}>
           <Ruler size={14} className="inline mr-1 -mt-0.5" />
           Distancia (km) &mdash; opcional
@@ -585,7 +557,7 @@ export default function CreateActivityPage() {
           type="number"
           min={0}
           step={0.1}
-          className={inputClasses}
+          className={`${inputClasses} max-w-xs`}
           placeholder="Ej: 12.5"
           value={formData.distanceKm}
           onChange={(e) => update('distanceKm', e.target.value)}
@@ -600,29 +572,10 @@ export default function CreateActivityPage() {
   /*  Render                                                           */
   /* ================================================================ */
   return (
-    <div className="min-h-screen bg-surface text-on-surface pb-32">
-      {/* Glass Header */}
-      <header className="sticky top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-md flex justify-between items-center px-6 py-5">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => (currentStep > 0 ? prev() : navigate(-1))}
-            className="p-2 hover:bg-surface-container-highest rounded-full transition-colors active:scale-95"
-            aria-label="Cerrar"
-          >
-            <X size={20} className="text-on-surface" />
-          </button>
-          <h1 className="font-headline font-black text-2xl tracking-tighter text-on-surface">Aktivar</h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="font-label text-xs uppercase tracking-widest text-primary">
-            Paso {String(currentStep + 1).padStart(2, '0')}/03
-          </span>
-        </div>
-      </header>
-
-      {/* Progress Bars */}
-      <nav className="px-6 mt-4">
-        <div className="flex gap-2 h-1 w-full max-w-2xl mx-auto">
+    <div className="min-h-screen bg-surface text-on-surface pb-32 md:pb-16">
+      {/* Progress bar */}
+      <div className="max-w-3xl mx-auto px-6 md:px-8 pt-6">
+        <div className="flex gap-2 h-1 w-full">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
@@ -636,18 +589,30 @@ export default function CreateActivityPage() {
             />
           ))}
         </div>
-      </nav>
+        <div className="flex items-center justify-between mt-4">
+          <button
+            onClick={() => (currentStep > 0 ? prev() : navigate(-1))}
+            className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
+          >
+            {currentStep > 0 ? <ArrowLeft size={18} /> : <X size={18} />}
+            <span className="text-sm font-medium">{currentStep > 0 ? 'Atrás' : 'Cancelar'}</span>
+          </button>
+          <span className="font-label text-xs uppercase tracking-widest text-primary">
+            Paso {String(currentStep + 1).padStart(2, '0')}/03
+          </span>
+        </div>
+      </div>
 
       {/* Form Body */}
-      <main className="max-w-2xl mx-auto px-6 py-10">
+      <main className="max-w-3xl mx-auto px-6 md:px-8 py-8 md:py-10">
         {/* Form Header */}
-        <header className="mb-12">
-          <h2 className="font-headline font-extrabold text-4xl md:text-5xl leading-tight tracking-tight mb-4">
+        <header className="mb-10">
+          <h2 className="font-headline font-extrabold text-3xl md:text-4xl lg:text-5xl leading-tight tracking-tight mb-3">
             {heading.prefix}{' '}
             <span className="text-primary italic">{heading.accent}</span>
             {heading.suffix ? ` ${heading.suffix}` : ''}
           </h2>
-          <p className="text-on-surface-variant text-base max-w-md">{heading.subtitle}</p>
+          <p className="text-on-surface-variant text-base max-w-lg">{heading.subtitle}</p>
         </header>
 
         {/* Animated Step Content */}
@@ -669,7 +634,7 @@ export default function CreateActivityPage() {
         <footer className="pt-10 mt-10 flex items-center justify-between border-t border-outline-variant/10">
           <button
             type="button"
-            className="text-on-surface-variant font-bold hover:text-on-surface transition-colors"
+            className="text-on-surface-variant font-bold text-sm hover:text-on-surface transition-colors"
           >
             Save Draft
           </button>
@@ -678,24 +643,24 @@ export default function CreateActivityPage() {
             <button
               type="button"
               onClick={next}
-              className="bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-black px-12 py-4 rounded-full active:scale-95 transition-all flex items-center gap-3"
-              style={{ boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)' }}
+              className="bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-black px-10 py-4 rounded-xl active:scale-95 transition-all flex items-center gap-3 text-sm"
+              style={{ boxShadow: '0 12px 32px rgba(0, 0, 0, 0.3)' }}
             >
               Continuar
-              <ArrowRight size={20} />
+              <ArrowRight size={18} />
             </button>
           ) : (
             <button
               type="button"
               onClick={handleCreate}
               disabled={createMutation.isPending}
-              className="bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-black px-12 py-4 rounded-full active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50"
-              style={{ boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)' }}
+              className="bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-black px-10 py-4 rounded-xl active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50 text-sm"
+              style={{ boxShadow: '0 12px 32px rgba(0, 0, 0, 0.3)' }}
             >
               {createMutation.isPending ? (
-                <Loader2 size={20} className="animate-spin" />
+                <Loader2 size={18} className="animate-spin" />
               ) : (
-                <Plus size={20} />
+                <Plus size={18} />
               )}
               Crear Actividad
             </button>
@@ -703,18 +668,21 @@ export default function CreateActivityPage() {
         </footer>
       </main>
 
-      {/* Floating Pro Tip Bar */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-lg bg-surface-container-low/80 backdrop-blur-xl px-6 py-4 rounded-2xl border border-outline-variant/10 flex items-center gap-4 z-40"
-        style={{ boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)' }}
-      >
-        <div className="h-10 w-10 rounded-full bg-secondary-container/30 flex items-center justify-center shrink-0">
-          <Sparkles size={20} className="text-secondary" />
-        </div>
-        <div className="flex-1">
-          <p className="text-xs font-bold text-on-surface">Pro Tip</p>
-          <p className="text-[10px] text-on-surface-variant font-body">
-            Agregar una imagen de portada aumenta la participación en un 40%.
-          </p>
+      {/* Pro Tip Bar */}
+      <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-lg z-40">
+        <div
+          className="bg-surface-container-low/90 backdrop-blur-xl px-5 py-4 rounded-2xl border border-outline-variant/10 flex items-center gap-4"
+          style={{ boxShadow: '0 12px 32px rgba(0, 0, 0, 0.3)' }}
+        >
+          <div className="h-10 w-10 rounded-full bg-secondary-container/30 flex items-center justify-center shrink-0">
+            <Sparkles size={18} className="text-secondary" />
+          </div>
+          <div className="flex-1">
+            <p className="text-xs font-bold text-on-surface">Pro Tip</p>
+            <p className="text-[11px] text-on-surface-variant font-body">
+              Agregar una imagen de portada aumenta la participación en un 40%.
+            </p>
+          </div>
         </div>
       </div>
     </div>
