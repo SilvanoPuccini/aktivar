@@ -75,22 +75,22 @@ export default function ActivityCard({
         whileHover={{ scale: 1.02 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         onClick={onClick}
-        className="flex items-center gap-3 rounded-xl bg-surface-container p-3 cursor-pointer"
+        className="flex items-center gap-4 rounded-xl bg-surface-container p-4 cursor-pointer"
       >
         <div className="flex-1 min-w-0">
-          <h3 className="font-[Epilogue] font-bold text-sm text-on-surface truncate">
+          <h3 className="font-headline font-bold text-sm text-on-surface truncate">
             {activity.title}
           </h3>
-          <div className="mt-1 flex items-center gap-2">
+          <div className="mt-1.5 flex items-center gap-2">
             <CategoryChip
               category={activity.category}
               size="sm"
             />
-            <span className="font-[Space_Grotesk] text-xs text-muted">
+            <span className="font-label text-xs text-muted">
               {formattedDate}
             </span>
           </div>
-          <div className="mt-2">
+          <div className="mt-2.5">
             <SpotsBar
               capacity={activity.capacity}
               taken={activity.confirmed_count}
@@ -101,24 +101,23 @@ export default function ActivityCard({
     );
   }
 
-  /* ---- feed variant (Stitch design) ---- */
+  /* ---- feed variant ---- */
   return (
     <article
       onClick={onClick}
       className="group relative bg-surface-container rounded-2xl overflow-hidden border border-outline-variant/10 transition-all duration-300 hover:shadow-2xl hover:border-outline-variant/20 cursor-pointer"
     >
       {/* cover image */}
-      <div className="relative h-56 md:h-72 w-full">
+      <div className="relative h-48 md:h-56 w-full">
         <img
           src={activity.cover_image}
           alt={activity.title}
           className="w-full h-full object-cover"
         />
-        {/* gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60" />
 
         {/* category badge top-left */}
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-3.5 left-3.5">
           <span className="px-3 py-1 bg-primary text-on-primary font-label text-[10px] font-bold rounded-full tracking-tighter">
             {activity.category.name.toUpperCase()}
           </span>
@@ -126,7 +125,7 @@ export default function ActivityCard({
 
         {/* weather badge top-right */}
         {activity.category.is_outdoor && activity.weather && (
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-3.5 right-3.5">
             <WeatherBadge
               temp={activity.weather.temp}
               description={activity.weather.description}
@@ -135,26 +134,26 @@ export default function ActivityCard({
         )}
 
         {/* price badge bottom-right */}
-        <div className="absolute bottom-4 right-4">
+        <div className="absolute bottom-3.5 right-3.5">
           <PriceBadge isFree={activity.is_free} price={activity.price} />
         </div>
       </div>
 
       {/* body */}
-      <div className="p-7 space-y-5">
-        <h2 className="text-xl font-headline font-bold text-[#EDE9DF] leading-tight group-hover:text-primary transition-colors">
+      <div className="p-5 md:p-6 space-y-4">
+        <h2 className="text-lg font-headline font-bold text-[#EDE9DF] leading-tight group-hover:text-primary transition-colors">
           {activity.title}
         </h2>
 
         {/* Location */}
         <div className="flex items-center gap-2 text-on-surface/50">
-          <MapPin size={16} className="shrink-0" />
+          <MapPin size={14} className="shrink-0" />
           <span className="text-sm font-label truncate">{activity.location_name}</span>
         </div>
 
         {/* organizer row */}
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden">
+          <div className="w-7 h-7 rounded-full overflow-hidden">
             <img
               src={activity.organizer.avatar}
               alt={activity.organizer.full_name}
@@ -173,21 +172,21 @@ export default function ActivityCard({
         </div>
 
         {/* info grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <div className="flex items-center gap-2 text-on-surface/60">
-            <Calendar size={18} />
+            <Calendar size={16} />
             <span className="text-xs font-label">{formattedDateUpper}</span>
           </div>
           <div className="flex items-center gap-2 text-on-surface/60">
             {activity.distance_km !== null && activity.distance_km !== undefined ? (
               <>
-                <Route size={18} />
+                <Route size={16} />
                 <span className="text-xs font-label">{activity.distance_km} KM</span>
               </>
             ) : (
               <>
-                <Route size={18} />
-                <span className="text-xs font-label">{activity.location_name}</span>
+                <Route size={16} />
+                <span className="text-xs font-label truncate">{activity.location_name}</span>
               </>
             )}
           </div>

@@ -18,7 +18,6 @@ export default function ExplorePage() {
   const [isLocating, setIsLocating] = useState(false);
   const [visibleCount, setVisibleCount] = useState<number | null>(null);
 
-  // Fetch from API with fallback to mock data
   const { data: apiActivities } = useActivities({
     search: searchQuery || undefined,
     category: selectedCategory || undefined,
@@ -73,7 +72,6 @@ export default function ExplorePage() {
     }
   }, []);
 
-  // Try to get user location on mount
   useEffect(() => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -87,7 +85,6 @@ export default function ExplorePage() {
   }, []);
 
   const handleMapMove = useCallback((_bounds: L.LatLngBounds) => {
-    // Count visible activities within bounds
     const count = filtered.filter((a) =>
       a.latitude && a.longitude && _bounds.contains([a.latitude, a.longitude])
     ).length;
@@ -95,7 +92,7 @@ export default function ExplorePage() {
   }, [filtered]);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-surface">
+    <div className="relative h-[calc(100vh-4rem)] md:h-[calc(100vh-4rem)] w-full overflow-hidden bg-surface">
       {/* Full-screen map */}
       <div className="absolute inset-0">
         <ActivityMap
@@ -110,17 +107,16 @@ export default function ExplorePage() {
       </div>
 
       {/* Floating search bar + filters */}
-      <div className="absolute top-4 left-4 right-4 z-[1000]">
+      <div className="absolute top-4 md:top-6 left-4 md:left-8 right-4 md:right-8 z-[1000]">
         <div className="mx-auto max-w-xl">
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="Explorar actividades…"
+            placeholder="Explorar actividades..."
           />
         </div>
 
-        {/* Category filter chips */}
-        <div className="mt-3 flex gap-2 overflow-x-auto scrollbar-none pb-2 -mx-1 px-1">
+        <div className="mt-3 flex gap-2 overflow-x-auto scrollbar-none pb-2 -mx-1 px-1 justify-center">
           <CategoryChip
             category={{ name: 'Todas', icon: 'users' }}
             selected={selectedCategory === null}
@@ -146,12 +142,12 @@ export default function ExplorePage() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute top-[120px] left-1/2 -translate-x-1/2 z-[1000]"
+          className="absolute top-[120px] md:top-[140px] left-1/2 -translate-x-1/2 z-[1000]"
         >
           <div
-            className="flex items-center gap-2 rounded-full px-4 py-2 text-xs font-label font-semibold"
+            className="flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-label font-semibold"
             style={{
-              background: 'rgba(17,20,15,0.8)',
+              background: 'rgba(17,20,15,0.85)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               border: '1px solid rgba(81,69,51,0.2)',
@@ -166,16 +162,15 @@ export default function ExplorePage() {
       )}
 
       {/* Floating controls */}
-      <div className="absolute bottom-6 right-4 z-[1000] flex flex-col gap-3">
-        {/* Re-center / locate button */}
+      <div className="absolute bottom-6 md:bottom-8 right-4 md:right-8 z-[1000] flex flex-col gap-3">
         <motion.button
           type="button"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={handleRecenter}
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-outline-variant text-on-surface shadow-lg cursor-pointer"
+          className="flex h-12 w-12 items-center justify-center rounded-xl border border-outline-variant/20 text-on-surface shadow-lg cursor-pointer"
           style={{
-            background: 'rgba(17,20,15,0.70)',
+            background: 'rgba(17,20,15,0.80)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
           }}
@@ -203,10 +198,9 @@ export default function ExplorePage() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '100%', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="absolute bottom-0 left-0 right-0 z-[1000] px-4 pb-6"
+            className="absolute bottom-0 left-0 right-0 z-[1000] px-4 md:px-8 pb-6"
           >
             <div className="relative mx-auto max-w-lg">
-              {/* Close button */}
               <button
                 type="button"
                 onClick={() => setSelectedActivityId(null)}
@@ -216,9 +210,9 @@ export default function ExplorePage() {
               </button>
 
               <div
-                className="rounded-2xl border border-outline-variant overflow-hidden"
+                className="rounded-2xl border border-outline-variant/15 overflow-hidden"
                 style={{
-                  background: 'rgba(17,20,15,0.85)',
+                  background: 'rgba(17,20,15,0.90)',
                   backdropFilter: 'blur(24px)',
                   WebkitBackdropFilter: 'blur(24px)',
                 }}
@@ -229,8 +223,7 @@ export default function ExplorePage() {
                   variant="compact"
                 />
 
-                {/* Quick action bar */}
-                <div className="flex items-center justify-between px-4 py-3 border-t border-outline-variant/30">
+                <div className="flex items-center justify-between px-5 py-3.5 border-t border-outline-variant/15">
                   <div className="flex items-center gap-2 text-xs text-muted">
                     <Users size={14} />
                     <span>{selectedActivity.confirmed_count} confirmados</span>
