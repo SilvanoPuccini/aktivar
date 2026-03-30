@@ -8,14 +8,12 @@ export function MainLayout() {
 
   const getActiveTab = () => {
     const path = location.pathname;
-    if (path === '/' || path.startsWith('/activity')) return 'home';
+    if (path === '/') return 'home';
     if (path === '/explore') return 'explore';
     if (path === '/create') return 'create';
-    if (path.startsWith('/trip')) return 'trips';
     if (path === '/profile') return 'profile';
-    if (path.startsWith('/chat')) return 'home';
-    if (path === '/notifications') return 'home';
-    if (path === '/dashboard') return 'home';
+    if (path === '/notifications') return 'notifications';
+    if (path === '/dashboard') return 'dashboard';
     return 'home';
   };
 
@@ -24,28 +22,26 @@ export function MainLayout() {
       home: '/',
       explore: '/explore',
       create: '/create',
-      trips: '/',
       profile: '/profile',
       notifications: '/notifications',
+      dashboard: '/dashboard',
     };
     navigate(routes[tab] || '/');
   };
 
-  // Hide nav on focused pages
-  const hideNav =
+  // Pages that handle their own full-screen layout (no nav, no footer)
+  const isImmersive =
     location.pathname.startsWith('/activity/') ||
     location.pathname.startsWith('/chat/') ||
     location.pathname.startsWith('/payment/');
 
-  // Full-screen pages that manage their own height
-  const isFullScreenPage = location.pathname === '/explore';
-
-  // Pages that show footer (not fullscreen, not feed home which has its own layout)
-  const showFooter = !hideNav && !isFullScreenPage && location.pathname !== '/';
+  // Full-bleed pages (explore map) — nav yes, footer no
+  const isFullBleed = location.pathname === '/explore';
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
-      {!hideNav && (
+      {/* Desktop top nav — always visible except immersive pages */}
+      {!isImmersive && (
         <GlassNav
           activeTab={getActiveTab()}
           onTabChange={handleTabChange}
@@ -53,12 +49,19 @@ export function MainLayout() {
         />
       )}
 
-      {/* Content area - offset for fixed header on desktop */}
-      <div className={`flex-grow ${!hideNav ? 'md:pt-16' : ''}`}>
-        <Outlet />
-      </div>
+      {/* Spacer for fixed desktop nav (64px = h-16) */}
+      {!isImmersive && <div className="hidden md:block h-16 shrink-0" />}
 
-      {showFooter && <Footer />}
+      {/* Page content */}
+      <main className="flex-1">
+        <Outlet />
+      </main>
+
+      {/* Mobile bottom spacer for bottom nav */}
+      {!isImmersive && <div className="md:hidden h-20 shrink-0" />}
+
+      {/* Footer — only on content pages, never on fullbleed or immersive */}
+      {!isImmersive && !isFullBleed && <Footer />}
     </div>
   );
 }
