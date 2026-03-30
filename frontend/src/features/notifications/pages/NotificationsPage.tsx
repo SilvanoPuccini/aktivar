@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Bell, MessageCircle, UserPlus, Clock, ArrowLeft, CheckCheck } from 'lucide-react';
+import { Bell, MessageCircle, UserPlus, Clock, CheckCheck } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
 import {
@@ -89,12 +89,10 @@ export default function NotificationsPage() {
   const [readIds, setReadIds] = useState<Set<number>>(new Set());
   const [allMarkedRead, setAllMarkedRead] = useState(false);
 
-  // API hooks
   const { data: apiNotifications } = useNotifications();
   const markRead = useMarkNotificationRead();
   const markAllRead = useMarkAllNotificationsRead();
 
-  // Derive notifications from API data
   const notifications = useMemo(() => {
     if (!apiNotifications || apiNotifications.length === 0) return [];
     const base = apiNotifications.map(mapApiToLocal);
@@ -105,13 +103,9 @@ export default function NotificationsPage() {
   }, [apiNotifications, readIds, allMarkedRead]);
 
   const handleNotificationClick = (notification: LocalNotification) => {
-    // Mark as read locally
     setReadIds((prev) => new Set(prev).add(notification.id));
-
-    // Mark as read on the API
     markRead.mutate(notification.id);
 
-    // Navigate based on type
     if (notification.type === 'message') {
       navigate(`/chat/${notification.activityId}`);
     } else {
@@ -127,112 +121,106 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
-    <div className="min-h-screen bg-surface pb-24">
-      {/* Header */}
-      <div
-        className="sticky top-0 z-10 flex items-center gap-3 px-4 py-4 border-b border-outline-variant"
-        style={{
-          background: 'rgba(17,20,15,0.85)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer"
-        >
-          <ArrowLeft size={20} />
-        </button>
-        <div className="flex-1">
-          <h1 className="font-display text-xl font-bold text-on-surface">
-            Notificaciones
-          </h1>
+    <div className="min-h-[60vh] bg-surface pb-28 md:pb-12">
+      {/* Page header */}
+      <div className="max-w-3xl mx-auto px-4 md:px-8 pt-6 md:pt-10 pb-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="font-headline text-2xl md:text-3xl font-black tracking-tight text-on-surface">
+              Notificaciones
+            </h1>
+            {unreadCount > 0 && (
+              <p className="font-label text-sm text-muted mt-1">
+                {unreadCount} sin leer
+              </p>
+            )}
+          </div>
           {unreadCount > 0 && (
-            <p className="font-label text-xs text-muted">
-              {unreadCount} sin leer
-            </p>
+            <button
+              type="button"
+              onClick={handleMarkAllRead}
+              className="flex items-center gap-2 rounded-xl bg-surface-container-high/60 px-4 py-2.5 text-sm font-label font-medium text-primary hover:bg-surface-container-highest transition-colors cursor-pointer border border-outline-variant/10"
+            >
+              <CheckCheck size={16} />
+              Marcar todo
+            </button>
           )}
         </div>
-        {unreadCount > 0 && (
-          <button
-            type="button"
-            onClick={handleMarkAllRead}
-            className="flex items-center gap-1.5 rounded-full bg-surface-container-high px-3 py-1.5 text-xs font-label text-primary hover:bg-surface-container-highest transition-colors cursor-pointer"
-          >
-            <CheckCheck size={14} />
-            Marcar todo
-          </button>
-        )}
       </div>
 
       {/* Notification list */}
-      {notifications.length === 0 ? (
-        <EmptyState
-          icon={<Bell size={48} />}
-          title="Sin notificaciones"
-          description="Cuando alguien se una a tus actividades o te envie un mensaje, aparecera aqui."
-        />
-      ) : (
-        <motion.div
-          className="divide-y divide-outline-variant/50"
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
-          {notifications.map((notification) => {
-            const Icon = notificationIcons[notification.type];
-            const iconColor = notificationColors[notification.type];
+      <div className="max-w-3xl mx-auto px-4 md:px-8">
+        {notifications.length === 0 ? (
+          <div className="py-12">
+            <EmptyState
+              icon={<Bell size={48} />}
+              title="Sin notificaciones"
+              description="Cuando alguien se una a tus actividades o te envie un mensaje, aparecera aqui."
+            />
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-outline-variant/10 overflow-hidden bg-surface-container/30">
+            <motion.div
+              className="divide-y divide-outline-variant/10"
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+            >
+              {notifications.map((notification) => {
+                const Icon = notificationIcons[notification.type];
+                const iconColor = notificationColors[notification.type];
 
-            return (
-              <motion.button
-                key={notification.id}
-                type="button"
-                variants={itemVariants}
-                onClick={() => handleNotificationClick(notification)}
-                className={`flex w-full items-start gap-3 px-4 py-4 text-left transition-colors cursor-pointer hover:bg-surface-container/50 ${
-                  !notification.isRead ? 'bg-surface-container/30' : ''
-                }`}
-              >
-                {/* Avatar with icon badge */}
-                <div className="relative shrink-0">
-                  <img
-                    src={notification.actor.avatar}
-                    alt={notification.actor.full_name}
-                    className="h-11 w-11 rounded-full object-cover border border-outline-variant"
-                  />
-                  <div
-                    className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-surface-container-high border border-outline-variant ${iconColor}`}
-                  >
-                    <Icon size={11} />
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <p
-                    className={`font-body text-sm leading-snug ${
-                      notification.isRead ? 'text-on-surface-variant' : 'text-on-surface'
+                return (
+                  <motion.button
+                    key={notification.id}
+                    type="button"
+                    variants={itemVariants}
+                    onClick={() => handleNotificationClick(notification)}
+                    className={`flex w-full items-start gap-4 px-5 md:px-6 py-5 text-left transition-colors cursor-pointer hover:bg-surface-container/50 ${
+                      !notification.isRead ? 'bg-primary/3' : ''
                     }`}
                   >
-                    {notification.description}
-                  </p>
-                  <p className="font-label text-xs text-muted mt-1">
-                    {notification.timestamp}
-                  </p>
-                </div>
+                    {/* Avatar with icon badge */}
+                    <div className="relative shrink-0">
+                      <img
+                        src={notification.actor.avatar}
+                        alt={notification.actor.full_name}
+                        className="h-12 w-12 rounded-xl object-cover border border-outline-variant/15"
+                      />
+                      <div
+                        className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-surface-container-high border-2 border-surface ${iconColor}`}
+                      >
+                        <Icon size={11} />
+                      </div>
+                    </div>
 
-                {/* Unread dot */}
-                {!notification.isRead && (
-                  <div className="mt-2 shrink-0">
-                    <span className="block h-2.5 w-2.5 rounded-full bg-primary" />
-                  </div>
-                )}
-              </motion.button>
-            );
-          })}
-        </motion.div>
-      )}
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <p
+                        className={`font-body text-sm leading-relaxed ${
+                          notification.isRead ? 'text-on-surface-variant' : 'text-on-surface'
+                        }`}
+                      >
+                        {notification.description}
+                      </p>
+                      <p className="font-label text-xs text-muted mt-1.5">
+                        {notification.timestamp}
+                      </p>
+                    </div>
+
+                    {/* Unread dot */}
+                    {!notification.isRead && (
+                      <div className="mt-3 shrink-0">
+                        <span className="block h-2.5 w-2.5 rounded-full bg-primary" />
+                      </div>
+                    )}
+                  </motion.button>
+                );
+              })}
+            </motion.div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

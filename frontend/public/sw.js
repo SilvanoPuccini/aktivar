@@ -1,6 +1,6 @@
 // Aktivar Service Worker — PWA + Push Notifications + Offline Support
 
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const STATIC_CACHE = `aktivar-static-${CACHE_VERSION}`;
 const API_CACHE = `aktivar-api-${CACHE_VERSION}`;
 const IMAGE_CACHE = `aktivar-images-${CACHE_VERSION}`;

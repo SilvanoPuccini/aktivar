@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Car,
   Users,
+  Mountain,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -96,40 +97,42 @@ export default function ActivityDetailPage() {
 
   return (
     <div className="min-h-screen bg-surface pb-32">
-      {/* ---- Glassmorphism Header ---- */}
-      <header className="sticky top-0 w-full z-50 bg-[#0c0f0a]/80 backdrop-blur-xl border-b border-outline-variant/10">
-        <div className="flex justify-between items-center px-6 py-4 w-full">
+      {/* ---- Header ---- */}
+      <header className="sticky top-0 w-full z-50 border-b border-outline-variant/10" style={{ background: 'rgba(12,15,10,0.92)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)' }}>
+        <div className="max-w-6xl mx-auto flex justify-between items-center px-6 md:px-8 py-4">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="active:scale-95 duration-200 text-on-surface flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-2 text-on-surface hover:text-primary transition-colors cursor-pointer"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
+            <span className="hidden md:inline text-sm font-medium">Volver</span>
           </button>
-          <div className="text-2xl font-black text-on-surface tracking-tighter font-headline">
-            Aktivar
+          <div className="flex items-center gap-2">
+            <Mountain size={18} className="text-primary" />
+            <span className="text-lg font-headline font-black text-on-surface tracking-tighter">Aktivar</span>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <button
               type="button"
               onClick={handleShare}
-              className="text-on-surface hover:text-primary-container transition-colors cursor-pointer"
+              className="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface/60 hover:bg-surface-container/50 hover:text-primary transition-all cursor-pointer"
             >
-              <Share2 size={24} />
+              <Share2 size={18} />
             </button>
             <button
               type="button"
-              className="text-on-surface hover:text-primary-container transition-colors cursor-pointer"
+              className="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface/60 hover:bg-surface-container/50 hover:text-error transition-all cursor-pointer"
             >
-              <Heart size={24} />
+              <Heart size={18} />
             </button>
           </div>
         </div>
       </header>
 
-      <main className="pb-4">
+      <main>
         {/* ---- Hero Section ---- */}
-        <section className="relative h-72 sm:h-96 lg:h-[486px] w-full overflow-hidden">
+        <section className="relative h-72 sm:h-96 lg:h-[480px] w-full overflow-hidden">
           <img
             src={activity.cover_image}
             alt={activity.title}
@@ -137,46 +140,46 @@ export default function ActivityDetailPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent" />
 
-          {/* Badges + Title overlay at bottom */}
-          <div className="absolute bottom-0 left-0 p-6 sm:p-8 w-full max-w-4xl">
-            <div className="flex gap-2 mb-4">
-              <span
-                className={`${diff.classes} px-4 py-1 rounded-full font-label text-xs uppercase tracking-widest font-bold`}
-              >
-                {diff.label}
-              </span>
-              {activity.distance_km !== null && (
-                <span className="bg-surface-container-highest/80 backdrop-blur text-primary px-4 py-1 rounded-full font-label text-xs uppercase tracking-widest font-bold">
-                  {activity.distance_km} KM
+          <div className="absolute bottom-0 left-0 right-0 px-6 md:px-8 pb-8">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex gap-2 mb-4">
+                <span
+                  className={`${diff.classes} px-4 py-1.5 rounded-full font-label text-xs uppercase tracking-widest font-bold`}
+                >
+                  {diff.label}
+                </span>
+                {activity.distance_km !== null && (
+                  <span className="bg-surface-container-highest/80 backdrop-blur text-primary px-4 py-1.5 rounded-full font-label text-xs uppercase tracking-widest font-bold">
+                    {activity.distance_km} KM
+                  </span>
+                )}
+              </div>
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-headline font-black text-on-surface leading-tight tracking-tighter max-w-3xl">
+                {activity.title}
+              </h1>
+              {activity.category?.name && (
+                <span className="inline-block mt-2 text-xl md:text-2xl font-headline font-bold text-primary-container">
+                  {activity.category.name}
                 </span>
               )}
             </div>
-            <h1 className="text-4xl md:text-6xl font-headline font-black text-on-surface leading-tight tracking-tighter">
-              {activity.title}
-              {activity.category?.name && (
-                <>
-                  <br />
-                  <span className="text-primary-container">{activity.category.name}</span>
-                </>
-              )}
-            </h1>
           </div>
         </section>
 
         {/* ---- Content Area ---- */}
         <motion.div
-          className="px-6 -mt-4 relative z-10 space-y-10 max-w-5xl mx-auto"
+          className="px-6 md:px-8 -mt-4 relative z-10 max-w-6xl mx-auto"
           initial="hidden"
           animate="show"
           variants={{ show: { transition: { staggerChildren: 0.08 } } }}
         >
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-6">
             {/* ---- Main Content (2/3) ---- */}
-            <div className="md:col-span-2 space-y-8">
+            <div className="lg:col-span-2 space-y-8">
               {/* Organizer Card */}
               <motion.div
                 variants={fadeUp}
-                className="bg-surface-container/60 rounded-2xl p-6 border border-outline-variant/10"
+                className="bg-surface-container/60 rounded-2xl p-6 md:p-8 border border-outline-variant/10"
               >
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-4">
@@ -184,11 +187,11 @@ export default function ActivityDetailPage() {
                       <img
                         src={activity.organizer.avatar}
                         alt={activity.organizer.full_name}
-                        className="w-16 h-16 rounded-xl object-cover"
+                        className="w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover"
                       />
                       {activity.organizer.is_verified_email && (
                         <div className="absolute -bottom-1 -right-1 bg-primary p-1 rounded-lg">
-                          <Check size={14} className="text-on-primary" strokeWidth={3} />
+                          <Check size={12} className="text-on-primary" strokeWidth={3} />
                         </div>
                       )}
                     </div>
@@ -214,30 +217,29 @@ export default function ActivityDetailPage() {
                   </div>
                   <button
                     type="button"
-                    className="bg-surface-container-highest text-primary px-6 py-2 rounded-full font-bold text-sm hover:bg-surface-bright transition-colors cursor-pointer"
+                    className="bg-surface-container-highest text-primary px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-surface-bright transition-colors cursor-pointer border border-outline-variant/10"
                   >
                     Seguir
                   </button>
                 </div>
                 {activity.description && (
                   <p className="text-on-surface-variant leading-relaxed text-sm">
-                    {activity.description.slice(0, 180)}
-                    {activity.description.length > 180 ? '...' : ''}
+                    {activity.description.slice(0, 200)}
+                    {activity.description.length > 200 ? '...' : ''}
                   </p>
                 )}
               </motion.div>
 
-              {/* The Experience / Description */}
+              {/* The Experience */}
               <motion.div variants={fadeUp} className="space-y-4">
                 <h2 className="font-headline font-bold text-2xl tracking-tight text-on-surface">
                   La Experiencia
                 </h2>
-                <div className="bg-surface-container-low rounded-xl p-6 space-y-6">
+                <div className="bg-surface-container-low rounded-2xl p-6 md:p-8 space-y-6">
                   <p className="text-on-surface-variant leading-relaxed">
                     {activity.description}
                   </p>
 
-                  {/* Participant Row */}
                   <div className="pt-4 border-t border-outline-variant/10">
                     <span className="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-3">
                       Equipo ({activity.confirmed_count}/{activity.capacity})
@@ -279,8 +281,8 @@ export default function ActivityDetailPage() {
                   <h2 className="font-headline font-bold text-2xl tracking-tight text-on-surface">
                     Qué llevar
                   </h2>
-                  <div className="bg-surface-container-low rounded-xl p-6">
-                    <ul className="flex flex-col gap-3">
+                  <div className="bg-surface-container-low rounded-2xl p-6 md:p-8">
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {whatToBring.map((item) => (
                         <li key={item} className="flex items-start gap-3 text-on-surface-variant">
                           <div className="mt-0.5 bg-secondary/20 p-1 rounded-md">
@@ -315,7 +317,7 @@ export default function ActivityDetailPage() {
                 variants={fadeUp}
                 className="bg-surface-container/60 rounded-2xl overflow-hidden border border-outline-variant/10"
               >
-                <div className="h-48 w-full relative">
+                <div className="h-52 w-full relative">
                   <ActivityMap
                     activities={[]}
                     singleMarker={{
@@ -332,9 +334,9 @@ export default function ActivityDetailPage() {
                     </div>
                   </div>
                 </div>
-                <div className="p-4">
+                <div className="p-5">
                   <h4 className="font-headline font-bold text-on-surface">Punto de encuentro</h4>
-                  <p className="text-sm text-on-surface-variant">{activity.meeting_point}</p>
+                  <p className="text-sm text-on-surface-variant mt-1">{activity.meeting_point}</p>
                   <span className="text-[10px] font-label text-primary mt-2 block uppercase tracking-wider">
                     {departureTime} Salida
                   </span>
@@ -346,8 +348,8 @@ export default function ActivityDetailPage() {
                 variants={fadeUp}
                 className="bg-surface-container/60 rounded-2xl p-6 border border-outline-variant/10"
               >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="bg-secondary-container/20 p-2 rounded-lg">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="bg-secondary-container/20 p-2.5 rounded-xl">
                     <Car size={20} className="text-secondary" />
                   </div>
                   <h4 className="font-headline font-bold text-on-surface">Transporte</h4>
@@ -356,21 +358,19 @@ export default function ActivityDetailPage() {
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-sm font-bold text-on-surface">{activity.location_name}</p>
-                      <p className="text-xs text-on-surface-variant">{formattedDate}</p>
+                      <p className="text-xs text-on-surface-variant mt-0.5">{formattedDate}</p>
                     </div>
                     {activity.spots_remaining > 0 && (
-                      <span className="bg-surface-container-highest text-secondary-fixed-dim text-[10px] px-2 py-1 rounded-md font-label font-bold uppercase">
+                      <span className="bg-surface-container-highest text-secondary-fixed-dim text-[10px] px-2.5 py-1 rounded-md font-label font-bold uppercase">
                         {activity.spots_remaining} cupos
                       </span>
                     )}
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-outline-variant" />
-                      <span className="text-xs text-on-surface-variant">
-                        Salida: {activity.meeting_point} ({departureTime})
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-outline-variant" />
+                    <span className="text-xs text-on-surface-variant">
+                      Salida: {activity.meeting_point} ({departureTime})
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -406,13 +406,13 @@ export default function ActivityDetailPage() {
                 </div>
               </motion.div>
             </aside>
-          </section>
+          </div>
         </motion.div>
       </main>
 
       {/* ---- Fixed Bottom CTA ---- */}
-      <div className="fixed bottom-0 left-0 w-full z-[60] px-6 py-4 md:py-5" style={{ background: 'rgba(12,15,10,0.90)', backdropFilter: 'blur(24px)', borderTop: '1px solid rgba(81,69,51,0.1)' }}>
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-6">
+      <div className="fixed bottom-0 left-0 w-full z-[60] border-t border-outline-variant/10" style={{ background: 'rgba(12,15,10,0.92)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)' }}>
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-6 px-6 md:px-8 py-4 md:py-5">
           <div className="flex flex-col">
             <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
               Precio total
@@ -431,7 +431,7 @@ export default function ActivityDetailPage() {
             type="button"
             onClick={handleJoin}
             disabled={joinMutation.isPending}
-            className="flex-1 max-w-md bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-extrabold py-4 rounded-full shadow-lg shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide"
+            className="flex-1 max-w-md bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-extrabold py-4 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide text-sm md:text-base"
           >
             {joinMutation.isPending
               ? 'Uniendo...'
