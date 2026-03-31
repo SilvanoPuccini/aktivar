@@ -4,20 +4,6 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Activity } from '@/types/activity';
 
-// SVG icon paths per category slug
-const categoryIcons: Record<string, string> = {
-  trekking: '<path d="M13 3L4 14h3l-2 7 9-11h-3l2-7z" fill="currentColor"/>',
-  festival: '<path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" fill="none" stroke="currentColor" stroke-width="2"/>',
-  ciclismo: '<circle cx="5.5" cy="17.5" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18.5" cy="17.5" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-  kayak: '<path d="M2 12c2-3 5-5 10-5s8 2 10 5c-2 3-5 5-10 5s-8-2-10-5z" fill="none" stroke="currentColor" stroke-width="2"/><line x1="4" y1="8" x2="20" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-  cine: '<rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/>',
-  viaje: '<path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.9.3 1.1L11 12l-2 3H6l-1 1 3 2 2 3 1-1v-3l3-2 3.7 7.3c.2.4.7.5 1.1.3l.5-.3c.4-.2.5-.7.4-1.1z" fill="currentColor"/>',
-  social: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-  deporte: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C6 4 6 6 6 6zM18 9h1.5a2.5 2.5 0 0 0 0-5C18 4 18 6 18 6zM4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22M18 2H6v7a6 6 0 1 0 12 0V2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-  camping: '<path d="M3 21h18L12 3 3 21zm9-4v-4m-3 4h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-  surf: '<path d="M2 12c2-2.5 4-4 6-4s4 1.5 6 4c2 2.5 4 4 6 4s4-1.5 6-4M2 6c2-2.5 4-4 6-4s4 1.5 6 4c2 2.5 4 4 6 4s4-1.5 6-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-};
-
 // Category color map
 const categoryColors: Record<string, string> = {
   trekking: '#7BDA96',
@@ -33,10 +19,8 @@ const categoryColors: Record<string, string> = {
 };
 
 // Create custom marker with category icon inside
-function createActivityIcon(slug: string, color: string, isSelected: boolean = false): L.DivIcon {
+function createActivityIcon(color: string, isSelected: boolean = false): L.DivIcon {
   const size = isSelected ? 44 : 36;
-  const iconSvg = categoryIcons[slug] || categoryIcons.social;
-  const svgSize = isSelected ? 18 : 14;
   const borderWidth = isSelected ? 3 : 2;
   const shadow = isSelected
     ? `0 0 0 4px ${color}33, 0 6px 20px rgba(0,0,0,0.5)`
@@ -60,11 +44,13 @@ function createActivityIcon(slug: string, color: string, isSelected: boolean = f
         cursor: pointer;
         position: relative;
       ">
-        <svg viewBox="0 0 24 24" width="${svgSize}" height="${svgSize}" style="
+        <div style="
+          width: ${isSelected ? 12 : 10}px;
+          height: ${isSelected ? 12 : 10}px;
+          border-radius: 50%;
           transform: rotate(45deg);
-          color: #11140f;
-          flex-shrink: 0;
-        ">${iconSvg}</svg>
+          background: #11140f;
+        "></div>
       </div>
     `,
     iconSize: [size, size],
@@ -129,14 +115,10 @@ const singleMarkerIcon = L.divIcon({
   popupAnchor: [0, -14],
 });
 
-// Icon cache for performance
-const iconCache: Record<string, L.DivIcon> = {};
 function getActivityIcon(slug: string, isSelected: boolean = false): L.DivIcon {
-  const key = `${slug}-${isSelected}`;
-  if (!iconCache[key]) {
-    iconCache[key] = createActivityIcon(slug, categoryColors[slug] || '#ffc56c', isSelected);
-  }
-  return iconCache[key];
+  // Avoid sharing DivIcon instances across markers to prevent
+  // edge-case recursion issues in some Leaflet runtime states.
+  return createActivityIcon(categoryColors[slug] || '#ffc56c', isSelected);
 }
 
 // Format date for popup
