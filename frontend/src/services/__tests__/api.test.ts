@@ -12,16 +12,17 @@ describe('API endpoints', () => {
     expect(endpoints.users).toBe('/users/')
     expect(endpoints.me).toBe('/users/me/')
     expect(endpoints.myProfile).toBe('/users/me/profile/')
+    expect(endpoints.myAvatar).toBe('/users/me/avatar/')
   })
 
   it('has correct activity endpoints', () => {
     expect(endpoints.activities).toBe('/activities/')
-    expect(endpoints.categories).toBe('/categories/')
+    expect(endpoints.categories).toBe('/activities/categories/')
   })
 
   it('has correct transport endpoints', () => {
-    expect(endpoints.trips).toBe('/trips/')
-    expect(endpoints.vehicles).toBe('/vehicles/')
+    expect(endpoints.trips).toBe('/transport/trips/')
+    expect(endpoints.vehicles).toBe('/transport/vehicles/')
   })
 
   it('generates correct messages endpoint for a given activity ID', () => {
@@ -31,12 +32,12 @@ describe('API endpoints', () => {
 
   it('has correct review and report endpoints', () => {
     expect(endpoints.reviews).toBe('/reviews/')
-    expect(endpoints.reports).toBe('/reports/')
+    expect(endpoints.reports).toBe('/reviews/reports/')
   })
 
   it('has correct payment endpoints', () => {
     expect(endpoints.payments).toBe('/payments/')
-    expect(endpoints.subscriptions).toBe('/subscriptions/')
+    expect(endpoints.subscriptions).toBe('/payments/subscriptions/')
   })
 
   it('has correct notification endpoint', () => {

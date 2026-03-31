@@ -5,6 +5,7 @@ import type { LucideIcon } from 'lucide-react';
 interface GlassNavProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  isAuthenticated?: boolean;
   notificationCount?: number;
 }
 
@@ -23,14 +24,17 @@ const tabs: Tab[] = [
 export default function GlassNav({
   activeTab,
   onTabChange,
+  isAuthenticated = false,
   notificationCount = 0,
 }: GlassNavProps) {
+  const visibleTabs = isAuthenticated ? tabs : tabs.filter((tab) => tab.key !== 'profile');
+
   return (
     <>
       {/* ===== Mobile bottom nav ===== */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-outline-variant/15 bg-surface-lowest/95 backdrop-blur-xl">
         <div className="flex items-center justify-around h-16 px-4">
-          {tabs.map((tab) => {
+          {visibleTabs.map((tab) => {
             const isActive = activeTab === tab.key;
             const Icon = tab.icon;
             return (
@@ -38,6 +42,8 @@ export default function GlassNav({
                 key={tab.key}
                 type="button"
                 onClick={() => onTabChange(tab.key)}
+                aria-label={`Ir a ${tab.label}`}
+                aria-current={isActive ? 'page' : undefined}
                 className={`flex flex-col items-center gap-1 px-4 py-2 cursor-pointer transition-colors ${
                   isActive ? 'text-primary' : 'text-muted'
                 }`}
@@ -51,6 +57,7 @@ export default function GlassNav({
           <button
             type="button"
             onClick={() => onTabChange('create')}
+            aria-label="Crear actividad"
             className="flex flex-col items-center gap-1 px-4 py-2 cursor-pointer"
           >
             <div className="w-9 h-9 rounded-full flex items-center justify-center gradient-cta">
@@ -61,8 +68,8 @@ export default function GlassNav({
       </nav>
 
       {/* ===== Desktop top nav ===== */}
-      <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 h-16 bg-surface-lowest border-b border-outline-variant/15">
-        <div className="max-w-screen-xl mx-auto h-full flex items-center justify-between px-8">
+      <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 h-16 bg-surface-lowest/95 backdrop-blur-xl border-b border-outline-variant/15">
+        <div className="premium-shell h-full flex items-center justify-between">
           {/* Logo */}
           <button
             type="button"
@@ -74,13 +81,14 @@ export default function GlassNav({
 
           {/* Center links */}
           <div className="flex items-center gap-2">
-            {tabs.map((tab) => {
+            {visibleTabs.map((tab) => {
               const isActive = activeTab === tab.key;
               return (
                 <button
                   key={tab.key}
                   type="button"
                   onClick={() => onTabChange(tab.key)}
+                  aria-current={isActive ? 'page' : undefined}
                   className={`relative px-5 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                     isActive
                       ? 'text-primary bg-surface-container'

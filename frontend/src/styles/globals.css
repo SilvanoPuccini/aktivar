@@ -24,6 +24,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  min-height: 100vh;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
 /* Utility Classes */
 .glass {
   background: rgba(17, 20, 15, 0.70);
@@ -211,6 +228,23 @@ body {
 .smooth-scroll {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+}
+
+.premium-shell {
+  width: min(100% - 2rem, 1180px);
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .premium-shell {
+    width: min(100% - 3rem, 1180px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .premium-shell {
+    width: min(100% - 4rem, 1240px);
+  }
 }
 
 /* Safe area padding for mobile */

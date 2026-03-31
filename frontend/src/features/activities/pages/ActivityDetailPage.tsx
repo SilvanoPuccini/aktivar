@@ -18,6 +18,7 @@ import {
   Mountain,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import type { AxiosError } from 'axios';
 
 import WeatherBadge from '@/components/WeatherBadge';
 import EmptyState from '@/components/EmptyState';
@@ -55,7 +56,10 @@ export default function ActivityDetailPage() {
     if (!activity) return;
     joinMutation.mutate(activity.id, {
       onSuccess: () => toast.success('Te uniste a la actividad!'),
-      onError: () => toast.error('No se pudo unir a la actividad'),
+      onError: (err) => {
+        const axiosErr = err as AxiosError<{ detail?: string }>;
+        toast.error(axiosErr.response?.data?.detail ?? 'No se pudo unir a la actividad');
+      },
     });
   };
 
@@ -96,7 +100,7 @@ export default function ActivityDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface pb-32">
+    <div className="min-h-screen bg-surface pb-44 md:pb-40">
       {/* ---- Header ---- */}
       <header className="sticky top-0 w-full z-50 border-b border-outline-variant/10" style={{ background: 'rgba(12,15,10,0.92)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)' }}>
         <div className="max-w-6xl mx-auto flex justify-between items-center px-6 md:px-8 py-4">
@@ -411,8 +415,8 @@ export default function ActivityDetailPage() {
       </main>
 
       {/* ---- Fixed Bottom CTA ---- */}
-      <div className="fixed bottom-0 left-0 w-full z-[60] border-t border-outline-variant/10" style={{ background: 'rgba(12,15,10,0.92)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)' }}>
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-6 px-6 md:px-8 py-4 md:py-5">
+      <div className="fixed bottom-0 left-0 w-full z-[60] border-t border-outline-variant/10 pb-safe" style={{ background: 'rgba(12,15,10,0.92)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)' }}>
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-6 px-4 sm:px-6 md:px-8 py-4 md:py-5">
           <div className="flex flex-col">
             <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
               Precio total
@@ -431,13 +435,13 @@ export default function ActivityDetailPage() {
             type="button"
             onClick={handleJoin}
             disabled={joinMutation.isPending}
-            className="flex-1 max-w-md bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-extrabold py-4 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide text-sm md:text-base"
+            className="flex-1 max-w-md bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-extrabold py-4 px-5 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed tracking-[0.02em] text-sm md:text-base"
           >
             {joinMutation.isPending
               ? 'Uniendo...'
               : isFull
-                ? 'LISTA DE ESPERA'
-                : 'UNIRME A LA ACTIVIDAD'}
+                ? 'Lista de espera'
+                : 'Unirme a la actividad'}
             <ChevronRight size={20} />
           </button>
         </div>

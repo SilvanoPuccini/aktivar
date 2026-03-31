@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -18,9 +18,10 @@ import {
   Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useCurrentUser } from '@/services/hooks';
+import { useCurrentUser, useUploadImage } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
 import api, { endpoints } from '@/services/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 const badgeIconMap: Record<string, React.ReactNode> = {
   'mountain-snow': <Mountain size={18} />,
@@ -44,10 +45,14 @@ const badgeColorMap: Record<string, string> = {
 
 export default function ProfilePage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { isAuthenticated, logout } = useAuthStore();
   const { data: user, isLoading } = useCurrentUser();
+  const uploadMutation = useUploadImage();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [updatingAvatar, setUpdatingAvatar] = useState(false);
 
   const [editBio, setEditBio] = useState('');
   const [editLocation, setEditLocation] = useState('');
@@ -56,7 +61,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
-      setEditBio(user.bio ?? '');
+      setEditBio(user.profile.bio_extended ?? user.bio ?? '');
       setEditLocation(user.profile.location_name ?? '');
       setEditInstagram(user.profile.instagram ?? '');
       setEditWebsite(user.profile.website ?? '');
@@ -98,11 +103,12 @@ export default function ProfilePage() {
     setSaving(true);
     try {
       await api.patch(endpoints.myProfile, {
-        bio: editBio,
+        bio_extended: editBio,
         location_name: editLocation,
         instagram: editInstagram,
         website: editWebsite,
       });
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       toast.success('Perfil actualizado');
       setIsEditing(false);
     } catch {
@@ -110,6 +116,34 @@ export default function ProfilePage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleAvatarUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const onAvatarSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUpdatingAvatar(true);
+    uploadMutation.mutate(file, {
+      onSuccess: async (result) => {
+        try {
+          await api.patch(endpoints.myAvatar, { avatar: result.url });
+          await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+          toast.success('Foto de perfil actualizada');
+        } catch {
+          toast.error('No se pudo guardar la foto de perfil');
+        } finally {
+          setUpdatingAvatar(false);
+        }
+      },
+      onError: () => {
+        setUpdatingAvatar(false);
+        toast.error('No se pudo subir la imagen');
+      },
+    });
   };
 
   const rating = profile?.avg_rating ?? 0;
@@ -127,6 +161,13 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-[60vh] bg-surface pb-28 md:pb-12">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={onAvatarSelected}
+      />
       {/* Page header - desktop */}
       <div className="max-w-4xl mx-auto px-6 md:px-8 pt-6 md:pt-10 pb-4 flex items-center justify-between">
         <h1 className="font-headline text-2xl md:text-3xl font-black tracking-tight text-on-surface">
@@ -138,7 +179,7 @@ export default function ProfilePage() {
               if (isEditing) {
                 setIsEditing(false);
               } else {
-                setEditBio(user.bio);
+                setEditBio(profile.bio_extended ?? user.bio ?? '');
                 setEditLocation(profile.location_name);
                 setEditInstagram(profile.instagram);
                 setEditWebsite(profile.website);
@@ -186,8 +227,17 @@ export default function ProfilePage() {
                 </div>
               )}
               {isAuthenticated && (
-                <button className="absolute -bottom-1 -left-1 rounded-full border-[3px] border-surface bg-surface-container-high p-1.5 text-muted hover:text-on-surface transition-colors cursor-pointer">
-                  <Camera size={14} />
+                <button
+                  type="button"
+                  onClick={handleAvatarUpload}
+                  disabled={updatingAvatar || uploadMutation.isPending}
+                  className="absolute -bottom-1 -left-1 rounded-full border-[3px] border-surface bg-surface-container-high p-1.5 text-muted hover:text-on-surface transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  {updatingAvatar || uploadMutation.isPending ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <Camera size={14} />
+                  )}
                 </button>
               )}
             </motion.div>
