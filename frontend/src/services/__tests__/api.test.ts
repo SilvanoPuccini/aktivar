@@ -12,6 +12,7 @@ describe('API endpoints', () => {
     expect(endpoints.users).toBe('/users/')
     expect(endpoints.me).toBe('/users/me/')
     expect(endpoints.myProfile).toBe('/users/me/profile/')
+    expect(endpoints.myAvatar).toBe('/users/me/avatar/')
   })
 
   it('has correct activity endpoints', () => {

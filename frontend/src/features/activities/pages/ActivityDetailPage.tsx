@@ -100,7 +100,7 @@ export default function ActivityDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface pb-32">
+    <div className="min-h-screen bg-surface pb-44 md:pb-40">
       {/* ---- Header ---- */}
       <header className="sticky top-0 w-full z-50 border-b border-outline-variant/10" style={{ background: 'rgba(12,15,10,0.92)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)' }}>
         <div className="max-w-6xl mx-auto flex justify-between items-center px-6 md:px-8 py-4">
@@ -415,8 +415,8 @@ export default function ActivityDetailPage() {
       </main>
 
       {/* ---- Fixed Bottom CTA ---- */}
-      <div className="fixed bottom-0 left-0 w-full z-[60] border-t border-outline-variant/10" style={{ background: 'rgba(12,15,10,0.92)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)' }}>
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-6 px-6 md:px-8 py-4 md:py-5">
+      <div className="fixed bottom-0 left-0 w-full z-[60] border-t border-outline-variant/10 pb-safe" style={{ background: 'rgba(12,15,10,0.92)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)' }}>
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-6 px-4 sm:px-6 md:px-8 py-4 md:py-5">
           <div className="flex flex-col">
             <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
               Precio total
