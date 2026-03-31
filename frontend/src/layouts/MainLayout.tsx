@@ -53,8 +53,14 @@ export function MainLayout() {
       {!isImmersive && <div className="hidden md:block h-16 shrink-0" />}
 
       {/* Page content */}
-      <main className="flex-1">
-        <Outlet />
+      <main className="flex-1 px-0 md:px-2 lg:px-0">
+        {isFullBleed || isImmersive ? (
+          <Outlet />
+        ) : (
+          <section className="premium-shell py-5 md:py-7 lg:py-9">
+            <Outlet />
+          </section>
+        )}
       </main>
 
       {/* Mobile bottom spacer for bottom nav */}
