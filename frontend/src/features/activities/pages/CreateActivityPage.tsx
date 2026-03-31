@@ -17,9 +17,9 @@ import {
   Camera,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import type { AxiosError } from 'axios';
 
 import CategoryChip from '@/components/CategoryChip';
-import { categories as fallbackCategories } from '@/data/categories';
 import { useCategories, useCreateActivity, useUploadImage } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
 import type { Difficulty } from '@/types/activity';
@@ -86,7 +86,7 @@ export default function CreateActivityPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { data: apiCategories } = useCategories();
-  const categories = apiCategories ?? fallbackCategories;
+  const categories = apiCategories ?? [];
   const createMutation = useCreateActivity();
   const uploadMutation = useUploadImage();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -160,7 +160,11 @@ export default function CreateActivityPage() {
       what_to_bring: form.whatToBring,
     }, {
       onSuccess: () => { toast.success('Actividad creada!'); navigate('/'); },
-      onError: () => { toast.error('Error al crear la actividad'); },
+      onError: (err) => {
+        const axiosErr = err as AxiosError<{ detail?: string; [k: string]: unknown }>;
+        const detail = axiosErr.response?.data?.detail;
+        toast.error(typeof detail === 'string' ? detail : 'Error al crear la actividad. Revisá los campos.');
+      },
     });
   };
 
@@ -328,7 +332,7 @@ export default function CreateActivityPage() {
 
   return (
     <div className="bg-surface min-h-[80vh]">
-      <div className="max-w-2xl mx-auto px-6 md:px-8 py-8 md:py-12">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <button onClick={() => (step > 0 ? prev() : navigate(-1))}
@@ -349,9 +353,15 @@ export default function CreateActivityPage() {
             }`} />
           ))}
         </div>
-        <h1 className="font-headline text-2xl font-bold text-on-surface mb-8">
+        <h1 className="font-headline text-2xl font-bold text-on-surface mb-10">
           {stepTitles[step]}
         </h1>
+
+        {categories.length === 0 && (
+          <div className="mb-6 rounded-xl border border-error/25 bg-error-container/20 px-4 py-3 text-sm text-error">
+            No pudimos cargar categorías desde el servidor. Reintentá en unos segundos.
+          </div>
+        )}
 
         {/* Step content */}
         <AnimatePresence mode="wait" custom={dir}>
@@ -366,12 +376,12 @@ export default function CreateActivityPage() {
         <div className="flex justify-end gap-3 mt-10 pt-6 border-t border-outline-variant/10">
           {step < 2 ? (
             <button type="button" onClick={next}
-              className="flex items-center gap-2 px-8 py-3 rounded-lg gradient-cta text-on-primary font-bold text-sm cursor-pointer">
+              className="flex items-center gap-2 px-8 py-3.5 rounded-xl gradient-cta text-on-primary font-bold text-sm tracking-[0.02em] cursor-pointer">
               Continuar <ArrowRight size={16} />
             </button>
           ) : (
             <button type="button" onClick={handleCreate} disabled={createMutation.isPending}
-              className="flex items-center gap-2 px-8 py-3 rounded-lg gradient-cta text-on-primary font-bold text-sm cursor-pointer disabled:opacity-50">
+              className="flex items-center gap-2 px-8 py-3.5 rounded-xl gradient-cta text-on-primary font-bold text-sm tracking-[0.02em] cursor-pointer disabled:opacity-50">
               {createMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
               Crear Actividad
             </button>

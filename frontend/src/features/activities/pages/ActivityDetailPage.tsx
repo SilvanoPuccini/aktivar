@@ -18,6 +18,7 @@ import {
   Mountain,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import type { AxiosError } from 'axios';
 
 import WeatherBadge from '@/components/WeatherBadge';
 import EmptyState from '@/components/EmptyState';
@@ -55,7 +56,10 @@ export default function ActivityDetailPage() {
     if (!activity) return;
     joinMutation.mutate(activity.id, {
       onSuccess: () => toast.success('Te uniste a la actividad!'),
-      onError: () => toast.error('No se pudo unir a la actividad'),
+      onError: (err) => {
+        const axiosErr = err as AxiosError<{ detail?: string }>;
+        toast.error(axiosErr.response?.data?.detail ?? 'No se pudo unir a la actividad');
+      },
     });
   };
 
@@ -431,13 +435,13 @@ export default function ActivityDetailPage() {
             type="button"
             onClick={handleJoin}
             disabled={joinMutation.isPending}
-            className="flex-1 max-w-md bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-extrabold py-4 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide text-sm md:text-base"
+            className="flex-1 max-w-md bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-extrabold py-4 px-5 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed tracking-[0.02em] text-sm md:text-base"
           >
             {joinMutation.isPending
               ? 'Uniendo...'
               : isFull
-                ? 'LISTA DE ESPERA'
-                : 'UNIRME A LA ACTIVIDAD'}
+                ? 'Lista de espera'
+                : 'Unirme a la actividad'}
             <ChevronRight size={20} />
           </button>
         </div>
