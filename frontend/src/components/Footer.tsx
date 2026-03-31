@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-outline-variant/10 bg-surface-lowest">
-      <div className="max-w-screen-xl mx-auto px-6 md:px-8 py-8 md:py-10">
+    <footer className="mt-8 md:mt-10 border-t border-outline-variant/10 bg-surface-lowest/95 backdrop-blur-md">
+      <div className="premium-shell py-8 md:py-10">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           {/* Brand */}
           <div className="flex items-center gap-2">

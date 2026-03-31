@@ -76,6 +76,12 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 
+class UserAvatarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['avatar']
+
+
 class UserRegistrationSerializer(SanitizeMixin, serializers.ModelSerializer):
     sanitize_fields = ['full_name']
     password = serializers.CharField(write_only=True, min_length=8)

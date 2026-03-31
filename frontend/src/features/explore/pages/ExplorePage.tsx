@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Crosshair, X, Navigation, MapPin, Users, ChevronRight } from 'lucide-react';
@@ -7,6 +7,29 @@ import SearchBar from '@/components/SearchBar';
 import CategoryChip from '@/components/CategoryChip';
 import ActivityCard from '@/components/ActivityCard';
 import { useActivities, useCategories } from '@/services/hooks';
+
+class MapErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode; fallback: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch() {
+    // noop (already handled by fallback UI)
+  }
+
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
 
 export default function ExplorePage() {
   const navigate = useNavigate();
@@ -95,15 +118,26 @@ export default function ExplorePage() {
     <div className="relative h-[calc(100vh-4rem)] md:h-[calc(100vh-4rem)] w-full overflow-hidden bg-surface">
       {/* Full-screen map */}
       <div className="absolute inset-0">
-        <ActivityMap
-          activities={filtered}
-          onActivityClick={handleMarkerClick}
-          center={mapCenter}
-          zoom={12}
-          selectedActivityId={selectedActivityId}
-          userLocation={userLocation}
-          onMapMove={handleMapMove}
-        />
+        <MapErrorBoundary
+          fallback={(
+            <div className="h-full w-full flex items-center justify-center bg-surface-container">
+              <div className="text-center px-6">
+                <h3 className="text-on-surface font-headline text-xl mb-2">No pudimos cargar el mapa</h3>
+                <p className="text-muted text-sm">Puedes seguir explorando desde la lista de actividades.</p>
+              </div>
+            </div>
+          )}
+        >
+          <ActivityMap
+            activities={filtered}
+            onActivityClick={handleMarkerClick}
+            center={mapCenter}
+            zoom={12}
+            selectedActivityId={selectedActivityId}
+            userLocation={userLocation}
+            onMapMove={handleMapMove}
+          />
+        </MapErrorBoundary>
       </div>
 
       {/* Floating search bar + filters */}

@@ -67,7 +67,7 @@ export function MainLayout() {
       </main>
 
       {/* Mobile bottom spacer for bottom nav */}
-      {!isImmersive && <div className="md:hidden h-20 shrink-0" />}
+      {!isImmersive && <div className="md:hidden h-24 shrink-0" />}
 
       {/* Footer — only on content pages, never on fullbleed or immersive */}
       {!isImmersive && !isFullBleed && <Footer />}

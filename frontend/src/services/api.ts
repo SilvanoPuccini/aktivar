@@ -87,6 +87,7 @@ export const endpoints = {
   users: '/users/',
   me: '/users/me/',
   myProfile: '/users/me/profile/',
+  myAvatar: '/users/me/avatar/',
   verifyEmailRequest: '/users/verify-email/request/',
   verifyEmailConfirm: '/users/verify-email/confirm/',
   verifyPhoneRequest: '/users/verify-phone/request/',
