@@ -1,9 +1,11 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect, type ReactNode } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout } from '@/layouts/MainLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
+import { useCurrentUser } from '@/services/hooks';
+import { useAuthStore } from '@/stores/authStore';
 
 // Lazy load pages for code splitting
 const FeedPage = lazy(() => import('@/features/activities/pages/FeedPage'));
@@ -55,10 +57,37 @@ function LoadingFallback() {
   );
 }
 
+function AuthBootstrap({ children }: { children: ReactNode }) {
+  const { setUser, isAuthenticated } = useAuthStore();
+  const { data: currentUser, isError } = useCurrentUser();
+
+  useEffect(() => {
+    if (currentUser) {
+      setUser(currentUser);
+      return;
+    }
+    if (isAuthenticated && isError) {
+      // Token invalid/expired and refresh failed
+      setUser(null);
+      sessionStorage.removeItem('aktivar_access_token');
+      sessionStorage.removeItem('aktivar_refresh_token');
+    }
+  }, [currentUser, isAuthenticated, isError, setUser]);
+
+  return <>{children}</>;
+}
+
+function RequireAuth({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useAuthStore();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
     <BrowserRouter>
+      <AuthBootstrap>
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           {/* Auth routes (no bottom nav) */}
@@ -71,17 +100,18 @@ export default function App() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<FeedPage />} />
             <Route path="/activity/:id" element={<ActivityDetailPage />} />
-            <Route path="/create" element={<CreateActivityPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/create" element={<RequireAuth><CreateActivityPage /></RequireAuth>} />
+            <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
             <Route path="/trip/:id" element={<TripDetailPage />} />
             <Route path="/explore" element={<ExplorePage />} />
-            <Route path="/chat/:activityId" element={<ChatPage />} />
-            <Route path="/payment/:activityId" element={<PaymentPage />} />
-            <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/dashboard" element={<OrganizerDashboardPage />} />
+            <Route path="/chat/:activityId" element={<RequireAuth><ChatPage /></RequireAuth>} />
+            <Route path="/payment/:activityId" element={<RequireAuth><PaymentPage /></RequireAuth>} />
+            <Route path="/notifications" element={<RequireAuth><NotificationsPage /></RequireAuth>} />
+            <Route path="/dashboard" element={<RequireAuth><OrganizerDashboardPage /></RequireAuth>} />
           </Route>
         </Routes>
       </Suspense>
+      </AuthBootstrap>
 
       {/* Toast notifications */}
       <Toaster
