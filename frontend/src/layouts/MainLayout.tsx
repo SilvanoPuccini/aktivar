@@ -1,10 +1,12 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import GlassNav from '@/components/GlassNav';
 import Footer from '@/components/Footer';
+import { useAuthStore } from '@/stores/authStore';
 
 export function MainLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated } = useAuthStore();
 
   const getActiveTab = () => {
     const path = location.pathname;
@@ -22,7 +24,7 @@ export function MainLayout() {
       home: '/',
       explore: '/explore',
       create: '/create',
-      profile: '/profile',
+      profile: isAuthenticated ? '/profile' : '/login',
       notifications: '/notifications',
       dashboard: '/dashboard',
     };
@@ -45,6 +47,7 @@ export function MainLayout() {
         <GlassNav
           activeTab={getActiveTab()}
           onTabChange={handleTabChange}
+          isAuthenticated={isAuthenticated}
           notificationCount={3}
         />
       )}
@@ -57,7 +60,7 @@ export function MainLayout() {
         {isFullBleed || isImmersive ? (
           <Outlet />
         ) : (
-          <section className="premium-shell py-5 md:py-7 lg:py-9">
+          <section className="premium-shell py-8 md:py-10 lg:py-12">
             <Outlet />
           </section>
         )}

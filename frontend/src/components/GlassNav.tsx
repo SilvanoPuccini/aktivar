@@ -5,6 +5,7 @@ import type { LucideIcon } from 'lucide-react';
 interface GlassNavProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  isAuthenticated?: boolean;
   notificationCount?: number;
 }
 
@@ -23,14 +24,17 @@ const tabs: Tab[] = [
 export default function GlassNav({
   activeTab,
   onTabChange,
+  isAuthenticated = false,
   notificationCount = 0,
 }: GlassNavProps) {
+  const visibleTabs = isAuthenticated ? tabs : tabs.filter((tab) => tab.key !== 'profile');
+
   return (
     <>
       {/* ===== Mobile bottom nav ===== */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-outline-variant/15 bg-surface-lowest/95 backdrop-blur-xl">
         <div className="flex items-center justify-around h-16 px-4">
-          {tabs.map((tab) => {
+          {visibleTabs.map((tab) => {
             const isActive = activeTab === tab.key;
             const Icon = tab.icon;
             return (
@@ -77,7 +81,7 @@ export default function GlassNav({
 
           {/* Center links */}
           <div className="flex items-center gap-2">
-            {tabs.map((tab) => {
+            {visibleTabs.map((tab) => {
               const isActive = activeTab === tab.key;
               return (
                 <button
