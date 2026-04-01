@@ -39,8 +39,8 @@ interface CategoryChipProps {
 }
 
 const sizeClasses = {
-  sm: 'min-h-10 px-4 text-xs',
-  md: 'min-h-12 px-5 text-sm',
+  sm: 'min-h-10 px-4 py-2 text-xs',
+  md: 'min-h-12 px-5 py-2.5 text-sm',
 } as const;
 
 const iconSizes = { sm: 14, md: 16 } as const;

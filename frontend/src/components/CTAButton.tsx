@@ -15,9 +15,9 @@ interface CTAButtonProps {
 }
 
 const sizeClasses = {
-  sm: 'min-h-11 px-4 text-xs',
-  md: 'min-h-14 px-6 text-sm',
-  lg: 'min-h-16 px-8 text-base',
+  sm: 'min-h-11 px-5 py-2.5 text-xs',
+  md: 'min-h-14 px-7 py-3.5 text-sm',
+  lg: 'min-h-16 px-9 py-4 text-base',
 } as const;
 
 export default function CTAButton({
