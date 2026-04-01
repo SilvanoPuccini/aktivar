@@ -11,17 +11,18 @@ from .views import ActivityViewSet, CategoryViewSet
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
-router.register(r'activities', ActivityViewSet, basename='activity')
+# Activities at root level — included at /api/v1/activities/ so full URL is /api/v1/activities/
+router.register(r'', ActivityViewSet, basename='activity')
 router.register(r'squads', SquadViewSet, basename='squad')
 router.register(r'availability', AvailabilityStatusViewSet, basename='availability')
 router.register(r'swipes', ActivitySwipeViewSet, basename='swipe')
 
 urlpatterns = [
-    path('', include(router.urls)),
-    # Stories nested under activity
+    # Stories must come before router to avoid router's detail pk catching the path
     path(
-        'activities/<int:activity_id>/stories/',
+        '<int:activity_id>/stories/',
         ActivityStoryViewSet.as_view({'get': 'list', 'post': 'create'}),
         name='activity-stories',
     ),
+    path('', include(router.urls)),
 ]

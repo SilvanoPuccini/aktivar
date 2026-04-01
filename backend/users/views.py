@@ -12,6 +12,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import CustomUser, EmailVerificationToken, PhoneVerificationOTP
 from .serializers import (
     RequestPhoneVerificationSerializer,
+    UserAvatarSerializer,
     UserProfileSerializer,
     UserRegistrationSerializer,
     UserSerializer,
@@ -28,6 +29,15 @@ class AuthRateThrottle(AnonRateThrottle):
     """5 requests/hour for auth endpoints (login, register)."""
     rate = '30/hour'
     scope = 'auth'
+
+    def allow_request(self, request, view):
+        try:
+            return super().allow_request(request, view)
+        except Exception:
+            logger.exception(
+                "Auth throttling cache failure; allowing request to avoid auth outage"
+            )
+            return True
 
 
 class OTPRateThrottle(UserRateThrottle):
@@ -91,6 +101,13 @@ class UserViewSet(viewsets.ModelViewSet):
     def update_profile(self, request):
         profile = request.user.profile
         serializer = UserProfileSerializer(profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['patch'], url_path='me/avatar')
+    def update_avatar(self, request):
+        serializer = UserAvatarSerializer(request.user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

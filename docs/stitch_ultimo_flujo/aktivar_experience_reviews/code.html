@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&amp;family=Manrope:wght@400;500;600&amp;family=Space_Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#191c17",
+              "on-primary": "#442c00",
+              "surface-container-high": "#282b25",
+              "surface-bright": "#373a34",
+              "surface-variant": "#333630",
+              "outline": "#9f8e79",
+              "inverse-on-surface": "#2e312b",
+              "surface-container": "#1d201b",
+              "surface": "#11140f",
+              "error": "#ffb4ab",
+              "secondary-fixed": "#97f7b0",
+              "inverse-primary": "#805600",
+              "on-secondary-fixed-variant": "#005228",
+              "surface-tint": "#ffba44",
+              "on-tertiary-container": "#47463f",
+              "error-container": "#93000a",
+              "on-primary-fixed": "#281800",
+              "on-error-container": "#ffdad6",
+              "tertiary": "#d3cfc6",
+              "surface-dim": "#11140f",
+              "primary-container": "#f0a500",
+              "tertiary-fixed": "#e6e2d8",
+              "on-secondary-container": "#95f5ae",
+              "on-tertiary-fixed-variant": "#484740",
+              "surface-container-lowest": "#0c0f0a",
+              "on-secondary-fixed": "#00210d",
+              "on-secondary": "#00391a",
+              "tertiary-fixed-dim": "#cac6bd",
+              "on-tertiary": "#32312a",
+              "secondary-fixed-dim": "#7bda96",
+              "outline-variant": "#514533",
+              "on-primary-container": "#5f3f00",
+              "tertiary-container": "#b7b4ab",
+              "primary-fixed-dim": "#ffba44",
+              "on-tertiary-fixed": "#1c1c16",
+              "primary": "#ffc56c",
+              "primary-fixed": "#ffddaf",
+              "background": "#11140f",
+              "on-background": "#e1e3da",
+              "secondary-container": "#00733b",
+              "on-surface-variant": "#d6c4ac",
+              "on-surface": "#e1e3da",
+              "inverse-surface": "#e1e3da",
+              "on-primary-fixed-variant": "#614000",
+              "surface-container-highest": "#333630",
+              "secondary": "#7bda96",
+              "on-error": "#690005"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+      }
+      .fill-icon {
+        font-variation-settings: 'FILL' 1;
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl flex justify-between items-center px-8 h-20 w-full max-w-none shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<div class="text-[#EDE9DF] font-black text-2xl tracking-tighter uppercase font-headline">AKTIVAR</div>
+<div class="hidden md:flex items-center space-x-12 font-headline tracking-tighter font-extrabold uppercase text-sm">
+<a class="text-[#EDE9DF]/60 hover:scale-105 hover:text-[#ffc56c] transition-transform duration-200" href="#">Journal</a>
+<a class="text-[#EDE9DF]/60 hover:scale-105 hover:text-[#ffc56c] transition-transform duration-200" href="#">Marketplace</a>
+<a class="text-[#ffc56c] border-b-2 border-[#ffc56c] pb-1 hover:scale-105 transition-transform duration-200" href="#">Safety</a>
+<a class="text-[#EDE9DF]/60 hover:scale-105 hover:text-[#ffc56c] transition-transform duration-200" href="#">Guides</a>
+</div>
+<div class="flex items-center space-x-4">
+<span class="material-symbols-outlined text-[#ffc56c] text-3xl cursor-pointer hover:scale-95 duration-200">account_circle</span>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
+<!-- Header & Ratings Overview -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-24 items-end">
+<div class="lg:col-span-5">
+<p class="font-label text-primary uppercase tracking-[0.3em] text-sm mb-4">Expedition Feedback</p>
+<h1 class="font-headline text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8">VERIFIED<br/>ECHOES.</h1>
+<div class="flex items-baseline space-x-4">
+<span class="font-headline text-8xl text-primary font-black tracking-tighter">4.9</span>
+<div class="flex flex-col">
+<div class="flex text-primary mb-1">
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<span class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Based on 1,248 expeditions</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-7 bg-surface-container p-8 lg:p-12 rounded-xl shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<div class="space-y-4">
+<!-- Rating Bar 5 -->
+<div class="flex items-center space-x-6">
+<span class="font-label text-xs w-4">5</span>
+<div class="flex-1 h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[88%]"></div>
+</div>
+<span class="font-label text-xs text-on-surface-variant">88%</span>
+</div>
+<!-- Rating Bar 4 -->
+<div class="flex items-center space-x-6">
+<span class="font-label text-xs w-4">4</span>
+<div class="flex-1 h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[9%]"></div>
+</div>
+<span class="font-label text-xs text-on-surface-variant">9%</span>
+</div>
+<!-- Rating Bar 3 -->
+<div class="flex items-center space-x-6 opacity-40">
+<span class="font-label text-xs w-4">3</span>
+<div class="flex-1 h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[2%]"></div>
+</div>
+<span class="font-label text-xs text-on-surface-variant">2%</span>
+</div>
+<!-- Rating Bar 2 -->
+<div class="flex items-center space-x-6 opacity-40">
+<span class="font-label text-xs w-4">2</span>
+<div class="flex-1 h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[1%]"></div>
+</div>
+<span class="font-label text-xs text-on-surface-variant">1%</span>
+</div>
+<!-- Rating Bar 1 -->
+<div class="flex items-center space-x-6 opacity-40">
+<span class="font-label text-xs w-4">1</span>
+<div class="flex-1 h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[0%]"></div>
+</div>
+<span class="font-label text-xs text-on-surface-variant">0%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Highlights Section -->
+<section class="mb-32">
+<h2 class="font-label text-xs uppercase tracking-[0.4em] mb-8 text-on-surface-variant">Community Highlights</h2>
+<div class="flex flex-wrap gap-4">
+<div class="px-8 py-4 bg-surface-container border border-outline-variant/15 rounded-full flex items-center space-x-3 hover:scale-105 transition-transform cursor-default">
+<span class="material-symbols-outlined text-primary text-xl">gpp_good</span>
+<span class="font-label text-sm uppercase tracking-widest font-bold">Safe</span>
+<span class="font-label text-xs text-primary/60">412</span>
+</div>
+<div class="px-8 py-4 bg-surface-container border border-outline-variant/15 rounded-full flex items-center space-x-3 hover:scale-105 transition-transform cursor-default">
+<span class="material-symbols-outlined text-primary text-xl">mountain_flag</span>
+<span class="font-label text-sm uppercase tracking-widest font-bold">Expert Guide</span>
+<span class="font-label text-xs text-primary/60">389</span>
+</div>
+<div class="px-8 py-4 bg-surface-container border border-outline-variant/15 rounded-full flex items-center space-x-3 hover:scale-105 transition-transform cursor-default">
+<span class="material-symbols-outlined text-primary text-xl">visibility</span>
+<span class="font-label text-sm uppercase tracking-widest font-bold">Epic Views</span>
+<span class="font-label text-xs text-primary/60">567</span>
+</div>
+<div class="px-8 py-4 bg-surface-container border border-outline-variant/15 rounded-full flex items-center space-x-3 hover:scale-105 transition-transform cursor-default">
+<span class="material-symbols-outlined text-primary text-xl">fitness_center</span>
+<span class="font-label text-sm uppercase tracking-widest font-bold">Challenging</span>
+<span class="font-label text-xs text-primary/60">201</span>
+</div>
+</div>
+</section>
+<!-- Review List (Bento-style layout) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Review Card 1 -->
+<article class="bg-surface-container p-10 rounded-xl flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-10">
+<div class="flex items-center space-x-4">
+<div class="w-16 h-16 rounded-full overflow-hidden bg-surface-container-highest border-2 border-primary/20">
+<img alt="User" class="w-full h-full object-cover" data-alt="close-up portrait of a woman with adventurous style, warm outdoor lighting, blurred mountain background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqZjZwTMPBjyIHQ4eeSUUDh3a9c2K1jiC0szxkZ178zk26HC8J9J3UQZcfX1rR5aXIZwKE9sc5u7bLP2cLmfXpYSdyMrdA0n6RrG6QtUadrcnVBfng2y54KCzOOOe1xSP-dtIm_hE_2xCVZiPgwoShW345jKjHLhsBY8zDE_Cl9P9ll7cgPtn-Hyu9ovdZ1mtAyYncFf1qzuugJac5kZ5rnJFgpMH5aQE5YFtK-SnDpj8FmEtW86JeF32KqeBXO_cn9BuQyGNA0D0"/>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<h3 class="font-headline text-xl font-bold tracking-tight">Elena Moretti</h3>
+<span class="material-symbols-outlined text-secondary text-base fill-icon" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Alpine Explorer</p>
+</div>
+</div>
+<span class="font-label text-xs text-on-surface-variant">14 OCT 2023</span>
+</div>
+<div class="flex text-primary mb-6">
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="body-lg text-on-surface-variant leading-relaxed mb-10">
+                        The ascent was nothing short of breathtaking. Our guide, Marcus, possessed an intimate knowledge of the ridges that felt almost legendary. We reached the summit exactly at dawn—the planning was surgical. Truly an elite experience for those seeking more than just a hike.
+                    </p>
+</div>
+<div>
+<p class="font-label text-[10px] uppercase tracking-[0.2em] mb-4 text-on-surface-variant/60">Glimpses from the peak</p>
+<div class="flex gap-3 overflow-hidden">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 grayscale hover:grayscale-0 transition-all cursor-zoom-in">
+<img alt="Trail" class="w-full h-full object-cover" data-alt="rugged mountain peak at sunrise with orange light hitting the snow-capped rocks" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSKMGDjOaBYKk8OvW9KtuRN8aJzBZU-3oONO0OHaVnyIIwk82xysN_4E9wCb39HGB6EZyFk6HtwbkL1NVBKI79YwXeMK_tnZAbg762iqB3r3-fcfUykMdvjEzTSBEWSHXkkymGqzO5zrKrBsORLsF4d9G-XXigF97f0tnCh7vjPCxO1u768FCedGLYBvfx_fbJxcfBhhQPOwWXwKVb9XKVz2GHOfy_zGIX0LsmrDq6sNKOEUbrrx6sZIRyz_mIzJdbecKVSniKotI"/>
+</div>
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 grayscale hover:grayscale-0 transition-all cursor-zoom-in">
+<img alt="Trail" class="w-full h-full object-cover" data-alt="wide shot of a hiker standing on a rocky edge looking over a valley filled with mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkL6tNW_rw8A0uxSblwvOjRNyo1oDhaVq8t1IxsniRRVww6M4Lu6zt9_PtE0rMU07Bi1H-FrRq1USqf0TkYg6HMtFBQOCfKQVhebWWojDCTZzcz0ZqEKxfzEnIkWPPbqT-ZatnM3oy3M_RiPbuB89M1bEpIXgOTMFZX-CGIqzVcYuPr-VlarvHWCLtA8zXgclwOIG_8M5ruJUS8FaNfTv_-XLNRi08oqpuNj9JndApFiBnPsGimM4AzwzrZwDgZ5fnzU3htAM8a8o"/>
+</div>
+</div>
+</div>
+</article>
+<!-- Review Card 2 -->
+<article class="bg-surface-container p-10 rounded-xl flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-10">
+<div class="flex items-center space-x-4">
+<div class="w-16 h-16 rounded-full overflow-hidden bg-surface-container-highest border-2 border-primary/20">
+<img alt="User" class="w-full h-full object-cover" data-alt="close-up portrait of a man with a beard wearing a beanie, dramatic mountain lighting, moody atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcz8fEkTTZ0iSBHOli11cm4TBODyAB3h4OL47svAQnigIxe5LoqFgHWVpWNb96wUXJtjurpqvd2bE9K4M0iTwEpsoDGs-IqvigDXLmQqZxoHPbQ-yfz-fHmDbTVGcaSezUY4zV6kSPDm6wa8sxFoQ-UE7CDzZosnzNDSEJXq5PO2vMttj36oTxI0MQC8ZdByx37unpbl2JpzBgdWgWgthWVjssBneibfouQl5yCf5Ch4-XSKbxfzm8QSCIGZ-EB4K6TRnSdDVVWh8"/>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<h3 class="font-headline text-xl font-bold tracking-tight">David Chen</h3>
+<span class="material-symbols-outlined text-secondary text-base fill-icon" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">High-Altitude Trekker</p>
+</div>
+</div>
+<span class="font-label text-xs text-on-surface-variant">02 NOV 2023</span>
+</div>
+<div class="flex text-primary mb-6">
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+<p class="body-lg text-on-surface-variant leading-relaxed mb-10">
+                        Hardest thing I've done all year. The technical sections are legitimate—don't underestimate the grade. Aktivar's safety protocols were the only reason I felt comfortable pushing my limits. The gear provided was top-tier, which made all the difference in the sub-zero temps.
+                    </p>
+</div>
+<div>
+<p class="font-label text-[10px] uppercase tracking-[0.2em] mb-4 text-on-surface-variant/60">Technical captures</p>
+<div class="flex gap-3 overflow-hidden">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 grayscale hover:grayscale-0 transition-all cursor-zoom-in">
+<img alt="Gear" class="w-full h-full object-cover" data-alt="close-up of climbing gear and ropes on a granite rock surface with detailed texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsOhqZp4ddv-nm8fbtICzWnm5Q-HmORLK9JfRIng15rlZVTLunpuEISTVOuTHjykLHV_3Gfb0klw97vBZENzgdoLf61UjBiz8vH74U1irs0hgX-X5m_Lq_jvT1B9iIDdw-Esl_0y0ImqPf3zu4nE2SaoJTXQACA-p5Ms6GrmoVmaqbiNZGooI_TR3xKjiiyPMGrW4FLVEjRxEcFjCSBqSbAgHbz0WgIi62arQAq_HncdqBn6Ig_PNo0bXsJd9-9jqTCW-I8FxenBI"/>
+</div>
+</div>
+</div>
+</article>
+<!-- Review Card 3 (Spanning or specific placement) -->
+<article class="bg-surface-container p-10 rounded-xl md:col-span-2 flex flex-col md:flex-row gap-12">
+<div class="md:w-1/2">
+<div class="flex justify-between items-start mb-10">
+<div class="flex items-center space-x-4">
+<div class="w-16 h-16 rounded-full overflow-hidden bg-surface-container-highest border-2 border-primary/20">
+<img alt="User" class="w-full h-full object-cover" data-alt="portrait of a woman in outdoor gear, looking confidently at the camera, soft natural morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTEOU-i0Od7D1GBL6IVyXHoeMDOs0H1LqDe8D201e35bidb3KgjYnjZBHYETKxE1qb212NU8YW0X-mSuw4a8iPlo6hO7-HEbmeboBsLu6W4E3dKZ89Ho7152TR4sfP-irhEGjENtLbE_CpSl_BmAtz8aY2hojVz3WxTy26-3OTGWI0Qm7H2X-d0OoVNtL_62cOkXwj3xV-HNbR4fCSbDa2Pu1O2xh6iUzDKnOaNNsl1Jika1g_d2R5Ja7OcrdX5BJxLXMRC5Vv8Mc"/>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<h3 class="font-headline text-xl font-bold tracking-tight">Sarah Jenkins</h3>
+<span class="material-symbols-outlined text-secondary text-base fill-icon" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Solo Explorer</p>
+</div>
+</div>
+<span class="font-label text-xs text-on-surface-variant">19 NOV 2023</span>
+</div>
+<div class="flex text-primary mb-6">
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="body-lg text-on-surface-variant leading-relaxed">
+                        I was nervous about booking a solo expedition, but AKTIVAR creates a community atmosphere that is incredibly welcoming while maintaining high professional standards. The views from the Basecamp Level were enough to make me book my next expedition before even leaving the site. The attention to detail—from the nutrition packs to the GPS tracking—is unmatched.
+                    </p>
+</div>
+<div class="md:w-1/2 grid grid-cols-2 gap-4">
+<div class="h-48 rounded-xl overflow-hidden grayscale hover:grayscale-0 transition-all cursor-zoom-in">
+<img class="w-full h-full object-cover" data-alt="breathtaking mountain landscape with a clear lake reflecting the surrounding peaks during autumn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoPZBbXaYxIgwwDYcY4EbptPDIeTzrMuRakBwbnztVYca3OXbl8EExV8fRtEPtv2daZpFCdJCkN4rWa5onOu788N2I8E5B53jJj9g2jhn1YG8f5Oh8-sz8NYv2wR9L1DeyEaLXtW8G5F1tgIK0_NTNcUjmAHqKX3YpfmRs7Gl7kNsTD7hu64VzgGjeNCXN9Bi3V0FqtwI0fr8-CKgEbOp1KPEF9vuBmx5Zaw8Urxj9SaKgclw6F6twRnLuu4TQE5NPVjT2O6rctwo"/>
+</div>
+<div class="h-48 rounded-xl overflow-hidden grayscale hover:grayscale-0 transition-all cursor-zoom-in">
+<img class="w-full h-full object-cover" data-alt="wide landscape shot of a dramatic valley with high cliffs and a river winding through it at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAANStpbS44HdqfrtRE1NPLPUwfFcyBj1MyD5FBnL4pKars2szHmnUPi5yqttFocgHvw0hBHBqPvg3744AjTKUMj-0mxgqg9DqXNUYTLvuER9ZSVHECzZLmdISmgaike95tAv8WlXLj3H0PRztIOwN1vNVrOLAytfPFKKmwZyoAe1oXXp1CSWpuaosQ5epLy9E0aLbugyNvEdrEqxCKjGx2pwa12lqkFaBODaLBYaXxsCXEXW_FGjGuxaZSkL9NHbEfP7BI0TmWxag"/>
+</div>
+<div class="col-span-2 h-32 bg-surface-container-highest rounded-xl flex items-center justify-center border border-outline-variant/10 group cursor-pointer">
+<span class="font-label text-xs uppercase tracking-[0.3em] group-hover:text-primary transition-colors">View All Expedition Media (+12)</span>
+</div>
+</div>
+</article>
+</div>
+<div class="mt-24 flex justify-center">
+<button class="px-12 py-5 bg-primary text-on-primary font-label text-sm font-bold uppercase tracking-[0.2em] rounded-full hover:scale-105 transition-transform">
+                Load More Chronicles
+            </button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-[#333630]/15 bg-[#11140f] flex flex-col items-center py-12 space-y-6 w-full">
+<div class="text-[#EDE9DF] font-bold text-lg font-headline uppercase tracking-tighter">AKTIVAR</div>
+<div class="flex flex-wrap justify-center gap-8 px-6">
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity" href="#">Journal</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity" href="#">Marketplace</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-[#ffc56c] transition-opacity" href="#">Safety</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity" href="#">Guides</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity" href="#">Privacy</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity" href="#">Terms</a>
+</div>
+<div class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest text-[#EDE9DF]/20">© 2024 AKTIVAR. THE DIGITAL EXPEDITION.</div>
+</footer>
+</body></html>

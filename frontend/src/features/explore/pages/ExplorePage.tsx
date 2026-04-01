@@ -1,200 +1,197 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Crosshair, X, Navigation, MapPin, Users, ChevronRight } from 'lucide-react';
-import ActivityMap from '@/components/ActivityMap';
-import SearchBar from '@/components/SearchBar';
-import CategoryChip from '@/components/CategoryChip';
+import { Compass, Crosshair, MapPin, Navigation, Users, X } from 'lucide-react';
+import type L from 'leaflet';
 import ActivityCard from '@/components/ActivityCard';
+import ActivityMap from '@/components/ActivityMap';
+import CategoryChip from '@/components/CategoryChip';
+import SearchBar from '@/components/SearchBar';
 import { useActivities, useCategories } from '@/services/hooks';
+
+class MapErrorBoundary extends React.Component<{ children: React.ReactNode; fallback: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: React.ReactNode; fallback: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
 
 export default function ExplorePage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedActivityId, setSelectedActivityId] = useState<number | null>(null);
-  const [mapCenter, setMapCenter] = useState<[number, number] | undefined>(undefined);
+  const [mapCenter, setMapCenter] = useState<[number, number] | undefined>();
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [visibleCount, setVisibleCount] = useState<number | null>(null);
 
-  // Fetch from API with fallback to mock data
   const { data: apiActivities } = useActivities({
     search: searchQuery || undefined,
     category: selectedCategory || undefined,
   });
   const { data: apiCategories } = useCategories();
-
   const categories = apiCategories ?? [];
 
   const filtered = useMemo(() => {
     const activities = apiActivities ?? [];
-    return activities.filter((a) => {
-      if (selectedCategory && a.category.slug !== selectedCategory) return false;
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        return (
-          a.title.toLowerCase().includes(q) ||
-          a.location_name.toLowerCase().includes(q) ||
-          a.description.toLowerCase().includes(q)
-        );
-      }
-      return true;
+    return activities.filter((activity) => {
+      if (selectedCategory && activity.category.slug !== selectedCategory) return false;
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return [activity.title, activity.location_name, activity.description].some((field) => field.toLowerCase().includes(q));
     });
-  }, [apiActivities, selectedCategory, searchQuery]);
+  }, [apiActivities, searchQuery, selectedCategory]);
 
   const selectedActivity = useMemo(
-    () => filtered.find((a) => a.id === selectedActivityId) ?? null,
+    () => filtered.find((activity) => activity.id === selectedActivityId) ?? null,
     [filtered, selectedActivityId],
   );
 
-  const handleMarkerClick = useCallback((id: number) => {
-    setSelectedActivityId(id);
-  }, []);
-
   const handleRecenter = useCallback(() => {
     setIsLocating(true);
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const loc: [number, number] = [pos.coords.latitude, pos.coords.longitude];
-          setUserLocation(loc);
-          setMapCenter(loc);
-          setIsLocating(false);
-        },
-        () => {
-          setMapCenter([-33.4489, -70.6693]);
-          setIsLocating(false);
-        },
-        { enableHighAccuracy: true, timeout: 10000 },
-      );
-    } else {
+    if (!('geolocation' in navigator)) {
       setIsLocating(false);
+      return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const loc: [number, number] = [position.coords.latitude, position.coords.longitude];
+        setUserLocation(loc);
+        setMapCenter(loc);
+        setIsLocating(false);
+      },
+      () => {
+        setMapCenter([-41.1335, -71.3103]);
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
   }, []);
 
-  // Try to get user location on mount
   useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setUserLocation([pos.coords.latitude, pos.coords.longitude]);
-        },
-        () => { /* silently fail */ },
-        { enableHighAccuracy: false, timeout: 5000 },
-      );
-    }
+    if (!('geolocation' in navigator)) return;
+    navigator.geolocation.getCurrentPosition(
+      (position) => setUserLocation([position.coords.latitude, position.coords.longitude]),
+      () => undefined,
+      { enableHighAccuracy: false, timeout: 5000 },
+    );
   }, []);
 
-  const handleMapMove = useCallback((_bounds: L.LatLngBounds) => {
-    // Count visible activities within bounds
-    const count = filtered.filter((a) =>
-      a.latitude && a.longitude && _bounds.contains([a.latitude, a.longitude])
-    ).length;
+  const handleMapMove = useCallback((bounds: L.LatLngBounds) => {
+    const count = filtered.filter((activity) => activity.latitude && activity.longitude && bounds.contains([activity.latitude, activity.longitude])).length;
     setVisibleCount(count);
   }, [filtered]);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-surface">
-      {/* Full-screen map */}
+    <div className="relative h-[calc(100vh-4rem)] w-full overflow-hidden bg-surface md:h-[calc(100vh-5rem)]">
       <div className="absolute inset-0">
-        <ActivityMap
-          activities={filtered}
-          onActivityClick={handleMarkerClick}
-          center={mapCenter}
-          zoom={12}
-          selectedActivityId={selectedActivityId}
-          userLocation={userLocation}
-          onMapMove={handleMapMove}
-        />
-      </div>
-
-      {/* Floating search bar + filters */}
-      <div className="absolute top-4 left-4 right-4 z-[1000]">
-        <div className="mx-auto max-w-xl">
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Explorar actividades…"
-          />
-        </div>
-
-        {/* Category filter chips */}
-        <div className="mt-3 flex gap-2 overflow-x-auto scrollbar-none pb-2 -mx-1 px-1">
-          <CategoryChip
-            category={{ name: 'Todas', icon: 'users' }}
-            selected={selectedCategory === null}
-            onClick={() => setSelectedCategory(null)}
-            size="sm"
-          />
-          {categories.map((cat) => (
-            <CategoryChip
-              key={cat.id}
-              category={cat}
-              selected={selectedCategory === cat.slug}
-              onClick={() =>
-                setSelectedCategory(selectedCategory === cat.slug ? null : cat.slug)
-              }
-              size="sm"
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Activity count badge */}
-      {visibleCount !== null && !selectedActivity && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute top-[120px] left-1/2 -translate-x-1/2 z-[1000]"
+        <MapErrorBoundary
+          fallback={(
+            <div className="flex h-full w-full items-center justify-center bg-surface-container">
+              <div className="space-y-2 px-6 text-center">
+                <h3 className="font-headline text-2xl font-black uppercase tracking-tight text-on-surface">No pudimos cargar el mapa</h3>
+                <p className="text-sm text-on-surface-variant">Puedes seguir explorando desde la lista o volver al feed.</p>
+              </div>
+            </div>
+          )}
         >
-          <div
-            className="flex items-center gap-2 rounded-full px-4 py-2 text-xs font-label font-semibold"
-            style={{
-              background: 'rgba(17,20,15,0.8)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(81,69,51,0.2)',
-            }}
-          >
-            <MapPin size={12} className="text-primary" />
-            <span className="text-on-surface">
-              {visibleCount} {visibleCount === 1 ? 'actividad' : 'actividades'} en esta zona
+          <ActivityMap
+            activities={filtered}
+            onActivityClick={setSelectedActivityId}
+            center={mapCenter}
+            zoom={12}
+            selectedActivityId={selectedActivityId}
+            userLocation={userLocation}
+            onMapMove={handleMapMove}
+          />
+        </MapErrorBoundary>
+      </div>
+
+      <div className="absolute left-4 right-4 top-4 z-[1000] md:left-8 md:right-8 md:top-6">
+        <div className="mx-auto max-w-5xl space-y-4">
+          <div className="glass overflow-hidden rounded-[2.1rem] border border-outline-variant/20 px-5 py-5 shadow-[var(--shadow-forest)] md:px-6">
+            <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
+              <div className="space-y-3">
+                <p className="section-kicker">Map + list</p>
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                  <div>
+                    <h1 className="font-headline text-4xl font-black uppercase leading-[0.92] tracking-tight text-on-surface md:text-5xl">
+                      Explora el territorio.
+                    </h1>
+                    <p className="mt-2 max-w-xl text-sm text-on-surface-variant md:text-base">
+                      Busca, filtra y salta del mapa a la ficha detallada con una navegación más inmersiva.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 rounded-full bg-surface-container-high px-4 py-2">
+                    <Compass size={16} className="text-primary" />
+                    <span className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">
+                      {visibleCount ?? filtered.length} activas en pantalla
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-3 text-sm text-on-surface-variant">
+                  <div className="editorial-badge">Mapa inmersivo</div>
+                  <div className="editorial-badge">Overlay editorial</div>
+                </div>
+              </div>
+              <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Montaña, host, ciudad o experiencia" />
+            </div>
+          </div>
+
+          <div className="scrollbar-none flex gap-2 overflow-x-auto pb-1">
+            <CategoryChip category={{ name: 'Todas', icon: 'users' }} selected={selectedCategory === null} onClick={() => setSelectedCategory(null)} size="sm" />
+            {categories.map((category) => (
+              <CategoryChip
+                key={category.id}
+                category={category}
+                selected={selectedCategory === category.slug}
+                onClick={() => setSelectedCategory(selectedCategory === category.slug ? null : category.slug)}
+                size="sm"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {!selectedActivity && visibleCount !== null && (
+        <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="absolute left-1/2 top-[10.75rem] z-[1000] -translate-x-1/2 md:top-[12.5rem]">
+          <div className="glass flex items-center gap-2 rounded-full border border-outline-variant/20 px-4 py-2.5 shadow-[var(--shadow-soft)]">
+            <MapPin size={14} className="text-primary" />
+            <span className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">
+              {visibleCount} {visibleCount === 1 ? 'ruta visible' : 'rutas visibles'}
             </span>
           </div>
         </motion.div>
       )}
 
-      {/* Floating controls */}
-      <div className="absolute bottom-6 right-4 z-[1000] flex flex-col gap-3">
-        {/* Re-center / locate button */}
-        <motion.button
+      <div className="absolute bottom-6 right-4 z-[1000] flex flex-col gap-3 md:bottom-8 md:right-8">
+        <button
           type="button"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
           onClick={handleRecenter}
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-outline-variant text-on-surface shadow-lg cursor-pointer"
-          style={{
-            background: 'rgba(17,20,15,0.70)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-          }}
-          title="Centrar en mi ubicación"
+          className="glass flex h-14 w-14 items-center justify-center rounded-[1.2rem] border border-outline-variant/20 text-on-surface shadow-[var(--shadow-soft)] cursor-pointer"
+          title="Centrar mapa"
         >
           {isLocating ? (
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            >
+            <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
               <Navigation size={20} />
             </motion.div>
           ) : (
             <Crosshair size={20} />
           )}
-        </motion.button>
+        </button>
       </div>
 
-      {/* Bottom sheet card */}
       <AnimatePresence>
         {selectedActivity && (
           <motion.div
@@ -202,48 +199,34 @@ export default function ExplorePage() {
             initial={{ y: '100%', opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '100%', opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="absolute bottom-0 left-0 right-0 z-[1000] px-4 pb-6"
+            transition={{ type: 'spring', stiffness: 280, damping: 28 }}
+            className="absolute bottom-0 left-0 right-0 z-[1000] px-4 pb-6 md:px-8"
           >
-            <div className="relative mx-auto max-w-lg">
-              {/* Close button */}
+            <div className="relative mx-auto max-w-xl overflow-hidden rounded-[2rem] border border-outline-variant/20 glass shadow-[var(--shadow-forest)]">
               <button
                 type="button"
                 onClick={() => setSelectedActivityId(null)}
-                className="absolute -top-3 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-high text-muted hover:text-on-surface transition-colors cursor-pointer"
+                className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-surface-container-high text-on-surface-variant cursor-pointer"
               >
                 <X size={16} />
               </button>
 
-              <div
-                className="rounded-2xl border border-outline-variant overflow-hidden"
-                style={{
-                  background: 'rgba(17,20,15,0.85)',
-                  backdropFilter: 'blur(24px)',
-                  WebkitBackdropFilter: 'blur(24px)',
-                }}
-              >
-                <ActivityCard
-                  activity={selectedActivity}
-                  onClick={() => navigate(`/activity/${selectedActivity.id}`)}
-                  variant="compact"
-                />
+              <ActivityCard activity={selectedActivity} variant="compact" onClick={() => navigate(`/activity/${selectedActivity.id}`)} />
 
-                {/* Quick action bar */}
-                <div className="flex items-center justify-between px-4 py-3 border-t border-outline-variant/30">
-                  <div className="flex items-center gap-2 text-xs text-muted">
-                    <Users size={14} />
-                    <span>{selectedActivity.confirmed_count} confirmados</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/activity/${selectedActivity.id}`)}
-                    className="flex items-center gap-1 text-xs font-label font-semibold text-primary hover:text-primary-container transition-colors cursor-pointer"
-                  >
-                    Ver detalles
-                    <ChevronRight size={14} />
-                  </button>
+              <div className="flex items-center justify-between border-t border-outline-variant/15 px-5 py-4">
+                <div className="flex items-center gap-2 text-on-surface-variant">
+                  <Users size={15} className="text-primary" />
+                  <span className="font-label text-[10px] uppercase tracking-[0.16em]">
+                    {selectedActivity.confirmed_count}/{selectedActivity.capacity} en equipo
+                  </span>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => navigate(`/activity/${selectedActivity.id}`)}
+                  className="rounded-full bg-primary/10 px-4 py-2 font-label text-[10px] font-bold uppercase tracking-[0.18em] text-primary cursor-pointer"
+                >
+                  Abrir ficha
+                </button>
               </div>
             </div>
           </motion.div>

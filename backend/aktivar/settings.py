@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "payments",
     "notifications",
     "core",
+    "ecosystem",
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"
@@ -104,6 +105,7 @@ ASGI_APPLICATION = "aktivar.asgi.application"
 
 # Database
 _db_engine = env("DB_ENGINE", default="django.contrib.gis.db.backends.postgis")
+_database_url = env("DATABASE_URL", default="")
 DATABASES = {
     "default": {
         "ENGINE": _db_engine,
@@ -115,6 +117,10 @@ DATABASES = {
     }
 }
 
+# If DATABASE_URL is provided (Dokploy/12-factor style), prefer it.
+if _database_url:
+    DATABASES["default"] = env.db("DATABASE_URL")
+
 # When using SQLite (CI), remove GIS from INSTALLED_APPS since GDAL is not available
 if "sqlite" in _db_engine:
     DATABASES["default"] = {
@@ -124,10 +130,11 @@ if "sqlite" in _db_engine:
     INSTALLED_APPS = [app for app in INSTALLED_APPS if app != "django.contrib.gis"]
 
 # Caches
+_redis_url = env("REDIS_URL", default="redis://127.0.0.1:6379/0")
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_CACHE_URL", default="redis://127.0.0.1:6379/1"),
+        "LOCATION": env("REDIS_CACHE_URL", default=_redis_url),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -139,7 +146,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [env("REDIS_CHANNEL_URL", default="redis://127.0.0.1:6379/2")],
+            "hosts": [env("REDIS_CHANNEL_URL", default=_redis_url)],
         },
     },
 }
@@ -210,7 +217,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "anon": "100/day",
         "user": "1000/day",
-        "auth": "5/hour",
+        "auth": "30/hour",
         "otp": "3/hour",
         "join": "10/hour",
     },
@@ -230,12 +237,25 @@ SIMPLE_JWT = {
 }
 
 # CORS
-CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS")
+_cors_origins = env("CORS_ALLOWED_ORIGINS")
+if _cors_origins == ["*"] or _cors_origins == "*":
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGINS = []
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = _cors_origins
 
 # CSRF trusted origins (needed for admin and API from external IPs/domains)
-CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=",".join(CORS_ALLOWED_ORIGINS))
-if isinstance(CSRF_TRUSTED_ORIGINS, str):
-    CSRF_TRUSTED_ORIGINS = [o.strip() for o in CSRF_TRUSTED_ORIGINS.split(",") if o.strip()]
+_csrf_raw = env("CSRF_TRUSTED_ORIGINS", default="")
+if _csrf_raw and _csrf_raw != "*":
+    if isinstance(_csrf_raw, str):
+        CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_raw.split(",") if o.strip()]
+    else:
+        CSRF_TRUSTED_ORIGINS = _csrf_raw
+elif CORS_ALLOWED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+else:
+    CSRF_TRUSTED_ORIGINS = []
 
 # Security flags (default safe for HTTP; set True in .env when you have SSL)
 SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=False)
@@ -243,8 +263,8 @@ SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=not DEBUG)
 CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=not DEBUG)
 
 # Celery
-CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://127.0.0.1:6379/0")
-CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="redis://127.0.0.1:6379/0")
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default=_redis_url)
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default=_redis_url)
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"

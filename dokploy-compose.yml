@@ -1,12 +1,11 @@
 # =============================================================================
-# Aktivar — Dokploy / CubePath Deployment
-# Single-file compose for one-click deploy via Dokploy
+# Aktivar — Dokploy Deployment
 #
 # HOW TO DEPLOY ON DOKPLOY:
 # 1. In Dokploy → Create Project → Docker Compose
 # 2. Paste this repo URL or upload this file
 # 3. Set environment variables (see below)
-# 4. Go to Domains tab → click dice icon 🎲 → generates free traefik.me subdomain
+# 4. Go to Domains tab → click dice icon → generates free traefik.me subdomain
 # 5. Set Container Port: 80, Service: nginx, HTTPS: off
 # 6. Deploy!
 #
@@ -20,7 +19,7 @@
 
 services:
   # ---------------------------------------------------------------------------
-  # PostgreSQL 16 + PostGIS (database — runs inside Docker)
+  # PostgreSQL 16 + PostGIS
   # ---------------------------------------------------------------------------
   db:
     image: postgis/postgis:16-3.4
@@ -39,7 +38,7 @@ services:
       start_period: 30s
 
   # ---------------------------------------------------------------------------
-  # Redis 7 (cache + Celery broker + WebSocket channels)
+  # Redis 7
   # ---------------------------------------------------------------------------
   redis:
     image: redis:7-alpine
@@ -54,7 +53,7 @@ services:
       retries: 5
 
   # ---------------------------------------------------------------------------
-  # Django Backend (Daphne ASGI — handles HTTP + WebSocket)
+  # Django Backend (Daphne ASGI — HTTP + WebSocket)
   # ---------------------------------------------------------------------------
   backend:
     build:
@@ -76,7 +75,6 @@ services:
       SECURE_SSL_REDIRECT: "False"
       SESSION_COOKIE_SECURE: "False"
       CSRF_COOKIE_SECURE: "False"
-      # Optional services
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
@@ -97,13 +95,25 @@ services:
       redis:
         condition: service_healthy
     command: >
-      sh -c "python manage.py migrate --noinput &&
-             python manage.py collectstatic --noinput &&
-             python manage.py seed_demo --skip-if-exists 2>/dev/null || true &&
-             daphne -b 0.0.0.0 -p 8000 --access-log - aktivar.asgi:application"
+      sh -c "
+        echo '=== Running migrations ===' &&
+        python manage.py migrate --noinput &&
+        echo '=== Collecting static files ===' &&
+        python manage.py collectstatic --noinput &&
+        echo '=== Seeding demo data ===' &&
+        (python manage.py seed_demo --skip-if-exists 2>&1 || echo 'Seed skipped or failed (non-fatal)') &&
+        echo '=== Starting Daphne on port 8000 ===' &&
+        daphne -b 0.0.0.0 -p 8000 --access-log - aktivar.asgi:application
+      "
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health/')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
   # ---------------------------------------------------------------------------
-  # Celery Worker (async tasks: emails, notifications, etc.)
+  # Celery Worker
   # ---------------------------------------------------------------------------
   celery:
     build:
@@ -125,51 +135,37 @@ services:
     command: celery -A aktivar worker --loglevel=info --concurrency=2
 
   # ---------------------------------------------------------------------------
-  # React Frontend (Vite build → served by internal Nginx)
+  # Nginx — builds the React frontend inside + serves it + proxies API
+  # Multi-stage: Node builds Vite app → Nginx serves it
+  # No separate frontend container needed.
   # ---------------------------------------------------------------------------
-  frontend:
+  nginx:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: nginx/Dockerfile
       args:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api/v1}
         VITE_STRIPE_PUBLIC_KEY: ${VITE_STRIPE_PUBLIC_KEY:-}
         VITE_SENTRY_DSN: ${VITE_SENTRY_DSN:-}
     restart: always
-
-  # ---------------------------------------------------------------------------
-  # Nginx Reverse Proxy
-  # Dokploy's Traefik routes traffic here via the dokploy-network.
-  # Dokploy injects labels automatically when you assign a domain.
-  # ---------------------------------------------------------------------------
-  nginx:
-    image: nginx:alpine
-    restart: always
     expose:
       - "80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - static_files:/var/www/static:ro
       - media_files:/var/www/media:ro
     depends_on:
-      - backend
-      - frontend
+      backend:
+        condition: service_healthy
     networks:
       - default
       - dokploy-network
 
-# =============================================================================
-# Networks
-# =============================================================================
 networks:
   default:
     driver: bridge
   dokploy-network:
     external: true
 
-# =============================================================================
-# Persistent volumes (data survives container restarts)
-# =============================================================================
 volumes:
   postgres_data:
   redis_data:

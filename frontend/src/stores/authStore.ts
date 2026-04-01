@@ -13,7 +13,10 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  isAuthenticated: false,
+  isAuthenticated:
+    typeof window !== 'undefined'
+      ? !!sessionStorage.getItem('aktivar_access_token')
+      : false,
   isLoading: false,
 
   setUser: (user) =>
@@ -24,6 +27,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: () => {
     sessionStorage.removeItem('aktivar_access_token');
+    sessionStorage.removeItem('aktivar_refresh_token');
     set({ user: null, isAuthenticated: false });
   },
 

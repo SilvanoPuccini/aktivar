@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
-import { Home, Compass, Plus, Mountain, User, Bell } from 'lucide-react';
+import { Bell, Compass, Home, Mountain, Plus, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface GlassNavProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  isAuthenticated?: boolean;
   notificationCount?: number;
 }
 
@@ -15,170 +16,102 @@ interface Tab {
 }
 
 const tabs: Tab[] = [
-  { key: 'home', label: 'Home', icon: Home },
+  { key: 'home', label: 'Inicio', icon: Home },
   { key: 'explore', label: 'Explorar', icon: Compass },
-  { key: 'create', label: 'Crear', icon: Plus },
-  { key: 'trips', label: 'Trips', icon: Mountain },
   { key: 'profile', label: 'Perfil', icon: User },
 ];
 
-export default function GlassNav({
-  activeTab,
-  onTabChange,
-  notificationCount = 0,
-}: GlassNavProps) {
+export default function GlassNav({ activeTab, onTabChange, isAuthenticated = false, notificationCount = 0 }: GlassNavProps) {
+  const visibleTabs = isAuthenticated ? tabs : tabs.filter((tab) => tab.key !== 'profile');
+
   return (
     <>
-      {/* Mobile bottom nav */}
-      <nav
-        className="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-2 pb-[env(safe-area-inset-bottom,8px)] pt-2 z-50"
-        style={{
-          background: 'rgba(12, 15, 10, 0.85)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          borderTop: '1px solid rgba(81, 69, 51, 0.15)',
-        }}
-      >
-        {tabs.map((tab) => {
-          const isActive = activeTab === tab.key;
-          const Icon = tab.icon;
+      <nav className="glass fixed left-0 right-0 top-0 z-50 hidden border-b border-outline-variant/10 shadow-[0_20px_40px_rgba(12,15,10,0.22)] md:block">
+        <div className="premium-shell flex h-20 items-center justify-between">
+          <button type="button" onClick={() => onTabChange('home')} className="flex cursor-pointer items-center gap-3 rounded-full pr-4 transition-transform hover:scale-[1.01]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[1.2rem] bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.18),_transparent_58%),rgba(40,43,37,0.95)] text-primary shadow-[var(--shadow-soft)]">
+              <Mountain size={18} />
+            </div>
+            <div className="text-left">
+              <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary-container">Aktivar</div>
+              <div className="font-label text-[10px] uppercase tracking-[0.24em] text-on-surface-variant">Premium outdoor operating system</div>
+            </div>
+          </button>
 
-          if (tab.key === 'create') {
-            return (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => onTabChange(tab.key)}
-                className="relative flex items-center justify-center -mt-5 cursor-pointer"
-              >
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
-                  style={{
-                    background: 'linear-gradient(135deg, #ffc56c, #f0a500)',
-                    boxShadow: '0 4px 20px rgba(240, 165, 0, 0.3)',
-                  }}
-                >
-                  <Plus size={22} className="text-on-primary" strokeWidth={2.5} />
-                </div>
-              </button>
-            );
-          }
-
-          return (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => onTabChange(tab.key)}
-              className={`relative flex flex-col items-center justify-center px-4 py-1.5 rounded-xl transition-all duration-200 ease-out cursor-pointer ${
-                isActive
-                  ? 'text-primary'
-                  : 'text-on-surface/40 hover:text-on-surface/60'
-              }`}
-            >
-              <motion.div
-                animate={{ scale: isActive ? 1.1 : 1, y: isActive ? -2 : 0 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              >
-                <Icon
-                  size={20}
-                  fill={isActive ? 'currentColor' : 'none'}
-                  strokeWidth={isActive ? 2 : 1.5}
-                />
-              </motion.div>
-
-              {/* notification badge */}
-              {tab.key === 'home' && notificationCount > 0 && (
-                <span className="absolute -top-0.5 right-2 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-error text-[9px] font-bold text-on-error leading-none">
-                  {notificationCount > 99 ? '99+' : notificationCount}
-                </span>
-              )}
-
-              <span className={`font-label text-[9px] uppercase tracking-wider mt-0.5 transition-opacity ${isActive ? 'opacity-100' : 'opacity-60'}`}>
-                {tab.label}
-              </span>
-
-              {/* Active indicator dot */}
-              {isActive && (
-                <motion.div
-                  layoutId="navIndicator"
-                  className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-primary"
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                />
-              )}
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* Desktop side nav - minimal */}
-      <nav className="hidden md:flex fixed left-0 top-0 bottom-0 w-16 flex-col items-center py-6 z-50 border-r border-outline-variant/10"
-        style={{
-          background: 'rgba(12, 15, 10, 0.90)',
-          backdropFilter: 'blur(24px)',
-        }}
-      >
-        {/* Logo */}
-        <div className="mb-8">
-          <Mountain size={22} className="text-primary" />
-        </div>
-
-        <div className="flex-1 flex flex-col items-center gap-2">
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab.key;
-            const Icon = tab.icon;
-
-            if (tab.key === 'create') {
+          <div className="rounded-full border border-outline-variant/10 bg-surface-container-low/70 p-1.5 backdrop-blur-xl">
+            <div className="flex items-center gap-1.5">
+            {visibleTabs.map((tab) => {
+              const isActive = activeTab === tab.key;
               return (
                 <button
                   key={tab.key}
                   type="button"
                   onClick={() => onTabChange(tab.key)}
-                  className="my-2 w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer"
-                  style={{
-                    background: 'linear-gradient(135deg, #ffc56c, #f0a500)',
-                  }}
+                  className={[
+                    'relative cursor-pointer rounded-full px-5 py-3 font-label text-xs uppercase tracking-[0.18em] transition-colors',
+                    isActive ? 'text-[#442c00]' : 'text-on-surface-variant hover:text-on-surface',
+                  ].join(' ')}
+                  style={isActive ? { background: 'var(--cta-gradient)' } : undefined}
                 >
-                  <Plus size={18} className="text-on-primary" strokeWidth={2.5} />
+                  {tab.label}
+                  {isActive && <motion.div layoutId="nav-active" className="absolute inset-0 -z-10 rounded-full" />}
                 </button>
               );
-            }
+            })}
+            </div>
+          </div>
 
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => onTabChange('notifications')}
+              className="relative flex h-11 w-11 items-center justify-center rounded-full bg-surface-container-high/90 text-on-surface-variant transition-colors hover:text-on-surface"
+            >
+              <Bell size={18} />
+              {notificationCount > 0 && <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-primary" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => onTabChange('create')}
+              className="inline-flex h-12 items-center gap-2 rounded-full px-5 font-label text-xs font-bold uppercase tracking-[0.18em] text-[#442c00] cursor-pointer"
+              style={{ background: 'var(--cta-gradient)', boxShadow: 'var(--shadow-soft)' }}
+            >
+              <Plus size={16} />
+              Crear salida
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <nav className="glass pb-safe fixed bottom-3 left-3 right-3 z-50 rounded-[1.8rem] border border-outline-variant/15 px-2 py-2 shadow-[var(--shadow-forest)] md:hidden">
+        <div className="flex items-center justify-around">
+          {visibleTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.key;
             return (
               <button
                 key={tab.key}
                 type="button"
                 onClick={() => onTabChange(tab.key)}
-                className={`relative w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-surface-container-high text-primary'
-                    : 'text-on-surface/40 hover:bg-surface-container/50 hover:text-on-surface/60'
-                }`}
-                title={tab.label}
+                className="flex min-w-16 flex-col items-center gap-1 px-3 py-2 text-[10px] font-label uppercase tracking-[0.14em]"
               >
-                <Icon size={18} fill={isActive ? 'currentColor' : 'none'} strokeWidth={isActive ? 2 : 1.5} />
-
-                {tab.key === 'home' && notificationCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[14px] h-3.5 px-0.5 rounded-full bg-error text-[8px] font-bold text-on-error leading-none">
-                    {notificationCount > 9 ? '9+' : notificationCount}
-                  </span>
-                )}
+                <span className={isActive ? 'text-primary' : 'text-on-surface-variant'}>
+                  <Icon size={19} strokeWidth={isActive ? 2.4 : 1.8} />
+                </span>
+                <span className={isActive ? 'text-primary' : 'text-on-surface-variant'}>{tab.label}</span>
               </button>
             );
           })}
-        </div>
 
-        {/* Notifications at bottom */}
-        <button
-          type="button"
-          onClick={() => onTabChange('notifications')}
-          className="relative w-10 h-10 rounded-xl flex items-center justify-center text-on-surface/40 hover:bg-surface-container/50 hover:text-on-surface/60 transition-all cursor-pointer"
-          title="Notificaciones"
-        >
-          <Bell size={18} />
-          {notificationCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-error" />
-          )}
-        </button>
+          <button
+            type="button"
+            onClick={() => onTabChange('create')}
+            className="flex h-12 w-12 items-center justify-center rounded-full text-[#442c00] shadow-[var(--shadow-soft)]"
+            style={{ background: 'var(--cta-gradient)' }}
+          >
+            <Plus size={20} />
+          </button>
+        </div>
       </nav>
     </>
   );

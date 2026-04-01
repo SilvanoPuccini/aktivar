@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aktivar - Activity Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;900&amp;family=Manrope:wght@400;500;700&amp;family=Space_Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#373a34",
+              "tertiary-fixed": "#e6e2d8",
+              "on-surface": "#e1e3da",
+              "on-error": "#690005",
+              "background": "#11140f",
+              "tertiary-container": "#b7b4ab",
+              "outline": "#9f8e79",
+              "on-primary-fixed-variant": "#614000",
+              "surface-container-highest": "#333630",
+              "surface-container-low": "#191c17",
+              "error": "#ffb4ab",
+              "secondary-container": "#00733b",
+              "on-tertiary-fixed": "#1c1c16",
+              "tertiary-fixed-dim": "#cac6bd",
+              "primary-fixed": "#ffddaf",
+              "on-secondary-container": "#95f5ae",
+              "on-secondary-fixed-variant": "#005228",
+              "surface-tint": "#ffba44",
+              "primary-container": "#f0a500",
+              "surface-dim": "#11140f",
+              "on-tertiary-fixed-variant": "#484740",
+              "secondary-fixed": "#97f7b0",
+              "surface-container": "#1d201b",
+              "inverse-surface": "#e1e3da",
+              "primary": "#ffc56c",
+              "on-secondary": "#00391a",
+              "on-error-container": "#ffdad6",
+              "primary-fixed-dim": "#ffba44",
+              "inverse-on-surface": "#2e312b",
+              "on-primary-container": "#5f3f00",
+              "on-secondary-fixed": "#00210d",
+              "surface-container-lowest": "#0c0f0a",
+              "on-tertiary-container": "#47463f",
+              "inverse-primary": "#805600",
+              "outline-variant": "#514533",
+              "on-surface-variant": "#d6c4ac",
+              "secondary-fixed-dim": "#7bda96",
+              "secondary": "#7bda96",
+              "on-tertiary": "#32312a",
+              "on-primary-fixed": "#281800",
+              "on-primary": "#442c00",
+              "tertiary": "#d3cfc6",
+              "on-background": "#e1e3da",
+              "surface-variant": "#333630",
+              "error-container": "#93000a",
+              "surface": "#11140f",
+              "surface-container-high": "#282b25"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        font-size: 24px;
+      }
+      .glass-effect {
+        backdrop-filter: blur(24px);
+        background-color: rgba(17, 20, 15, 0.7);
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation (Shell Implementation) -->
+<header class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_24px_48px_rgba(12,15,10,0.4)] md:block hidden">
+<nav class="flex justify-between items-center px-6 py-4 w-full max-w-screen-xl mx-auto">
+<div class="text-2xl font-black text-[#f0a500] uppercase tracking-tighter font-headline">Aktivar</div>
+<div class="flex items-center gap-8">
+<a class="text-[#EDE9DF]/60 font-body hover:scale-105 transition-transform duration-200" href="#">Home</a>
+<a class="text-[#f0a500] font-bold border-b-2 border-[#f0a500] pb-1 font-body hover:scale-105 transition-transform duration-200" href="#">Explore</a>
+<a class="text-[#EDE9DF]/60 font-body hover:scale-105 transition-transform duration-200" href="#">My Trips</a>
+<div class="flex items-center gap-4 ml-4">
+<span class="material-symbols-outlined text-[#EDE9DF]">notifications</span>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="portrait of a young man with a friendly expression in outdoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB51GmTWN5VhNptFgZepgaTEQDQM3M_MB8a_vofeRNIDpwMIqbTrzU6unJteBwr0SLnVCZYO0GlzBt847fvWE13giLJLOEsMK3XiTae6qMWlNTIMrLdGqkQ-QDaXPgyZECGf8aDHlSC3V1wObeErSXdBuzZUuhcV7j6l5J-KocR7V19UgaHzGaGgle6bDPzpUS_Z9qvyp8bK-1Nzxz19JPBAX4ZPvtScCFq9GbPVAZQ6-wb9NXvZPvgiFkB0FxDlx8_FgLDkG42zvI"/>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<main class="pb-32 md:pt-20">
+<!-- Hero Section -->
+<section class="relative h-[614px] md:h-[716px] w-full overflow-hidden">
+<img alt="Kayaking Expedition" class="w-full h-full object-cover" data-alt="lone kayaker navigating a calm turquoise mountain lake surrounded by dense evergreen pine forests and mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVQPcpeWXdp_tZjdONXd4lW5BvYasNAhU3IxqcRlB2r1YjGcrgMpOsfCCydu6AIIVEyHZxgSg1l663lOIwgUKcpPbMFrTwr3pBNFPC7hqj2cSJHWMJp6F2jZLrEr0gql-Nzb2f7u1l-mQKH-Kd55IPQ63sZ2q7Vnq0zkFqrA4oP4oOIXXY4vFWcZ__bhUQZ7tdSrxBPErweSbDmy_CDMgIJeNv_ZPwdgjA-_vrubprbd2VEKjIaSquChV5tEz8JhG8N10WDkLaFpw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
+<!-- Mobile Back Button -->
+<button class="absolute top-6 left-6 w-12 h-12 rounded-xl bg-background/40 backdrop-blur-md flex items-center justify-center text-on-surface md:hidden">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<!-- Hero Content Overlay -->
+<div class="absolute bottom-0 left-0 w-full px-6 py-12 max-w-screen-xl mx-auto md:px-12">
+<div class="flex flex-col gap-2">
+<span class="font-label text-primary-fixed uppercase tracking-[0.2em] text-xs font-bold">Expedition • Intermediate</span>
+<h1 class="font-headline text-5xl md:text-7xl font-black tracking-tighter text-on-surface leading-none uppercase italic">River Silence Kayaking</h1>
+<div class="flex items-center gap-4 mt-4 font-label text-sm text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-base" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span>OCT 24, 08:00 AM</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-base" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span>SQUAMISH, BC</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="max-w-screen-xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12">
+<!-- Left Column: Content -->
+<div class="lg:col-span-8 space-y-12">
+<!-- Organizer Card -->
+<div class="flex flex-col md:flex-row md:items-center justify-between p-8 rounded-xl bg-surface-container border border-outline-variant/10 shadow-lg">
+<div class="flex items-center gap-6">
+<div class="relative">
+<img alt="Organizer" class="w-20 h-20 rounded-xl object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="rugged outdoorsman with a beard wearing a technical fleece jacket, smiling warmly in a forest setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqY9z4XSffU8kqWU8BikKXbsSHGn-9Js9CyLkDWJXN0ChtWBjzIGYHWYKbrLbbEGu_HVAJAtvIxod3mCit6D_3qxzWz567nGqVA_rWemqvOUFE2yKUgEqQqMoDJCfcD-9Zn5RZPlfi74_h-ZAmN4Cw26L6eyFd6G2B2YOQpVXLKaJNj9QB3klIm9fzBBBVL-nTwL1-t1PmxAfWG-GoQOrNj_tgX6Rd-Ga07GxBmlfHmvTOjDdmIDBu-Q96mGGt-oZ1FgtiSJ8I-uM"/>
+<div class="absolute -bottom-2 -right-2 bg-secondary text-on-secondary w-8 h-8 rounded-full flex items-center justify-center border-4 border-surface-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-xs text-primary/80 uppercase font-bold tracking-widest">Organizer</span>
+<h3 class="font-headline text-2xl font-bold text-on-surface">Marcus Thorne</h3>
+<div class="flex items-center gap-3 mt-1">
+<div class="flex items-center text-primary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label font-bold ml-1">4.9</span>
+</div>
+<span class="text-on-surface-variant/40">•</span>
+<span class="font-label text-xs text-on-surface-variant font-bold uppercase">12 activities hosted</span>
+</div>
+</div>
+</div>
+<button class="mt-6 md:mt-0 px-8 py-3 rounded-full border border-outline-variant hover:bg-surface-container-highest transition-colors font-label text-xs font-bold uppercase tracking-widest">Message</button>
+</div>
+<!-- Description -->
+<div class="space-y-6">
+<h2 class="font-headline text-3xl font-black uppercase italic tracking-tighter border-l-4 border-primary pl-6">The Journey</h2>
+<div class="font-body text-lg leading-relaxed text-on-surface-variant max-w-3xl">
+<p>Join us for an immersive six-hour paddling expedition through the glacial waters of the Squamish estuary. This isn't just a workout; it's a silent meditation. We'll navigate through narrow channels of reeds, watching for bald eagles and harbor seals that frequent the area during the salmon run.</p>
+<p class="mt-4">Equipment is provided, but we recommend bringing thermal base layers and a dry change of clothes. We'll stop halfway at a secluded pebble beach for a forest-brewed coffee and light snacks provided by Marcus.</p>
+</div>
+</div>
+<!-- Participants Section -->
+<div class="space-y-6">
+<div class="flex justify-between items-end">
+<h2 class="font-headline text-2xl font-black uppercase italic tracking-tighter">Current Squad</h2>
+<span class="font-label text-xs text-on-surface-variant uppercase font-bold tracking-widest">14 / 20 Spots Filled</span>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<img class="w-12 h-12 rounded-xl object-cover border border-outline-variant/20 hover:scale-110 transition-transform" data-alt="portrait of a woman athlete" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS2wCh1OIrKBVWvPKtIrGsZ3fL2-0kMdM6RtDf7LdUkS-M17JZkT7ku21nUqJdpPkFBFC6PLyJIz7ueUZs7C_frH8iOtKl1DZjHMn-z9IReqLeyRXnt7MFYdOBNDupSAvR1teeuBazVpOLxH9rzNw0zSwymtrg3IL53CVYzQE5X44DW3ks_DgeZiy3grQHEnFnjff-F2OwvcqNEbv2fElg17nk6IvSGEmVxXY8_pWodF5c9Ob5Is1slyNFqfVTyURC7UJzVCTYv8k"/>
+<img class="w-12 h-12 rounded-xl object-cover border border-outline-variant/20 hover:scale-110 transition-transform" data-alt="portrait of a man smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGx62ttUv3tsrPxm_woKdmaQRehPTexqtkrE-tSIVaB-mqoYq3G_CClPHchJwjTEr4gSUPEGiCjeKzMr3K1TepRUwAIYGYu3bUG5ZJ_tCdNkoSFB1FXQQ7gMC4r2UDiQyhUbmuYByvZPUtYEfvGcP2YOtnRvhHjBQiaXY3Smt4wqKSIRzuhGVPu3-2xvWSP-49vcJXiADrWzWpkCkd521kh44zuzwUrYr_1erVSEqFVeptfCUo7hEJMFNHg2knQKxdeyLXWA091PU"/>
+<img class="w-12 h-12 rounded-xl object-cover border border-outline-variant/20 hover:scale-110 transition-transform" data-alt="portrait of a young woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK2FERIz-8i2ZIeO-KXAkDk9Aw6g_QjYWVGUg-lIDohJ-dYUsB18VuATLoepgXAQxVsWPk7DHIPirI1XXJ--hQ_T4raTWRxBECPDsCEJXWPbo3Gu7c1GQ2cM26X10Gn2fE7Tm3V49cy9AMqehPtTHhFgUyKWaQns3DC7LgXOgi5haeDXrWTEXJUnod42JhvuCn-3wmf4v8_cqmu7osTCdLMQ7tnKbJeD2Y6sOM2JQ_uubaxmTg8B0Forub7zU_7xkZR-mGr4twzzc"/>
+<img class="w-12 h-12 rounded-xl object-cover border border-outline-variant/20 hover:scale-110 transition-transform" data-alt="portrait of a professional man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2Znvz_FjLe4MBM_OFJF1qVEae9w5EgNyf4rxddLdV188hcTNWIOUYGdob8GMmoPu4uW9WB-iViUZOqYssoAwPXJ98PnE3NQJnABBEv4x-JnL59HAHX0LXMkUbIAeDGSA_a_Bx5V4i0xEz0WoRLXgBjx0CfVkprLjeY4irpdBQK8TlfkTXnNRZlK5RoY_1lBzZGGdJt9ZXd5DFBZIV1_cm1euiId9MkjUVlsVF3ZHnu3f0WEkB-1aXCc_TWWTzejKETvnH2SQaDro"/>
+<img class="w-12 h-12 rounded-xl object-cover border border-outline-variant/20 hover:scale-110 transition-transform" data-alt="portrait of a person with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDObXGCl2ABaIgKo1ZDvjnX7nUN0MEitBDVhZJN5zNS_SazKHZTg5OJn0H9AwcWH6Z9jif80vFp_RgTsH6FiwaHNSy6i4R0j3b3MbUPFJXO6UyFn-lAXaBInUr8cBaSqIg0vKY-WyFG7acZTgZIxVHkZWwnQ2ScrWXH0pSVkJU9P24dPnKQcvxK_MluJzgz-wRJZNzPQkdUdY44nqlx_tZ4WS0PwwqC06gPfI7Un3B4Gq6T7U13RKIk6s-Bk06GMHBNYQsmwpUxb1Y"/>
+<img class="w-12 h-12 rounded-xl object-cover border border-outline-variant/20 hover:scale-110 transition-transform" data-alt="portrait of a smiling man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1LmFydXptfCPtZ4xb98hg2rqA4OaApzGLpi9UEswkWFJFTaZTnM31Q88e_uP0ilMAXlxhgUTiGKR_oiC9O6ybRAYG5AGTe8JoYv1v2VElqvSuBv0MpjJrDTvDybz710E9P7Qnzhv8pD9wButeMu1Mk5evNbio-GsLTobd3NdZrfHQIthh9g-vveRGe_bfokIAL7-h3XuD45P9dFAxiv4jaNwr4Tu9yJhohDYo1BMn2fwhyW2qATy88TumvbAGU-NHj7bP8Gkws_4"/>
+<img class="w-12 h-12 rounded-xl object-cover border border-outline-variant/20 hover:scale-110 transition-transform" data-alt="portrait of a black woman smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUKKtbDNpM_iDikTL0pN-maQmFHu3GcbrqMRxeNYxasZzi3-IVU7cZq5TIvT4eUoLx6_wbFok_hO-8AYrCxhY4nkFKxMDAxy3GN7DGGQ3L_Be8ay0mSO6JlGH30HSx17JffNRP8i7fPBckWi2b8t_jWc8Ajj0uq52Fl8Md01-fnjlNzkPJr-us-gMkUWhtzeJyMkUsGSwn0guBecrPaZZBmvcaAM3TN8oFQSzKzK7rsw48CgjtSwQer2WCLEXLvQ25sDN_nn_DlKE"/>
+<img class="w-12 h-12 rounded-xl object-cover border border-outline-variant/20 hover:scale-110 transition-transform" data-alt="portrait of a man in casual wear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxlamTQfm2oE9b3GsCPkXhETfD5kRtlR4LVc0zh1FwjH0GSZVaFHX4dcQ5N4ADCTTei3H1eeMX8eGQyVvTq6FmszXRLVvp7HF1ibPtZ9k60NX9Go-pz-SYuqMaFYSBGuKJO_nx-mEHEDSXkZ9KBZHJX7MK5UAAmXt8aEwsWmmJoUI_ZIwaPjLwEQAqROq1R75niqWQoUyMvY5FBI-2QCy6xUk7GJrvD1TO5nRD99vjptK5FUrB_JUZJYhtULg_5zaFsHsgl9KXUUw"/>
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest border border-outline-variant/40 flex items-center justify-center font-label text-[10px] font-bold text-primary">
+                            +12
+                        </div>
+</div>
+</div>
+</div>
+<!-- Right Column: Sidebar -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Meeting Point Map -->
+<div class="space-y-4">
+<h2 class="font-headline text-xl font-bold uppercase tracking-tight">Meeting Point</h2>
+<div class="relative h-64 rounded-xl overflow-hidden border border-outline-variant/10 shadow-2xl">
+<img alt="Map Location" class="w-full h-full object-cover" data-alt="top-down satellite view of a river estuary meeting the sea with lush greenery and sandbars" data-location="Squamish, Canada" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC62Jcre3ZWx56IkdBhv5nWTGfR4Lr2U4XRyxXthW-agl1LstGufMFxgIL7XqI_sRoRdaBwqJfQT1xEraooTfKgbCxqOA8pEe_nV2X2v9lVQpghhPn9FyUzgJ3iN66eY9MEh0tWhiVLS6Fufb83CDgM6mC4viCn67BA1TsKZZ7wQhKFqvMduQmlugS-N-n6b8V8i4k7G2QAd-pK-UFK1r2t5TKp_SdMCLmozJefByL1ycHFAJHLRF3Ngh6X5WojapdXm6demnF3IJA"/>
+<div class="absolute inset-0 bg-primary/10"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+<div class="relative flex items-center justify-center">
+<div class="absolute w-12 h-12 bg-primary/30 rounded-full animate-ping"></div>
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+<div class="absolute bottom-4 left-4 right-4 p-4 glass-effect rounded-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label text-[10px] text-primary font-bold uppercase">Basecamp</span>
+<span class="font-body text-sm font-bold">Squamish Public Dock</span>
+</div>
+<button class="bg-primary-container text-on-primary-container p-2 rounded-lg">
+<span class="material-symbols-outlined text-lg">directions</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Transport Card -->
+<div class="p-6 rounded-xl bg-surface-container border border-outline-variant/10 space-y-6">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-lg font-bold">Rideshare Available</h3>
+<p class="font-body text-xs text-on-surface-variant">Joining from Downtown Vancouver</p>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label text-[10px] font-bold uppercase tracking-wider">3 seats left</span>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-lg bg-background/50">
+<div class="relative">
+<img class="w-12 h-12 rounded-lg object-cover" data-alt="portrait of a man with sunglasses and an athletic build" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA47A2Uy-cbxJdk2TuLHXdAM7n9K7bB-hNbD6PAD7KcsHiI7fWyinC7lLHQKawzWuSzFYvFFbh2bvSUSlEWTdcrHCAWC2zo3ho3j61bs7b4QB7TDxk3BPHazBaTZ-DRVj9thY_MDeCJ_7MJ8fkSRvHE93dYUoBXSg07MXvFlauJxRV5fY55wwfKG_pKHstrFRVCrpbV_wgIGtw4xoMp_PHfkzisHcGY-xXqKT_CC5jDWnsvf9N_VssH1fm5xgluuCzwvviPyYQyeh4"/>
+<span class="absolute -top-1 -right-1 material-symbols-outlined text-secondary text-xs" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<span class="font-body font-bold text-sm">Driver: Alex Chen</span>
+<span class="font-label text-xs text-primary-container">$15.00</span>
+</div>
+<span class="font-label text-[10px] text-on-surface-variant uppercase font-bold">Toyota Hilux • Silver</span>
+</div>
+</div>
+<button class="w-full py-4 rounded-xl bg-primary-container text-on-primary-container font-headline text-sm font-black uppercase tracking-widest hover:scale-[1.02] transition-transform">JOIN RIDE</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Join Bar (Fixed Bottom Shell) -->
+<div class="fixed bottom-0 left-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl px-6 py-6 border-t border-outline-variant/10">
+<div class="max-w-screen-xl mx-auto flex items-center justify-between gap-6">
+<div class="hidden md:flex flex-col">
+<span class="font-label text-[10px] text-on-surface-variant uppercase font-bold tracking-[0.2em]">Total Price</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline text-3xl font-black text-primary">$45</span>
+<span class="font-label text-xs text-on-surface-variant">/ PERSON</span>
+</div>
+</div>
+<button class="flex-1 md:flex-none md:min-w-[400px] py-5 rounded-xl bg-primary-container text-on-primary-container font-headline text-lg font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.01] active:scale-95 transition-all shadow-[0px_10px_30px_rgba(240,165,0,0.3)]">
+                JOIN ACTIVITY — $45
+                <span class="material-symbols-outlined font-bold">arrow_forward</span>
+</button>
+<div class="w-14 h-14 md:flex items-center justify-center rounded-xl border border-outline-variant/20 hidden">
+<span class="material-symbols-outlined text-on-surface-variant">share</span>
+</div>
+</div>
+</div>
+<!-- Mobile Bottom Navigation (Shell Implementation) -->
+<footer class="md:hidden fixed bottom-0 left-0 w-full z-[60] flex justify-around items-center px-4 py-3 pb-safe bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_-10px_30px_rgba(0,0,0,0.5)] rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/40 font-label text-[10px] uppercase tracking-widest font-bold hover:text-[#ffc56c] transition-colors" href="#">
+<span class="material-symbols-outlined">location_on</span>
+<span class="mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#f0a500] scale-110 font-label text-[10px] uppercase tracking-widest font-bold hover:text-[#ffc56c] transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="mt-1">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/40 font-label text-[10px] uppercase tracking-widest font-bold hover:text-[#ffc56c] transition-colors" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="mt-1">Create</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/40 font-label text-[10px] uppercase tracking-widest font-bold hover:text-[#ffc56c] transition-colors" href="#">
+<span class="material-symbols-outlined">backpack</span>
+<span class="mt-1">My Trips</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/40 font-label text-[10px] uppercase tracking-widest font-bold hover:text-[#ffc56c] transition-colors" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="mt-1">Profile</span>
+</a>
+</footer>
+</body></html>

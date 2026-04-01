@@ -1,6 +1,6 @@
 // Aktivar Service Worker — PWA + Push Notifications + Offline Support
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v4';
 const STATIC_CACHE = `aktivar-static-${CACHE_VERSION}`;
 const API_CACHE = `aktivar-api-${CACHE_VERSION}`;
 const IMAGE_CACHE = `aktivar-images-${CACHE_VERSION}`;
@@ -74,8 +74,15 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets (JS, CSS): stale-while-revalidate
-  event.respondWith(staleWhileRevalidate(request, STATIC_CACHE));
+  // Hashed assets (Vite: /assets/Foo-AbCd1234.js): cache-first
+  // These are immutable — the hash guarantees content hasn't changed.
+  if (url.pathname.startsWith('/assets/')) {
+    event.respondWith(cacheFirstWithNetwork(request, STATIC_CACHE));
+    return;
+  }
+
+  // Other static assets: network-first to avoid stale files
+  event.respondWith(networkFirstWithCache(request, STATIC_CACHE, 60 * 60));
 });
 
 // ── Caching strategies ────────────────────────────────────────────
