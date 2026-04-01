@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Car, Clock3, MapPin, Shield, Star } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Car, Clock3, MapPin, Shield, Star, Zap } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { AxiosError } from 'axios';
@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import CTAButton from '@/components/CTAButton';
 import EmptyState from '@/components/EmptyState';
 import { useBookSeat, useTrip } from '@/services/hooks';
-import type { TripPassenger } from '@/types/transport';
+
 
 export default function TripDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -36,18 +36,13 @@ export default function TripDetailPage() {
     );
   }
 
-  const departureDate = new Date(trip.departure_time);
-  const formattedTime = format(departureDate, 'HH:mm', { locale: es });
-  const arrivalDate = trip.estimated_arrival ? new Date(trip.estimated_arrival) : null;
-  const formattedArrival = arrivalDate ? format(arrivalDate, 'HH:mm', { locale: es }) : null;
-  const totalCost = trip.price_per_passenger;
-  const costPerPerson = trip.seats_taken > 0
-    ? Math.round(totalCost)
-    : totalCost;
+  const departure = new Date(trip.departure_time);
+  const arrival = trip.estimated_arrival ? new Date(trip.estimated_arrival) : null;
+  const tripTitle = `${trip.origin_name} → ${trip.destination_name}`;
+  const cost = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(trip.price_per_passenger);
   const spotsLeft = trip.seats_remaining ?? (trip.available_seats - (trip.seats_taken ?? 0));
   const confirmedPassengers = (trip.passengers ?? []).filter((p: { status: string }) => p.status === 'confirmed');
-  const totalSeats = trip.available_seats;
-  const seatsTaken = trip.seats_taken ?? 0;
+  const seatDots = Array.from({ length: trip.available_seats }, (_, i) => i < (trip.seats_taken ?? 0));
   const pendingPassengersCount = (trip.passengers ?? []).filter((p: { status: string }) => p.status === 'pending').length;
   const bookingDisabled = spotsLeft === 0 || bookSeat.isPending;
   const bookingLabel = bookSeat.isPending
@@ -55,6 +50,17 @@ export default function TripDetailPage() {
     : spotsLeft > 0
       ? 'RESERVAR ASIENTO'
       : 'SIN CUPOS';
+
+  const handleBook = () => {
+    if (spotsLeft <= 0) {
+      toast.error('No hay cupos disponibles');
+      return;
+    }
+    bookSeat.mutate(trip.id, {
+      onSuccess: () => toast.success('Asiento reservado exitosamente'),
+      onError: (error) => toast.error(getApiErrorMessage(error)),
+    });
+  };
 
   const getApiErrorMessage = (error: unknown) => {
     const axiosError = error as AxiosError<{ detail?: string; [key: string]: unknown }>;
