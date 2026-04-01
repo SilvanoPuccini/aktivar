@@ -11,7 +11,12 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+from django.http import JsonResponse
 from users.views import AuthTokenObtainPairView
+
+
+def health_check(request):
+    return JsonResponse({"status": "ok"})
 
 
 urlpatterns = [

@@ -131,15 +131,24 @@ if "sqlite" in _db_engine:
 
 # Caches
 _redis_url = env("REDIS_URL", default="redis://127.0.0.1:6379/0")
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_CACHE_URL", default=_redis_url),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
+_use_redis_cache = env.bool("USE_REDIS_CACHE", default=True)
+
+if _use_redis_cache:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": env("REDIS_CACHE_URL", default=_redis_url),
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            },
+        }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }
 
 # Channel Layers
 CHANNEL_LAYERS = {
