@@ -154,23 +154,6 @@ interface ActivityMapProps {
   interactive?: boolean;
 }
 
-function FitBounds({ activities }: { activities: Activity[] }) {
-  const map = useMap();
-
-  useEffect(() => {
-    if (activities.length === 0) return;
-    const coords = activities
-      .filter((a) => a.latitude && a.longitude)
-      .map((a) => [a.latitude, a.longitude] as [number, number]);
-    if (coords.length > 0) {
-      const bounds = L.latLngBounds(coords);
-      map.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
-    }
-  }, [activities, map]);
-
-  return null;
-}
-
 function MapCenter({ center, zoom }: { center?: [number, number]; zoom?: number }) {
   const map = useMap();
 
@@ -499,7 +482,6 @@ export default function ActivityMap({
         </Marker>
       ))}
 
-      {!singleMarker && <FitBounds activities={activities} />}
       {center && <MapCenter center={center} zoom={zoom} />}
     </MapContainer>
   );

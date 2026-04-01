@@ -1,33 +1,35 @@
-import { Mountain } from 'lucide-react';
+import { Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="mt-8 md:mt-10 border-t border-outline-variant/10 bg-surface-lowest/95 backdrop-blur-md">
-      <div className="premium-shell py-8 md:py-10">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          {/* Brand */}
-          <div className="flex items-center gap-2">
-            <Mountain size={18} className="text-primary" />
-            <span className="font-headline text-base font-black tracking-tight text-on-surface">
-              Aktivar
-            </span>
-            <span className="text-muted text-xs font-label ml-2">LATAM Outdoors</span>
+    <footer className="mt-12 border-t border-outline-variant/10 bg-surface-lowest/90 backdrop-blur-xl">
+      <div className="premium-shell grid gap-8 py-10 md:grid-cols-[1.2fr_1fr_auto] md:items-end">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-surface-container-high text-primary">
+              <Compass size={18} />
+            </div>
+            <div>
+              <p className="font-headline text-xl font-black uppercase tracking-tight text-on-surface">Aktivar</p>
+              <p className="font-label text-[10px] uppercase tracking-[0.22em] text-on-surface-variant">Digital expedition for Latam outdoors</p>
+            </div>
           </div>
-
-          {/* Links */}
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-on-surface-variant">
-            <Link to="/" className="hover:text-primary transition-colors">Inicio</Link>
-            <Link to="/explore" className="hover:text-primary transition-colors">Explorar</Link>
-            <Link to="/create" className="hover:text-primary transition-colors">Crear</Link>
-            <Link to="/profile" className="hover:text-primary transition-colors">Perfil</Link>
-          </nav>
-
-          {/* Copyright */}
-          <p className="text-xs text-muted font-label">
-            &copy; {new Date().getFullYear()} Aktivar
+          <p className="max-w-md text-sm text-on-surface-variant">
+            Explora actividades, comparte rutas y arma tu próxima salida con una interfaz editorial, cálida y precisa.
           </p>
         </div>
+
+        <nav className="grid grid-cols-2 gap-3 text-sm text-on-surface-variant md:justify-self-center">
+          <Link to="/" className="transition-colors hover:text-primary">Inicio</Link>
+          <Link to="/explore" className="transition-colors hover:text-primary">Explorar</Link>
+          <Link to="/create" className="transition-colors hover:text-primary">Crear</Link>
+          <Link to="/profile" className="transition-colors hover:text-primary">Perfil</Link>
+        </nav>
+
+        <p className="font-label text-[10px] uppercase tracking-[0.18em] text-muted md:text-right">
+          © {new Date().getFullYear()} Aktivar
+        </p>
       </div>
     </footer>
   );
