@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Camera, CheckCircle, Globe, Instagram, Loader2, LogOut, MapPin, Mountain, Save, Star } from 'lucide-react';
+import { AtSign, Camera, CheckCircle, Globe, Loader2, LogOut, MapPin, Mountain, Save, Star } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -204,7 +204,7 @@ export default function ProfilePage() {
             <p className="section-kicker">Presence</p>
             <div className="mt-4 space-y-4 text-sm text-on-surface-variant">
                <div className="flex items-center gap-3"><MapPin size={16} className="text-primary" /> {locationName || 'Sin ubicación definida'}</div>
-              <div className="flex items-center gap-3"><Instagram size={16} className="text-primary" /> {instagram || 'Sin Instagram'}</div>
+              <div className="flex items-center gap-3"><AtSign size={16} className="text-primary" /> {instagram || 'Sin Instagram'}</div>
               <div className="flex items-center gap-3"><Globe size={16} className="text-primary" /> {website || 'Sin sitio web'}</div>
               <div className="flex items-center gap-3"><CheckCircle size={16} className="text-primary" /> {user.is_verified_email ? 'Email verificado' : 'Email pendiente'}</div>
             </div>

@@ -1,40 +1,6 @@
 import { expect, test } from '@playwright/test'
 
 const DEMO_EMAIL = 'demo@aktivar.app'
-const DEMO_PASSWORD = 'aktivar123'
-
-async function mockAuthEndpoints(page: import('@playwright/test').Page) {
-  await page.route('**/auth/token/**', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ access: 'test-access-token', refresh: 'test-refresh-token' }),
-    })
-  })
-
-  await page.route('**/users/me/**', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        id: 1,
-        email: DEMO_EMAIL,
-        full_name: 'Demo Explorer',
-        phone: '+56 9 1111 1111',
-        bio: 'QA session',
-        avatar: null,
-        is_organizer: true,
-      }),
-    })
-  })
-}
-
-async function loginThroughUi(page: import('@playwright/test').Page) {
-  await page.getByRole('textbox', { name: 'Email address' }).fill(DEMO_EMAIL)
-  await page.getByRole('textbox', { name: 'Password' }).fill(DEMO_PASSWORD)
-  await expect(page.getByRole('button', { name: /continue/i })).toBeEnabled()
-  await page.getByRole('button', { name: /continue/i }).click()
-}
 
 test.describe('Ecosystem CTA micro-QA', () => {
   test('safety keeps visible fallback states when backend responses degrade', async ({ page }) => {
