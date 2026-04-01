@@ -16,8 +16,8 @@ body {
   background:
     radial-gradient(circle at top right, rgba(255, 197, 108, 0.08), transparent 28%),
     radial-gradient(circle at bottom left, rgba(123, 218, 150, 0.06), transparent 24%),
-    var(--surface);
-  color: var(--on-surface);
+    var(--color-surface);
+  color: var(--color-on-surface);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.65;
@@ -49,12 +49,12 @@ button {
 }
 
 ::selection {
-  background: var(--primary-container);
+  background: var(--color-primary-container);
   color: #442c00;
 }
 
 :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -78,15 +78,15 @@ button {
 
 .font-display,
 .font-headline {
-  font-family: var(--font-display);
+  font-family: var(--font-display), sans-serif;
 }
 
 .font-body {
-  font-family: var(--font-body);
+  font-family: var(--font-body), sans-serif;
 }
 
 .font-label {
-  font-family: var(--font-label);
+  font-family: var(--font-label), monospace;
 }
 
 .text-bleed {
@@ -109,7 +109,7 @@ button {
 }
 
 .editorial-card {
-  background: var(--surface-container);
+  background: var(--color-surface-container);
   box-shadow: var(--shadow-soft);
 }
 
@@ -148,7 +148,7 @@ button {
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--on-surface-variant);
+  color: var(--color-on-surface-variant);
   backdrop-filter: blur(20px);
 }
 
@@ -176,7 +176,7 @@ button {
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--color-primary);
 }
 
 .hero-title {
@@ -191,8 +191,8 @@ button {
   width: 100%;
   border-radius: 1rem;
   border: 1px solid transparent;
-  background: var(--surface-container-highest);
-  color: var(--on-surface);
+  background: var(--color-surface-container-highest);
+  color: var(--color-on-surface);
   padding: 1rem 1.125rem;
   transition: border-color 160ms ease, transform 160ms ease, background-color 160ms ease;
 }
@@ -203,7 +203,7 @@ button {
 
 .editorial-input:focus {
   border-color: rgba(255, 197, 108, 0.35);
-  background: rgba(51, 54, 48, 0.96);
+  background-color: rgba(51, 54, 48, 0.96);
 }
 
 .premium-shell {
@@ -259,7 +259,7 @@ button {
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--on-surface-variant);
+  color: var(--color-on-surface-variant);
   backdrop-filter: blur(18px);
 }
 
@@ -273,12 +273,12 @@ button {
 .premium-progress-fill {
   height: 100%;
   border-radius: 9999px;
-  background: linear-gradient(90deg, var(--primary-container), var(--primary));
+  background: linear-gradient(90deg, var(--color-primary-container), var(--color-primary));
   box-shadow: 0 0 24px rgba(240, 165, 0, 0.24);
 }
 
 .premium-progress-fill-secondary {
-  background: linear-gradient(90deg, rgba(0, 115, 59, 0.92), var(--secondary));
+  background: linear-gradient(90deg, rgba(0, 115, 59, 0.92), var(--color-secondary));
   box-shadow: 0 0 24px rgba(123, 218, 150, 0.2);
 }
 
@@ -321,7 +321,7 @@ button {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, var(--surface-container) 25%, var(--surface-container-high) 50%, var(--surface-container) 75%);
+  background: linear-gradient(90deg, var(--color-surface-container) 25%, var(--color-surface-container-high) 50%, var(--color-surface-container) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 0.75rem;
@@ -374,7 +374,7 @@ button {
 
 .leaflet-popup-content {
   margin: 12px 14px !important;
-  color: var(--on-surface) !important;
+  color: var(--color-on-surface) !important;
 }
 
 .leaflet-control-zoom {
@@ -386,7 +386,7 @@ button {
 
 .leaflet-control-zoom a {
   background: rgba(17, 20, 15, 0.88) !important;
-  color: var(--on-surface) !important;
+  color: var(--color-on-surface) !important;
   border-bottom: 1px solid rgba(81, 69, 51, 0.2) !important;
   backdrop-filter: blur(20px);
   width: 38px !important;
@@ -401,7 +401,7 @@ button {
 }
 
 .leaflet-control-attribution a {
-  color: var(--muted) !important;
+  color: var(--color-muted) !important;
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -410,7 +410,7 @@ input[type='range']::-webkit-slider-thumb {
   width: 18px;
   height: 18px;
   border-radius: 9999px;
-  background: var(--primary);
+  background: var(--color-primary);
   cursor: pointer;
   box-shadow: 0 0 0 4px rgba(255, 197, 108, 0.14);
 }

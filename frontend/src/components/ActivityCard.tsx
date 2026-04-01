@@ -29,7 +29,12 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
   if (variant === 'compact') {
     return (
       <button type="button" onClick={onClick} className="flex w-full items-center gap-4 p-4 text-left cursor-pointer">
-        <img src={activity.cover_image} alt={activity.title} className="h-24 w-24 shrink-0 rounded-[1.15rem] object-cover" />
+        <img
+          src={activity.cover_image}
+          alt={activity.title}
+          className="h-24 w-24 shrink-0 rounded-[1.15rem] object-cover"
+          onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/200x200/1d201b/ffc56c?text=${encodeURIComponent(activity.category.name)}`; }}
+        />
         <div className="min-w-0 flex-1 space-y-2">
           <div className="flex items-center gap-2">
             <CategoryChip category={activity.category} size="sm" />
@@ -53,8 +58,13 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
       onClick={onClick}
       className="group editorial-card cursor-pointer overflow-hidden rounded-[2rem] transition-transform duration-300 hover:-translate-y-1"
     >
-      <div className="relative aspect-[1.05] overflow-hidden rounded-[1.3rem] m-3 mb-0">
-        <img src={activity.cover_image} alt={activity.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+      <div className="relative aspect-[1.05] overflow-hidden rounded-[1.3rem] m-3.5 mb-0">
+        <img
+          src={activity.cover_image}
+          alt={activity.title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/600x400/1d201b/ffc56c?text=${encodeURIComponent(activity.category.name)}`; }}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/15 to-transparent" />
         <div className="absolute left-4 top-4 flex items-center gap-2">
           <CategoryChip category={activity.category} size="sm" />
@@ -64,7 +74,7 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
         </div>
       </div>
 
-      <div className="space-y-5 px-5 py-5 md:px-6 md:py-6">
+      <div className="space-y-5 px-5 py-5 md:px-7 md:py-6">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
             <p className="font-label text-[10px] uppercase tracking-[0.18em] text-primary">Expedición abierta</p>
