@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aktivar - Join the Adventure</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;900&amp;family=Manrope:wght@400;500;700&amp;family=Space_Grotesk:wght@500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-bright": "#373a34",
+                        "tertiary-fixed": "#e6e2d8",
+                        "on-surface": "#e1e3da",
+                        "on-error": "#690005",
+                        "background": "#11140f",
+                        "tertiary-container": "#b7b4ab",
+                        "outline": "#9f8e79",
+                        "on-primary-fixed-variant": "#614000",
+                        "surface-container-highest": "#333630",
+                        "surface-container-low": "#191c17",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#00733b",
+                        "on-tertiary-fixed": "#1c1c16",
+                        "tertiary-fixed-dim": "#cac6bd",
+                        "primary-fixed": "#ffddaf",
+                        "on-secondary-container": "#95f5ae",
+                        "on-secondary-fixed-variant": "#005228",
+                        "surface-tint": "#ffba44",
+                        "primary-container": "#f0a500",
+                        "surface-dim": "#11140f",
+                        "on-tertiary-fixed-variant": "#484740",
+                        "secondary-fixed": "#97f7b0",
+                        "surface-container": "#1d201b",
+                        "inverse-surface": "#e1e3da",
+                        "primary": "#ffc56c",
+                        "on-secondary": "#00391a",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#ffba44",
+                        "inverse-on-surface": "#2e312b",
+                        "on-primary-container": "#5f3f00",
+                        "on-secondary-fixed": "#00210d",
+                        "surface-container-lowest": "#0c0f0a",
+                        "on-tertiary-container": "#47463f",
+                        "inverse-primary": "#805600",
+                        "outline-variant": "#514533",
+                        "on-surface-variant": "#d6c4ac",
+                        "secondary-fixed-dim": "#7bda96",
+                        "secondary": "#7bda96",
+                        "on-tertiary": "#32312a",
+                        "on-primary-fixed": "#281800",
+                        "on-primary": "#442c00",
+                        "tertiary": "#d3cfc6",
+                        "on-background": "#e1e3da",
+                        "surface-variant": "#333630",
+                        "error-container": "#93000a",
+                        "surface": "#11140f",
+                        "surface-container-high": "#282b25"
+                    },
+                    fontFamily: {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-bleed {
+            letter-spacing: -0.04em;
+        }
+        .glass-header {
+            background: rgba(17, 20, 15, 0.7);
+            backdrop-filter: blur(24px);
+        }
+        .tonal-shifting {
+            transition: background-color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary selection:text-on-primary-container overflow-x-hidden">
+<!-- Progress Indicator Shell -->
+<header class="fixed top-0 left-0 w-full z-50 py-8 px-6 flex justify-center items-center pointer-events-none">
+<div class="flex gap-3 pointer-events-auto">
+<!-- Active Step 1 -->
+<div class="h-1.5 w-12 rounded-full bg-primary-container"></div>
+<div class="h-1.5 w-12 rounded-full bg-surface-container-highest"></div>
+<div class="h-1.5 w-12 rounded-full bg-surface-container-highest"></div>
+</div>
+</header>
+<main class="min-h-screen pt-24 pb-12 px-6 max-w-screen-xl mx-auto flex flex-col justify-center">
+<!-- Step 1: Login/Signup -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center" id="step-1">
+<div class="md:col-span-6 lg:col-span-5">
+<span class="font-label text-primary font-bold tracking-widest text-xs uppercase mb-4 block">Begin Your Journey</span>
+<h1 class="font-headline font-black text-6xl md:text-8xl text-on-surface text-bleed leading-[0.9] mb-8">
+                    Join the <br/>Adventure
+                </h1>
+<form class="space-y-6">
+<div class="space-y-1">
+<label class="font-label text-xs text-on-surface-variant uppercase ml-2">Email Address</label>
+<input class="w-full h-16 bg-surface-container-highest border-none rounded-xl px-6 font-body text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary transition-all" placeholder="explorer@aktivar.com" type="email"/>
+</div>
+<div class="space-y-1">
+<label class="font-label text-xs text-on-surface-variant uppercase ml-2">Phone Number</label>
+<input class="w-full h-16 bg-surface-container-highest border-none rounded-xl px-6 font-body text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary transition-all" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<button class="w-full h-14 bg-primary-container hover:bg-primary text-on-primary-container font-headline font-black rounded-xl uppercase tracking-wider shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" type="button">
+                        Continue
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</form>
+<p class="mt-8 text-on-surface-variant text-sm font-body">
+                    By continuing, you agree to our <a class="text-primary underline underline-offset-4 decoration-1" href="#">Terms of Expedition</a>.
+                </p>
+</div>
+<div class="hidden md:block md:col-span-6 md:col-start-8 relative">
+<div class="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl relative group">
+<img alt="Hiker standing on a mountain peak" class="w-full h-full object-cover" data-alt="rugged hiker standing on a rocky mountain peak at sunset with deep orange sky and sharp silhouette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZydbUlA4idA6_BBDQqNb-ny0b2jZhan2ssmR8I9_MKjrEO26hMsLNnZfyPipFCMoOfZ3PRfISA9fthpte2cusPZ6fLOuaPtAndoM8hMsCOIG4dn3v7JdSHi2S_ho2cIQZ-z5yUm9KcdJRZ-d66U5P2Ot2FBfUuW1hm69GLcRN7A9rtEh2gkleaLXrSRkSX5kMuChnLRdc5diYDj-N_KRa97BAK0tEO68KN8RKss9b4CxrjamiX-J7635O2X-Hk5RS3Mhfb472QKI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+</div>
+<!-- Asymmetric Floating Card -->
+<div class="absolute -bottom-10 -left-12 bg-surface-container-high p-6 rounded-2xl shadow-2xl border border-outline-variant/10 max-w-xs">
+<span class="material-symbols-outlined text-primary mb-2" data-icon="explore">explore</span>
+<p class="font-body text-on-surface font-medium italic">"The best views come after the hardest climbs."</p>
+</div>
+</div>
+</section>
+<!-- Step 2: Interests (Hidden for prototype flow visualization, normally toggled by JS) -->
+<section class="hidden mt-20" id="step-2">
+<div class="max-w-4xl">
+<span class="font-label text-primary font-bold tracking-widest text-xs uppercase mb-4 block">Tailor Your Feed</span>
+<h2 class="font-headline font-black text-5xl md:text-7xl text-on-surface text-bleed leading-[0.9] mb-12">
+                    What fuels <br/>your soul?
+                </h2>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+<!-- Interest Card -->
+<div class="group relative aspect-square md:aspect-video rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all">
+<img alt="Trekking" class="absolute inset-0 w-full h-full object-cover" data-alt="dramatic view of winding mountain path through a green valley with misty clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfgSk4j58SDHrTFsUX_n3m4Di3e-MZC0lnl-cJpukHZSgki5VZn-5MOQT1ex03H-PGuHDl7mu126QHkUq3KKpgcxClrcSeE1-TvMfc3SNW6L5hFzfUDHP32v11dyMVk-NiysKQodlupYGj-nThWB6vKBho8Kh45tnOTNt2ANCOcMhgXybrdfH8AGflnB8W3hnoIXHaLaJlp3WC7h_u1Uatyz6weJuH4074q1_cfQVWPuOSfnXXCBZB3MaXc1lw71S2Lfqh0K3CbDo"/>
+<div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all"></div>
+<div class="absolute top-4 right-4 h-8 w-8 rounded-full border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-headline font-black text-2xl text-white uppercase tracking-tight">Trekking</h3>
+</div>
+</div>
+<!-- Interest Card 2 -->
+<div class="group relative aspect-square md:aspect-video rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all">
+<img alt="Music Festivals" class="absolute inset-0 w-full h-full object-cover" data-alt="overhead crowd shot of a music festival at night with blue and purple strobe lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQ_3p5V8av3BPuxpRED4NQEP88NzdQoVOLHjac1_XgsQSmbxzqzgksuKiFlmFkpcVBG-Je93BVbLcoxnDcBH1NkhSORLvCmBnEm56hx9VjFXbs4S4p7cZtz09ZMM8qY5_EeRFomCb3u-vJDf8RL64oPuXf03_UEnIVmqHCK59SlK-b9o8KAZZ2I-qQiodm8zJEbJgoqDStgOnUnml2z3StJrkdEbk0kMZDSmHM75q72AB1jW67M9EGcwIdTtLTkX5N0awilgWbYtI"/>
+<div class="absolute inset-0 bg-black/40"></div>
+<div class="absolute top-4 right-4 h-8 w-8 rounded-full border-2 border-white/40"></div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-headline font-black text-2xl text-white uppercase tracking-tight">Festivals</h3>
+</div>
+</div>
+<!-- Interest Card 3 -->
+<div class="group relative aspect-square md:aspect-video rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all">
+<img alt="Road Trips" class="absolute inset-0 w-full h-full object-cover" data-alt="vintage orange van parked on the edge of a desert road during golden hour" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBE5HBqp-cpF3dl69nPlivbUvBGZ3m699CPO2k5FLfQuIy_riZQodd2JGrtp7psi9QZwPxK1jOTT8dWxtoUxxbv8QjQiCjWf-BgEbRhNK6B9fIe25mnTJurmcjo6cbNqm1BKXvAlFVL3CzECE0MsgjqhLAk3jvvf2lQDHqPMwMt4YMrRVcXTrl9ZOyoPdlUFr8r6zL0wfSOs-wcpOT5xSOWESSfZlOuN5t852uVQIzRtIYcripOljEVlBfc0h0e3cle_Fd9l0tnlbA"/>
+<div class="absolute inset-0 bg-black/40"></div>
+<div class="absolute top-4 right-4 h-8 w-8 rounded-full border-2 border-white/40"></div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-headline font-black text-2xl text-white uppercase tracking-tight">Road Trips</h3>
+</div>
+</div>
+<!-- Interest Card 4 -->
+<div class="group relative aspect-square md:aspect-video rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all">
+<img alt="Surf" class="absolute inset-0 w-full h-full object-cover" data-alt="lone surfer riding a massive turquoise barrel wave under bright midday sun" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBie7N1LVF5kQqu9J2pN00vmEq2ejOWa9zmUTcKmJ4G4suvDCgk2eGrwcYtbgtgBl7xNhDb9QYnxGrk73MrMeN-8GUWiEheFPHOVeTShBTPtccyroUxC9tRE3pvfAP8RsXbDje0X2h0fKxm0Nxe0QvUXzNZVWhb6g2Kyqwi6R4wqf6Y1hYvYEbLa46XVG4pA0QCXn6GC6HyHBQ2vZwYAIEF6FEq9DNNJTJZ4J1vJC2XH1lChNnU3KG94WpI7R5wKUPnpUtYS3B0UI8"/>
+<div class="absolute inset-0 bg-black/40"></div>
+<div class="absolute top-4 right-4 h-8 w-8 rounded-full border-2 border-white/40"></div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-headline font-black text-2xl text-white uppercase tracking-tight">Surf</h3>
+</div>
+</div>
+<!-- Interest Card 5 -->
+<div class="group relative aspect-square md:aspect-video rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all">
+<img alt="Photography" class="absolute inset-0 w-full h-full object-cover" data-alt="professional camera on a tripod overlooking a jagged mountain range at dawn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe0LjU0y4ktWUpwaHjCmA9wKgCr_JB6BJPY2_eUEKfU9AEY3EeMJg1BIGRFwoYI9U1p6GrSXUcz2H2v8zCEq6FQ3r2p7m8yHepC7fHdi8xYGNUqZjCMguR6sKMeDkgXbCCgGJ26lwhKgMnmlrEkxGnXgK9kCeWDDEt-wXMxgyUmJrnarmxyRbYGDhsb00-Koqnhr64fJJlR8IED3p0Hmf5DxRLTwK7V2pDE3zQrJHO2rS_XvfyOStofOhYyI32l2LelXyKj6AGSdE"/>
+<div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all"></div>
+<div class="absolute top-4 right-4 h-8 w-8 rounded-full border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-headline font-black text-2xl text-white uppercase tracking-tight">Photography</h3>
+</div>
+</div>
+<!-- Interest Card 6 -->
+<div class="group relative aspect-square md:aspect-video rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all">
+<img alt="Climbing" class="absolute inset-0 w-full h-full object-cover" data-alt="rock climber scaling a sheer granite cliff face against a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsnfzbbi4GsNl5nrTFw_ri3Is7xYsJBWOieP6OY5LQDh2vXkSF5fnLZ13NLLzBWfJFEX-A0GmLRPDB92p--ptPQ3o8XC9NZcL9B1CWM3RSZNj69gjXxSpdyQWJhnaKjx9jK41T2QniObJ7dZCk3lpRrMOAq6KUeX_7xe6zCndPB3bBGohDPLC_aQ5eAlGmZdGBYndFltg14uUTKEiet0WKP9LiQu0lxmhaOvbH7VQsIzaMnoxDSKwac7rrLmasxMRloLfZXtpiEsc"/>
+<div class="absolute inset-0 bg-black/40"></div>
+<div class="absolute top-4 right-4 h-8 w-8 rounded-full border-2 border-white/40"></div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-headline font-black text-2xl text-white uppercase tracking-tight">Climbing</h3>
+</div>
+</div>
+</div>
+<div class="mt-12 flex justify-between items-center">
+<button class="font-label text-on-surface-variant hover:text-on-surface transition-colors font-bold tracking-widest uppercase">Go Back</button>
+<button class="px-10 h-14 bg-primary-container text-on-primary-container font-headline font-black rounded-xl uppercase tracking-wider shadow-lg hover:scale-[1.05] active:scale-95 transition-all">
+                        Selection Complete
+                    </button>
+</div>
+</div>
+</section>
+<!-- Step 3: Location Access (Hidden for prototype flow visualization) -->
+<section class="hidden flex flex-col items-center text-center max-w-2xl mx-auto" id="step-3">
+<div class="relative w-full aspect-video rounded-3xl overflow-hidden mb-12 shadow-2xl ring-1 ring-outline-variant/20">
+<img alt="Topographic Map Visual" class="w-full h-full object-cover grayscale brightness-50" data-alt="abstract stylized topographic map in dark green and gold lines with subtle glowing altitude markers" data-location="Iceland" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbDufmGTq67lOdT_n6Hw-7vVgJsVTQSZESw3Cp4sueTqHUKKTFKiRUWNfEdYur70aAUmqWum3y3ZijvVcNdTWVXSEwfw91Hp1g3KpS7FqKVRYMyeiGj-zwaFaA6avAhiRnIqy9bSa_eUT0FzLsVo6HEFggr6_YKxPL4bBMpFIJPbru6IAEjm-inb3wos7WK0bHdVJKDpvrVeFShUkQEADWAHZ2tgCoxi150GKGcyGEJ1ytdYku8CPPnExIp2n4kpScsevUi4-LPlc"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center animate-pulse">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-3xl" data-icon="my_location">my_location</span>
+</div>
+</div>
+</div>
+</div>
+<h2 class="font-headline font-black text-5xl md:text-7xl text-on-surface text-bleed leading-[0.9] mb-6">
+                Explore Your Map
+            </h2>
+<p class="font-body text-on-surface-variant text-lg mb-10 max-w-md">
+                Enable location services to discover nearby expeditions, hidden trails, and local adventurers in real-time.
+            </p>
+<div class="w-full space-y-4">
+<button class="w-full h-16 bg-primary-container text-on-primary-container font-headline font-black rounded-xl uppercase tracking-wider shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+                    Enable Location
+                </button>
+<button class="w-full py-4 text-on-surface-variant font-label font-bold uppercase tracking-widest hover:text-primary transition-colors">
+                    Maybe Later
+                </button>
+</div>
+</section>
+</main>
+<!-- Branding Footer -->
+<footer class="fixed bottom-8 left-0 w-full flex justify-center pointer-events-none">
+<div class="font-headline font-black text-3xl text-on-surface/10 uppercase tracking-tighter select-none">
+            Aktivar
+        </div>
+</footer>
+<!-- Style Helper for Material Icons logic from prompt -->
+<script>
+        // Placeholder for future logic to toggle sections:
+        // document.getElementById('step-1').classList.add('hidden');
+        // document.getElementById('step-2').classList.remove('hidden');
+    </script>
+</body></html>
