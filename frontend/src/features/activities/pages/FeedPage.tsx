@@ -24,6 +24,16 @@ export default function FeedPage() {
   const { data: apiCategories } = useCategories();
   const categories = apiCategories ?? [];
 
+  const filtered = useMemo(() => {
+    const activities = apiActivities ?? [];
+    return activities.filter((a) => {
+      if (selectedCategory && a.category.slug !== selectedCategory) return false;
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return [a.title, a.location_name, a.description].some((f) => f.toLowerCase().includes(q));
+    });
+  }, [apiActivities, searchQuery, selectedCategory]);
+
   function setSearchQuery(value: string) {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
@@ -31,16 +41,7 @@ export default function FeedPage() {
       else next.delete('q');
       return next;
     });
-  }, [apiActivities, searchQuery, selectedCategory]);
-
-  const setSearchQuery = (value: string) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      if (slug) next.set('cat', slug);
-      else next.delete('cat');
-      return next;
-    });
-  };
+  }
 
   const setSelectedCategory = (slug: string | null) => {
     setSearchParams((prev) => {

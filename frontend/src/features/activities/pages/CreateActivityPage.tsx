@@ -125,20 +125,6 @@ export default function CreateActivityPage() {
     return true;
   };
 
-  const toIsoDateTime = (date: string, time: string): string | undefined => {
-    if (!date || !time) return undefined;
-    const localDate = new Date(`${date}T${time}:00`);
-    if (Number.isNaN(localDate.getTime())) return undefined;
-    return localDate.toISOString();
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    return true;
-  };
-
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -168,7 +154,7 @@ export default function CreateActivityPage() {
       return;
     }
 
-    if (!validateIdentityStep() || !validateRouteStep() || !validatePublicationStep()) return;
+    if (!validateIdentityStep() || !validateRouteStep()) return;
 
     const startIso = toIso(form.date, form.startTime);
     if (!startIso) {
@@ -177,48 +163,12 @@ export default function CreateActivityPage() {
       return;
     }
 
-    if (!formData.categoryId || !formData.title.trim() || !formData.description.trim()) {
-      toast.error('Completa título, categoría y descripción');
-      setCurrentStep(0);
-      return;
+    let endIso = toIso(form.date, form.endTime);
+    if (!endIso) {
+      const startDate = new Date(startIso);
+      startDate.setHours(startDate.getHours() + 3);
+      endIso = startDate.toISOString();
     }
-
-    if (!formData.date || !formData.startTime || !formData.locationName.trim()) {
-      toast.error('Completa fecha, hora de inicio y ubicación');
-      setCurrentStep(1);
-      return;
-    }
-
-    const startIso = toIsoDateTime(formData.date, formData.startTime);
-    const endIso = toIsoDateTime(formData.date, formData.endTime);
-
-    if (!startIso) {
-      toast.error('La fecha/hora de inicio no es válida');
-      setCurrentStep(1);
-      return;
-    }
-
-    if (endIso && new Date(endIso) <= new Date(startIso)) {
-      toast.error('La hora de fin debe ser posterior al inicio');
-      setCurrentStep(1);
-      return;
-    }
-
-    const payload = {
-      title: formData.title.trim(),
-      description: formData.description.trim(),
-      category: formData.categoryId,
-      cover_image: formData.coverImage,
-      location_name: formData.locationName.trim(),
-      meeting_point: formData.meetingPoint.trim(),
-      start_datetime: startIso,
-      end_datetime: endIso,
-      capacity: formData.capacity,
-      price: formData.isFree ? 0 : formData.price,
-      difficulty: formData.difficulty,
-      distance_km: formData.distanceKm ? parseFloat(formData.distanceKm) : null,
-      what_to_bring: formData.whatToBring,
-    };
 
     createMutation.mutate(
       {
