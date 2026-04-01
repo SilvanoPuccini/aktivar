@@ -24,21 +24,20 @@ export default function FeedPage() {
   const { data: apiCategories } = useCategories();
   const categories = apiCategories ?? [];
 
-  const filtered = useMemo(() => {
-    const activities = apiActivities ?? [];
-    return activities.filter((activity) => {
-      if (selectedCategory && activity.category.slug !== selectedCategory) return false;
-      if (!searchQuery) return true;
-      const q = searchQuery.toLowerCase();
-      return [activity.title, activity.location_name, activity.description].some((field) => field.toLowerCase().includes(q));
+  function setSearchQuery(value: string) {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value) next.set('q', value);
+      else next.delete('q');
+      return next;
     });
   }, [apiActivities, searchQuery, selectedCategory]);
 
   const setSearchQuery = (value: string) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
-      if (value) next.set('q', value);
-      else next.delete('q');
+      if (slug) next.set('cat', slug);
+      else next.delete('cat');
       return next;
     });
   };

@@ -16,9 +16,13 @@ export default function SpotsBar({ capacity, taken, showLabel = true }: SpotsBar
     <div className="flex flex-col gap-2">
       <div className="h-2 w-full overflow-hidden rounded-full bg-surface-container-highest">
         <div
+          className="h-full rounded-full"
           data-testid="spots-bar-fill"
-          className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${Math.min(percentage, 100)}%`, backgroundColor: barColor }}
+          style={{
+            width: `${Math.min(percentage, 100)}%`,
+            backgroundColor: barColor,
+            transition: 'width 500ms ease-out, background-color 300ms ease',
+          }}
         />
       </div>
       {showLabel && (
