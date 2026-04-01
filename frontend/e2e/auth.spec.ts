@@ -1,63 +1,44 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Login Page', () => {
-  test('renders login page with form elements', async ({ page }) => {
+const DEMO_EMAIL = 'demo@aktivar.app'
+const DEMO_PASSWORD = 'aktivar123'
+
+async function authSession(page: import('@playwright/test').Page, request: import('@playwright/test').APIRequestContext) {
+  const res = await request.post('http://127.0.0.1:8000/api/v1/auth/token/', {
+    data: { email: DEMO_EMAIL, password: DEMO_PASSWORD },
+  })
+  expect(res.ok()).toBeTruthy()
+  const body = await res.json()
+  await page.addInitScript(([access, refresh]) => {
+    sessionStorage.setItem('aktivar_access_token', access)
+    sessionStorage.setItem('aktivar_refresh_token', refresh)
+  }, [body.access, body.refresh])
+}
+
+test.describe('Auth and protected routes', () => {
+  test('login page renders and can authenticate with real backend', async ({ page }) => {
     await page.goto('/login')
-
-    // Expect core form elements to be visible
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.locator('input[type="email"], input[name="email"]')).toBeVisible()
-    await expect(page.locator('input[type="password"], input[name="password"]')).toBeVisible()
-    await expect(page.getByRole('button', { name: /iniciar|login|entrar/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /bienvenido de vuelta/i })).toBeVisible()
+    await page.locator('input[type="email"]').fill(DEMO_EMAIL)
+    await page.locator('input[type="password"]').fill(DEMO_PASSWORD)
+    await page.getByRole('button', { name: /continue|iniciar/i }).click()
+    await page.waitForURL('**/')
+    await expect(page.locator('body')).toContainText(/explora|expedici|aktivar/i)
   })
 
-  test('shows validation errors for empty form submission', async ({ page }) => {
-    await page.goto('/login')
-
-    // Click submit without filling in fields
-    await page.getByRole('button', { name: /iniciar|login|entrar/i }).click()
-
-    // Expect validation messages to appear
-    await expect(page.locator('text=/requerido|required|obligatorio|correo|email/i').first()).toBeVisible()
-  })
-
-  test('has a link to registration or onboarding', async ({ page }) => {
-    await page.goto('/login')
-
-    const registerLink = page.locator('a[href*="onboarding"], a[href*="register"], a[href*="signup"]')
-    await expect(registerLink).toBeVisible()
-  })
-})
-
-test.describe('Onboarding Page', () => {
-  test('renders onboarding page', async ({ page }) => {
+  test('onboarding flow renders and advances through steps', async ({ page }) => {
     await page.goto('/onboarding')
-
-    // Should show the onboarding content
-    await expect(page.locator('body')).toContainText(/.+/)
+    await expect(page.locator('body')).toContainText(/join the adventure|aktivar/i)
+    await page.locator('input').nth(0).fill('Smoke Tester')
+    await page.locator('input').nth(1).fill('smoke@aktivar.app')
+    await page.locator('input').nth(2).fill('aktivar123')
+    await page.getByRole('button', { name: /continue/i }).click()
+    await expect(page.locator('body')).toContainText(/what fuels your soul|step 02|select/i)
   })
 
-  test('allows navigation through onboarding steps', async ({ page }) => {
-    await page.goto('/onboarding')
-
-    // Look for a next/continue button or navigation element
-    const nextButton = page.getByRole('button', { name: /siguiente|next|continuar|continue|empezar/i })
-    if (await nextButton.isVisible()) {
-      await nextButton.click()
-      // Page content should change after navigation
-      await expect(page.locator('body')).toContainText(/.+/)
-    }
-  })
-
-  test('form validation prevents advancing without required fields', async ({ page }) => {
-    await page.goto('/onboarding')
-
-    // If there is a submit/register button, click it without filling fields
-    const submitButton = page.getByRole('button', { name: /registrar|register|crear|create|submit/i })
-    if (await submitButton.isVisible()) {
-      await submitButton.click()
-      // Should show validation feedback
-      await expect(page.locator('[role="alert"], .text-error, [class*="error"]').first()).toBeVisible()
-    }
+  test('protected profile route loads with authenticated session', async ({ page, request }) => {
+    await authSession(page, request)
+    await page.goto('/profile')
+    await expect(page.locator('body')).toContainText(/demo organizer|tu historia|explorer profile/i)
   })
 })

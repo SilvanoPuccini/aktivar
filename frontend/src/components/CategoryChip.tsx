@@ -10,6 +10,7 @@ import {
   Trophy,
   Tent,
   HelpCircle,
+  Zap,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -23,6 +24,7 @@ const iconMap: Record<string, LucideIcon> = {
   users: Users,
   trophy: Trophy,
   tent: Tent,
+  zap: Zap,
 };
 
 function getIcon(name: string): LucideIcon {
@@ -37,34 +39,31 @@ interface CategoryChipProps {
 }
 
 const sizeClasses = {
-  sm: 'px-3 py-1 text-xs',
-  md: 'px-4 py-2 text-sm',
+  sm: 'min-h-10 px-4 text-xs',
+  md: 'min-h-12 px-5 text-sm',
 } as const;
 
 const iconSizes = { sm: 14, md: 16 } as const;
 
 function renderIcon(name: string, size: number) {
   const IconComponent = getIcon(name);
-  return <IconComponent size={size} />;
+  return <IconComponent size={size} strokeWidth={1.8} />;
 }
 
-export default function CategoryChip({
-  category,
-  selected = false,
-  onClick,
-  size = 'md',
-}: CategoryChipProps) {
+export default function CategoryChip({ category, selected = false, onClick, size = 'md' }: CategoryChipProps) {
   return (
     <motion.button
       type="button"
       onClick={onClick}
-      whileHover={{ scale: 1.05, opacity: 0.9 }}
-      whileTap={{ scale: 0.95 }}
-      className={`inline-flex items-center gap-1.5 rounded-full font-[Space_Grotesk] font-medium transition-colors duration-200 cursor-pointer select-none ${sizeClasses[size]} ${
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      className={[
+        'inline-flex items-center gap-2 rounded-full font-label font-bold uppercase tracking-[0.14em] transition-all duration-200 cursor-pointer',
+        sizeClasses[size],
         selected
-          ? 'bg-secondary text-surface'
-          : 'bg-surface-container-highest text-on-surface-variant'
-      }`}
+          ? 'bg-secondary text-surface shadow-[0_10px_24px_rgba(123,218,150,0.18)]'
+          : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface',
+      ].join(' ')}
     >
       {renderIcon(category.icon, iconSizes[size])}
       <span>{category.name}</span>

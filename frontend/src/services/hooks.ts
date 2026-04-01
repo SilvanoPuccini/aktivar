@@ -261,11 +261,18 @@ export function useCreatePaymentIntent() {
   return useMutation<PaymentIntent, Error, { activityId: number; amount: number }>({
     mutationFn: async ({ activityId, amount }) => {
       analytics.paymentStarted(amount);
-      const res = await api.post(`${endpoints.payments}create-intent/`, {
-        activity_id: activityId,
+      const res = await api.post(endpoints.payments, {
+        activity: activityId,
         amount,
+        currency: 'CLP',
       });
-      return res.data;
+      return {
+        id: res.data.payment?.id ?? '',
+        client_secret: res.data.client_secret,
+        amount,
+        currency: 'CLP',
+        status: res.data.payment?.status ?? 'pending',
+      };
     },
   });
 }
@@ -283,7 +290,7 @@ export function useUserPayments() {
   return useQuery<Payment[]>({
     queryKey: ['userPayments'],
     queryFn: async () => {
-      const res = await api.get(`${endpoints.payments}my/`);
+      const res = await api.get(endpoints.payments);
       return res.data.results ?? res.data;
     },
     enabled: !!sessionStorage.getItem('aktivar_access_token'),
@@ -306,12 +313,28 @@ export interface AppNotification {
   is_read: boolean;
 }
 
+function mapNotificationType(notificationType: string): AppNotification['type'] {
+  if (notificationType === 'new_message') return 'message';
+  if (notificationType === 'activity_joined') return 'join';
+  if (notificationType === 'activity_reminder') return 'reminder';
+  return 'spot_opened';
+}
+
 export function useNotifications() {
   return useQuery<AppNotification[]>({
     queryKey: ['notifications'],
     queryFn: async () => {
-      const res = await api.get(`${endpoints.notifications}`);
-      return res.data.results ?? res.data;
+      const res = await api.get(endpoints.notifications);
+      const rows = res.data.results ?? res.data;
+      return rows.map((row: { id: number; notification_type: string; data?: Record<string, unknown>; body: string; created_at: string; is_read: boolean }) => ({
+        id: row.id,
+        type: mapNotificationType(row.notification_type),
+        actor: (row.data?.actor as AppNotification['actor']) ?? { id: 0, full_name: 'Aktivar', avatar: '' },
+        activity_id: Number((row.data?.activity_id as number | string | undefined) ?? 0),
+        description: row.body,
+        created_at: row.created_at,
+        is_read: row.is_read,
+      }));
     },
     retry: 1,
   });
@@ -321,9 +344,7 @@ export function useMarkNotificationRead() {
   const queryClient = useQueryClient();
   return useMutation<void, Error, number>({
     mutationFn: async (notificationId: number) => {
-      await api.patch(`${endpoints.notifications}${notificationId}/`, {
-        is_read: true,
-      });
+      await api.post(`${endpoints.notifications}${notificationId}/mark_read/`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -335,7 +356,7 @@ export function useMarkAllNotificationsRead() {
   const queryClient = useQueryClient();
   return useMutation<void, Error, void>({
     mutationFn: async () => {
-      await api.post(`${endpoints.notifications}mark-all-read/`);
+      await api.post(`${endpoints.notifications}mark_all_read/`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
