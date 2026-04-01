@@ -160,7 +160,7 @@ export default function TripDetailPage() {
                   <p className="mt-4 font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Includes: fuel, tolls, gear rack</p>
                 </div>
                 <CTAButton label={bookSeat.isPending ? 'Reservando' : 'Reservar asiento'} loading={bookSeat.isPending} onClick={handleBook} fullWidth />
-                <CTAButton label="Emergency SOS" variant="danger" fullWidth />
+                <CTAButton label="Emergency SOS" variant="danger" onClick={() => navigate('/safety')} fullWidth />
               </div>
             </section>
           </aside>

@@ -36,6 +36,7 @@ urlpatterns = [
     path("api/v1/payments/", include("payments.urls")),
     path("api/v1/notifications/", include("notifications.urls")),
     path("api/v1/core/", include("core.urls")),
+    path("api/v1/ecosystem/", include("ecosystem.urls")),
 ]
 
 # API docs and media files only in development

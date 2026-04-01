@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Loader2, Mountain } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { consumePostAuthPath } from '@/lib/authRedirect';
 import api, { endpoints } from '@/services/api';
 import { useAuthStore } from '@/stores/authStore';
 
 export default function LoginPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { login: storeLogin } = useAuthStore();
   const [email, setEmail] = useState('');
@@ -30,7 +32,13 @@ export default function LoginPage() {
       const userRes = await api.get(endpoints.me);
       storeLogin(userRes.data);
       toast.success('Bienvenido de vuelta');
-      navigate('/');
+      const stateTarget = location.state && typeof location.state === 'object' && 'from' in location.state
+        ? location.state.from
+        : undefined;
+      const returnTo = typeof stateTarget === 'string' && stateTarget.startsWith('/')
+        ? stateTarget
+        : consumePostAuthPath('/');
+      navigate(returnTo, { replace: true });
     } catch (error: unknown) {
       const err = error as { response?: { status?: number } };
       if (err.response?.status === 401) toast.error('Email o contraseña incorrectos');

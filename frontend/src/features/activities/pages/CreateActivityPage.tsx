@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Calendar, Camera, Clock3, DollarSign, MapPin, Mountain, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { AxiosError } from 'axios';
 import CategoryChip from '@/components/CategoryChip';
 import CTAButton from '@/components/CTAButton';
+import { preparePostAuthRedirect } from '@/lib/authRedirect';
 import { useCategories, useCreateActivity, useUploadImage } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
 import type { Difficulty } from '@/types/activity';
@@ -57,6 +58,7 @@ const difficultyOptions: { value: Difficulty; label: string }[] = [
 ];
 
 export default function CreateActivityPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { data: categoriesData } = useCategories();
@@ -75,6 +77,64 @@ export default function CreateActivityPage() {
     return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString();
   };
 
+  const validateIdentityStep = () => {
+    if (!form.categoryId || !form.title.trim() || !form.description.trim()) {
+      toast.error('Completa la información principal');
+      setStep(0);
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateRouteStep = () => {
+    if (!form.date || !form.startTime || !form.locationName.trim()) {
+      toast.error('Completa fecha, hora y ubicación');
+      setStep(1);
+      return false;
+    }
+
+    const startIso = toIso(form.date, form.startTime);
+    if (!startIso) {
+      toast.error('Fecha u hora inválidas');
+      setStep(1);
+      return false;
+    }
+
+    if (new Date(startIso).getTime() <= Date.now()) {
+      toast.error('La actividad debe programarse en el futuro');
+      setStep(1);
+      return false;
+    }
+
+    if (form.endTime) {
+      const endIso = toIso(form.date, form.endTime);
+      if (!endIso) {
+        toast.error('Fecha u hora inválidas');
+        setStep(1);
+        return false;
+      }
+
+      if (new Date(endIso).getTime() <= new Date(startIso).getTime()) {
+        toast.error('La hora de fin debe ser posterior al inicio');
+        setStep(1);
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const validatePublicationStep = () => {
+    if (!form.isFree && form.price <= 0) {
+      toast.error('Ingresa un precio mayor a 0 para actividades pagas');
+      setStep(2);
+      return false;
+    }
+
+    return true;
+  };
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -89,31 +149,27 @@ export default function CreateActivityPage() {
     });
   };
 
-  const next = () => setStep((current) => Math.min(current + 1, 2));
+  const next = () => {
+    if (step === 0 && !validateIdentityStep()) return;
+    if (step === 1 && !validateRouteStep()) return;
+    setStep((current) => Math.min(current + 1, 2));
+  };
   const prev = () => setStep((current) => Math.max(current - 1, 0));
 
   const handleSubmit = () => {
     if (!isAuthenticated) {
       toast.error('Inicia sesión para crear actividades');
-      navigate('/login');
+      const returnPath = preparePostAuthRedirect(location.pathname, location.search, location.hash);
+      navigate('/login', { state: { from: returnPath } });
       return;
     }
 
-    if (!form.categoryId || !form.title.trim() || !form.description.trim()) {
-      toast.error('Completa la información principal');
-      setStep(0);
-      return;
-    }
-
-    if (!form.date || !form.startTime || !form.locationName.trim()) {
-      toast.error('Completa fecha, hora y ubicación');
-      setStep(1);
-      return;
-    }
+    if (!validateIdentityStep() || !validateRouteStep() || !validatePublicationStep()) return;
 
     const startIso = toIso(form.date, form.startTime);
     if (!startIso) {
       toast.error('Fecha u hora inválidas');
+      setStep(1);
       return;
     }
 

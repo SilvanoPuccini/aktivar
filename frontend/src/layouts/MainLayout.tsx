@@ -24,7 +24,7 @@ export function MainLayout() {
       home: '/',
       explore: '/explore',
       create: '/create',
-      profile: isAuthenticated ? '/profile' : '/login',
+      profile: '/profile',
       notifications: '/notifications',
       dashboard: '/dashboard',
     };
@@ -36,7 +36,9 @@ export function MainLayout() {
   const isFullBleed = location.pathname === '/explore';
 
   return (
-    <div className="flex min-h-screen flex-col bg-surface text-on-surface">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-surface text-on-surface">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.08),_transparent_42%)]" />
+      <div className="pointer-events-none absolute left-[-8rem] top-[22rem] h-72 w-72 rounded-full bg-secondary/6 blur-3xl" />
       {!isImmersive && (
         <GlassNav
           activeTab={getActiveTab()}
@@ -48,7 +50,7 @@ export function MainLayout() {
 
       {!isImmersive && <div className="hidden h-20 shrink-0 md:block" />}
 
-      <main className="relative flex-1">
+      <main className="relative z-10 flex-1">
         {isImmersive || isFullBleed ? (
           <Outlet />
         ) : (

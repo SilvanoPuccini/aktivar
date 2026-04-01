@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aktivar Safety &amp; SOS Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&amp;family=Manrope:wght@400;500;700&amp;family=Space+Grotesk:wght@300;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "error-container": "#93000a",
+              "on-primary-fixed": "#281800",
+              "on-error-container": "#ffdad6",
+              "tertiary": "#d3cfc6",
+              "surface-dim": "#11140f",
+              "primary-container": "#f0a500",
+              "tertiary-fixed": "#e6e2d8",
+              "on-secondary-container": "#95f5ae",
+              "on-tertiary-fixed-variant": "#484740",
+              "surface-container-lowest": "#0c0f0a",
+              "on-secondary-fixed": "#00210d",
+              "on-secondary": "#00391a",
+              "surface-container-low": "#191c17",
+              "on-primary": "#442c00",
+              "surface-container-high": "#282b25",
+              "surface-bright": "#373a34",
+              "surface-variant": "#333630",
+              "outline": "#9f8e79",
+              "inverse-on-surface": "#2e312b",
+              "surface-container": "#1d201b",
+              "surface": "#11140f",
+              "error": "#ffb4ab",
+              "secondary-fixed": "#97f7b0",
+              "inverse-primary": "#805600",
+              "on-secondary-fixed-variant": "#005228",
+              "surface-tint": "#ffba44",
+              "on-tertiary-container": "#47463f",
+              "primary-fixed-dim": "#ffba44",
+              "on-tertiary-fixed": "#1c1c16",
+              "primary": "#ffc56c",
+              "primary-fixed": "#ffddaf",
+              "background": "#11140f",
+              "on-background": "#e1e3da",
+              "secondary-container": "#00733b",
+              "on-surface-variant": "#d6c4ac",
+              "on-surface": "#e1e3da",
+              "inverse-surface": "#e1e3da",
+              "on-primary-fixed-variant": "#614000",
+              "surface-container-highest": "#333630",
+              "secondary": "#7bda96",
+              "on-error": "#690005",
+              "tertiary-fixed-dim": "#cac6bd",
+              "on-tertiary": "#32312a",
+              "secondary-fixed-dim": "#7bda96",
+              "outline-variant": "#514533",
+              "on-primary-container": "#5f3f00",
+              "tertiary-container": "#b7b4ab"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0c0f0a;
+            color: #ede9df;
+            font-family: 'Manrope', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+        .tonal-shifting {
+            background: linear-gradient(145deg, #1d201b 0%, #11140f 100%);
+        }
+        .glass-header {
+            background: rgba(17, 20, 15, 0.7);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="pb-32 md:pb-0 pt-24">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 glass-header">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black tracking-tighter text-[#f0a500] italic font-['Epilogue'] uppercase">Aktivar</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-[#ede9df] opacity-80 font-['Epilogue'] tracking-tighter font-extrabold uppercase hover:scale-105 transition-transform duration-200 hover:text-[#f0a500]" href="#">Journal</a>
+<a class="text-[#ede9df] opacity-80 font-['Epilogue'] tracking-tighter font-extrabold uppercase hover:scale-105 transition-transform duration-200 hover:text-[#f0a500]" href="#">Marketplace</a>
+<a class="text-[#f0a500] border-b-2 border-[#f0a500] pb-1 font-['Epilogue'] tracking-tighter font-extrabold uppercase" href="#">Safety</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="text-[#ede9df] hover:scale-105 transition-transform"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-[#ede9df] hover:scale-105 transition-transform"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</div>
+</nav>
+<main class="max-w-screen-2xl mx-auto px-6 md:px-12 py-8">
+<!-- Hero Header Section -->
+<header class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<p class="font-label text-primary uppercase tracking-[0.3em] text-sm mb-2">Expedition Protocol</p>
+<h1 class="font-headline text-5xl md:text-7xl font-black tracking-tighter uppercase leading-none">Safety &amp; SOS<br/><span class="text-surface-variant">Command Center</span></h1>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-3 bg-secondary-container/20 px-6 py-3 rounded-xl border border-secondary/20">
+<div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
+<span class="font-label text-secondary font-bold tracking-widest uppercase text-xs">All Systems Green</span>
+</div>
+<p class="font-label text-on-surface-variant text-xs mt-3 uppercase tracking-wider">Last Satellite Sync: 2m ago</p>
+</div>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="bento-grid">
+<!-- EMERGENCY SOS - CRITICAL ACTION -->
+<div class="col-span-12 lg:col-span-4 row-span-2 bg-error-container/10 border-2 border-error/30 rounded-3xl p-8 flex flex-col justify-between overflow-hidden relative group">
+<div class="relative z-10">
+<span class="font-label text-error font-bold uppercase tracking-widest text-sm">Emergency Override</span>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight uppercase mt-4 mb-2">Initiate SOS</h2>
+<p class="text-on-surface-variant text-sm max-w-xs leading-relaxed">Broadcasts GPS coordinates to Local SAR, Park Rangers, and emergency contacts via Satellite Link.</p>
+</div>
+<div class="mt-12 relative z-10">
+<button class="w-full bg-error text-on-error py-8 rounded-2xl font-headline font-black text-2xl uppercase tracking-tighter shadow-[0px_0px_60px_rgba(255,180,171,0.3)] active:scale-95 transition-all">
+                        Hold to Broadcast
+                    </button>
+<p class="text-center font-label text-[10px] text-error uppercase tracking-widest mt-4 opacity-60">System armed: accidental trigger protection active</p>
+</div>
+<!-- Abstract decorative element -->
+<div class="absolute -right-8 -bottom-8 w-64 h-64 bg-error/5 rounded-full blur-3xl group-hover:bg-error/10 transition-colors"></div>
+</div>
+<!-- WEATHER WIDGET -->
+<div class="col-span-12 md:col-span-6 lg:col-span-5 bg-surface-container rounded-3xl p-8 relative overflow-hidden flex flex-col justify-between min-h-[320px]">
+<img class="absolute inset-0 w-full h-full object-cover opacity-20" data-alt="dramatic mountain peaks shrouded in thick dark storm clouds at sunset with moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuqQLNv5RbqxiOTrveJK7K5OzDKefF9SerAth3bItg6qMdWxjimp0ReFrii1tj7fx1z6A5awk-3-_UCLMwzb2-mGbAGb-as7FqHyc2y3fytlh-zbPxjVaTiaSKwplLSxA71-RU-9WpGa0dspVzzvkj21SKnQUAb0LDJcKEAeJ0G6ejknt_CugQvukA9tz-QvgEhVaf2hC9ii4OLum2YzZGe8pyqCL5g8Ig5jrfhh-cZxleiT4HwySpcowiSJ_vrjsdA94FImwyy6k"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/80 to-transparent"></div>
+<div class="relative z-10 flex justify-between items-start">
+<div>
+<span class="font-label text-primary uppercase tracking-widest text-xs">Current Location</span>
+<h3 class="font-headline text-2xl font-bold tracking-tight">Eiger North Face</h3>
+</div>
+<div class="text-right">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="thunderstorm">thunderstorm</span>
+<p class="font-label text-xs uppercase tracking-widest text-on-surface-variant mt-1">High Risk</p>
+</div>
+</div>
+<div class="relative z-10 mt-auto flex items-end justify-between">
+<div>
+<span class="font-label text-5xl font-light tracking-tighter">-4°C</span>
+<div class="flex gap-4 mt-2">
+<div class="flex flex-col">
+<span class="font-label text-[10px] uppercase text-on-surface-variant">Wind</span>
+<span class="font-label text-sm">48km/h NW</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-[10px] uppercase text-on-surface-variant">Visibility</span>
+<span class="font-label text-sm">800m</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-highest/60 backdrop-blur-md p-4 rounded-xl border border-white/5">
+<span class="font-label text-[10px] uppercase text-primary mb-1 block">Storm Warning</span>
+<p class="text-[11px] leading-tight text-on-surface">Heavy snowfall expected within 45 minutes. Seek shelter immediately.</p>
+</div>
+</div>
+</div>
+<!-- GROUP STATUS -->
+<div class="col-span-12 md:col-span-6 lg:col-span-3 bg-surface-container rounded-3xl p-8 flex flex-col">
+<div class="flex justify-between items-center mb-8">
+<span class="font-label text-on-surface-variant uppercase tracking-widest text-xs">Group Status</span>
+<span class="material-symbols-outlined text-secondary" data-icon="group">group</span>
+</div>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="professional portrait of an outdoor explorer woman in hiking gear looking confident" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMPSVOKLEfYRoZAPhYDSqvm7tBf91PF6c93CU8zKq8mOvyISnA2QtQeRIT1bQY9vAXoCuJRQkvIAXtU3mY1NnseMmtD-j89thye02n-A_XRlca4VpJxvGytomBopNF1yhOS49SJbn6Lm5qLZzGwik3kHiS7BetXXMJAZx-Sr6SEIBydzKXiSTDGhqQiEvwk7rmlUR4Ty0UKAJ8G5ZPu4TZ3LIx_1FpCAGoE8XGVvCYekpo4a7eTW508s0JEkpUgt5mNm4drgkOKCc"/>
+</div>
+<div>
+<p class="font-body font-bold text-sm leading-none">Sarah K.</p>
+<span class="font-label text-[10px] text-secondary uppercase tracking-tighter">Checked In</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="check_circle" data-weight="fill">check_circle</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="outdoor guide man with beard and mountain equipment looking at camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATAYGFeDQAB_xh4T5Vj5eUy4BM_NLEG4ljLJD7z-4eXxNNXiJaNAGK3Ih23s20EaAcolEutVYrB-PywRqwC8-lfQwMmmdNGwTInXYx6G3prSPW-nH3hPz-mbSaFa7Z5nryjegeLopgfS3jstMb8GSpMaUX97vUUSEVhHM60z-9zB3ldvsuMrW0iv3Nc8dtVLO_GU3Im7H_N_ogPSAVR4zY3Th5ssKJ_qYViIKtdEH7rse1JNS9kBK9dil_qMjMxK8DECOSX5RJi-A"/>
+</div>
+<div>
+<p class="font-body font-bold text-sm leading-none">Marcus L.</p>
+<span class="font-label text-[10px] text-primary-container uppercase tracking-tighter">Sync Pending</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary-container text-lg animate-spin" data-icon="sync">sync</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="adventurous man smiling in high altitude snowy environment with sunglasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjWVwopZbAksRUM6PcmA-3dBNB6sV9XDP_lzRf-HIqbLgTU70UEUJad-8S1fWncfacleegN4As2EHHsAh31rbOllF797oU7xgmnDJi1wrneLjPjXGRyGeJZ99RiTTnoKMT6qcY1xcxvnjVIfmdr_yz1apcUvWh_xL4GscI9LbHu63yMumI5lF9B3s1nCvEaIwdcZdqrMSYIVTHPQNOErVAX57QB9XvNuz81O9tFnzTC_RaFc7h4OnJaxySQFcoG326kOojif3auv8"/>
+</div>
+<div>
+<p class="font-body font-bold text-sm leading-none">David W.</p>
+<span class="font-label text-[10px] text-secondary uppercase tracking-tighter">Checked In</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="check_circle" data-weight="fill">check_circle</span>
+</div>
+</div>
+<button class="mt-auto w-full border border-outline-variant text-on-surface py-3 rounded-xl font-label text-xs uppercase tracking-widest hover:bg-surface-container-high transition-colors">
+                    Request All Sync
+                </button>
+</div>
+<!-- MAP WITH DANGER ZONES -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container rounded-3xl p-4 min-h-[450px] relative overflow-hidden group">
+<div class="absolute inset-4 rounded-2xl overflow-hidden grayscale brightness-50 contrast-125 border border-white/5">
+<img class="w-full h-full object-cover" data-alt="topographic satellite map of a mountainous terrain with sharp ridges and valleys" data-location="Swiss Alps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrvgmqKPs3C5HKSaryu4ILbCIeEMEFU7oXGzmqn3NTUFBgENsS_lz0oSwYjEnyEStV0GYnWO8BNal3Apm9sO7E5JLrmrf5ADJiPEnBkm1agAcBXg28AadJzs9z_K9G9yxCynqUtLYFHJX_O1knjBNiVsRfl0MiLkDxlpwp2vHjTUhgOAsK71Ss3twlgKWGdYSjb8CKODU6vF428SJWDEncxTp6hCtAUQGcITerpw15nLNNU_DTU0_5Zxmaz5mg7mafqq0aUNiD3vE"/>
+<!-- Hazard Overlays -->
+<div class="absolute top-1/4 left-1/3 w-32 h-32 bg-error/20 border border-error/40 rounded-full animate-pulse flex items-center justify-center">
+<span class="font-label text-[10px] text-error font-bold uppercase tracking-widest bg-surface-container-lowest/80 px-2 py-1 rounded">Avalanche Zone</span>
+</div>
+<div class="absolute bottom-1/3 right-1/4 w-48 h-24 bg-primary/10 border border-primary/30 rounded-[40%] rotate-12 flex items-center justify-center">
+<span class="font-label text-[10px] text-primary font-bold uppercase tracking-widest bg-surface-container-lowest/80 px-2 py-1 rounded">Flooding Risk</span>
+</div>
+<!-- Current Position Marker -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+<div class="relative">
+<div class="w-8 h-8 bg-secondary/30 rounded-full animate-ping absolute -inset-0"></div>
+<div class="w-4 h-4 bg-secondary rounded-full border-2 border-on-secondary shadow-lg relative z-10"></div>
+</div>
+</div>
+</div>
+<div class="absolute top-8 left-8 z-20">
+<div class="bg-surface-container-highest/90 backdrop-blur-xl p-4 rounded-2xl border border-white/10 shadow-2xl">
+<h4 class="font-headline text-lg font-bold mb-2">Danger Overlays</h4>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="rounded border-outline-variant bg-surface text-error focus:ring-error" type="checkbox"/>
+<span class="font-label text-[10px] uppercase text-on-surface-variant">Avalanche Activity</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="rounded border-outline-variant bg-surface text-primary-container focus:ring-primary-container" type="checkbox"/>
+<span class="font-label text-[10px] uppercase text-on-surface-variant">Unstable Terrain</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="rounded border-outline-variant bg-surface text-secondary focus:ring-secondary" type="checkbox"/>
+<span class="font-label text-[10px] uppercase text-on-surface-variant">Ranger Outposts</span>
+</label>
+</div>
+</div>
+</div>
+<div class="absolute bottom-8 right-8 z-20 flex gap-2">
+<button class="bg-surface-container-highest/90 backdrop-blur-xl p-3 rounded-xl border border-white/10 hover:bg-primary-container hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="my_location">my_location</span>
+</button>
+<button class="bg-surface-container-highest/90 backdrop-blur-xl p-3 rounded-xl border border-white/10 hover:bg-primary-container hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+</button>
+</div>
+</div>
+<!-- EMERGENCY CONTACTS -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-surface-container rounded-3xl p-8 flex flex-col">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="contact_phone">contact_phone</span>
+<h3 class="font-headline text-xl font-bold uppercase tracking-tight">Critical Contacts</h3>
+</div>
+<div class="space-y-4">
+<div class="p-4 rounded-2xl bg-surface-container-low border border-white/5 flex justify-between items-center group hover:bg-surface-container-high transition-colors">
+<div>
+<p class="font-body font-bold text-on-surface">Regional SAR Alpine</p>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Local Search &amp; Rescue</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+<div class="p-4 rounded-2xl bg-surface-container-low border border-white/5 flex justify-between items-center group hover:bg-surface-container-high transition-colors">
+<div>
+<p class="font-body font-bold text-on-surface">Valais Park Rangers</p>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Forest &amp; Wildlife Authority</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+<div class="p-4 rounded-2xl bg-surface-container-low border border-white/5 flex justify-between items-center group hover:bg-surface-container-high transition-colors">
+<div>
+<p class="font-body font-bold text-on-surface">Emergency HQ (Aktivar)</p>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Global Monitoring Team</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="satellite_alt">satellite_alt</span>
+</button>
+</div>
+<div class="p-4 rounded-2xl bg-surface-container-low border border-white/5 flex justify-between items-center group hover:bg-surface-container-high transition-colors">
+<div>
+<p class="font-body font-bold text-on-surface">Trusted: Elena Rossi</p>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Primary ICE Contact</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+</div>
+<button class="mt-8 text-primary font-label text-xs uppercase tracking-[0.2em] font-bold flex items-center gap-2 hover:translate-x-2 transition-transform">
+                    Edit Emergency Contacts <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- SAFETY CHECKLISTS -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-surface-container-highest rounded-3xl p-8 flex flex-col">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline text-xl font-bold uppercase tracking-tight">Pre-Ex Checklists</h3>
+<span class="font-label text-[10px] bg-primary/20 text-primary px-3 py-1 rounded-full uppercase font-bold">2 Pending</span>
+</div>
+<div class="space-y-6 flex-1">
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label text-xs uppercase tracking-widest text-on-surface">Gear &amp; Equipment</span>
+<span class="font-label text-xs text-secondary">8/10</span>
+</div>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="w-[80%] h-full bg-secondary"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label text-xs uppercase tracking-widest text-on-surface">Route Planning</span>
+<span class="font-label text-xs text-secondary">Completed</span>
+</div>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="w-full h-full bg-secondary"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label text-xs uppercase tracking-widest text-on-surface">Health &amp; Fitness</span>
+<span class="font-label text-xs text-primary-container">Incomplete</span>
+</div>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="w-[30%] h-full bg-primary-container"></div>
+</div>
+</div>
+</div>
+<div class="mt-8 grid grid-cols-3 gap-2">
+<div class="flex flex-col items-center gap-1 p-3 bg-surface-container-low rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-on-surface-variant text-xl" data-icon="backpack">backpack</span>
+<span class="font-label text-[8px] uppercase tracking-widest text-on-surface-variant">Gear</span>
+</div>
+<div class="flex flex-col items-center gap-1 p-3 bg-surface-container-low rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-on-surface-variant text-xl" data-icon="route">route</span>
+<span class="font-label text-[8px] uppercase tracking-widest text-on-surface-variant">Route</span>
+</div>
+<div class="flex flex-col items-center gap-1 p-3 bg-surface-container-low rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-on-surface-variant text-xl" data-icon="medical_services">medical_services</span>
+<span class="font-label text-[8px] uppercase tracking-widest text-on-surface-variant">Health</span>
+</div>
+</div>
+</div>
+</div>
+<!-- System Logs / Real-time Feed -->
+<section class="mt-16 mb-24">
+<div class="border-l-4 border-primary pl-8">
+<h3 class="font-label text-sm text-primary uppercase tracking-[0.3em] mb-4">Real-Time Safety Log</h3>
+<div class="space-y-4 max-w-2xl">
+<div class="flex gap-6 items-start opacity-100">
+<span class="font-label text-xs text-on-surface-variant whitespace-nowrap mt-1">14:42:05</span>
+<p class="font-body text-sm text-on-surface"><span class="font-bold text-secondary">SYSTEM:</span> Weather satellite data updated. Wind speeds increasing in Sector 7-G.</p>
+</div>
+<div class="flex gap-6 items-start opacity-60">
+<span class="font-label text-xs text-on-surface-variant whitespace-nowrap mt-1">14:38:12</span>
+<p class="font-body text-sm text-on-surface"><span class="font-bold">USER_MARCUS:</span> Periodic Check-in initiated. GPS lock confirmed.</p>
+</div>
+<div class="flex gap-6 items-start opacity-40">
+<span class="font-label text-xs text-on-surface-variant whitespace-nowrap mt-1">14:15:30</span>
+<p class="font-body text-sm text-on-surface"><span class="font-bold">SYSTEM:</span> Safety perimeter breach warning (Avalanche Zone 4B). Warning dismissed by User.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#11140f]/70 backdrop-blur-xl z-50 rounded-t-3xl border-t border-[#333630]/15 shadow-[0px_-12px_32px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60" href="#">
+<span class="material-symbols-outlined" data-icon="landscape">landscape</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60" href="#">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Trophy</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#f0a500] text-[#11140f] rounded-2xl p-3 scale-110 -translate-y-2 transition-all shadow-lg" href="#">
+<span class="material-symbols-outlined" data-icon="health_and_safety" data-weight="fill">health_and_safety</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Safety</span>
+</a>
+</nav>
+</body></html>
