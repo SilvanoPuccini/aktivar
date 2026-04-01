@@ -12,12 +12,13 @@ from .views import (
 app_name = 'payments'
 
 router = DefaultRouter()
-router.register(r'payments', PaymentViewSet, basename='payment')
 router.register(r'subscriptions', SubscriptionViewSet, basename='subscription')
+router.register(r'', PaymentViewSet, basename='payment')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    # Explicit paths before router to avoid pk capture
     path('webhook/stripe/', StripeWebhookView.as_view(), name='stripe-webhook'),
     path('connect/onboarding/', ConnectOnboardingView.as_view(), name='connect-onboarding'),
     path('connect/dashboard/', ConnectDashboardView.as_view(), name='connect-dashboard'),
+    path('', include(router.urls)),
 ]

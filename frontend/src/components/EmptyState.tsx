@@ -8,39 +8,20 @@ interface EmptyStateProps {
   action?: { label: string; onClick: () => void };
 }
 
-export default function EmptyState({
-  icon,
-  title,
-  description,
-  action,
-}: EmptyStateProps) {
+export default function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 py-16 px-6 text-center">
+    <div className="editorial-card mx-auto flex max-w-xl flex-col items-start gap-5 rounded-[2rem] px-6 py-10 text-left md:px-8">
       {icon && (
-        <div className="flex items-center justify-center w-16 h-16 text-muted">
+        <div className="flex h-16 w-16 items-center justify-center rounded-[1.35rem] bg-surface-container-high text-primary">
           {icon}
         </div>
       )}
-
-      <h3 className="font-[Epilogue] text-lg font-semibold text-on-surface">
-        {title}
-      </h3>
-
-      {description && (
-        <p className="max-w-xs font-[Plus_Jakarta_Sans] text-sm text-muted leading-relaxed">
-          {description}
-        </p>
-      )}
-
-      {action && (
-        <div className="mt-2">
-          <CTAButton
-            label={action.label}
-            onClick={action.onClick}
-            size="sm"
-          />
-        </div>
-      )}
+      <div className="space-y-2">
+        <span className="section-kicker">Estado</span>
+        <h3 className="font-headline text-3xl font-black uppercase tracking-tight text-on-surface">{title}</h3>
+        {description && <p className="max-w-md text-sm text-on-surface-variant">{description}</p>}
+      </div>
+      {action && <CTAButton label={action.label} onClick={action.onClick} size="sm" />}
     </div>
   );
 }

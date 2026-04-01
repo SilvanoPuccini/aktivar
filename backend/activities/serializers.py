@@ -97,7 +97,7 @@ class ActivityDetailSerializer(ActivityListSerializer):
 
 
 class ActivityCreateSerializer(SanitizeMixin, serializers.ModelSerializer):
-    sanitize_fields = ['title', 'location_name', 'meeting_point', 'what_to_bring']
+    sanitize_fields = ['title', 'description', 'location_name', 'meeting_point', 'what_to_bring']
     rich_text_fields = ['description']
 
     class Meta:
@@ -128,6 +128,7 @@ class ActivityCreateSerializer(SanitizeMixin, serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
+        attrs = super().validate(attrs)
         start = attrs.get('start_datetime')
         end = attrs.get('end_datetime')
         if start and end and end <= start:

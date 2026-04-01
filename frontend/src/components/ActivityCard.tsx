@@ -1,54 +1,18 @@
-import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { BadgeCheck, Star, Sun, Cloud, Calendar, Route } from 'lucide-react';
+import { ArrowUpRight, BadgeCheck, Calendar, MapPin } from 'lucide-react';
 import type { Activity } from '@/types/activity';
-import SpotsBar from './SpotsBar';
 import CategoryChip from './CategoryChip';
-
-/* ---------- sub-components ---------- */
-
-function VerifiedBadge() {
-  return <BadgeCheck size={14} className="text-secondary shrink-0" />;
-}
-
-function WeatherBadge({ temp, description }: { temp: number; description: string }) {
-  const isCloud = description.toLowerCase().includes('nub') || description.toLowerCase().includes('cloud');
-  const WeatherIcon = isCloud ? Cloud : Sun;
-  return (
-    <div className="bg-surface-container/80 backdrop-blur-md p-2 rounded-lg flex items-center gap-1">
-      <WeatherIcon size={14} className="text-primary" />
-      <span className="font-label text-xs font-bold text-[#EDE9DF]">{Math.round(temp)}°C</span>
-    </div>
-  );
-}
+import SpotsBar from './SpotsBar';
 
 function PriceBadge({ isFree, price }: { isFree: boolean; price: number }) {
-  const label = isFree ? 'FREE' : `$${price.toLocaleString('es-CL')}`;
+  const label = isFree ? 'Gratis' : `$${price.toLocaleString('es-CL')}`;
   return (
-    <span className="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label font-bold text-sm shadow-lg">
+    <span className="rounded-full bg-surface/80 px-3 py-1.5 font-label text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface backdrop-blur-sm">
       {label}
     </span>
   );
 }
-
-function StarRating({ rating }: { rating: number }) {
-  const stars = [];
-  const fullStars = Math.floor(rating);
-  for (let i = 0; i < 5; i++) {
-    stars.push(
-      <Star
-        key={i}
-        size={12}
-        className="text-primary"
-        fill={i < fullStars ? 'currentColor' : 'none'}
-      />,
-    );
-  }
-  return <div className="flex">{stars}</div>;
-}
-
-/* ---------- main component ---------- */
 
 interface ActivityCardProps {
   activity: Activity;
@@ -57,151 +21,90 @@ interface ActivityCardProps {
   variant?: 'feed' | 'compact';
 }
 
-export default function ActivityCard({
-  activity,
-  onClick,
-  variant = 'feed',
-}: ActivityCardProps) {
+export default function ActivityCard({ activity, onClick, variant = 'feed' }: ActivityCardProps) {
   const startDate = new Date(activity.start_datetime);
-  const formattedDate = format(startDate, "EEE d MMM · HH:mm", { locale: es });
-  const formattedDateUpper = format(startDate, "MMM dd '·' hh:mm a", { locale: es }).toUpperCase();
+  const formattedDate = format(startDate, "d MMM · HH:mm", { locale: es });
   const spotsRemaining = activity.spots_remaining;
-  const percentage = activity.capacity > 0 ? (activity.confirmed_count / activity.capacity) * 100 : 100;
 
-  /* ---- compact variant ---- */
   if (variant === 'compact') {
     return (
-      <motion.div
-        whileHover={{ scale: 1.02 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-        onClick={onClick}
-        className="flex items-center gap-3 rounded-xl bg-surface-container p-3 cursor-pointer"
-      >
-        <div className="flex-1 min-w-0">
-          <h3 className="font-[Epilogue] font-bold text-sm text-on-surface truncate">
+      <button type="button" onClick={onClick} className="flex w-full items-center gap-4 p-4 text-left cursor-pointer">
+        <img src={activity.cover_image} alt={activity.title} className="h-24 w-24 shrink-0 rounded-[1.15rem] object-cover" />
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="flex items-center gap-2">
+            <CategoryChip category={activity.category} size="sm" />
+            <span className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">{formattedDate}</span>
+          </div>
+          <h3 className="font-headline text-lg font-black uppercase leading-tight tracking-tight text-on-surface line-clamp-2">
             {activity.title}
           </h3>
-          <div className="mt-1 flex items-center gap-2">
-            <CategoryChip
-              category={activity.category}
-              size="sm"
-            />
-            <span className="font-[Space_Grotesk] text-xs text-muted">
-              {formattedDate}
-            </span>
-          </div>
-          <div className="mt-2">
-            <SpotsBar
-              capacity={activity.capacity}
-              taken={activity.confirmed_count}
-            />
-          </div>
+          <p className="flex items-center gap-1.5 text-sm text-on-surface-variant">
+            <MapPin size={14} />
+            <span className="truncate">{activity.location_name}</span>
+          </p>
+          <SpotsBar capacity={activity.capacity} taken={activity.confirmed_count} />
         </div>
-      </motion.div>
+      </button>
     );
   }
 
-  /* ---- feed variant (Stitch design) ---- */
   return (
     <article
       onClick={onClick}
-      className="group relative bg-surface-container rounded-2xl overflow-hidden border border-outline-variant/10 transition-all duration-300 hover:shadow-2xl hover:border-outline-variant/20 cursor-pointer"
+      className="group editorial-card cursor-pointer overflow-hidden rounded-[2rem] transition-transform duration-300 hover:-translate-y-1"
     >
-      {/* cover image */}
-      <div className="relative h-64 w-full">
-        <img
-          src={activity.cover_image}
-          alt={activity.title}
-          className="w-full h-full object-cover"
-        />
-        {/* gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60" />
-
-        {/* category badge top-left */}
-        <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 bg-primary text-on-primary font-label text-[10px] font-bold rounded-full tracking-tighter">
-            {activity.category.name.toUpperCase()}
-          </span>
+      <div className="relative aspect-[1.05] overflow-hidden rounded-[1.3rem] m-3 mb-0">
+        <img src={activity.cover_image} alt={activity.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/15 to-transparent" />
+        <div className="absolute left-4 top-4 flex items-center gap-2">
+          <CategoryChip category={activity.category} size="sm" />
         </div>
-
-        {/* weather badge top-right */}
-        {activity.category.is_outdoor && activity.weather && (
-          <div className="absolute top-4 right-4">
-            <WeatherBadge
-              temp={activity.weather.temp}
-              description={activity.weather.description}
-            />
-          </div>
-        )}
-
-        {/* price badge bottom-right */}
         <div className="absolute bottom-4 right-4">
           <PriceBadge isFree={activity.is_free} price={activity.price} />
         </div>
       </div>
 
-      {/* body */}
-      <div className="p-6 space-y-5">
-        <h2 className="text-xl font-headline font-bold text-[#EDE9DF] leading-tight group-hover:text-primary transition-colors">
-          {activity.title}
-        </h2>
-
-        {/* organizer row */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden">
-            <img
-              src={activity.organizer.avatar}
-              alt={activity.organizer.full_name}
-              className="w-full h-full object-cover"
-            />
+      <div className="space-y-5 px-5 py-5 md:px-6 md:py-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2">
+            <p className="font-label text-[10px] uppercase tracking-[0.18em] text-primary">Expedición abierta</p>
+            <h2 className="font-headline text-2xl font-black uppercase leading-[1.02] tracking-tight text-on-surface line-clamp-2">
+              {activity.title}
+            </h2>
           </div>
-          <div>
-            <p className="text-sm font-bold text-[#EDE9DF]">
-              {activity.organizer.full_name}
-              {activity.organizer.is_verified_email && (
-                <VerifiedBadge />
-              )}
-            </p>
-            <StarRating rating={activity.organizer.rating ?? 4} />
+          <div className="rounded-full bg-surface-container-high p-2 text-on-surface-variant transition-colors group-hover:text-primary">
+            <ArrowUpRight size={18} />
           </div>
         </div>
 
-        {/* info grid */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex items-center gap-2 text-on-surface/60">
-            <Calendar size={18} />
-            <span className="text-xs font-label">{formattedDateUpper}</span>
+        <div className="grid gap-2 text-sm text-on-surface-variant">
+          <div className="flex items-center gap-2">
+            <MapPin size={15} className="text-primary" />
+            <span className="truncate">{activity.location_name}</span>
           </div>
-          <div className="flex items-center gap-2 text-on-surface/60">
-            {activity.distance_km !== null && activity.distance_km !== undefined ? (
-              <>
-                <Route size={18} />
-                <span className="text-xs font-label">{activity.distance_km} KM</span>
-              </>
-            ) : (
-              <>
-                <Route size={18} />
-                <span className="text-xs font-label">{activity.location_name}</span>
-              </>
-            )}
+          <div className="flex items-center gap-2">
+            <Calendar size={15} className="text-primary" />
+            <span>{formattedDate}</span>
           </div>
         </div>
 
-        {/* capacity section */}
-        <div className="space-y-2">
-          <div className="flex justify-between text-[11px] font-label font-bold uppercase tracking-wider">
-            <span className="text-on-surface/50">Capacity</span>
-            <span className={spotsRemaining <= 5 ? 'text-error' : 'text-on-surface/40'}>
-              {spotsRemaining > 0 ? `${spotsRemaining} spots left` : 'Full'}
-            </span>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <img src={activity.organizer.avatar} alt={activity.organizer.full_name} className="h-11 w-11 rounded-full object-cover" />
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="truncate text-sm font-semibold text-on-surface">{activity.organizer.full_name}</span>
+                {activity.organizer.is_verified_email && <BadgeCheck size={14} className="shrink-0 text-secondary" />}
+              </div>
+              <span className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Host</span>
+            </div>
           </div>
-          <div className="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
-            <div
-              className="bg-secondary h-full rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${Math.min(percentage, 100)}%` }}
-            />
-          </div>
+          <span className={`font-label text-[10px] uppercase tracking-[0.16em] ${spotsRemaining <= 3 ? 'text-error' : 'text-on-surface-variant'}`}>
+            {spotsRemaining > 0 ? `${spotsRemaining} cupos` : 'Completo'}
+          </span>
         </div>
+
+        <SpotsBar capacity={activity.capacity} taken={activity.confirmed_count} />
       </div>
     </article>
   );

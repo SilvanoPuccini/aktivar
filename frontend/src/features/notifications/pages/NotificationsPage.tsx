@@ -1,26 +1,15 @@
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Bell, MessageCircle, UserPlus, Clock, ArrowLeft, CheckCheck } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Bell, CheckCheck, Clock, MessageCircle, UserPlus } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import EmptyState from '@/components/EmptyState';
-import {
-  useNotifications,
-  useMarkNotificationRead,
-  useMarkAllNotificationsRead,
-  type AppNotification,
-} from '@/services/hooks';
+import { useMarkAllNotificationsRead, useMarkNotificationRead, useNotifications, type AppNotification } from '@/services/hooks';
 
 type NotificationType = 'join' | 'message' | 'reminder' | 'spot_opened';
-
 interface LocalNotification {
   id: number;
   type: NotificationType;
-  actor: {
-    id: number;
-    full_name: string;
-    avatar: string;
-  };
+  actor: { id: number; full_name: string; avatar: string };
   activityId: number;
   description: string;
   timestamp: string;
@@ -34,204 +23,79 @@ const notificationIcons: Record<NotificationType, LucideIcon> = {
   spot_opened: Bell,
 };
 
-const notificationColors: Record<NotificationType, string> = {
-  join: 'text-secondary',
-  message: 'text-primary',
-  reminder: 'text-on-surface-variant',
-  spot_opened: 'text-primary',
-};
-
-
-function mapApiToLocal(apiNotification: AppNotification): LocalNotification {
-  const now = new Date();
-  const created = new Date(apiNotification.created_at);
-  const diffMs = now.getTime() - created.getTime();
-  const diffMin = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMin / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  let timestamp: string;
-  if (diffMin < 60) {
-    timestamp = `hace ${diffMin} min`;
-  } else if (diffHours < 24) {
-    timestamp = `hace ${diffHours}h`;
-  } else if (diffDays === 1) {
-    timestamp = 'ayer';
-  } else {
-    timestamp = `hace ${diffDays} dias`;
-  }
-
+function mapApiToLocal(notification: AppNotification): LocalNotification {
+  const created = new Date(notification.created_at);
+  const diffMin = Math.max(1, Math.floor((Date.now() - created.getTime()) / 60000));
+  const timestamp = diffMin < 60 ? `hace ${diffMin} min` : diffMin < 1440 ? `hace ${Math.floor(diffMin / 60)} h` : `hace ${Math.floor(diffMin / 1440)} días`;
   return {
-    id: apiNotification.id,
-    type: apiNotification.type,
-    actor: apiNotification.actor,
-    activityId: apiNotification.activity_id,
-    description: apiNotification.description,
+    id: notification.id,
+    type: notification.type,
+    actor: notification.actor,
+    activityId: notification.activity_id,
+    description: notification.description,
     timestamp,
-    isRead: apiNotification.is_read,
+    isRead: notification.is_read,
   };
 }
-
-const containerVariants = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.06 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' as const } },
-};
 
 export default function NotificationsPage() {
   const navigate = useNavigate();
   const [readIds, setReadIds] = useState<Set<number>>(new Set());
-  const [allMarkedRead, setAllMarkedRead] = useState(false);
-
-  // API hooks
-  const { data: apiNotifications } = useNotifications();
+  const [markAllState, setMarkAllState] = useState(false);
+  const { data } = useNotifications();
   const markRead = useMarkNotificationRead();
-  const markAllRead = useMarkAllNotificationsRead();
+  const markAll = useMarkAllNotificationsRead();
 
-  // Derive notifications from API data
-  const notifications = useMemo(() => {
-    if (!apiNotifications || apiNotifications.length === 0) return [];
-    const base = apiNotifications.map(mapApiToLocal);
-    return base.map((n) => ({
-      ...n,
-      isRead: allMarkedRead || readIds.has(n.id) || n.isRead,
-    }));
-  }, [apiNotifications, readIds, allMarkedRead]);
+  const notifications = useMemo(() => (data ?? []).map(mapApiToLocal).map((notification) => ({ ...notification, isRead: notification.isRead || markAllState || readIds.has(notification.id) })), [data, markAllState, readIds]);
+  const unread = notifications.filter((notification) => !notification.isRead).length;
 
-  const handleNotificationClick = (notification: LocalNotification) => {
-    // Mark as read locally
+  const handleClick = (notification: LocalNotification) => {
     setReadIds((prev) => new Set(prev).add(notification.id));
-
-    // Mark as read on the API
     markRead.mutate(notification.id);
-
-    // Navigate based on type
-    if (notification.type === 'message') {
-      navigate(`/chat/${notification.activityId}`);
-    } else {
-      navigate(`/activity/${notification.activityId}`);
-    }
+    navigate(notification.type === 'message' ? `/chat/${notification.activityId}` : `/activity/${notification.activityId}`);
   };
-
-  const handleMarkAllRead = () => {
-    setAllMarkedRead(true);
-    markAllRead.mutate();
-  };
-
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
-    <div className="min-h-screen bg-surface pb-24">
-      {/* Header */}
-      <div
-        className="sticky top-0 z-10 flex items-center gap-3 px-4 py-4 border-b border-outline-variant"
-        style={{
-          background: 'rgba(17,20,15,0.85)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer"
-        >
-          <ArrowLeft size={20} />
-        </button>
-        <div className="flex-1">
-          <h1 className="font-display text-xl font-bold text-on-surface">
-            Notificaciones
-          </h1>
-          {unreadCount > 0 && (
-            <p className="font-label text-xs text-muted">
-              {unreadCount} sin leer
-            </p>
-          )}
+    <div className="mx-auto max-w-4xl space-y-8 pb-12">
+      <section className="editorial-card rounded-[2.25rem] px-6 py-8 md:px-8">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="section-kicker">Inbox</p>
+            <h1 className="hero-title text-4xl text-on-surface md:text-6xl">Notificaciones</h1>
+            <p className="mt-3 text-on-surface-variant">Actividad reciente, mensajes y movimientos de cupos en una vista más clara.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="rounded-[1.2rem] bg-surface px-5 py-4 text-center">
+              <p className="section-kicker">Unread</p>
+              <p className="mt-2 font-headline text-3xl font-black text-primary">{unread}</p>
+            </div>
+            {unread > 0 && <button type="button" onClick={() => { setMarkAllState(true); markAll.mutate(); }} className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-3 font-label text-[10px] uppercase tracking-[0.16em] text-primary cursor-pointer"><CheckCheck size={14} /> Marcar todo</button>}
+          </div>
         </div>
-        {unreadCount > 0 && (
-          <button
-            type="button"
-            onClick={handleMarkAllRead}
-            className="flex items-center gap-1.5 rounded-full bg-surface-container-high px-3 py-1.5 text-xs font-label text-primary hover:bg-surface-container-highest transition-colors cursor-pointer"
-          >
-            <CheckCheck size={14} />
-            Marcar todo
-          </button>
-        )}
-      </div>
+      </section>
 
-      {/* Notification list */}
       {notifications.length === 0 ? (
-        <EmptyState
-          icon={<Bell size={48} />}
-          title="Sin notificaciones"
-          description="Cuando alguien se una a tus actividades o te envie un mensaje, aparecera aqui."
-        />
+        <EmptyState title="Sin notificaciones" description="Cuando pase algo importante en tu actividad o chat, aparecerá aquí." />
       ) : (
-        <motion.div
-          className="divide-y divide-outline-variant/50"
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
+        <section className="space-y-4">
           {notifications.map((notification) => {
             const Icon = notificationIcons[notification.type];
-            const iconColor = notificationColors[notification.type];
-
             return (
-              <motion.button
-                key={notification.id}
-                type="button"
-                variants={itemVariants}
-                onClick={() => handleNotificationClick(notification)}
-                className={`flex w-full items-start gap-3 px-4 py-4 text-left transition-colors cursor-pointer hover:bg-surface-container/50 ${
-                  !notification.isRead ? 'bg-surface-container/30' : ''
-                }`}
-              >
-                {/* Avatar with icon badge */}
+              <button key={notification.id} type="button" onClick={() => handleClick(notification)} className={`flex w-full items-start gap-4 rounded-[1.75rem] border px-5 py-5 text-left cursor-pointer transition ${notification.isRead ? 'border-outline-variant/10 bg-surface-container' : 'border-primary/20 bg-surface-container-high shadow-[0_18px_40px_rgba(0,0,0,0.15)]'}`}>
                 <div className="relative shrink-0">
-                  <img
-                    src={notification.actor.avatar}
-                    alt={notification.actor.full_name}
-                    className="h-11 w-11 rounded-full object-cover border border-outline-variant"
-                  />
-                  <div
-                    className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-surface-container-high border border-outline-variant ${iconColor}`}
-                  >
-                    <Icon size={11} />
-                  </div>
+                  <img src={notification.actor.avatar} alt={notification.actor.full_name} className="h-14 w-14 rounded-[1rem] object-cover" />
+                  <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[#442c00]"><Icon size={12} /></div>
                 </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <p
-                    className={`font-body text-sm leading-snug ${
-                      notification.isRead ? 'text-on-surface-variant' : 'text-on-surface'
-                    }`}
-                  >
-                    {notification.description}
-                  </p>
-                  <p className="font-label text-xs text-muted mt-1">
-                    {notification.timestamp}
-                  </p>
+                <div className="min-w-0 flex-1">
+                  <p className="font-label text-[10px] uppercase tracking-[0.16em] text-primary">{notification.actor.full_name}</p>
+                  <p className={`${notification.isRead ? 'text-on-surface-variant' : 'text-on-surface'} text-sm leading-relaxed`}>{notification.description}</p>
+                  <p className="mt-2 font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">{notification.timestamp}</p>
                 </div>
-
-                {/* Unread dot */}
-                {!notification.isRead && (
-                  <div className="mt-2 shrink-0">
-                    <span className="block h-2.5 w-2.5 rounded-full bg-primary" />
-                  </div>
-                )}
-              </motion.button>
+                {!notification.isRead && <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary" />}
+              </button>
             );
           })}
-        </motion.div>
+        </section>
       )}
     </div>
   );

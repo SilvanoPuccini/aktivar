@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;900&amp;family=Manrope:wght@400;500;700&amp;family=Space_Grotesk:wght@300;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary": "#d3cfc6",
+                        "on-secondary": "#00391a",
+                        "on-surface": "#e1e3da",
+                        "surface-bright": "#373a34",
+                        "on-primary-container": "#5f3f00",
+                        "surface": "#11140f",
+                        "primary-container": "#f0a500",
+                        "on-tertiary-fixed": "#1c1c16",
+                        "on-background": "#e1e3da",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#cac6bd",
+                        "on-primary-fixed-variant": "#614000",
+                        "surface-container-highest": "#333630",
+                        "on-tertiary-container": "#47463f",
+                        "inverse-primary": "#805600",
+                        "secondary-container": "#00733b",
+                        "surface-container-lowest": "#0c0f0a",
+                        "secondary-fixed": "#97f7b0",
+                        "secondary-fixed-dim": "#7bda96",
+                        "on-tertiary": "#32312a",
+                        "surface-tint": "#ffba44",
+                        "surface-container-high": "#282b25",
+                        "on-primary-fixed": "#281800",
+                        "tertiary-fixed": "#e6e2d8",
+                        "on-primary": "#442c00",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#2e312b",
+                        "on-secondary-fixed": "#00210d",
+                        "surface-dim": "#11140f",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#ffba44",
+                        "inverse-surface": "#e1e3da",
+                        "secondary": "#7bda96",
+                        "outline-variant": "#514533",
+                        "surface-variant": "#333630",
+                        "outline": "#9f8e79",
+                        "primary-fixed": "#ffddaf",
+                        "on-tertiary-fixed-variant": "#484740",
+                        "tertiary-container": "#b7b4ab",
+                        "surface-container-low": "#191c17",
+                        "primary": "#ffc56c",
+                        "on-secondary-container": "#95f5ae",
+                        "surface-container": "#1d201b",
+                        "on-surface-variant": "#d6c4ac",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#005228",
+                        "background": "#11140f"
+                    },
+                    fontFamily: {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift {
+            background: linear-gradient(180deg, rgba(29, 32, 27, 0.8) 0%, rgba(17, 20, 15, 1) 100%);
+        }
+        .glass-header {
+            background: rgba(17, 20, 15, 0.7);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body min-h-screen pb-32 overflow-x-hidden">
+<!-- Header Suppression: Back Button UI for Task Focus -->
+<header class="fixed top-0 w-full z-50 glass-header px-6 py-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest text-on-surface hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">close</span>
+</button>
+<span class="font-headline font-black text-primary-container tracking-tighter uppercase text-xl">Aktivar</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="close-up profile portrait of a rugged outdoor adventurer with a slight smile and mountain gear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVfjJrY247W_N-f10qmDC9UokyLueBM001ame5Xyvx4SIY2zjbCKtckHJNZc0PRgR5Sw4rqm5lCmjG5IbXz2tQwcxkqMst9B6RccGhgxP4TNurD5AjRhEVfYyOxlOMjkt7t6q6DJcXnt8toIccchIStNbQ8bYqeoUxQT3fEHbnv6p1crWDWgeATS6K-gIz8KMax8IVB4luLAJFwqZlfQWUjxLgQ2nB_exs_RlXFmp1S-HeiCe8l2QZwqvPZsw-JVSEiF0eJoKQDWg"/>
+</div>
+</header>
+<main class="pt-32 px-6 max-w-2xl mx-auto">
+<!-- Success Celebration Section -->
+<div class="flex flex-col items-start mb-12">
+<div class="mb-8 p-4 rounded-3xl bg-secondary-container/20 border border-secondary/20 shadow-[0_0_40px_rgba(123,218,150,0.1)]">
+<span class="material-symbols-outlined text-secondary text-6xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h1 class="font-headline font-black text-5xl md:text-6xl text-on-surface tracking-tighter leading-none mb-4">
+                EXPEDITION <br/>CONFIRMED
+            </h1>
+<p class="font-body text-xl text-on-surface-variant max-w-md">
+                You're now part of the squad for the <span class="text-on-surface font-bold">Volcano Sunset Hike</span>.
+            </p>
+</div>
+<!-- Summary Card (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+<!-- Main Details -->
+<div class="md:col-span-2 bg-surface-container rounded-[2rem] p-8 border border-outline-variant/10 shadow-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+<div class="flex flex-col gap-8 relative z-10">
+<div class="flex flex-col gap-1">
+<span class="font-label text-secondary text-xs font-bold tracking-[0.2em] uppercase">Expedition Detail</span>
+<h2 class="font-headline text-3xl font-bold text-on-surface">Volcano Sunset Hike</h2>
+</div>
+<div class="grid grid-cols-2 gap-y-8 gap-x-4">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">calendar_today</span>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Date</span>
+</div>
+<span class="font-headline text-xl font-bold text-on-surface">Oct 24, 2024</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">schedule</span>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Time</span>
+</div>
+<span class="font-headline text-xl font-bold text-on-surface">16:30 PM</span>
+</div>
+<div class="flex flex-col col-span-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">location_on</span>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Meeting Point</span>
+</div>
+<span class="font-body text-lg text-on-surface font-medium">North Ridge Trailhead, Base Camp 4</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Squad Members Accessory -->
+<div class="bg-surface-container-high rounded-[2rem] p-6 flex flex-col justify-between h-48 border border-outline-variant/10">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Your Squad</span>
+<div class="flex -space-x-3 mt-4">
+<img class="w-12 h-12 rounded-full border-2 border-surface-container-high object-cover" data-alt="portrait of a man with sunglasses outdoors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnlVHujtJgaFzGiNFB0akyRfvpkNNg6rUV6KP7S9bg2IJuXsM6AWbjbE6OYwqUcWUVxa97aOIdP5ZNfe0wwZBSoLnnbFkA51Uwm0ggoWV4dGRYnAX219RzebhJpVKX39xtabzqTRPPGmjgCE_KN5N4Lxd0VrR3qDHZ49s-L9QxVuyg_EP9Sqy11375k0Ht1IPZlIG_e1rC7RZVQIkZHRHQ2cqEyKgCUbW4I7BCCElEMyOfhReoPwropHAxbvY5jSHkkNhMmCLyyuI"/>
+<img class="w-12 h-12 rounded-full border-2 border-surface-container-high object-cover" data-alt="smiling woman in hiking gear portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0mM-GFUAA6nCtECGQSC2dmFJtpgoF0z7hIJ4tY8v3PDxTuEk8DxY6dR7EYsonBfPMSdi-0ujtnvSM3fA8fBX8RxKWQZbSGz8ZyRs04nD5yPgntXGZ4iAgTuFzmpfbBktTsV5Mw7jF94maM18Q_Kthq1DVxiviS0JasP3WVx0HjAdBxoSPmTVIz3ERQ1S1pxZUljpGi9F_IU0BvlOqvoTpl1G_op3uPE3BoQQTu_LUD1SR7wEmdtZfjNawlqwFNjbUInhS0_vP_bA"/>
+<img class="w-12 h-12 rounded-full border-2 border-surface-container-high object-cover" data-alt="rugged hiker man portrait with beard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZuBYZ94gCTEo2N-7eI2s1YLY8g99IyOm8jmrXXaqWrmPtX9uFJBc5rC5z5V8TENEK4-aWWc5N_twWkwdJ0ZicBkc3MTfx0Q9D3YSzyEcFjg28QrTHPdl9a_DSshc9IiLx8OUog7XvfBvEOLR9FKuTdS8XRdw9RSU3BwqTdtHuZODRrm8QA_VQhDeBq3_Lv200saazC2n4WZTQpOOde17GHcPESay5ZG7EGVy9Eu1B_N6EmiK3dxpXpsHPbWNY5juxR74V8riu1T0"/>
+<div class="w-12 h-12 rounded-full border-2 border-surface-container-high bg-surface-container-highest flex items-center justify-center text-xs font-label text-on-surface">+8</div>
+</div>
+<p class="font-body text-sm text-on-surface-variant mt-2">11 explorers attending</p>
+</div>
+<!-- Route Map Accessory -->
+<div class="bg-surface-container-high rounded-[2rem] overflow-hidden h-48 border border-outline-variant/10 relative group">
+<img class="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-80 transition-opacity" data-alt="topographic map style satellite view of a volcanic crater and surrounding lava fields" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKLaleHYxOnzuuhP3YVEo8XSwpGBlqKeVoHliuSGqny_-h4rmHgCy6tGHI6F33XpJthe557O_8FqChFWKzO7zTAqYJw6ZZXpAN6Z9bfFbtbvb0IrcsCOmWCFQqYGWh3PCCif3ckUXGcbfcIbiuKxs6bDFjoiBPsqf4GfmSv1UNJwuJIUPwqS6eFxF72rdpBoIDyZLFB4Lf9eQDGBBog8Pn8qOmfcPvNqN9qkNQBAq7Xa-7SJ_fBlTNurw4XL7KigxPaEKrH5qjJ6c"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-high to-transparent"></div>
+<div class="absolute bottom-4 left-6">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest block mb-1">Route Type</span>
+<span class="font-headline font-bold text-on-surface">Summit Loop</span>
+</div>
+<div class="absolute top-4 right-4 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-label font-bold tracking-tighter uppercase">
+                    Advanced
+                </div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-4">
+<button class="w-full h-16 bg-primary-container text-on-primary-container rounded-xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all group">
+<span class="material-symbols-outlined font-bold group-hover:rotate-12 transition-transform">forum</span>
+<span class="font-label font-bold tracking-widest text-sm uppercase">OPEN GROUP CHAT</span>
+</button>
+<button class="w-full h-16 border border-outline-variant/30 text-on-surface rounded-xl flex items-center justify-center gap-3 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">event</span>
+<span class="font-label font-medium tracking-widest text-sm uppercase">ADD TO CALENDAR</span>
+</button>
+</div>
+<!-- Reward/Gamification Hook -->
+<div class="mt-12 p-6 rounded-2xl bg-surface-container-low border border-outline-variant/5 flex items-center gap-6">
+<div class="w-14 h-14 shrink-0 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-on-primary-container text-3xl">military_tech</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Summit Badge Quest</h4>
+<p class="font-body text-sm text-on-surface-variant">Complete this expedition to earn the 'Volcano Pioneer' digital badge.</p>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Suppressed for Task-Focused Confirmation Flow -->
+</body></html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&amp;family=Manrope:wght@400;500;600&amp;family=Space_Grotesk:wght@300;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary": "#d3cfc6",
+            "on-secondary": "#00391a",
+            "on-surface": "#e1e3da",
+            "surface-bright": "#373a34",
+            "on-primary-container": "#5f3f00",
+            "surface": "#11140f",
+            "primary-container": "#f0a500",
+            "on-tertiary-fixed": "#1c1c16",
+            "on-background": "#e1e3da",
+            "error": "#ffb4ab",
+            "tertiary-fixed-dim": "#cac6bd",
+            "on-primary-fixed-variant": "#614000",
+            "surface-container-highest": "#333630",
+            "on-tertiary-container": "#47463f",
+            "inverse-primary": "#805600",
+            "secondary-container": "#00733b",
+            "surface-container-lowest": "#0c0f0a",
+            "secondary-fixed": "#97f7b0",
+            "secondary-fixed-dim": "#7bda96",
+            "on-tertiary": "#32312a",
+            "surface-tint": "#ffba44",
+            "surface-container-high": "#282b25",
+            "on-primary-fixed": "#281800",
+            "tertiary-fixed": "#e6e2d8",
+            "on-primary": "#442c00",
+            "on-error-container": "#ffdad6",
+            "inverse-on-surface": "#2e312b",
+            "on-secondary-fixed": "#00210d",
+            "surface-dim": "#11140f",
+            "on-error": "#690005",
+            "primary-fixed-dim": "#ffba44",
+            "inverse-surface": "#e1e3da",
+            "secondary": "#7bda96",
+            "outline-variant": "#514533",
+            "surface-variant": "#333630",
+            "outline": "#9f8e79",
+            "primary-fixed": "#ffddaf",
+            "on-tertiary-fixed-variant": "#484740",
+            "tertiary-container": "#b7b4ab",
+            "surface-container-low": "#191c17",
+            "primary": "#ffc56c",
+            "on-secondary-container": "#95f5ae",
+            "surface-container": "#1d201b",
+            "on-surface-variant": "#d6c4ac",
+            "error-container": "#93000a",
+            "on-secondary-fixed-variant": "#005228",
+            "background": "#11140f"
+          },
+          fontFamily: {
+            "headline": ["Epilogue"],
+            "body": ["Manrope"],
+            "label": ["Space Grotesk"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+    }
+    .active-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-nav {
+      background: rgba(17, 20, 15, 0.7);
+      backdrop-filter: blur(24px);
+    }
+    .tonal-shift {
+      background: linear-gradient(180deg, #11140f 0%, #1d201b 100%);
+    }
+    .text-shadow-premium {
+      text-shadow: 0px 4px 12px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+<!-- Top Bar: Static Navigation Shell (Transactional) -->
+<!-- Note: Suppression logic applies here as it's Onboarding. Shell is simplified. -->
+<header class="fixed top-0 w-full z-50 glass-nav px-6 py-8 flex justify-between items-center">
+<div class="text-2xl font-black text-primary-container tracking-tighter uppercase font-headline">
+      Aktivar
+    </div>
+<div class="font-label text-xs tracking-widest text-on-surface-variant uppercase">
+      Step 02 / 04
+    </div>
+</header>
+<main class="flex-grow pt-32 pb-40 px-6 max-w-5xl mx-auto w-full">
+<!-- Header Section -->
+<section class="mb-12">
+<h1 class="font-headline font-black text-4xl md:text-6xl tracking-tighter text-on-surface uppercase mb-4 leading-none">
+        WHAT FUELS YOUR SOUL?
+      </h1>
+<div class="flex items-center gap-3">
+<span class="h-px w-12 bg-primary-container"></span>
+<p class="font-label text-sm uppercase tracking-[0.2em] text-on-surface-variant">
+          Select at least 3 categories to start your journey.
+        </p>
+</div>
+</section>
+<!-- Interests Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1: Selected State -->
+<button class="relative group h-80 rounded-xl overflow-hidden text-left border-4 border-primary-container ring-8 ring-primary-container/10 transition-transform duration-300 scale-[1.02] shadow-2xl">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0" data-alt="dramatic wide angle shot of a trekker standing on a rocky mountain ridge at sunset with warm golden light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPNcj8B489-31-RTPuweqidNgm7nR1BMInBc4kSTPsf_nbEltHINW2OgekCE-2aCVxX0p4Hb_MqN46WUgY5gfaf38OsLK3ucazLo2yRyH4IHr2-9IRkDohaSgxNtA_tFPeGFi8Lp2wQh0VzozJkjTHUEXbWt0GtU0RD4MWbP53C6rub_zpCcdhQQfSKvNgWqCcxwGbIrTOR-Q325qH485kAiSS48tFudPLJpZQJHF3zT1XDupfor9qOdTliaZQJO1CqSVDY07NcVc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-90"></div>
+<div class="absolute top-4 right-4 bg-primary-container text-surface p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined active-icon" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="absolute bottom-6 left-6">
+<p class="font-label text-[10px] uppercase tracking-widest text-primary-container mb-1">01 / Outdoors</p>
+<h3 class="font-headline text-2xl font-black text-on-surface uppercase tracking-tight text-shadow-premium">Trekking</h3>
+</div>
+</button>
+<!-- Card 2: Default State -->
+<button class="relative group h-80 rounded-xl overflow-hidden text-left bg-surface-container-low transition-all duration-300 hover:scale-[1.02]">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale hover:grayscale-0 opacity-60 hover:opacity-100" data-alt="vibrant music festival at night with colorful stage lights beams of blue and purple and a large crowd in silhouette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARP9BBr6v13qxvGhzPhIciCABWZqzs1mDavH6r1R4Cw49h2KJkpT2s0W6VgpI3hDxJeq9vfafi2VMAacg5YYCaL3AujM-fJJdvSFylFZ3HbEf1xkhwEt0zVBSXvHAlGu6r7oAP7eA4bXDzwOq91qkxUpbwjy8z-Oy6jEPmQu0uMOyo7W1SEhAvJQgAcw3gWx0tSjM9tCns9Kt9kuULnWhDe4jiJLmjE457ZaBwQTN3LrjJlgLBluDu9fn9FYqN-9IALdkknq3J58M"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-highest/80 via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-6 left-6">
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">02 / Culture</p>
+<h3 class="font-headline text-2xl font-black text-on-surface uppercase tracking-tight text-shadow-premium">Festivals</h3>
+</div>
+</button>
+<!-- Card 3: Default State -->
+<button class="relative group h-80 rounded-xl overflow-hidden text-left bg-surface-container-low transition-all duration-300 hover:scale-[1.02]">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale hover:grayscale-0 opacity-60 hover:opacity-100" data-alt="vintage off-road vehicle driving on a winding desert road through majestic red rock canyons in the American Southwest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgth4G8TxrQZwAba_srK38QalFImciq7oojizDglXtdMpOcZtxqWJZ78E7WRNNKj0bdHACpYq4HrnS1IolgSP200h_-ilZ6MMlRwzMO6iAdfNkjzf6-5bwT88lZBCVxT89F85QjcyNN0JnOQDxmXnG9v5uN6btSIuQYOKLTDelPU6WzqMB7fMtU0lg_aeykwG1ZnNhXHaDtTdZrE_ohnpdmQklh7esUF82eECYu8FmfJjfV6048TrCRifq9NI6FAIQGZHIoxAGFXw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-highest/80 via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-6 left-6">
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">03 / Exploration</p>
+<h3 class="font-headline text-2xl font-black text-on-surface uppercase tracking-tight text-shadow-premium">Road Trips</h3>
+</div>
+</button>
+<!-- Card 4: Selected State -->
+<button class="relative group h-80 rounded-xl overflow-hidden text-left border-4 border-primary-container transition-transform duration-300 scale-[1.02] shadow-2xl">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0" data-alt="solo kayaker paddling across a mirror-like mountain lake reflecting snow-capped peaks and deep blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaoPmDPrZJX-uJ4ZYAJ4pivyMSjXF3YSL8VZvi4xVfZr3WEFFAL6lePzahrFRSeK8-S5jgJe5nAUPsfcnLpatWPQK1xwyL9pSzf8JJ6Yhz8auoBavtujoQdV_2eB-P_kfVSOcsmti07SGZtMcegl_p3ROzsbhHpH0Sixyt0V4biFB5mc_AVw3SOM2SeTJN9eGBmkzU7xIgo7hfnoklOpK7dbDzMEiZxwZYi7i7O7wh7xS9NxJjnY_48VicZi1W8S3rHnEwg254ZGo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-90"></div>
+<div class="absolute top-4 right-4 bg-primary-container text-surface p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined active-icon" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="absolute bottom-6 left-6">
+<p class="font-label text-[10px] uppercase tracking-widest text-primary-container mb-1">04 / Watersports</p>
+<h3 class="font-headline text-2xl font-black text-on-surface uppercase tracking-tight text-shadow-premium">Kayaking</h3>
+</div>
+</button>
+<!-- Card 5: Default State -->
+<button class="relative group h-80 rounded-xl overflow-hidden text-left bg-surface-container-low transition-all duration-300 hover:scale-[1.02]">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale hover:grayscale-0 opacity-60 hover:opacity-100" data-alt="two people camping in a forest at night with a small glowing tent under a clear starry sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO5jSyt_2SHm0mQgXhtuXsQE1JTvSLhDWXyyoPXCWyG5Dc0DefPm3boRDr9OdOpXStrP57xmUdl53UIQxE3Lj_kTXvdt4ySZvbyFyUOdxJ4ZsUi9o9nIq8KwoiFG-AsNRDkrcZPB9-kyQP9bMbPcxK9tTOk3BZBHgblyd-R-wQTIi-LRr5s7U0WSpKx42SZxuhGzAv1qgiPGpw2FuEzTt9mGss3SBwXZb8QLN3lH7V4q5dGBDe0tr7w9oQ6VEZsvVO6jE1zZDFHLQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-highest/80 via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-6 left-6">
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">05 / Survival</p>
+<h3 class="font-headline text-2xl font-black text-on-surface uppercase tracking-tight text-shadow-premium">Wild Camping</h3>
+</div>
+</button>
+<!-- Card 6: Default State -->
+<button class="relative group h-80 rounded-xl overflow-hidden text-left bg-surface-container-low transition-all duration-300 hover:scale-[1.02]">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale hover:grayscale-0 opacity-60 hover:opacity-100" data-alt="extreme rock climber on a vertical granite cliff face with high altitude exposure and dramatic mountain background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIlWQMzZwiYxqVticYM6OyOVj_FP_Wrte4BOrcFX4iB-TE8qKOeBonqgJOzfsMciV0zWhqexNUeajxmB4b8EykuBgGtsCwEGihTJSjcoWn6g_VNUsQoJT7sMD0FO_BrTlwComXb9RB-k6LCjDq_FMRAA7YSw_MacQLQmNOKKV8OhQTCEhg2hS6a_pan9ozRaZGc0JtLoLFqakabo1vZqWDqxEVi_hP0hU7glBxzfCWp7ukKmKKmIufzZAn2fcJp0iFFi5KJHof5p8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-highest/80 via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-6 left-6">
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">06 / Vertical</p>
+<h3 class="font-headline text-2xl font-black text-on-surface uppercase tracking-tight text-shadow-premium">Climbing</h3>
+</div>
+</button>
+</div>
+</main>
+<!-- Sticky Footer Action -->
+<footer class="fixed bottom-0 left-0 w-full glass-nav pt-6 pb-10 px-6 border-t border-outline-variant/15 flex flex-col items-center">
+<div class="w-full max-w-5xl flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="hidden md:flex items-center gap-4">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="portrait of a young female adventurer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4wipYh-3UAYtHfx58Eh2v_00Msq-yx7-cUPMNy8TqJ5abKivmfMzmy2cOEMVH50IYENgGg6dK078TOnPkfi7-469hNFT478exg88Fb_8bgsZwtFugbKW9DM_erV2_cyXoWN1haRrLOHpiodIFItr4OICmuA0pJ_Cnpo7KxOsydtUM29BJZounFyBxgmBK3cvUOcqesydCcz5PI_-bqdRklkD58I9OlmU4IDZkB58TTEZ_K_YCI7ngq8UnXbx8ajUzvfCJwetDpNk"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="portrait of a bearded man with hiking gear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsOhDnuvyq7ah0j9nsqrA4tIPmZBKhIjpwyfA30M7cuZ0rLIHFATTq33hJErn__o1oU78NXwH-HIhRclENJ9oPNqEGoJ7jvVD3BTAWM0BTg0JAYi6iXkYLJZ7FdCpnN8S74XHX0lstQsms1Qw75Zgtw1_A-pAqWwhhAq67ldY_1fPafPg1jOFhcAuUNy5WP0JuK7vgpox85zJ5q-PQvI-PewZxcZeABBQxcByYFTJK5PgA0DhdIV2tqO2W4bcmjZzLdTqqY83_nFk"/>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border-2 border-surface flex items-center justify-center text-[10px] font-label">
+            +2k
+          </div>
+</div>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Join 2,400+ explorers today</p>
+</div>
+<button class="w-full md:w-auto min-h-[64px] px-12 bg-primary-container text-on-primary-container rounded-xl font-headline font-black text-xl tracking-tighter uppercase transition-all duration-200 hover:scale-105 active:scale-95 shadow-[0px_16px_32px_rgba(240,165,0,0.25)] flex items-center justify-center gap-4">
+        CONTINUE
+        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</footer>
+</body></html>

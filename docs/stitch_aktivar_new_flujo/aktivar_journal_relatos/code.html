@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&amp;family=Manrope:wght@400;500;600&amp;family=Space_Grotesk:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "error-container": "#93000a",
+            "on-primary-fixed": "#281800",
+            "on-error-container": "#ffdad6",
+            "tertiary": "#d3cfc6",
+            "surface-dim": "#11140f",
+            "primary-container": "#f0a500",
+            "tertiary-fixed": "#e6e2d8",
+            "on-secondary-container": "#95f5ae",
+            "on-tertiary-fixed-variant": "#484740",
+            "surface-container-lowest": "#0c0f0a",
+            "on-secondary-fixed": "#00210d",
+            "on-secondary": "#00391a",
+            "surface-container-low": "#191c17",
+            "on-primary": "#442c00",
+            "surface-container-high": "#282b25",
+            "surface-bright": "#373a34",
+            "surface-variant": "#333630",
+            "outline": "#9f8e79",
+            "inverse-on-surface": "#2e312b",
+            "surface-container": "#1d201b",
+            "surface": "#11140f",
+            "error": "#ffb4ab",
+            "secondary-fixed": "#97f7b0",
+            "inverse-primary": "#805600",
+            "on-secondary-fixed-variant": "#005228",
+            "surface-tint": "#ffba44",
+            "on-tertiary-container": "#47463f",
+            "primary-fixed-dim": "#ffba44",
+            "on-tertiary-fixed": "#1c1c16",
+            "primary": "#ffc56c",
+            "primary-fixed": "#ffddaf",
+            "background": "#11140f",
+            "on-background": "#e1e3da",
+            "secondary-container": "#00733b",
+            "on-surface-variant": "#d6c4ac",
+            "on-surface": "#e1e3da",
+            "inverse-surface": "#e1e3da",
+            "on-primary-fixed-variant": "#614000",
+            "surface-container-highest": "#333630",
+            "secondary": "#7bda96",
+            "on-error": "#690005",
+            "tertiary-fixed-dim": "#cac6bd",
+            "on-tertiary": "#32312a",
+            "secondary-fixed-dim": "#7bda96",
+            "outline-variant": "#514533",
+            "on-primary-container": "#5f3f00",
+            "tertiary-container": "#b7b4ab"
+          },
+          fontFamily: {
+            "headline": ["Epilogue"],
+            "body": ["Manrope"],
+            "label": ["Space Grotesk"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+      font-size: 20px;
+    }
+    .text-shadow-sm { text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .asymmetric-bleed { margin-right: -4rem; }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation (Shared Component Integration) -->
+<header class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<nav class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black tracking-tighter text-[#f0a500] italic font-['Epilogue']">Aktivar</div>
+<div class="hidden md:flex gap-10 items-center">
+<a class="font-['Epilogue'] tracking-tighter font-extrabold uppercase text-[#f0a500] border-b-2 border-[#f0a500] pb-1 hover:scale-105 transition-transform duration-200" href="#">Journal</a>
+<a class="font-['Epilogue'] tracking-tighter font-extrabold uppercase text-[#ede9df] opacity-80 hover:scale-105 transition-transform duration-200 hover:text-[#f0a500]" href="#">Marketplace</a>
+<a class="font-['Epilogue'] tracking-tighter font-extrabold uppercase text-[#ede9df] opacity-80 hover:scale-105 transition-transform duration-200 hover:text-[#f0a500]" href="#">Safety</a>
+</div>
+<div class="flex gap-6 items-center">
+<button class="material-symbols-outlined text-[#ede9df] opacity-80 hover:text-[#f0a500] transition-colors">notifications</button>
+<button class="material-symbols-outlined text-[#ede9df] opacity-80 hover:text-[#f0a500] transition-colors">account_circle</button>
+</div>
+</nav>
+</header>
+<main class="pt-24 pb-32 px-4 md:px-12 max-w-screen-2xl mx-auto overflow-x-hidden">
+<!-- Hero Section: Featured Story -->
+<section class="relative grid grid-cols-1 lg:grid-cols-12 gap-8 mb-24 items-end">
+<div class="lg:col-span-8 relative z-10 group cursor-pointer">
+<div class="aspect-[16/10] overflow-hidden rounded-xl bg-surface-container shadow-2xl">
+<img alt="Patagonia Peaks" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Cinematic wide shot of snow-capped jagged mountain peaks in Patagonia at sunset, orange glow hitting the granite faces, dramatic storm clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0BdHk4HF672NcEzvETH7lfNAnRUnNXS912tPbn9Kv52GNymthGHskM-zvmp43cNJPDuFi7mT5fXS6YcS53SQ8I5l88oTFo2NsvCHvfUOmhfVqQQnDkfgUZi7_82NKa-Lh0qpJvo5MVC4mE02p3CZWsP6LMEXePwvLGfPpRr1Kyn1ZeUq1DTXlN-tlPZuBQLie_7xM_u-y3PtI1WnJRTBngKxUXgaknmf8HBvCjKAAuAy_vpIwAs_JDVDVuFmn-m6bveo2UxJAOvk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60"></div>
+</div>
+<div class="mt-8">
+<span class="font-label text-xs tracking-[0.2em] text-primary uppercase mb-4 block">FEATURED EXPEDITION</span>
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.9] text-on-surface mb-6">
+            CHASING THE <br/> GRANITE GIANTS
+          </h1>
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="font-label text-[10px] text-on-surface-variant uppercase">By Mateo Vazquez</span>
+<span class="font-label text-[10px] text-primary-container uppercase">Nov 24, 2023</span>
+</div>
+<a class="inline-flex items-center gap-2 text-primary-container font-headline font-extrabold uppercase tracking-tight group" href="#">
+              Read More 
+              <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_right_alt</span>
+</a>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 self-start space-y-12 lg:pl-8">
+<div class="p-8 bg-surface-container rounded-xl border-l-4 border-primary">
+<h2 class="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-6">THE ESSENCE</h2>
+<p class="font-body text-lg leading-relaxed text-on-surface italic">
+            "We found ourselves standing where the map ended. The air in Torres del Paine doesn't just fill your lungs; it awakens your spirit."
+          </p>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-outline-variant/30 pb-4">
+<span class="font-label text-xs uppercase text-on-surface-variant">Distance</span>
+<span class="font-label text-xl font-bold">124.8 KM</span>
+</div>
+<div class="flex items-center justify-between border-b border-outline-variant/30 pb-4">
+<span class="font-label text-xs uppercase text-on-surface-variant">Elevation Gain</span>
+<span class="font-label text-xl font-bold">4,200 M</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+<!-- Editorial Feed -->
+<div class="lg:col-span-8 space-y-24">
+<!-- Article 1 -->
+<article class="flex flex-col md:flex-row gap-10 group">
+<div class="w-full md:w-1/2 aspect-square md:aspect-auto overflow-hidden rounded-lg bg-surface-container-low">
+<img alt="Amazon Basin" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Dense Amazon rainforest canopy viewed from above at sunrise, thick morning mist clinging to the green trees, vibrant emerald colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq0pxN0zSHE1PUgEOmYQhcTnEkB2U3Mgy3VcMKw39w_tEcJVLYZn-PSQ1PEXT6vrd8hcVNsDA-dCqDbaBLZYKycrjvcAbsMa2sG3oetgu2IxYm1ngr8RCXpsMBPD93lwXAhtOxYKA3zWbA7oHf7bmKuquhzA_SYtUluOyB8zUHrbvkFPcLDysItSNZcjWNs4PviXUaG6JV_MWGmEa1B62AVJo1roAhG7XcDrZcWJEvrVJgCidiC7qqbifXIvzlFvPC3qw75B7PqhY"/>
+</div>
+<div class="w-full md:w-1/2 flex flex-col justify-center">
+<span class="font-label text-[10px] tracking-widest text-primary-container uppercase mb-3">AMAZONAS STORY</span>
+<h3 class="font-headline text-3xl font-extrabold tracking-tight mb-4 leading-none">
+              Lost in the Deep <br/> Green Silence
+            </h3>
+<p class="font-body text-on-surface-variant mb-6 line-clamp-3">
+              Navigating the Javarí River requires more than just a compass. It requires an ear for the subtle shifts in the jungle's nocturnal orchestra.
+            </p>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="font-label text-[10px] uppercase">By Sofia Rincon</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="font-label text-[10px] uppercase">12 Min Read</span>
+</div>
+<a class="mt-6 text-primary-container font-headline font-bold uppercase text-xs tracking-widest hover:underline decoration-2 underline-offset-4" href="#">Read Full Relato</a>
+</div>
+</article>
+<!-- Article 2: Asymmetric Layout -->
+<article class="relative py-12">
+<div class="bg-surface-container-high rounded-3xl p-10 md:p-16 flex flex-col lg:flex-row-reverse items-center gap-12">
+<div class="w-full lg:w-1/2 -mr-0 lg:-mr-24 z-10">
+<div class="aspect-video rounded-2xl overflow-hidden shadow-2xl">
+<img alt="Atacama Stars" class="w-full h-full object-cover" data-alt="Milky way galaxy clearly visible above the dark silhouettes of Atacama desert salt flats, purple and deep blue night sky with thousands of stars" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr3MJyFBHJhg5erC5mdVySoTMyxXJSOGh759BQNk9f-wNe0VoPZ3w1TnWqozM2zjpcgpVDmKyKlBsjYE428TWVN5yki-xjZCZrOKFq0iCwpDj3Y9Z6Vp7UWouZGMXkZkaKJWP9PhXc8_nsGy1wJ_3wpt3ab6dFOvC6yjiDuDdml_KaoQlIQpwqObvTSQmBQob4EmZJHr-TEr-5Fd4DPmANmCW7hEUE5ES_kisSFCEjnflyhteQfB2DsDkDzmZKVsJoGu1WDerE_gs"/>
+</div>
+</div>
+<div class="w-full lg:w-1/2">
+<span class="font-label text-[10px] tracking-widest text-secondary uppercase mb-3">NIGHT PHOTOGRAPHY</span>
+<h3 class="font-headline text-4xl font-extrabold tracking-tighter mb-6 leading-tight">
+                Where the Sky <br/> Touches the Earth
+              </h3>
+<p class="font-body text-on-surface-variant mb-8 text-lg">
+                In Atacama, darkness isn't an absence of light, but a canvas of cosmic fire. We spent ten nights documenting the clearest skies on the planet.
+              </p>
+<div class="flex gap-4">
+<button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-headline font-extrabold uppercase text-xs tracking-widest hover:scale-105 transition-transform">
+                   View Gallery
+                 </button>
+<button class="border border-outline-variant text-on-surface px-6 py-3 rounded-xl font-headline font-extrabold uppercase text-xs tracking-widest hover:bg-surface-variant transition-colors">
+                   Read Journal
+                 </button>
+</div>
+</div>
+</div>
+</article>
+<!-- Article 3 -->
+<article class="flex flex-col md:flex-row gap-10 group">
+<div class="w-full md:w-1/2 aspect-square md:aspect-auto overflow-hidden rounded-lg bg-surface-container-low md:order-last">
+<img alt="Andes Trail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A lone hiker with a large backpack walking on a narrow ridge in the high Andes, dramatic valley below with turquoise glacial lakes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTkqpSzuJos5Bt8ExZ6GN7HUmv9H3K2XTQXIkyxBcyGR5z_DYCuI7O5rmvkPX4lQYMfzIatLzxrnzNnH2IpGuXqzSr0xGxzd_e_N4dkcNxL3_ZKLpq5hsPI_EY_LLCYJVDovcRovqKyhMw8XmmvQxvOwdCwnvj8DkIsGTDVwT7BwyruxTXgS7IFJ40_qFv18qEkPsl7U-3pWeTi3OTE0j6ojtCEkKpezT-NprEa31K3_P0YvpmUILXuBuFnBks_5PLsX9nJBPkdEI"/>
+</div>
+<div class="w-full md:w-1/2 flex flex-col justify-center">
+<span class="font-label text-[10px] tracking-widest text-primary-container uppercase mb-3">SOLO TREKKING</span>
+<h3 class="font-headline text-3xl font-extrabold tracking-tight mb-4 leading-none">
+              High Altitude <br/> Humility
+            </h3>
+<p class="font-body text-on-surface-variant mb-6 line-clamp-3">
+              The Cordillera Blanca doesn't care about your resume. At 5,000 meters, you realize your true size in the grand architecture of the world.
+            </p>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="font-label text-[10px] uppercase">By Carlos Mendez</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="font-label text-[10px] uppercase">8 Min Read</span>
+</div>
+<a class="mt-6 text-primary-container font-headline font-bold uppercase text-xs tracking-widest hover:underline decoration-2 underline-offset-4" href="#">Read Full Relato</a>
+</div>
+</article>
+</div>
+<!-- Sidebar -->
+<aside class="lg:col-span-4 space-y-16">
+<!-- Trending -->
+<section>
+<h4 class="font-headline text-2xl font-black italic tracking-tighter mb-8 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+            Trending Stories
+          </h4>
+<div class="space-y-8">
+<div class="flex gap-4 group cursor-pointer">
+<span class="font-headline text-4xl font-extrabold text-outline-variant/30 transition-colors group-hover:text-primary">01</span>
+<div>
+<h5 class="font-headline font-bold leading-tight mb-1 group-hover:text-primary transition-colors">Survival Secrets of the Darien Gap</h5>
+<span class="font-label text-[10px] text-on-surface-variant uppercase">By Elena Rossi</span>
+</div>
+</div>
+<div class="flex gap-4 group cursor-pointer">
+<span class="font-headline text-4xl font-extrabold text-outline-variant/30 transition-colors group-hover:text-primary">02</span>
+<div>
+<h5 class="font-headline font-bold leading-tight mb-1 group-hover:text-primary transition-colors">The Invisible Routes of Oaxaca</h5>
+<span class="font-label text-[10px] text-on-surface-variant uppercase">By Diego Silva</span>
+</div>
+</div>
+<div class="flex gap-4 group cursor-pointer">
+<span class="font-headline text-4xl font-extrabold text-outline-variant/30 transition-colors group-hover:text-primary">03</span>
+<div>
+<h5 class="font-headline font-bold leading-tight mb-1 group-hover:text-primary transition-colors">Kayaking the Bio-Bio Rapids</h5>
+<span class="font-label text-[10px] text-on-surface-variant uppercase">By Clara Hertz</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Contributors -->
+<section class="bg-surface-container rounded-2xl p-8">
+<h4 class="font-headline text-xl font-black uppercase tracking-tight mb-8">Top Contributors</h4>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden">
+<img alt="Author" data-alt="Close-up headshot of a rugged man with a beard wearing a wool hat, warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9tj5ei-aRvWzCUljdiyVSI1F3I2XZui5zA0UpJps7VjO3BgFYjn7MGnorFD33eluMWMDobxz1YBgSqq9rN7ffDT4UkcrHTvYbq626dtf1ojQI-3IqRe1kV4JKOc-Na__5DEIqXUC41aanhcBgJlShTOzIBqmj1R9a-NUeassYx838PK0yyKLeTkM-iLtr1qRZq0QVqGRIY0sv_DwMSc0k3zi-iaTvoM8gBO5ME6wZt0l4GXJzxgZOqVj4CgFOAeUCwqPqNn-eqfw"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline font-bold text-sm">Mateo Vazquez</span>
+<span class="font-label text-[10px] text-on-surface-variant uppercase">42 Relatos</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden">
+<img alt="Author" data-alt="Headshot of a smiling woman with mountain hiking gear, bright outdoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyU7YY5ThxfwlH7d5wTF2QPStvrH101pvmFdIVsYqn9MGKDw3RXt7g2w9dyi7cR6QehXlg9_viBl-u4oWg9fjlGxPw7Hrcn8aqj5GmWZ8SMk_qYw3x5_5z5Tzz7hd8XK-Nz5CrfBDF0sAQ4EzwtVub9sX43xBaYvtQhae40VcTRzZpi6RsuixEGKLHbrk9rYIP8qRcf-isqjwbphAFhJ6PRcwCJtS4LwNRIwHaVhzm_-qM5aJFUBB6nbafJccQ9qoUMIJbNrwvyGM"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline font-bold text-sm">Sofia Rincon</span>
+<span class="font-label text-[10px] text-on-surface-variant uppercase">38 Relatos</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden">
+<img alt="Author" data-alt="Portrait of a young adventurous man with messy hair and sunglasses on his head" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr8p02y_kIKhP2a0F4jJDIV1vqGHILN_eys_WRTJhlKhVUyXZCRmytnpfjd3vUQFXsjpkGmI6QWSBhW6p6mj7tIJOw_NEM1-mFUykUPbQtvLkjCYxTzWejoZ-ZQyZyiGh977SjoLSIgRyHUMXV8VXixxSmgoGpbhvIhQcjKiv9t-aJxOWrjkeT-AkeRToP_00BhctDqf_-M5ZU_SYBXf4xzOANT31cpRwZk37xTonCPY0LOeTq0vNFymDZasFUHUadJZW8pGG7H8c"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline font-bold text-sm">Diego Silva</span>
+<span class="font-label text-[10px] text-on-surface-variant uppercase">31 Relatos</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full mt-10 py-4 border-t border-outline-variant/30 font-label text-[10px] tracking-widest uppercase hover:text-primary transition-colors">Join the expedition</button>
+</section>
+<!-- Newsletter / Subscribe -->
+<section class="bg-primary text-on-primary-fixed p-8 rounded-xl shadow-xl">
+<h4 class="font-headline text-2xl font-black leading-tight mb-4 uppercase">Get the Monthly Journal</h4>
+<p class="font-body text-sm mb-6 opacity-80">The best stories from Latin American trails, delivered to your inbox every full moon.</p>
+<div class="space-y-3">
+<input class="w-full bg-on-primary-fixed/5 border-none rounded-lg p-4 font-label text-xs tracking-widest placeholder:text-on-primary-fixed/40" placeholder="YOUR EMAIL" type="email"/>
+<button class="w-full bg-on-primary-fixed text-primary px-4 py-4 rounded-lg font-headline font-extrabold uppercase text-xs tracking-widest active:scale-95 transition-transform">Subscribe</button>
+</div>
+</section>
+</aside>
+</div>
+</main>
+<!-- Bottom Nav (Mobile Only Shared Component) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#11140f]/70 backdrop-blur-xl z-50 rounded-t-3xl border-t border-[#333630]/15 shadow-[0px_-12px_32px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60" href="#">
+<span class="material-symbols-outlined">landscape</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#f0a500] text-[#11140f] rounded-2xl p-3 scale-110 -translate-y-2 transition-all shadow-lg" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Trophy</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60" href="#">
+<span class="material-symbols-outlined">health_and_safety</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Safety</span>
+</a>
+</nav>
+</body></html>

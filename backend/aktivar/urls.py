@@ -15,6 +15,7 @@ from users.views import AuthTokenObtainPairView
 
 
 urlpatterns = [
+    path("api/v1/health/", health_check, name="health_check"),
     path("admin/", admin.site.urls),
     # JWT Authentication (rate limited)
     path("api/v1/auth/token/", AuthTokenObtainPairView.as_view(), name="token_obtain_pair"),
@@ -29,6 +30,7 @@ urlpatterns = [
     path("api/v1/payments/", include("payments.urls")),
     path("api/v1/notifications/", include("notifications.urls")),
     path("api/v1/core/", include("core.urls")),
+    path("api/v1/ecosystem/", include("ecosystem.urls")),
 ]
 
 # API docs and media files only in development
