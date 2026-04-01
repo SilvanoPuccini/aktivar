@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Manrope:wght@400;500;600&amp;family=Space_Grotesk:wght@400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shifting {
+            background: linear-gradient(180deg, #11140f 0%, #1d201b 100%);
+        }
+        body {
+            background-color: #0c0f0a;
+            color: #ede9df;
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#281800",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#d3cfc6",
+                        "surface-dim": "#11140f",
+                        "primary-container": "#f0a500",
+                        "tertiary-fixed": "#e6e2d8",
+                        "on-secondary-container": "#95f5ae",
+                        "on-tertiary-fixed-variant": "#484740",
+                        "surface-container-lowest": "#0c0f0a",
+                        "on-secondary-fixed": "#00210d",
+                        "on-secondary": "#00391a",
+                        "surface-container-low": "#191c17",
+                        "on-primary": "#442c00",
+                        "surface-container-high": "#282b25",
+                        "surface-bright": "#373a34",
+                        "surface-variant": "#333630",
+                        "outline": "#9f8e79",
+                        "inverse-on-surface": "#2e312b",
+                        "surface-container": "#1d201b",
+                        "surface": "#11140f",
+                        "error": "#ffb4ab",
+                        "secondary-fixed": "#97f7b0",
+                        "inverse-primary": "#805600",
+                        "on-secondary-fixed-variant": "#005228",
+                        "surface-tint": "#ffba44",
+                        "on-tertiary-container": "#47463f",
+                        "primary-fixed-dim": "#ffba44",
+                        "on-tertiary-fixed": "#1c1c16",
+                        "primary": "#ffc56c",
+                        "primary-fixed": "#ffddaf",
+                        "background": "#11140f",
+                        "on-background": "#e1e3da",
+                        "secondary-container": "#00733b",
+                        "on-surface-variant": "#d6c4ac",
+                        "on-surface": "#e1e3da",
+                        "inverse-surface": "#e1e3da",
+                        "on-primary-fixed-variant": "#614000",
+                        "surface-container-highest": "#333630",
+                        "secondary": "#7bda96",
+                        "on-error": "#690005",
+                        "tertiary-fixed-dim": "#cac6bd",
+                        "on-tertiary": "#32312a",
+                        "secondary-fixed-dim": "#7bda96",
+                        "outline-variant": "#514533",
+                        "on-primary-container": "#5f3f00",
+                        "tertiary-container": "#b7b4ab"
+                    },
+                    fontFamily: {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface-container-lowest min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<nav class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black tracking-tighter text-[#f0a500] italic font-['Epilogue'] uppercase">Aktivar</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="font-['Epilogue'] tracking-tighter font-extrabold uppercase text-[#ede9df] opacity-80 hover:scale-105 transition-transform duration-200 hover:text-[#f0a500]" href="#">Journal</a>
+<a class="font-['Epilogue'] tracking-tighter font-extrabold uppercase text-[#f0a500] border-b-2 border-[#f0a500] pb-1 hover:scale-105 transition-transform duration-200 hover:text-[#f0a500]" href="#">Marketplace</a>
+<a class="font-['Epilogue'] tracking-tighter font-extrabold uppercase text-[#ede9df] opacity-80 hover:scale-105 transition-transform duration-200 hover:text-[#f0a500]" href="#">Safety</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="text-[#ede9df] opacity-80 hover:text-[#f0a500] transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-[#ede9df] opacity-80 hover:text-[#f0a500] transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="pt-24 pb-32 px-4 md:px-8 max-w-screen-2xl mx-auto flex flex-col md:flex-row gap-12">
+<!-- Left Sidebar: Filters -->
+<aside class="w-full md:w-72 flex-shrink-0 space-y-12">
+<div class="space-y-6">
+<h3 class="font-headline text-lg font-extrabold tracking-tight uppercase text-on-surface">Categories</h3>
+<div class="flex flex-wrap md:flex-col gap-3">
+<button class="flex items-center justify-between w-full px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-label text-sm font-bold uppercase transition-transform active:scale-95">
+<span>Camping</span>
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="flex items-center justify-between w-full px-4 py-3 bg-surface-container-high text-on-surface-variant rounded-xl font-label text-sm font-bold uppercase hover:bg-surface-variant transition-all">
+<span>Climbing</span>
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="flex items-center justify-between w-full px-4 py-3 bg-surface-container-high text-on-surface-variant rounded-xl font-label text-sm font-bold uppercase hover:bg-surface-variant transition-all">
+<span>Water Sports</span>
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="space-y-6">
+<h3 class="font-headline text-lg font-extrabold tracking-tight uppercase text-on-surface">Price Range</h3>
+<div class="px-2">
+<input class="w-full h-1 bg-surface-container-highest rounded-full appearance-none cursor-pointer accent-primary" max="2000" min="0" type="range"/>
+<div class="flex justify-between mt-4 font-label text-xs text-on-surface-variant tracking-widest">
+<span>$0</span>
+<span>$2000+</span>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<h3 class="font-headline text-lg font-extrabold tracking-tight uppercase text-on-surface">Condition</h3>
+<div class="space-y-3">
+<label class="flex items-center space-x-3 cursor-pointer group">
+<div class="w-5 h-5 border-2 border-outline rounded flex items-center justify-center group-hover:border-primary">
+<div class="w-2 h-2 bg-primary rounded-sm opacity-0 group-hover:opacity-50"></div>
+</div>
+<span class="font-body text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">New / Unused</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<div class="w-5 h-5 border-2 border-primary rounded flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-primary rounded-sm"></div>
+</div>
+<span class="font-body text-sm text-on-surface transition-colors">Excellent</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<div class="w-5 h-5 border-2 border-outline rounded flex items-center justify-center group-hover:border-primary">
+<div class="w-2 h-2 bg-primary rounded-sm opacity-0 group-hover:opacity-50"></div>
+</div>
+<span class="font-body text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Good Condition</span>
+</label>
+</div>
+</div>
+<button class="w-full py-5 bg-primary text-on-primary-fixed font-headline font-black text-lg uppercase tracking-tighter rounded-xl shadow-[0px_12px_32px_rgba(240,165,0,0.2)] hover:scale-[1.02] active:scale-95 transition-all">
+                List Your Gear
+            </button>
+</aside>
+<!-- Product Grid Section -->
+<section class="flex-grow">
+<header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<span class="font-label text-xs tracking-[0.3em] uppercase text-primary mb-2 block">Premium Marketplace</span>
+<h1 class="font-headline text-5xl md:text-6xl font-black tracking-tighter uppercase leading-none italic">
+                        Aktivar <br/><span class="text-on-surface-variant not-italic">Gear Exchange</span>
+</h1>
+</div>
+<div class="flex items-center space-x-4 bg-surface-container-high p-1 rounded-xl">
+<button class="px-6 py-2 bg-surface-container-highest text-on-surface rounded-lg font-label text-xs uppercase tracking-widest font-bold">Featured</button>
+<button class="px-6 py-2 text-on-surface-variant rounded-lg font-label text-xs uppercase tracking-widest font-bold hover:text-on-surface">Newest</button>
+</div>
+</header>
+<!-- Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group bg-surface-container rounded-lg overflow-hidden flex flex-col h-full transition-all duration-500 hover:translate-y-[-8px]">
+<div class="relative h-72 overflow-hidden">
+<img class="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-110" data-alt="Yellow North Face dome tent pitched on a mountain ridge at sunset with warm orange glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkgvRW-MqAAjiUSNVGwPRuzvMoWT4n7d6j7BKUNpxSzXylilfKnguVHEdraW2PH8s7-iMSHr886dI_xJdg0G_b-zzF6c9vJVo-XMbo0Er-2lTwzX-Kw9YVvaTLc9ja5bVn3aOn2MNI7U-DMy_fOHAz5azi2IWrzixG5t3JH4KUuxCkRNk3jmsTg0Hc7HxDV9dO6PGBgj7o-HIcEGLhh-EyDVXaYsnc3a6xkB07BPKbGBme3_jNb29VCgu96m9sf6S0GbmpgDRWrJo"/>
+<div class="absolute top-4 left-4 bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label text-[10px] font-bold tracking-widest uppercase">
+                            Excellent
+                        </div>
+<div class="absolute bottom-4 right-4 bg-surface/80 backdrop-blur-md px-4 py-2 rounded-xl border border-outline-variant/15">
+<span class="font-label text-lg font-bold text-primary">$450</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label text-[10px] text-on-surface-variant tracking-[0.2em] uppercase">Camping / Tents</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label text-xs font-bold ml-1">4.9</span>
+</div>
+</div>
+<h3 class="font-headline text-xl font-extrabold uppercase tracking-tight text-on-surface group-hover:text-primary transition-colors mb-4">North Face Alpine 3 Tent</h3>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="location_on">location_on</span>
+<span class="font-body text-xs text-on-surface-variant">Boulder, CO</span>
+</div>
+<button class="bg-surface-container-highest p-2 rounded-full text-on-surface hover:bg-primary hover:text-on-primary-fixed transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface-container rounded-lg overflow-hidden flex flex-col h-full transition-all duration-500 hover:translate-y-[-8px]">
+<div class="relative h-72 overflow-hidden">
+<img class="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-110" data-alt="Close up of various high-quality climbing carabiners and quickdraws hanging on a harness" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsH2o2v9K50aAZW6G8NhjsnCfhRX1RGUPam2hKwSp3xJ-tnQNfoRJzyZaA_tpm4EfsDYyP_vaaJemk3Lbt0VvyEhEf-nwJ0HdlUxaNIX0tGlkBLZc6FM0JtGs4AkjCvtlc18MZPZka8yAe9inZRAYlG7oLIhcXztj9tkMb8kYBVHoCkvUa_bfGwrFoVvry4oEW5PzqhyXgdQDOKMrzktANGtUu18oLsKxr6ubCURTHq_1bDqUhj88Hu2fGtV5YBQ0c6XLnSgEb6mo"/>
+<div class="absolute top-4 left-4 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label text-[10px] font-bold tracking-widest uppercase">
+                            New / Unused
+                        </div>
+<div class="absolute bottom-4 right-4 bg-surface/80 backdrop-blur-md px-4 py-2 rounded-xl border border-outline-variant/15">
+<span class="font-label text-lg font-bold text-primary">$120</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label text-[10px] text-on-surface-variant tracking-[0.2em] uppercase">Climbing / Hardware</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label text-xs font-bold ml-1">5.0</span>
+</div>
+</div>
+<h3 class="font-headline text-xl font-extrabold uppercase tracking-tight text-on-surface group-hover:text-primary transition-colors mb-4">Black Diamond Carabiner Set</h3>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="location_on">location_on</span>
+<span class="font-body text-xs text-on-surface-variant">Chamonix, FR</span>
+</div>
+<button class="bg-surface-container-highest p-2 rounded-full text-on-surface hover:bg-primary hover:text-on-primary-fixed transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-surface-container rounded-lg overflow-hidden flex flex-col h-full transition-all duration-500 hover:translate-y-[-8px]">
+<div class="relative h-72 overflow-hidden">
+<img class="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-110" data-alt="Action camera mounted on a mountain bike handlebar moving through a dense forest trail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK7kwr9OWKn2j_MloY0xOg4OBN4itZDqcq5L2Ksw0c-xBx-xxFxaUucd2MvdRUNEcy-dN9jkCa0BwXrZlF6uFbTxbvwfXNbg0lsh-nghJOuGTWR6NUNH7S1_pvQLQsJVi2tyeTVDNhmW93TUpwBqQ7tXdCNssF3BVi8hMX_Vl-yY8R1fRVMTG6h9okCm8yIsQAG93sVq9kuzLPw_DrIqm4nNSYns4zStcqy4xfwsEMv0dSRXXuhadKk_CTXliwq7-x8cWZCBAbpk4"/>
+<div class="absolute top-4 left-4 bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label text-[10px] font-bold tracking-widest uppercase">
+                            Excellent
+                        </div>
+<div class="absolute bottom-4 right-4 bg-surface/80 backdrop-blur-md px-4 py-2 rounded-xl border border-outline-variant/15">
+<span class="font-label text-lg font-bold text-primary">$325</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label text-[10px] text-on-surface-variant tracking-[0.2em] uppercase">Tech / Video</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label text-xs font-bold ml-1">4.8</span>
+</div>
+</div>
+<h3 class="font-headline text-xl font-extrabold uppercase tracking-tight text-on-surface group-hover:text-primary transition-colors mb-4">GoPro Hero 12 Black + Acc.</h3>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="location_on">location_on</span>
+<span class="font-body text-xs text-on-surface-variant">Seattle, WA</span>
+</div>
+<button class="bg-surface-container-highest p-2 rounded-full text-on-surface hover:bg-primary hover:text-on-primary-fixed transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 4 (Asymmetric Offset Example) -->
+<div class="group bg-surface-container rounded-lg overflow-hidden flex flex-col h-full transition-all duration-500 hover:translate-y-[-8px]">
+<div class="relative h-72 overflow-hidden">
+<img class="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-110" data-alt="Top down view of a high-end hiking backpack being packed with technical gear on a wooden cabin floor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6RgLzv-x4a5Rp_zUg3bnZaaFdH8HbguEhmlAbJ-7z-Ad2yyVNDNYJsCgMvGoJQ-m9N1p7Bldy0qoU3IM_OKlPgOY3sTXwiHcFWhlHXggxPEYNEmWaWr6oNZuVe7D5BOVxhfQCDwGt_PNXUOMobHYk9ft0NibFMvM-8nEkXMQB8xQT1U0SL49yfFogFmvmwgKl6rD1MImr_aIvLKObhUiGry61bTN9MR5cfx0GlP8OwRtm7LbrEtE-oV2JjlSpSNlX1XLxzmocIdw"/>
+<div class="absolute top-4 left-4 bg-surface-variant text-on-surface-variant px-3 py-1 rounded-full font-label text-[10px] font-bold tracking-widest uppercase">
+                            Good Condition
+                        </div>
+<div class="absolute bottom-4 right-4 bg-surface/80 backdrop-blur-md px-4 py-2 rounded-xl border border-outline-variant/15">
+<span class="font-label text-lg font-bold text-primary">$180</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label text-[10px] text-on-surface-variant tracking-[0.2em] uppercase">Packs / Multi-day</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label text-xs font-bold ml-1">4.7</span>
+</div>
+</div>
+<h3 class="font-headline text-xl font-extrabold uppercase tracking-tight text-on-surface group-hover:text-primary transition-colors mb-4">Osprey Aether 65 Pack</h3>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="location_on">location_on</span>
+<span class="font-body text-xs text-on-surface-variant">Vancouver, BC</span>
+</div>
+<button class="bg-surface-container-highest p-2 rounded-full text-on-surface hover:bg-primary hover:text-on-primary-fixed transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-[#11140f]/70 backdrop-blur-xl flex justify-around items-center px-4 pb-6 pt-2 z-50 rounded-t-3xl border-t border-[#333630]/15 shadow-[0px_-12px_32px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="landscape">landscape</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#f0a500] text-[#11140f] rounded-2xl p-3 scale-110 -translate-y-2 transition-all shadow-lg active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Trophy</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="health_and_safety">health_and_safety</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Safety</span>
+</a>
+</nav>
+</body></html>

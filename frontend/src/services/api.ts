@@ -1,4 +1,5 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import { buildReturnPath, savePostAuthPath } from '@/lib/authRedirect';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
@@ -41,6 +42,7 @@ api.interceptors.response.use(
       if (!refreshToken) {
         sessionStorage.removeItem('aktivar_access_token');
         if (!window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/onboarding')) {
+          savePostAuthPath(buildReturnPath(window.location.pathname, window.location.search, window.location.hash));
           window.location.href = '/login';
         }
         return Promise.reject(error);
@@ -65,6 +67,7 @@ api.interceptors.response.use(
         sessionStorage.removeItem('aktivar_refresh_token');
         // Only redirect if we're not already on an auth page
         if (!window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/onboarding')) {
+          savePostAuthPath(buildReturnPath(window.location.pathname, window.location.search, window.location.hash));
           window.location.href = '/login';
         }
       }
@@ -121,4 +124,13 @@ export const endpoints = {
 
   // Health
   health: '/health/',
+
+  // Ecosystem
+  communities: '/ecosystem/communities/',
+  journal: '/ecosystem/journal/',
+  marketplace: '/ecosystem/marketplace/',
+  rank: '/ecosystem/rank/',
+  safety: '/ecosystem/safety/',
+  safetySos: '/ecosystem/safety/initiate-sos/',
+  safetyChecklist: '/ecosystem/safety/checklist/',
 } as const;

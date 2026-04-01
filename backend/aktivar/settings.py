@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "payments",
     "notifications",
     "core",
+    "ecosystem",
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"

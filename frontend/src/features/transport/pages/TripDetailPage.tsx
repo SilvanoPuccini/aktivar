@@ -1,21 +1,13 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import {
-  ArrowLeft,
-  MapPin,
-  Car,
-  Star,
-  Shield,
-  AlertTriangle,
-  Search,
-  Zap,
-} from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Car, Clock3, MapPin, Shield, Star } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import CTAButton from '@/components/CTAButton';
 import EmptyState from '@/components/EmptyState';
-import { useTrip, useBookSeat } from '@/services/hooks';
+import { useBookSeat, useTrip } from '@/services/hooks';
+import type { TripPassenger } from '@/types/transport';
 
 export default function TripDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -23,378 +15,156 @@ export default function TripDetailPage() {
   const { data: trip, isLoading } = useTrip(id);
   const bookSeat = useBookSeat();
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-surface">
-        <div className="animate-pulse text-muted">Cargando viaje...</div>
-      </div>
-    );
-  }
+  if (isLoading) return <div className="flex min-h-screen items-center justify-center">Cargando viaje...</div>;
+  if (!trip) return <EmptyState title="Viaje no encontrado" description="Esta ruta ya no está disponible." action={{ label: 'Volver', onClick: () => navigate('/') }} />;
 
-  if (!trip) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-surface p-4">
-        <EmptyState
-          icon={<Car size={48} />}
-          title="Viaje no encontrado"
-          description="Este viaje no existe o fue cancelado."
-          action={{ label: 'Volver al inicio', onClick: () => navigate('/') }}
-        />
-      </div>
-    );
-  }
-
-  const departureDate = new Date(trip.departure_time);
-  const formattedTime = format(departureDate, 'HH:mm', { locale: es });
-  const arrivalDate = trip.estimated_arrival ? new Date(trip.estimated_arrival) : null;
-  const formattedArrival = arrivalDate ? format(arrivalDate, 'HH:mm', { locale: es }) : null;
-  const totalCost = trip.price_per_passenger;
-  const costPerPerson = trip.seats_taken > 0
-    ? Math.round(totalCost)
-    : totalCost;
-  const spotsLeft = trip.seats_remaining ?? (trip.available_seats - (trip.seats_taken ?? 0));
-  const confirmedPassengers = (trip.passengers ?? []).filter((p: { status: string }) => p.status === 'confirmed');
-  const totalSeats = trip.available_seats;
-  const seatsTaken = trip.seats_taken ?? 0;
-  const pendingPassengersCount = (trip.passengers ?? []).filter((p: { status: string }) => p.status === 'pending').length;
-  const bookingDisabled = spotsLeft === 0 || bookSeat.isPending;
-  const bookingLabel = bookSeat.isPending
-    ? 'RESERVANDO...'
-    : spotsLeft > 0
-      ? 'RESERVAR ASIENTO'
-      : 'SIN CUPOS';
-
-  const getApiErrorMessage = (error: unknown) => {
-    const axiosError = error as AxiosError<{ detail?: string; [key: string]: unknown }>;
-    return axiosError.response?.data?.detail || 'No se pudo reservar el asiento';
+  const departure = new Date(trip.departure_time);
+  const arrival = trip.estimated_arrival ? new Date(trip.estimated_arrival) : null;
+  const cost = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(trip.price_per_passenger);
+  const tripTitle = trip.activity?.title || trip.destination_name;
+  const seatDots = Array.from({ length: Math.max(4, trip.vehicle.capacity) }, (_, index) => index < trip.seats_remaining);
+  const handleBook = () => {
+    bookSeat.mutate(trip.id, {
+      onSuccess: () => toast.success('Asiento reservado'),
+      onError: (error) => {
+        const err = error as AxiosError<{ detail?: string }>;
+        toast.error(err.response?.data?.detail ?? 'No se pudo reservar');
+      },
+    });
   };
 
   return (
     <div className="min-h-screen bg-surface pb-24">
-      {/* ---- Glassmorphism Header ---- */}
-      <nav className="sticky top-0 z-50 flex w-full items-center justify-between bg-[#11140f]/70 px-6 py-4 backdrop-blur-md">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate(-1)}
-            aria-label="Volver"
-            className="text-[#EDE9DF]"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <span className="font-headline text-2xl font-black tracking-tighter text-[#EDE9DF]">
-            Ride Details
-          </span>
+      <header className="glass sticky top-0 z-20 border-b border-outline-variant/10">
+        <div className="premium-shell flex h-20 items-center justify-between">
+          <button type="button" onClick={() => navigate(-1)} className="flex items-center gap-2 cursor-pointer"><ArrowLeft size={18} /><span className="font-label text-[10px] uppercase tracking-[0.16em]">Volver</span></button>
+          <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary-container">Ride details</div>
+          <div className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">#{trip.id}</div>
         </div>
-        <div className="flex items-center gap-3">
-          <Search size={22} className="text-primary" />
-          <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-surface-container-highest">
-            <img
-              src={trip.driver.avatar}
-              alt="User avatar"
-              className="h-full w-full object-cover"
-            />
-          </div>
-        </div>
-      </nav>
+      </header>
 
-      {/* ---- Main Content ---- */}
-      <main className="mx-auto max-w-2xl px-6 pt-8">
-        {/* ---- Main Card ---- */}
-        <motion.section
-          className="overflow-hidden rounded-xl bg-surface-container-low"
-          style={{
-            border: '1px solid rgba(159, 142, 121, 0.15)',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
-          }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* ---- Map Section ---- */}
-          <div className="relative h-64 w-full bg-surface-container-highest">
-            {trip.vehicle.photo ? (
-              <img
-                src={trip.vehicle.photo}
-                alt="Route map view"
-                className="h-full w-full object-cover opacity-60"
-              />
-            ) : (
-              <div className="h-full w-full bg-surface-container-highest" />
-            )}
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent" />
-
-            {/* Numbered Pin 1 - Origin */}
-            <div className="absolute left-20 top-12 flex flex-col items-center">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface bg-primary-container font-label text-sm font-bold text-on-primary-container">
-                1
-              </div>
-              <div className="h-12 w-0.5 bg-primary-container/40" />
+      <main className="premium-shell space-y-8 py-8">
+        <section className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="rounded-full bg-secondary text-surface px-4 py-2 font-label text-[10px] uppercase tracking-[0.16em]">Confirmed route</span>
+              <span className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">{trip.status}</span>
             </div>
-
-            {/* Numbered Pin 2 - Destination */}
-            <div className="absolute bottom-20 right-32">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface bg-secondary font-label text-sm font-bold text-on-secondary shadow-lg">
-                2
-              </div>
-            </div>
-
-            {/* Route label + title overlay */}
-            <div className="absolute bottom-4 left-6">
-              <span className="font-label text-xs uppercase tracking-[0.2em] text-primary">
-                Live Route
-              </span>
-              <h2 className="font-headline text-xl font-bold text-on-surface">
-                {trip.destination_name}
-              </h2>
+            <h1 className="hero-title text-5xl text-on-surface md:text-7xl">{tripTitle}</h1>
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-on-surface-variant">
+              <span className="inline-flex items-center gap-2"><Clock3 size={15} className="text-primary" /> {format(departure, 'HH:mm', { locale: es })}</span>
+              <span className="inline-flex items-center gap-2"><MapPin size={15} className="text-primary" /> {trip.origin_name}</span>
+              {arrival && <span className="inline-flex items-center gap-2"><Car size={15} className="text-primary" /> llegada {format(arrival, 'HH:mm', { locale: es })}</span>}
             </div>
           </div>
+          <section className="editorial-card rounded-[1.8rem] border-l-4 border-primary px-6 py-6 text-center">
+            <p className="section-kicker">Seats left</p>
+            <p className="mt-1 font-headline text-6xl font-black leading-none text-primary">{String(trip.seats_remaining).padStart(2, '0')}</p>
+            <div className="mt-4 flex justify-center gap-1.5">
+              {seatDots.map((filled, index) => <span key={index} className={`h-2.5 w-2.5 rounded-full ${filled ? 'bg-primary' : 'bg-on-surface-variant/20'}`} />)}
+            </div>
+          </section>
+        </section>
 
-          {/* ---- Content Body ---- */}
-          <div className="space-y-8 p-6">
-            {/* ---- Driver & Vehicle Section ---- */}
-            <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
-              {/* Driver Info */}
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <img
-                    src={trip.driver.avatar}
-                    alt={trip.driver.full_name}
-                    className="h-16 w-16 rounded-xl object-cover ring-2 ring-secondary/20"
-                  />
-                  {trip.driver.is_verified_driver && (
-                    <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-surface-container-low bg-secondary text-on-secondary">
-                      <Shield size={14} />
+        <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="space-y-6">
+            <div className="editorial-card rounded-[2rem] overflow-hidden">
+              <div className="relative h-72 bg-surface-container-highest md:h-[31rem]">
+                {trip.vehicle.photo ? <img src={trip.vehicle.photo} alt={trip.vehicle.model_name} className="h-full w-full object-cover opacity-75" /> : null}
+                <div className="absolute inset-0 bg-gradient-to-t from-surface-container via-surface/10 to-surface-container-lowest/30" />
+                <div className="absolute inset-x-5 top-5 flex items-center justify-between">
+                  <div className="rounded-[1rem] bg-surface/80 px-4 py-3 backdrop-blur-sm">
+                    <p className="section-kicker">Departure</p>
+                    <p className="mt-1 font-semibold text-on-surface">{trip.origin_name}</p>
+                  </div>
+                  {trip.stops[0] && (
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-label text-[10px] font-bold text-[#442c00]">
+                      1
                     </div>
                   )}
                 </div>
+                <div className="absolute bottom-5 left-5">
+                  <div className="rounded-[1rem] bg-surface/80 px-5 py-4 backdrop-blur-sm">
+                    <div className="flex items-end gap-8">
+                      <div>
+                        <p className="section-kicker">Distance</p>
+                        <p className="font-headline text-2xl font-black text-on-surface">{trip.stops.length * 47 + 48}<span className="ml-1 text-xs text-on-surface-variant">km</span></p>
+                      </div>
+                      <div>
+                        <p className="section-kicker">Est. time</p>
+                        <p className="font-headline text-2xl font-black text-on-surface">{arrival ? format(arrival, 'H', { locale: es }) : '2'}<span className="ml-1 text-xs text-on-surface-variant">h</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+              <p className="section-kicker">Driver</p>
+              <div className="mt-4 flex items-center gap-4">
+                <img src={trip.driver.avatar} alt={trip.driver.full_name} className="h-16 w-16 rounded-[1.25rem] object-cover" />
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-headline text-lg font-bold text-[#EDE9DF]">
-                      {trip.driver.full_name}
-                    </h3>
-                    <div className="flex items-center text-primary">
-                      <Star size={14} className="fill-primary" />
-                      <span className="ml-1 font-label text-sm font-bold">
-                        {trip.driver.driver_rating.toFixed(1)}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="mt-1 flex items-center gap-2 text-sm text-on-surface-variant">
-                    <Shield size={16} />
-                    <span className="font-body">
-                      {trip.driver.total_trips} viajes completados
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Vehicle Info Card */}
-              <div className="flex min-w-[200px] items-center gap-4 rounded-xl bg-surface-container p-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-surface-container-highest">
-                  <Car size={24} className="text-secondary" />
-                </div>
-                <div>
-                  <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
-                    {trip.vehicle.brand} {trip.vehicle.model_name}
-                  </p>
-                  <p className="font-headline font-bold text-on-surface">
-                    {trip.vehicle.color}
-                    {trip.vehicle.year && (
-                      <span className="ml-2 font-label text-xs font-normal text-on-surface-variant">
-                        {trip.vehicle.year}
-                      </span>
-                    )}
-                  </p>
-                  <p className="select-none font-label text-xs text-on-surface-variant opacity-50 blur-[3px]">
-                    {trip.vehicle.plate}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* ---- Stats Bento Grid ---- */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Seats Counter */}
-              <div className="flex h-32 flex-col justify-between rounded-xl bg-surface-container p-5">
-                <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
-                  Disponibilidad
-                </span>
-                <div className="flex items-end justify-between">
-                  <div className="flex gap-1.5">
-                    {Array.from({ length: totalSeats }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`h-8 w-3 rounded-full ${
-                          i < seatsTaken
-                            ? 'bg-secondary'
-                            : 'bg-surface-container-highest'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <div className="text-right">
-                    <span className="font-headline text-3xl font-black text-on-surface">
-                      {String(spotsLeft).padStart(2, '0')}
-                    </span>
-                    <span className="block font-label text-sm text-on-surface-variant">
-                      Asientos
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Cost Split Calculator */}
-              <div className="flex h-32 flex-col justify-between rounded-xl bg-surface-container p-5">
-                <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
-                  Costo dividido
-                </span>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="font-label text-xs text-on-surface-variant">
-                      Total: ${(costPerPerson * confirmedPassengers.length).toLocaleString('es-CL')}
-                    </span>
-                    <div className="mt-1 font-headline text-2xl font-bold text-primary">
-                      ${costPerPerson.toLocaleString('es-CL')}
-                    </div>
-                  </div>
-                  <div className="rounded-lg bg-surface-container-highest px-3 py-1.5">
-                    <span className="font-label text-xs text-[#EDE9DF]">/ persona</span>
+                  <h3 className="font-headline text-2xl font-black uppercase tracking-tight text-on-surface">{trip.driver.full_name}</h3>
+                  <div className="mt-1 flex items-center gap-4 text-sm text-on-surface-variant">
+                    <span className="inline-flex items-center gap-1"><Star size={14} className="text-primary" /> {trip.driver.driver_rating.toFixed(1)}</span>
+                    <span className="inline-flex items-center gap-1"><Shield size={14} className="text-secondary" /> {trip.driver.total_trips} viajes</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* ---- Primary Action Area ---- */}
-            <div className="flex flex-col gap-4 pt-4">
-              {/* JOIN RIDE Button */}
-              <button
-                onClick={() => {
-                  if (spotsLeft > 0) {
-                    bookSeat.mutate(trip.id, {
-                      onSuccess: () => toast.success('Asiento reservado exitosamente'),
-                      onError: (error) => toast.error(getApiErrorMessage(error)),
-                    });
-                  } else {
-                    toast.error('No hay cupos disponibles');
-                  }
-                }}
-                disabled={bookingDisabled}
-                className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-primary to-primary-container py-5 font-headline text-lg font-bold tracking-tight text-on-primary shadow-lg transition-all active:scale-95 disabled:opacity-50"
-              >
-                <Zap size={22} className="fill-current" />
-                {bookingLabel}
-              </button>
-
-              {/* Emergency + Passenger Avatars Row */}
-              <div className="flex items-center justify-between pt-2">
-                {/* Emergency Button */}
-                <button
-                  className="flex items-center gap-2 font-label text-sm font-bold uppercase tracking-widest text-error opacity-60 transition-opacity hover:opacity-100"
-                  onClick={() => toast('Mantén presionado 3 segundos para activar emergencia')}
-                >
-                  <AlertTriangle size={16} />
-                  Emergencia
-                </button>
-
-                {/* Passenger Avatars */}
-                <div className="flex -space-x-3">
-                  {confirmedPassengers.slice(0, 3).map((passenger: { id: number; user: { avatar: string; full_name: string } }) => (
-                    <img
-                      key={passenger.id}
-                      src={passenger.user.avatar}
-                      alt={passenger.user.full_name}
-                      className="h-8 w-8 rounded-full border-2 border-surface-container-low object-cover"
-                    />
-                  ))}
-                  {confirmedPassengers.length > 3 && (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface-container-low bg-surface-container-highest text-[10px] font-bold text-on-surface">
-                      +{confirmedPassengers.length - 3}
+            <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+              <p className="section-kicker">Fellow expeditions</p>
+              <div className="mt-4 space-y-4">
+                {trip.passengers.length > 0 ? trip.passengers.map((passenger: TripPassenger) => (
+                  <div key={passenger.id} className="rounded-[1.35rem] border-b-4 border-secondary/30 bg-surface px-5 py-5">
+                    <div className="flex items-center gap-4">
+                      <img src={passenger.user.avatar} alt={passenger.user.full_name} className="h-12 w-12 rounded-full object-cover grayscale" />
+                      <div>
+                        <p className="font-headline text-lg font-bold tracking-tight text-on-surface">{passenger.user.full_name}</p>
+                        <p className="font-label text-[10px] uppercase tracking-[0.16em] text-secondary">{passenger.status}</p>
+                      </div>
                     </div>
-                  )}
-                  {pendingPassengersCount > 0 && confirmedPassengers.length <= 3 && (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface-container-low bg-surface-container-highest text-[10px] font-bold text-on-surface">
-                      +{pendingPassengersCount}
-                    </div>
-                  )}
-                </div>
+                    <p className="mt-4 text-sm text-on-surface-variant">
+                      {passenger.pickup_stop ? `Pickup en ${passenger.pickup_stop.name}.` : 'Sin pickup definido todavía.'}
+                    </p>
+                  </div>
+                )) : <p className="text-sm text-on-surface-variant">Todavía no hay pasajeros confirmados.</p>}
               </div>
             </div>
           </div>
-        </motion.section>
 
-        {/* ---- Pickup / Arrival Info Grid ---- */}
-        <motion.div
-          className="mt-8 grid grid-cols-2 gap-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div className="space-y-2">
-            <span className="font-label text-[10px] uppercase tracking-widest text-primary">
-              Punto de recogida
-            </span>
-            <p className="font-body text-sm text-[#EDE9DF]">
-              {trip.origin_name}{' '}
-              <span className="text-on-surface-variant">{formattedTime}</span>
-            </p>
-          </div>
-          <div className="space-y-2 text-right">
-            <span className="font-label text-[10px] uppercase tracking-widest text-primary">
-              Llegada estimada
-            </span>
-            <p className="font-body text-sm text-[#EDE9DF]">
-              {trip.destination_name}{' '}
-              {formattedArrival && (
-                <span className="text-on-surface-variant">{formattedArrival}</span>
-              )}
-            </p>
-          </div>
-        </motion.div>
-
-        {/* ---- Linked Activity ---- */}
-        {trip.activity && (
-          <motion.div
-            className="mt-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.35 }}
-          >
-            <button
-              onClick={() => navigate(`/activity/${trip.activity!.id}`)}
-              className="flex w-full items-center gap-3 rounded-xl p-4 text-left transition-colors"
-              style={{ border: '1px solid rgba(159, 142, 121, 0.15)' }}
-            >
-              <MapPin size={18} className="flex-shrink-0 text-secondary" />
-              <div>
-                <span className="font-label text-[10px] uppercase tracking-wider text-on-surface-variant">
-                  Actividad vinculada
-                </span>
-                <p className="text-sm font-semibold text-on-surface">{trip.activity.title}</p>
+          <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
+            <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+              <p className="section-kicker">Vehicle</p>
+              <h3 className="mt-3 font-headline text-4xl font-black uppercase leading-[0.95] tracking-tight text-on-surface">{trip.vehicle.brand} {trip.vehicle.model_name}</h3>
+              <div className="mt-5 space-y-3 text-sm text-on-surface-variant">
+                <p>Color: <span className="text-on-surface">{trip.vehicle.color}</span></p>
+                <p>Capacidad: <span className="text-on-surface">{trip.vehicle.capacity}</span></p>
+                {trip.notes && <p>Notas: <span className="text-on-surface">{trip.notes}</span></p>}
               </div>
-            </button>
-          </motion.div>
-        )}
+            </section>
 
-        {/* ---- Notes ---- */}
-        {trip.notes && (
-          <motion.div
-            className="mt-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            <div
-              className="rounded-xl bg-surface-container-low p-5"
-              style={{ border: '1px solid rgba(159, 142, 121, 0.15)' }}
-            >
-              <h3 className="mb-2 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
-                Notas del conductor
-              </h3>
-              <p className="text-sm text-on-surface-variant">{trip.notes}</p>
-            </div>
-          </motion.div>
-        )}
+            <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+              <p className="section-kicker">Cost split breakdown</p>
+              <div className="mt-4 space-y-4">
+                <div className="rounded-[1.35rem] bg-surface px-4 py-4">
+                  <div className="flex items-end justify-between gap-4">
+                    <p className="mt-2 font-headline text-4xl font-black text-primary">{cost}</p>
+                    <p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">per person</p>
+                  </div>
+                  <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-surface-container-highest">
+                    <div className="h-full w-3/4 rounded-full bg-primary" />
+                  </div>
+                  <p className="mt-4 font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Includes: fuel, tolls, gear rack</p>
+                </div>
+                <CTAButton label={bookSeat.isPending ? 'Reservando' : 'Reservar asiento'} loading={bookSeat.isPending} onClick={handleBook} fullWidth />
+                <CTAButton label="Emergency SOS" variant="danger" onClick={() => navigate('/safety')} fullWidth />
+              </div>
+            </section>
+          </aside>
+        </section>
       </main>
     </div>
   );

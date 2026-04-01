@@ -1,63 +1,163 @@
-import { test, expect } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 
-test.describe('Login Page', () => {
-  test('renders login page with form elements', async ({ page }) => {
-    await page.goto('/login')
+const ACCESS_TOKEN = 'playwright-access-token'
+const REFRESH_TOKEN = 'playwright-refresh-token'
+const DEMO_EMAIL = 'demo@aktivar.app'
+const DEMO_PASSWORD = 'aktivar123'
 
-    // Expect core form elements to be visible
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.locator('input[type="email"], input[name="email"]')).toBeVisible()
-    await expect(page.locator('input[type="password"], input[name="password"]')).toBeVisible()
-    await expect(page.getByRole('button', { name: /iniciar|login|entrar/i })).toBeVisible()
-  })
+const mockUser = {
+  id: 1,
+  email: DEMO_EMAIL,
+  full_name: 'Catalina Reyes',
+  avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Catalina',
+  bio: 'Amante del trekking y la naturaleza.',
+  phone: '+56912345678',
+  role: 'organizer',
+  is_verified_email: true,
+  is_verified_phone: true,
+  profile: {
+    location_name: 'Santiago, Chile',
+    latitude: -33.4489,
+    longitude: -70.6693,
+    bio_extended: 'Organizadora de actividades outdoor.',
+    website: 'https://catalinareyes.cl',
+    instagram: '@cata.aventura',
+    total_activities: 87,
+    total_km: 1420,
+    total_people_met: 342,
+    badges: [],
+  },
+  created_at: '2023-01-15T10:00:00Z',
+}
 
-  test('shows validation errors for empty form submission', async ({ page }) => {
-    await page.goto('/login')
+function trackPageErrors(page: Page) {
+  const pageErrors: string[] = []
+  page.on('pageerror', (error) => pageErrors.push(error.message))
+  return pageErrors
+}
 
-    // Click submit without filling in fields
-    await page.getByRole('button', { name: /iniciar|login|entrar/i }).click()
+async function mockAuthApi(
+  page: Page,
+  options: {
+    loginStatus?: number
+    currentUserStatus?: number
+  } = {},
+) {
+  const { loginStatus = 200, currentUserStatus = 200 } = options
 
-    // Expect validation messages to appear
-    await expect(page.locator('text=/requerido|required|obligatorio|correo|email/i').first()).toBeVisible()
-  })
-
-  test('has a link to registration or onboarding', async ({ page }) => {
-    await page.goto('/login')
-
-    const registerLink = page.locator('a[href*="onboarding"], a[href*="register"], a[href*="signup"]')
-    await expect(registerLink).toBeVisible()
-  })
-})
-
-test.describe('Onboarding Page', () => {
-  test('renders onboarding page', async ({ page }) => {
-    await page.goto('/onboarding')
-
-    // Should show the onboarding content
-    await expect(page.locator('body')).toContainText(/.+/)
-  })
-
-  test('allows navigation through onboarding steps', async ({ page }) => {
-    await page.goto('/onboarding')
-
-    // Look for a next/continue button or navigation element
-    const nextButton = page.getByRole('button', { name: /siguiente|next|continuar|continue|empezar/i })
-    if (await nextButton.isVisible()) {
-      await nextButton.click()
-      // Page content should change after navigation
-      await expect(page.locator('body')).toContainText(/.+/)
+  await page.route('**/api/v1/auth/token/', async (route) => {
+    if (route.request().method() !== 'POST') {
+      await route.continue()
+      return
     }
+
+    if (loginStatus !== 200) {
+      await route.fulfill({
+        status: loginStatus,
+        contentType: 'application/json',
+        body: JSON.stringify({ detail: 'Invalid credentials' }),
+      })
+      return
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ access: ACCESS_TOKEN, refresh: REFRESH_TOKEN }),
+    })
   })
 
-  test('form validation prevents advancing without required fields', async ({ page }) => {
-    await page.goto('/onboarding')
+  await page.route('**/api/v1/auth/token/refresh/', async (route) => {
+    await route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      body: JSON.stringify({ detail: 'Refresh expired' }),
+    })
+  })
 
-    // If there is a submit/register button, click it without filling fields
-    const submitButton = page.getByRole('button', { name: /registrar|register|crear|create|submit/i })
-    if (await submitButton.isVisible()) {
-      await submitButton.click()
-      // Should show validation feedback
-      await expect(page.locator('[role="alert"], .text-error, [class*="error"]').first()).toBeVisible()
+  await page.route('**/api/v1/users/me/', async (route) => {
+    if (currentUserStatus !== 200) {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({ detail: 'Unauthorized' }),
+      })
+      return
     }
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(mockUser),
+    })
+  })
+}
+
+test.describe('Auth and protected routes', () => {
+  test('login shows a visible auth error on invalid credentials', async ({ page }) => {
+    const pageErrors = trackPageErrors(page)
+    await mockAuthApi(page, { loginStatus: 401 })
+
+    await page.goto('/login')
+    await page.locator('input[type="email"]').fill(DEMO_EMAIL)
+    await page.locator('input[type="password"]').fill('wrong-password')
+    await page.getByRole('button', { name: /continue/i }).click()
+
+    await expect(page).toHaveURL(/\/login$/)
+    await expect(page.locator('[role="status"]')).toContainText(/email o contraseña incorrectos/i)
+    expect(pageErrors).toEqual([])
+  })
+
+  test('protected profile route redirects through login and returns to profile after sign-in', async ({ page }) => {
+    const pageErrors = trackPageErrors(page)
+    await mockAuthApi(page)
+
+    await page.goto('/profile')
+    await expect(page).toHaveURL(/\/login$/)
+
+    await page.locator('input[type="email"]').fill(DEMO_EMAIL)
+    await page.locator('input[type="password"]').fill(DEMO_PASSWORD)
+    await page.getByRole('button', { name: /continue/i }).click()
+
+    await expect(page).toHaveURL(/\/profile$/)
+    await expect(page.locator('body')).toContainText(/catalina reyes/i)
+    expect(pageErrors).toEqual([])
+  })
+
+  test('public activity join preserves the return path through login', async ({ page }) => {
+    const pageErrors = trackPageErrors(page)
+    await mockAuthApi(page)
+
+    await page.goto('/activity/1')
+    await page.getByRole('button', { name: /join activity/i }).click()
+    await expect(page).toHaveURL(/\/login$/)
+
+    await page.locator('input[type="email"]').fill(DEMO_EMAIL)
+    await page.locator('input[type="password"]').fill(DEMO_PASSWORD)
+    await page.getByRole('button', { name: /continue/i }).click()
+
+    await expect(page).toHaveURL(/\/activity\/1$/)
+    await expect(page.locator('body')).toContainText(/bienvenido de vuelta|join activity/i)
+    expect(pageErrors).toEqual([])
+  })
+
+  test('expired sessions fall back to login instead of keeping a fake signed-in user', async ({ page }) => {
+    const pageErrors = trackPageErrors(page)
+    await mockAuthApi(page, { currentUserStatus: 401 })
+
+    await page.addInitScript(([access, refresh]) => {
+      sessionStorage.setItem('aktivar_access_token', access)
+      sessionStorage.setItem('aktivar_refresh_token', refresh)
+    }, ['expired-access-token', 'expired-refresh-token'])
+
+    await page.goto('/profile')
+
+    await expect(page).toHaveURL(/\/login$/)
+    await expect(page.locator('body')).not.toContainText(/catalina reyes/i)
+    await expect.poll(() => page.evaluate(() => ({
+      access: sessionStorage.getItem('aktivar_access_token'),
+      refresh: sessionStorage.getItem('aktivar_refresh_token'),
+    }))).toEqual({ access: null, refresh: null })
+    expect(pageErrors).toEqual([])
   })
 })
