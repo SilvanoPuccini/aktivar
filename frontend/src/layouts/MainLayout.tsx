@@ -1,4 +1,4 @@
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import GlassNav from '@/components/GlassNav';
 import Footer from '@/components/Footer';
 import { useAuthStore } from '@/stores/authStore';
@@ -24,25 +24,21 @@ export function MainLayout() {
       home: '/',
       explore: '/explore',
       create: '/create',
-      profile: isAuthenticated ? '/profile' : '/login',
+      profile: '/profile',
       notifications: '/notifications',
       dashboard: '/dashboard',
     };
     navigate(routes[tab] || '/');
   };
 
-  // Pages that handle their own full-screen layout (no nav, no footer)
-  const isImmersive =
-    location.pathname.startsWith('/activity/') ||
-    location.pathname.startsWith('/chat/') ||
-    location.pathname.startsWith('/payment/');
-
-  // Full-bleed pages (explore map) — nav yes, footer no
+  const immersiveRoutes = ['/activity/', '/chat/', '/payment/'];
+  const isImmersive = immersiveRoutes.some((prefix) => location.pathname.startsWith(prefix));
   const isFullBleed = location.pathname === '/explore';
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col">
-      {/* Desktop top nav — always visible except immersive pages */}
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-surface text-on-surface">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.08),_transparent_42%)]" />
+      <div className="pointer-events-none absolute left-[-8rem] top-[22rem] h-72 w-72 rounded-full bg-secondary/6 blur-3xl" />
       {!isImmersive && (
         <GlassNav
           activeTab={getActiveTab()}
@@ -52,12 +48,10 @@ export function MainLayout() {
         />
       )}
 
-      {/* Spacer for fixed desktop nav (64px = h-16) */}
-      {!isImmersive && <div className="hidden md:block h-16 shrink-0" />}
+      {!isImmersive && <div className="hidden h-20 shrink-0 md:block" />}
 
-      {/* Page content */}
-      <main className="flex-1 px-0 md:px-2 lg:px-0">
-        {isFullBleed || isImmersive ? (
+      <main className="relative z-10 flex-1">
+        {isImmersive || isFullBleed ? (
           <Outlet />
         ) : (
           <section className="premium-shell py-8 md:py-10 lg:py-12">
@@ -66,10 +60,7 @@ export function MainLayout() {
         )}
       </main>
 
-      {/* Mobile bottom spacer for bottom nav */}
-      {!isImmersive && <div className="md:hidden h-24 shrink-0" />}
-
-      {/* Footer — only on content pages, never on fullbleed or immersive */}
+      {!isImmersive && <div className="h-24 shrink-0 md:hidden" />}
       {!isImmersive && !isFullBleed && <Footer />}
     </div>
   );

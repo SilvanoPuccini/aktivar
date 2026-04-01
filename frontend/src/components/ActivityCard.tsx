@@ -1,16 +1,14 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { BadgeCheck, Calendar, MapPin } from 'lucide-react';
+import { ArrowUpRight, BadgeCheck, Calendar, MapPin } from 'lucide-react';
 import type { Activity } from '@/types/activity';
-import SpotsBar from './SpotsBar';
 import CategoryChip from './CategoryChip';
+import SpotsBar from './SpotsBar';
 
 function PriceBadge({ isFree, price }: { isFree: boolean; price: number }) {
-  const label = isFree ? 'GRATIS' : `$${price.toLocaleString('es-CL')}`;
+  const label = isFree ? 'Gratis' : `$${price.toLocaleString('es-CL')}`;
   return (
-    <span className={`px-3 py-1 rounded-lg font-label text-xs font-bold ${
-      isFree ? 'bg-secondary/90 text-on-secondary' : 'bg-primary-container text-on-primary-container'
-    }`}>
+    <span className="rounded-full bg-surface/80 px-3 py-1.5 font-label text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface backdrop-blur-sm">
       {label}
     </span>
   );
@@ -23,101 +21,90 @@ interface ActivityCardProps {
   variant?: 'feed' | 'compact';
 }
 
-export default function ActivityCard({
-  activity,
-  onClick,
-  variant = 'feed',
-}: ActivityCardProps) {
+export default function ActivityCard({ activity, onClick, variant = 'feed' }: ActivityCardProps) {
   const startDate = new Date(activity.start_datetime);
   const formattedDate = format(startDate, "d MMM · HH:mm", { locale: es });
   const spotsRemaining = activity.spots_remaining;
-  const percentage = activity.capacity > 0 ? (activity.confirmed_count / activity.capacity) * 100 : 100;
 
   if (variant === 'compact') {
     return (
-      <div
-        onClick={onClick}
-        className="flex items-center gap-3 p-4 cursor-pointer hover:bg-surface-container/60 transition-colors"
-      >
-        <div className="flex-1 min-w-0">
-          <h3 className="font-headline font-bold text-sm text-on-surface truncate">{activity.title}</h3>
-          <div className="mt-1 flex items-center gap-2">
+      <button type="button" onClick={onClick} className="flex w-full items-center gap-4 p-4 text-left cursor-pointer">
+        <img src={activity.cover_image} alt={activity.title} className="h-24 w-24 shrink-0 rounded-[1.15rem] object-cover" />
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="flex items-center gap-2">
             <CategoryChip category={activity.category} size="sm" />
-            <span className="font-label text-xs text-muted">{formattedDate}</span>
+            <span className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">{formattedDate}</span>
           </div>
-          <div className="mt-2">
-            <SpotsBar capacity={activity.capacity} taken={activity.confirmed_count} />
-          </div>
+          <h3 className="font-headline text-lg font-black uppercase leading-tight tracking-tight text-on-surface line-clamp-2">
+            {activity.title}
+          </h3>
+          <p className="flex items-center gap-1.5 text-sm text-on-surface-variant">
+            <MapPin size={14} />
+            <span className="truncate">{activity.location_name}</span>
+          </p>
+          <SpotsBar capacity={activity.capacity} taken={activity.confirmed_count} />
         </div>
-      </div>
+      </button>
     );
   }
 
   return (
     <article
       onClick={onClick}
-      className="group bg-surface-container rounded-xl overflow-hidden border border-outline-variant/10 hover:border-outline-variant/25 transition-all cursor-pointer"
+      className="group editorial-card cursor-pointer overflow-hidden rounded-[2rem] transition-transform duration-300 hover:-translate-y-1"
     >
-      {/* Image */}
-      <div className="relative h-44 w-full">
-        <img src={activity.cover_image} alt={activity.title} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        <div className="absolute top-3 left-3">
-          <span className="px-2.5 py-1 bg-surface-lowest/80 backdrop-blur-sm text-on-surface font-label text-[10px] font-bold rounded-md tracking-wider">
-            {activity.category.name.toUpperCase()}
-          </span>
+      <div className="relative aspect-[1.05] overflow-hidden rounded-[1.3rem] m-3 mb-0">
+        <img src={activity.cover_image} alt={activity.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/15 to-transparent" />
+        <div className="absolute left-4 top-4 flex items-center gap-2">
+          <CategoryChip category={activity.category} size="sm" />
         </div>
-        <div className="absolute bottom-3 right-3">
+        <div className="absolute bottom-4 right-4">
           <PriceBadge isFree={activity.is_free} price={activity.price} />
         </div>
       </div>
 
-      {/* Body */}
-      <div className="p-4 space-y-3">
-        <h2 className="font-headline text-base font-bold text-on-surface leading-snug group-hover:text-primary transition-colors line-clamp-2">
-          {activity.title}
-        </h2>
-
-        <div className="flex items-center gap-1.5 text-muted text-xs">
-          <MapPin size={13} className="shrink-0" />
-          <span className="truncate">{activity.location_name}</span>
+      <div className="space-y-5 px-5 py-5 md:px-6 md:py-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2">
+            <p className="font-label text-[10px] uppercase tracking-[0.18em] text-primary">Expedición abierta</p>
+            <h2 className="font-headline text-2xl font-black uppercase leading-[1.02] tracking-tight text-on-surface line-clamp-2">
+              {activity.title}
+            </h2>
+          </div>
+          <div className="rounded-full bg-surface-container-high p-2 text-on-surface-variant transition-colors group-hover:text-primary">
+            <ArrowUpRight size={18} />
+          </div>
         </div>
 
-        <div className="flex items-center gap-1.5 text-muted text-xs">
-          <Calendar size={13} className="shrink-0" />
-          <span>{formattedDate}</span>
+        <div className="grid gap-2 text-sm text-on-surface-variant">
+          <div className="flex items-center gap-2">
+            <MapPin size={15} className="text-primary" />
+            <span className="truncate">{activity.location_name}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Calendar size={15} className="text-primary" />
+            <span>{formattedDate}</span>
+          </div>
         </div>
 
-        {/* Organizer */}
-        <div className="flex items-center gap-2 pt-1">
-          <img
-            src={activity.organizer.avatar}
-            alt={activity.organizer.full_name}
-            className="w-6 h-6 rounded-full object-cover"
-          />
-          <span className="text-xs text-on-surface-variant font-medium truncate">
-            {activity.organizer.full_name}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <img src={activity.organizer.avatar} alt={activity.organizer.full_name} className="h-11 w-11 rounded-full object-cover" />
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="truncate text-sm font-semibold text-on-surface">{activity.organizer.full_name}</span>
+                {activity.organizer.is_verified_email && <BadgeCheck size={14} className="shrink-0 text-secondary" />}
+              </div>
+              <span className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Host</span>
+            </div>
+          </div>
+          <span className={`font-label text-[10px] uppercase tracking-[0.16em] ${spotsRemaining <= 3 ? 'text-error' : 'text-on-surface-variant'}`}>
+            {spotsRemaining > 0 ? `${spotsRemaining} cupos` : 'Completo'}
           </span>
-          {activity.organizer.is_verified_email && (
-            <BadgeCheck size={12} className="text-secondary shrink-0" />
-          )}
         </div>
 
-        {/* Capacity */}
-        <div className="pt-2 border-t border-outline-variant/10">
-          <div className="flex justify-between text-[10px] font-label font-bold uppercase tracking-wider mb-1.5">
-            <span className="text-muted">Cupos</span>
-            <span className={spotsRemaining <= 5 ? 'text-error' : 'text-muted'}>
-              {spotsRemaining > 0 ? `${spotsRemaining} disponibles` : 'Completo'}
-            </span>
-          </div>
-          <div className="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
-            <div
-              className="bg-secondary h-full rounded-full transition-all"
-              style={{ width: `${Math.min(percentage, 100)}%` }}
-            />
-          </div>
-        </div>
+        <SpotsBar capacity={activity.capacity} taken={activity.confirmed_count} />
       </div>
     </article>
   );

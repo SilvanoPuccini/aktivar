@@ -9,24 +9,12 @@ interface SearchBarProps {
   onBlur?: () => void;
 }
 
-export default function SearchBar({
-  value,
-  onChange,
-  placeholder = 'Buscar actividades…',
-  onFocus,
-  onBlur,
-}: SearchBarProps) {
+export default function SearchBar({ value, onChange, placeholder = 'Buscar aventuras…', onFocus, onBlur }: SearchBarProps) {
   return (
-    <div
-      className="relative flex items-center w-full rounded-full border border-outline-variant focus-within:border-primary transition-colors duration-200"
-      style={{
-        background: 'rgba(17,20,15,0.70)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-      }}
-    >
-      <Search size={18} className="ml-4 shrink-0 text-muted" />
-
+    <div className="glass flex w-full items-center rounded-[1.5rem] border border-outline-variant/20 bg-surface/70 px-4 py-1.5 shadow-[var(--shadow-soft)] transition-all focus-within:-translate-y-0.5 focus-within:border-primary/40 focus-within:bg-surface-container/85">
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-container-high text-primary">
+        <Search size={16} className="shrink-0" />
+      </div>
       <input
         type="text"
         value={value}
@@ -34,9 +22,8 @@ export default function SearchBar({
         onFocus={onFocus}
         onBlur={onBlur}
         placeholder={placeholder}
-        className="flex-1 bg-transparent py-3 px-3 text-sm text-on-surface placeholder:text-muted font-[Plus_Jakarta_Sans] outline-none"
+        className="flex-1 bg-transparent px-3 py-3.5 text-sm text-on-surface outline-none placeholder:text-on-surface-variant/50"
       />
-
       <AnimatePresence>
         {value.length > 0 && (
           <motion.button
@@ -44,9 +31,8 @@ export default function SearchBar({
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
-            transition={{ duration: 0.15 }}
             onClick={() => onChange('')}
-            className="mr-3 shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-surface-container-highest text-muted hover:text-on-surface transition-colors cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-high text-on-surface-variant transition-colors hover:text-on-surface"
           >
             <X size={14} />
           </motion.button>

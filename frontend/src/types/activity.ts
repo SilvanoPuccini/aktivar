@@ -51,12 +51,14 @@ export interface Activity {
   spots_remaining: number;
   confirmed_count: number;
   participants_preview: { id: number; full_name: string; avatar: string }[];
+  participants?: ActivityParticipant[];
   weather?: {
     temp: number;
     description: string;
     icon: string;
   };
   created_at: string;
+  updated_at?: string;
 }
 
 export type ActivityStatus = Activity['status'];

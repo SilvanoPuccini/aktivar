@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Home, Compass, Plus, User, Bell } from 'lucide-react';
+import { Bell, Compass, Home, Mountain, Plus, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface GlassNavProps {
@@ -21,66 +21,25 @@ const tabs: Tab[] = [
   { key: 'profile', label: 'Perfil', icon: User },
 ];
 
-export default function GlassNav({
-  activeTab,
-  onTabChange,
-  isAuthenticated = false,
-  notificationCount = 0,
-}: GlassNavProps) {
+export default function GlassNav({ activeTab, onTabChange, isAuthenticated = false, notificationCount = 0 }: GlassNavProps) {
   const visibleTabs = isAuthenticated ? tabs : tabs.filter((tab) => tab.key !== 'profile');
 
   return (
     <>
-      {/* ===== Mobile bottom nav ===== */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-outline-variant/15 bg-surface-lowest/95 backdrop-blur-xl">
-        <div className="flex items-center justify-around h-16 px-4">
-          {visibleTabs.map((tab) => {
-            const isActive = activeTab === tab.key;
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => onTabChange(tab.key)}
-                aria-label={`Ir a ${tab.label}`}
-                aria-current={isActive ? 'page' : undefined}
-                className={`flex flex-col items-center gap-1 px-4 py-2 cursor-pointer transition-colors ${
-                  isActive ? 'text-primary' : 'text-muted'
-                }`}
-              >
-                <Icon size={20} strokeWidth={isActive ? 2.2 : 1.5} />
-                <span className="font-label text-[10px] tracking-wider">{tab.label}</span>
-              </button>
-            );
-          })}
-          {/* Create button in mobile nav */}
-          <button
-            type="button"
-            onClick={() => onTabChange('create')}
-            aria-label="Crear actividad"
-            className="flex flex-col items-center gap-1 px-4 py-2 cursor-pointer"
-          >
-            <div className="w-9 h-9 rounded-full flex items-center justify-center gradient-cta">
-              <Plus size={18} className="text-on-primary" strokeWidth={2.5} />
+      <nav className="glass fixed left-0 right-0 top-0 z-50 hidden border-b border-outline-variant/10 shadow-[0_20px_40px_rgba(12,15,10,0.22)] md:block">
+        <div className="premium-shell flex h-20 items-center justify-between">
+          <button type="button" onClick={() => onTabChange('home')} className="flex cursor-pointer items-center gap-3 rounded-full pr-4 transition-transform hover:scale-[1.01]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[1.2rem] bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.18),_transparent_58%),rgba(40,43,37,0.95)] text-primary shadow-[var(--shadow-soft)]">
+              <Mountain size={18} />
+            </div>
+            <div className="text-left">
+              <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary-container">Aktivar</div>
+              <div className="font-label text-[10px] uppercase tracking-[0.24em] text-on-surface-variant">Premium outdoor operating system</div>
             </div>
           </button>
-        </div>
-      </nav>
 
-      {/* ===== Desktop top nav ===== */}
-      <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 h-16 bg-surface-lowest/95 backdrop-blur-xl border-b border-outline-variant/15">
-        <div className="premium-shell h-full flex items-center justify-between">
-          {/* Logo */}
-          <button
-            type="button"
-            onClick={() => onTabChange('home')}
-            className="font-headline text-xl font-black tracking-tight text-on-surface cursor-pointer"
-          >
-            AKT<span className="text-primary">IVAR</span>
-          </button>
-
-          {/* Center links */}
-          <div className="flex items-center gap-2">
+          <div className="rounded-full border border-outline-variant/10 bg-surface-container-low/70 p-1.5 backdrop-blur-xl">
+            <div className="flex items-center gap-1.5">
             {visibleTabs.map((tab) => {
               const isActive = activeTab === tab.key;
               return (
@@ -88,50 +47,70 @@ export default function GlassNav({
                   key={tab.key}
                   type="button"
                   onClick={() => onTabChange(tab.key)}
-                  aria-current={isActive ? 'page' : undefined}
-                  className={`relative px-5 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                    isActive
-                      ? 'text-primary bg-surface-container'
-                      : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50'
-                  }`}
+                  className={[
+                    'relative cursor-pointer rounded-full px-5 py-3 font-label text-xs uppercase tracking-[0.18em] transition-colors',
+                    isActive ? 'text-[#442c00]' : 'text-on-surface-variant hover:text-on-surface',
+                  ].join(' ')}
+                  style={isActive ? { background: 'var(--cta-gradient)' } : undefined}
                 >
                   {tab.label}
-                  {isActive && (
-                    <motion.div
-                      layoutId="navUnderline"
-                      className="absolute -bottom-[13px] left-4 right-4 h-[2px] bg-primary rounded-full"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
+                  {isActive && <motion.div layoutId="nav-active" className="absolute inset-0 -z-10 rounded-full" />}
                 </button>
               );
             })}
+            </div>
           </div>
 
-          {/* Right side */}
           <div className="flex items-center gap-3">
-            {/* Notifications */}
             <button
               type="button"
               onClick={() => onTabChange('notifications')}
-              className="relative w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60 transition-colors cursor-pointer"
+              className="relative flex h-11 w-11 items-center justify-center rounded-full bg-surface-container-high/90 text-on-surface-variant transition-colors hover:text-on-surface"
             >
               <Bell size={18} />
-              {notificationCount > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-error" />
-              )}
+              {notificationCount > 0 && <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-primary" />}
             </button>
-
-            {/* Create CTA */}
             <button
               type="button"
               onClick={() => onTabChange('create')}
-              className="flex items-center gap-2 px-5 py-2 rounded-lg gradient-cta text-on-primary font-semibold text-sm cursor-pointer hover:opacity-90 transition-opacity"
+              className="inline-flex h-12 items-center gap-2 rounded-full px-5 font-label text-xs font-bold uppercase tracking-[0.18em] text-[#442c00] cursor-pointer"
+              style={{ background: 'var(--cta-gradient)', boxShadow: 'var(--shadow-soft)' }}
             >
-              <Plus size={16} strokeWidth={2.5} />
-              Crear
+              <Plus size={16} />
+              Crear salida
             </button>
           </div>
+        </div>
+      </nav>
+
+      <nav className="glass pb-safe fixed bottom-3 left-3 right-3 z-50 rounded-[1.8rem] border border-outline-variant/15 px-2 py-2 shadow-[var(--shadow-forest)] md:hidden">
+        <div className="flex items-center justify-around">
+          {visibleTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => onTabChange(tab.key)}
+                className="flex min-w-16 flex-col items-center gap-1 px-3 py-2 text-[10px] font-label uppercase tracking-[0.14em]"
+              >
+                <span className={isActive ? 'text-primary' : 'text-on-surface-variant'}>
+                  <Icon size={19} strokeWidth={isActive ? 2.4 : 1.8} />
+                </span>
+                <span className={isActive ? 'text-primary' : 'text-on-surface-variant'}>{tab.label}</span>
+              </button>
+            );
+          })}
+
+          <button
+            type="button"
+            onClick={() => onTabChange('create')}
+            className="flex h-12 w-12 items-center justify-center rounded-full text-[#442c00] shadow-[var(--shadow-soft)]"
+            style={{ background: 'var(--cta-gradient)' }}
+          >
+            <Plus size={20} />
+          </button>
         </div>
       </nav>
     </>

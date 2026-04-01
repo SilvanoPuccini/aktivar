@@ -1,9 +1,35 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import api, { endpoints } from './api';
 import analytics from '@/lib/analytics';
+import { mockActivities } from '@/data/activities';
+import { categories as mockCategories } from '@/data/categories';
+import {
+  createMockMarketplaceListing,
+  joinMockCommunity,
+  mockChatMessages,
+  mockCommunities,
+  mockJournalStories,
+  mockMarketplaceListings,
+  mockOrganizerDashboard,
+  mockRankDashboard,
+  mockSafetyDashboard,
+  updateMockSafetyChecklist,
+} from '@/data/ecosystem';
+import { mockTrips } from '@/data/trips';
+import { normalizeMarketplaceListing, normalizeMarketplaceListings } from '@/features/marketplace/listingUtils';
 import type { Activity, Category } from '@/types/activity';
+import type { Community, JournalStory, MarketplaceListing, RankDashboard, SafetyChecklist, SafetyDashboard } from '@/types/ecosystem';
 import type { User } from '@/types/user';
 import type { ChatMessage } from '@/types/chat';
+
+async function withFallback<T>(request: () => Promise<T>, fallback: () => T | Promise<T>) {
+  try {
+    return await request();
+  } catch {
+    return fallback();
+  }
+}
 
 // ---- Activities ----
 
@@ -14,19 +40,35 @@ export function useActivities(params?: { search?: string; category?: string }) {
       const queryParams: Record<string, string> = {};
       if (params?.search) queryParams.search = params.search;
       if (params?.category) queryParams.category__slug = params.category;
-      const res = await api.get(endpoints.activities, { params: queryParams });
-      // Handle paginated or plain array response
-      return res.data.results ?? res.data;
+      return withFallback(async () => {
+        const res = await api.get(endpoints.activities, { params: queryParams });
+        return res.data.results ?? res.data;
+      }, () => {
+        const q = params?.search?.trim().toLowerCase();
+        return mockActivities.filter((activity) => {
+          if (params?.category && activity.category.slug !== params.category) return false;
+          if (!q) return true;
+          return [activity.title, activity.location_name, activity.description].some((field) => field.toLowerCase().includes(q));
+        });
+      });
     },
   });
 }
 
 export function useActivity(id: string | undefined) {
-  return useQuery<Activity>({
+  return useQuery<Activity | undefined>({
     queryKey: ['activity', id],
     queryFn: async () => {
-      const res = await api.get(`${endpoints.activities}${id}/`);
-      return res.data;
+      try {
+        const res = await api.get(`${endpoints.activities}${id}/`);
+        return res.data;
+      } catch (error) {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          return undefined;
+        }
+
+        return mockActivities.find((activity) => String(activity.id) === id);
+      }
     },
     enabled: !!id,
   });
@@ -35,10 +77,10 @@ export function useActivity(id: string | undefined) {
 export function useCategories() {
   return useQuery<Category[]>({
     queryKey: ['categories'],
-    queryFn: async () => {
+    queryFn: async () => withFallback(async () => {
       const res = await api.get(endpoints.categories);
       return res.data.results ?? res.data;
-    },
+    }, () => mockCategories),
     staleTime: 1000 * 60 * 30, // 30 min
   });
 }
@@ -88,13 +130,16 @@ export function useLeaveActivity() {
 // ---- User ----
 
 export function useCurrentUser() {
+  const accessToken = typeof window !== 'undefined' ? sessionStorage.getItem('aktivar_access_token') : null;
+
   return useQuery<User>({
-    queryKey: ['currentUser'],
+    queryKey: ['currentUser', accessToken],
     queryFn: async () => {
       const res = await api.get(endpoints.me);
       return res.data;
     },
-    enabled: !!sessionStorage.getItem('aktivar_access_token'),
+    enabled: !!accessToken,
+    retry: false,
   });
 }
 
@@ -158,20 +203,20 @@ export function useVerifyPhone() {
 export function useTrips() {
   return useQuery({
     queryKey: ['trips'],
-    queryFn: async () => {
+    queryFn: async () => withFallback(async () => {
       const res = await api.get(endpoints.trips);
       return res.data.results ?? res.data;
-    },
+    }, () => mockTrips),
   });
 }
 
 export function useTrip(id: string | undefined) {
   return useQuery({
     queryKey: ['trip', id],
-    queryFn: async () => {
+    queryFn: async () => withFallback(async () => {
       const res = await api.get(`${endpoints.trips}${id}/`);
       return res.data;
-    },
+    }, () => mockTrips.find((trip) => String(trip.id) === id) ?? mockTrips[0]),
     enabled: !!id,
   });
 }
@@ -238,10 +283,10 @@ export function useUploadImage() {
 export function useMessages(activityId: number | undefined) {
   return useQuery<ChatMessage[]>({
     queryKey: ['messages', activityId],
-    queryFn: async () => {
+    queryFn: async () => withFallback(async () => {
       const res = await api.get(endpoints.messages(activityId!));
       return res.data.results ?? res.data;
-    },
+    }, () => mockChatMessages),
     enabled: !!activityId,
     retry: 1,
   });
@@ -261,11 +306,18 @@ export function useCreatePaymentIntent() {
   return useMutation<PaymentIntent, Error, { activityId: number; amount: number }>({
     mutationFn: async ({ activityId, amount }) => {
       analytics.paymentStarted(amount);
-      const res = await api.post(`${endpoints.payments}create-intent/`, {
-        activity_id: activityId,
+      const res = await api.post(endpoints.payments, {
+        activity: activityId,
         amount,
+        currency: 'CLP',
       });
-      return res.data;
+      return {
+        id: res.data.payment?.id ?? '',
+        client_secret: res.data.client_secret,
+        amount,
+        currency: 'CLP',
+        status: res.data.payment?.status ?? 'pending',
+      };
     },
   });
 }
@@ -283,7 +335,7 @@ export function useUserPayments() {
   return useQuery<Payment[]>({
     queryKey: ['userPayments'],
     queryFn: async () => {
-      const res = await api.get(`${endpoints.payments}my/`);
+      const res = await api.get(endpoints.payments);
       return res.data.results ?? res.data;
     },
     enabled: !!sessionStorage.getItem('aktivar_access_token'),
@@ -306,12 +358,28 @@ export interface AppNotification {
   is_read: boolean;
 }
 
+function mapNotificationType(notificationType: string): AppNotification['type'] {
+  if (notificationType === 'new_message') return 'message';
+  if (notificationType === 'activity_joined') return 'join';
+  if (notificationType === 'activity_reminder') return 'reminder';
+  return 'spot_opened';
+}
+
 export function useNotifications() {
   return useQuery<AppNotification[]>({
     queryKey: ['notifications'],
     queryFn: async () => {
-      const res = await api.get(`${endpoints.notifications}`);
-      return res.data.results ?? res.data;
+      const res = await api.get(endpoints.notifications);
+      const rows = res.data.results ?? res.data;
+      return rows.map((row: { id: number; notification_type: string; data?: Record<string, unknown>; body: string; created_at: string; is_read: boolean }) => ({
+        id: row.id,
+        type: mapNotificationType(row.notification_type),
+        actor: (row.data?.actor as AppNotification['actor']) ?? { id: 0, full_name: 'Aktivar', avatar: '' },
+        activity_id: Number((row.data?.activity_id as number | string | undefined) ?? 0),
+        description: row.body,
+        created_at: row.created_at,
+        is_read: row.is_read,
+      }));
     },
     retry: 1,
   });
@@ -321,9 +389,7 @@ export function useMarkNotificationRead() {
   const queryClient = useQueryClient();
   return useMutation<void, Error, number>({
     mutationFn: async (notificationId: number) => {
-      await api.patch(`${endpoints.notifications}${notificationId}/`, {
-        is_read: true,
-      });
+      await api.post(`${endpoints.notifications}${notificationId}/mark_read/`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -335,7 +401,7 @@ export function useMarkAllNotificationsRead() {
   const queryClient = useQueryClient();
   return useMutation<void, Error, void>({
     mutationFn: async () => {
-      await api.post(`${endpoints.notifications}mark-all-read/`);
+      await api.post(`${endpoints.notifications}mark_all_read/`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -358,10 +424,10 @@ export function usePushSubscription() {
 export function useOrganizerDashboard() {
   return useQuery(({
     queryKey: ['organizerDashboard'],
-    queryFn: async () => {
+    queryFn: async () => withFallback(async () => {
       const res = await api.get(`${endpoints.activities}dashboard/`);
       return res.data;
-    },
+    }, () => mockOrganizerDashboard),
     enabled: !!sessionStorage.getItem('aktivar_access_token'),
   }));
 }
@@ -443,6 +509,157 @@ export function useTriggerEmergency() {
         latitude, longitude, message,
       });
       return res.data;
+    },
+  });
+}
+
+// ---- Ecosystem ----
+
+export function useCommunities(params?: { search?: string }) {
+  return useQuery<Community[]>({
+    queryKey: ['communities', params],
+    queryFn: async () => withFallback(async () => {
+      const res = await api.get(endpoints.communities, { params });
+      return res.data.results ?? res.data;
+    }, () => {
+      const q = params?.search?.trim().toLowerCase();
+      return mockCommunities.filter((community) => {
+        if (!q) return true;
+        return [community.name, community.description, community.location_name, community.activity_label]
+          .some((field) => field.toLowerCase().includes(q));
+      });
+    }),
+  });
+}
+
+export function useFeaturedCommunity() {
+  return useQuery<Community>({
+    queryKey: ['communities', 'featured'],
+    queryFn: async () => withFallback(async () => {
+      const res = await api.get(`${endpoints.communities}featured/`);
+      return res.data;
+    }, () => mockCommunities.find((community) => community.is_featured) ?? mockCommunities[0]),
+  });
+}
+
+export function useJoinCommunity() {
+  const queryClient = useQueryClient();
+  return useMutation<Community, Error, number>({
+    mutationFn: async (communityId: number) => withFallback(async () => {
+      const res = await api.post(`${endpoints.communities}${communityId}/join/`);
+      return res.data;
+    }, () => joinMockCommunity(communityId)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communities'] });
+    },
+  });
+}
+
+export function useJournalStories() {
+  return useQuery<JournalStory[]>({
+    queryKey: ['journalStories'],
+    queryFn: async () => withFallback(async () => {
+      const res = await api.get(endpoints.journal);
+      return res.data.results ?? res.data;
+    }, () => mockJournalStories),
+  });
+}
+
+export function useFeaturedJournalStory() {
+  return useQuery<JournalStory>({
+    queryKey: ['journalStories', 'featured'],
+    queryFn: async () => withFallback(async () => {
+      const res = await api.get(`${endpoints.journal}featured/`);
+      return res.data;
+    }, () => mockJournalStories.find((story) => story.is_featured) ?? mockJournalStories[0]),
+  });
+}
+
+export function useTrendingJournalStories() {
+  return useQuery<JournalStory[]>({
+    queryKey: ['journalStories', 'trending'],
+    queryFn: async () => withFallback(async () => {
+      const res = await api.get(`${endpoints.journal}trending/`);
+      return res.data;
+    }, () => mockJournalStories.filter((story) => story.is_trending)),
+  });
+}
+
+export function useMarketplaceListings(params?: { search?: string; category?: string; ordering?: string }) {
+  return useQuery<MarketplaceListing[]>({
+    queryKey: ['marketplaceListings', params],
+    queryFn: async () => withFallback(async () => {
+      const res = await api.get(endpoints.marketplace, { params });
+      return normalizeMarketplaceListings(res.data.results ?? res.data);
+    }, () => {
+      const q = params?.search?.trim().toLowerCase();
+      return normalizeMarketplaceListings(mockMarketplaceListings).filter((listing) => {
+        if (params?.category && listing.category !== params.category) return false;
+        if (!q) return true;
+        return [listing.title, listing.location_name, listing.seller_name, listing.subcategory]
+          .some((field) => field.toLowerCase().includes(q));
+      });
+    }),
+  });
+}
+
+export function useCreateMarketplaceListing() {
+  const queryClient = useQueryClient();
+  return useMutation<MarketplaceListing, Error, Partial<MarketplaceListing>>({
+    mutationFn: async (payload) => withFallback(async () => {
+      const res = await api.post(endpoints.marketplace, payload);
+      return normalizeMarketplaceListing(res.data) ?? createMockMarketplaceListing(payload);
+    }, () => createMockMarketplaceListing(payload)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['marketplaceListings'] });
+    },
+  });
+}
+
+export function useRankDashboard() {
+  return useQuery<RankDashboard>({
+    queryKey: ['rankDashboard'],
+    queryFn: async () => withFallback(async () => {
+      const res = await api.get(endpoints.rank);
+      return res.data;
+    }, () => mockRankDashboard),
+    enabled: !!sessionStorage.getItem('aktivar_access_token'),
+  });
+}
+
+export function useSafetyDashboard() {
+  return useQuery<SafetyDashboard>({
+    queryKey: ['safetyDashboard'],
+    queryFn: async () => withFallback(async () => {
+      const res = await api.get(endpoints.safety);
+      return res.data;
+    }, () => mockSafetyDashboard),
+    enabled: !!sessionStorage.getItem('aktivar_access_token'),
+  });
+}
+
+export function useInitiateSOS() {
+  const queryClient = useQueryClient();
+  return useMutation<{ id: number; detail: string }, Error, { message?: string }>({
+    mutationFn: async (payload) => withFallback(async () => {
+      const res = await api.post(endpoints.safetySos, payload);
+      return res.data;
+    }, () => ({ id: Date.now(), detail: payload.message ?? 'SOS triggered from command center.' })),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['safetyDashboard'] });
+    },
+  });
+}
+
+export function useUpdateSafetyChecklist() {
+  const queryClient = useQueryClient();
+  return useMutation<SafetyChecklist, Error, Partial<SafetyChecklist>>({
+    mutationFn: async (payload) => withFallback(async () => {
+      const res = await api.patch(endpoints.safetyChecklist, payload);
+      return res.data;
+    }, () => updateMockSafetyChecklist(payload)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['safetyDashboard'] });
     },
   });
 }
