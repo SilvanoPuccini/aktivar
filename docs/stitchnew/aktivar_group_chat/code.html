@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;900&amp;family=Manrope:wght@400;500;600&amp;family=Space_Grotesk:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-bright": "#373a34",
+            "tertiary-fixed": "#e6e2d8",
+            "on-surface": "#e1e3da",
+            "on-error": "#690005",
+            "background": "#11140f",
+            "tertiary-container": "#b7b4ab",
+            "outline": "#9f8e79",
+            "on-primary-fixed-variant": "#614000",
+            "surface-container-highest": "#333630",
+            "surface-container-low": "#191c17",
+            "error": "#ffb4ab",
+            "secondary-container": "#00733b",
+            "on-tertiary-fixed": "#1c1c16",
+            "tertiary-fixed-dim": "#cac6bd",
+            "primary-fixed": "#ffddaf",
+            "on-secondary-container": "#95f5ae",
+            "on-secondary-fixed-variant": "#005228",
+            "surface-tint": "#ffba44",
+            "primary-container": "#f0a500",
+            "surface-dim": "#11140f",
+            "on-tertiary-fixed-variant": "#484740",
+            "secondary-fixed": "#97f7b0",
+            "surface-container": "#1d201b",
+            "inverse-surface": "#e1e3da",
+            "primary": "#ffc56c",
+            "on-secondary": "#00391a",
+            "on-error-container": "#ffdad6",
+            "primary-fixed-dim": "#ffba44",
+            "inverse-on-surface": "#2e312b",
+            "on-primary-container": "#5f3f00",
+            "on-secondary-fixed": "#00210d",
+            "surface-container-lowest": "#0c0f0a",
+            "on-tertiary-container": "#47463f",
+            "inverse-primary": "#805600",
+            "outline-variant": "#514533",
+            "on-surface-variant": "#d6c4ac",
+            "secondary-fixed-dim": "#7bda96",
+            "secondary": "#7bda96",
+            "on-tertiary": "#32312a",
+            "on-primary-fixed": "#281800",
+            "on-primary": "#442c00",
+            "tertiary": "#d3cfc6",
+            "on-background": "#e1e3da",
+            "surface-variant": "#333630",
+            "error-container": "#93000a",
+            "surface": "#11140f",
+            "surface-container-high": "#282b25"
+          },
+          fontFamily: {
+            "headline": ["Epilogue"],
+            "body": ["Manrope"],
+            "label": ["Space Grotesk"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #11140f;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #333630;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body min-h-screen flex flex-col">
+<!-- Header Card: Shared Component TopNavBar Logic Mapping -->
+<header class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-screen-xl mx-auto">
+<div class="flex items-center gap-4">
+<button class="hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-headline font-black tracking-tighter text-[#EDE9DF] text-lg leading-tight">Antigua Coffee Trek</h1>
+<span class="font-label text-[10px] uppercase tracking-widest text-primary-container">Saturday 14 • 8 Participants</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#EDE9DF]/60 hover:text-primary cursor-pointer transition-colors" data-icon="notifications">notifications</span>
+<div class="w-10 h-10 rounded-full border border-outline-variant/30 overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="Portrait of a young man with a rugged outdoor look, warm lighting, natural skin texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoP3WcXx93fpqs3JND9U_P8p8WECMODPeiPNOreZ6uLknjVKOP6ZDn2x1X4C5SfNNd6I4DYT4b3o1LOuHTdyDwDZTr8m5VT1tj82x0zSgkDDA-I-Ms8dn4LsqVXO05R5mRey6xWJuPYtd-5fMqkCR_O-LCy6zLhh_UiTCA1KYjE16DkG8a8bE-A20qCcLGHf7xsv2fesdQ00krZtwfsVps6whiHpvlz85Q6uE2aTNkmVZ6I9T5rYf5Ux75rChFiZ1-BMuPkHiYAGk"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Chat Content Area -->
+<main class="flex-grow pt-24 pb-32 px-4 max-w-2xl mx-auto w-full custom-scrollbar overflow-y-auto">
+<!-- Date Divider -->
+<div class="flex justify-center my-8">
+<span class="font-label text-[11px] uppercase tracking-[0.2em] text-on-surface-variant/50 px-4 py-1 bg-surface-container rounded-full border border-outline-variant/10">Today</span>
+</div>
+<!-- Message Stream -->
+<div class="space-y-8">
+<!-- Received Message -->
+<div class="flex items-end gap-3 group">
+<div class="w-8 h-8 rounded-full flex-shrink-0 overflow-hidden mb-1">
+<img alt="Sofia" class="w-full h-full object-cover" data-alt="Close-up portrait of a woman smiling outdoors in soft natural sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdwj3EbFf1LBJESL3JPYy8wye0XnlNz5EewanCv9vsByR43TYSQR0jY-KDwKLuqWo4UmNgMOvZ2u-Qlk0N7vsab5sD2aS6pLwtLoVd__gOIMnDvegxduQW_loh6aDtuWS0bHFoKD9MVauG6e3T2Ohh_9TLJ8opmjhTMDjXsUjAqR23IE06aCS22lcrKmWcvnl9yTcDh72lvnib8JJ4k4zogyLN_HuH3XUMm3esc9vCDQycfrCxEghJHVUeKWQdeCWBv5vJKTXtew0"/>
+</div>
+<div class="flex flex-col max-w-[80%]">
+<span class="font-headline font-bold text-xs ml-1 mb-1 text-on-surface-variant">Sofia</span>
+<div class="bg-surface-container text-[#EDE9DF] p-4 rounded-t-xl rounded-br-xl shadow-sm">
+<p class="text-sm leading-relaxed">Hey everyone! Just double checking, do we meet at the park entrance or the coffee shop next to it?</p>
+</div>
+<span class="font-label text-[9px] mt-1 ml-1 text-on-surface-variant/40">08:42 AM</span>
+</div>
+</div>
+<!-- My Message -->
+<div class="flex flex-col items-end gap-1">
+<div class="max-w-[80%] bg-primary-container text-on-primary-container p-4 rounded-t-xl rounded-bl-xl shadow-md">
+<p class="text-sm font-medium leading-relaxed">We're meeting at the park entrance. I'll be there 10 minutes early with the gear!</p>
+</div>
+<div class="flex items-center gap-1 mt-1 mr-1">
+<span class="font-label text-[9px] text-on-surface-variant/40">08:45 AM</span>
+<span class="material-symbols-outlined text-[12px] text-primary" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+</div>
+<!-- Photo Sharing Block -->
+<div class="flex items-end gap-3">
+<div class="w-8 h-8 rounded-full flex-shrink-0 overflow-hidden mb-1">
+<img alt="Marcus" class="w-full h-full object-cover" data-alt="Portrait of a man with sunglasses and athletic gear looking at the camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAffiwuhaiK6ufLh38vtBXhdlEoery19uTgPDTEALrRiDJDpiPh97hHtIKxQ9avmSt2uM8V6s1SfquU27X3Xw4JmmjCEFd68xPM3fXlGOOYHikQLaZyERidQ-f30JcymeDg3nBaosvV00FfeXujiAHiRS6koys4DxnFZ3oiq8i3XfwKEpJ0kFjtrGrf1DuyNtWJQcyS7nk18v70LUeTEuZLIPXnaye3kCpvot2eMAMYGvO7QOuGefUJYNA9undfBMuWlxQvTlRIw8"/>
+</div>
+<div class="flex flex-col max-w-[80%]">
+<span class="font-headline font-bold text-xs ml-1 mb-1 text-on-surface-variant">Marcus</span>
+<div class="bg-surface-container p-2 rounded-t-xl rounded-br-xl shadow-sm">
+<div class="rounded-lg overflow-hidden mb-2">
+<img alt="Coffee beans" class="w-full aspect-video object-cover" data-alt="High-end artistic shot of fresh roasted coffee beans in a wooden bowl with steam rising in morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZZSjITmubIraStqYWAilShlJFXHwtEOEGS1slmqKRF3SjdtPDRML6-zV6kfOnu6QQVyM3HezUejc0rEuzqjDKZGXJ0iw-iwbxgjyqsuUBj1xW0GQ1AgVRkKVVavLdeMIj8CELQN9Cup6n2gfHGB3HqUelmvjzc7-tQf5YvAjLwIKdQnpSUxiWRcDFWye-5uHCkQ6-xeW45n1RtQ9azrfgSvCBqPZet6_3Hyw4HVB8-QdiD4Poq49DgXq2e8lxFP-7ej2Z7FSYXHg"/>
+</div>
+<p class="text-sm px-2 pb-2 text-[#EDE9DF]">Just picked up the fresh roast for our tasting session! ☕️</p>
+</div>
+<span class="font-label text-[9px] mt-1 ml-1 text-on-surface-variant/40">09:12 AM</span>
+</div>
+</div>
+<!-- Location Pin Shared Card -->
+<div class="flex items-end gap-3">
+<div class="w-8 h-8 rounded-full flex-shrink-0 overflow-hidden mb-1">
+<img alt="Sofia" class="w-full h-full object-cover" data-alt="Close-up portrait of a woman smiling outdoors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJywvfs1ziuVnytg0pQLfNqjqSv3bTEZ8TxMxPXMzD_0ekk5fJcj0VJ-X6ANhgU65EWnLVRb8YxB3zUuMIPsyG7pa6pQMmBOgmx6_fsWEYoKn4rISOygzt2LS9ScrR9-8p7TvoFznhaKB-TrudalWPiQLsVgb-2WrybjlWrQbVyiTNFa3lsOGLYr3-vqo-tw7E1zagEVQ7wto1M0e-65qEXgX2lb2RNumy9Bv1lz2AuTzQxXrT0DHGNHSX0KmF5EJsMDthfmiZyfQ"/>
+</div>
+<div class="flex flex-col max-w-[80%]">
+<span class="font-headline font-bold text-xs ml-1 mb-1 text-on-surface-variant">Sofia</span>
+<div class="bg-surface-container rounded-t-xl rounded-br-xl overflow-hidden shadow-sm border border-outline-variant/10">
+<div class="h-32 w-full bg-surface-container-highest relative">
+<img alt="Map Location" class="w-full h-full object-cover opacity-60" data-alt="Stylized map view of a central american town with a large park and colonial architecture" data-location="Antigua Guatemala" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNHqHTtM7KI1-G-sm1HVheDVfYtJrdOvXi4NcwvXUwQ71B_tl__hWrz1CKzFg43vi83MmoDec7Aa1TV9n_6LF3A-WKmG5ePP8rSfYXgc9CxDv-OMJilPKBtE9Yhk44mJsQkko136Qxw_11qa9-uUo4LJkdg4iQEYdml7EejP3ZdyMuJTtC7rB-BrMhHOsE5ZDGTh4P3Y6kQRJl37RMI__ItkOWVCZnNBhvNcHaSFLq6lhgL8MAorUZNpb_m7wS691r4p6lcK4gmtQ"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-primary text-on-primary p-2 rounded-full shadow-xl animate-bounce">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-high">
+<h4 class="font-headline font-bold text-sm text-[#EDE9DF]">Central Park Meeting Point</h4>
+<p class="font-label text-[11px] text-on-surface-variant mt-1">14.5573° N, 90.7332° W</p>
+<button class="mt-3 w-full py-2 bg-surface-container-highest text-primary font-label text-[10px] uppercase tracking-widest rounded-lg border border-primary/20 hover:bg-primary/10 transition-colors">Open in Maps</button>
+</div>
+</div>
+<span class="font-label text-[9px] mt-1 ml-1 text-on-surface-variant/40">09:15 AM</span>
+</div>
+</div>
+<!-- Typing Indicator -->
+<div class="flex items-center gap-2 pl-11">
+<div class="flex gap-1">
+<span class="w-1.5 h-1.5 bg-primary/40 rounded-full animate-pulse"></span>
+<span class="w-1.5 h-1.5 bg-primary/40 rounded-full animate-pulse delay-75"></span>
+<span class="w-1.5 h-1.5 bg-primary/40 rounded-full animate-pulse delay-150"></span>
+</div>
+<p class="text-[11px] text-on-surface-variant italic font-medium">Sofia is typing...</p>
+</div>
+</div>
+</main>
+<!-- Input Bar Area -->
+<footer class="fixed bottom-0 left-0 w-full z-50 bg-[#11140f]/90 backdrop-blur-2xl border-t border-outline-variant/10">
+<div class="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
+<!-- Attachment Trigger -->
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">add_circle</span>
+</button>
+<!-- Text Input Field -->
+<div class="flex-grow relative">
+<input class="w-full bg-surface-container-highest border-none rounded-2xl py-3 px-5 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary/30 font-body text-sm transition-all" placeholder="Message participants..." type="text"/>
+</div>
+<!-- Send Button -->
+<button class="w-12 h-12 bg-primary-container text-on-primary-container rounded-xl flex items-center justify-center shadow-lg active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+<!-- Bottom NavBar Logic Mapping (Hidden on focused screens like Chat Detail) -->
+<!-- Suppressed per Shell Visibility Rule: Task-Focused Journey -->
+</footer>
+</body></html>

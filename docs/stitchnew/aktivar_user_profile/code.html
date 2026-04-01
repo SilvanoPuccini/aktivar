@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Profile | Aktivar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;900&amp;family=Manrope:wght@400;500;700&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#373a34",
+              "tertiary-fixed": "#e6e2d8",
+              "on-surface": "#e1e3da",
+              "on-error": "#690005",
+              "background": "#11140f",
+              "tertiary-container": "#b7b4ab",
+              "outline": "#9f8e79",
+              "on-primary-fixed-variant": "#614000",
+              "surface-container-highest": "#333630",
+              "surface-container-low": "#191c17",
+              "error": "#ffb4ab",
+              "secondary-container": "#00733b",
+              "on-tertiary-fixed": "#1c1c16",
+              "tertiary-fixed-dim": "#cac6bd",
+              "primary-fixed": "#ffddaf",
+              "on-secondary-container": "#95f5ae",
+              "on-secondary-fixed-variant": "#005228",
+              "surface-tint": "#ffba44",
+              "primary-container": "#f0a500",
+              "surface-dim": "#11140f",
+              "on-tertiary-fixed-variant": "#484740",
+              "secondary-fixed": "#97f7b0",
+              "surface-container": "#1d201b",
+              "inverse-surface": "#e1e3da",
+              "primary": "#ffc56c",
+              "on-secondary": "#00391a",
+              "on-error-container": "#ffdad6",
+              "primary-fixed-dim": "#ffba44",
+              "inverse-on-surface": "#2e312b",
+              "on-primary-container": "#5f3f00",
+              "on-secondary-fixed": "#00210d",
+              "surface-container-lowest": "#0c0f0a",
+              "on-tertiary-container": "#47463f",
+              "inverse-primary": "#805600",
+              "outline-variant": "#514533",
+              "on-surface-variant": "#d6c4ac",
+              "secondary-fixed-dim": "#7bda96",
+              "secondary": "#7bda96",
+              "on-tertiary": "#32312a",
+              "on-primary-fixed": "#281800",
+              "on-primary": "#442c00",
+              "tertiary": "#d3cfc6",
+              "on-background": "#e1e3da",
+              "surface-variant": "#333630",
+              "error-container": "#93000a",
+              "surface": "#11140f",
+              "surface-container-high": "#282b25"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #11140f;
+            color: #EDE9DF;
+            font-family: 'Manrope', sans-serif;
+        }
+        .tonal-shifting {
+            background-color: #1d201b;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-screen-xl mx-auto">
+<div class="text-2xl font-black text-[#f0a500] uppercase tracking-tighter font-['Epilogue']">
+                Aktivar
+            </div>
+<div class="flex items-center gap-4">
+<button class="hover:scale-105 transition-transform duration-200 text-[#EDE9DF]">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-[#ffc56c]">
+<img alt="User Avatar" data-alt="Close-up portrait of a rugged man with a beard and outdoor gear, natural lighting, bokeh forest background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJrHQS5lqfWDzy5_BCkHQD8sKcPCK9Txz8FN-mG8djEkxkFaoIytW2YRzk4HhN8GZDt-9OoPgeK4PLbqD1tNZg-Ji-QrVl4UTUm2WBRkIlm535klSOLjfazY6QSPEmTaBa0cpHrqVUlzMqixTO9g9gFiyzSjni9o0l86vyZNoPdZjwHBAaothwZbHfGMcxi4s4wPb2SHp8VXCM28BLEDI3VuB4L8vKiEeK1g7jqm_3iLdtkWpLloJSClfS_T3xqwYnaSc4Q1ave-I"/>
+</div>
+</div>
+</div>
+</header>
+<main class="mt-20 px-6 max-w-screen-xl mx-auto">
+<!-- Hero Profile Section -->
+<section class="flex flex-col items-start gap-8 pt-8 md:flex-row md:items-end">
+<!-- Avatar -->
+<div class="relative">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-[#f0a500] p-1 overflow-hidden">
+<img alt="Alejandro Riva Profile" class="w-full h-full object-cover rounded-full" data-alt="Portrait of a male explorer in his 30s, wearing a high-end technical jacket, rugged look, warm golden hour lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkgjdh44p_eZBlr7iERV-YbzOHE6m_iHRyWa6xYAOkXjCK1iGSjcTYHA1tue_rhX3qXvgcfhSZTzHgqoCHXahN-nFPbyt-85pGRJKVV6IzHuSgQ9yteDaywK--shhaW5QZ9mCZrJzr3zdVs-N5dcCsP_RTU3jZrlqNBmClWazBnt4Oik7-myP_QS6MoU6sf8zfPy5zmXjCmhGCwIuZgwtt2zUbhRbEzJzzKBeXJ19vhAk3yL2iRM2oT1V4G5d-gVd0C5ggEoiIFSk"/>
+</div>
+<div class="absolute bottom-1 right-1 bg-[#f0a500] text-[#11140f] rounded-full p-1 border-4 border-[#11140f]">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<!-- Identity -->
+<div class="flex-1">
+<div class="flex items-center gap-3">
+<h1 class="font-headline font-black text-4xl tracking-tighter text-[#EDE9DF]">Alejandro Riva</h1>
+</div>
+<div class="flex items-center gap-2 mt-1 text-[#EDE9DF]/60 font-label text-sm uppercase tracking-widest">
+<span class="material-symbols-outlined text-xs">location_on</span>
+                    Santiago, Chile
+                </div>
+<div class="mt-4 max-w-xl text-lg leading-relaxed text-[#EDE9DF]/80">
+                    Outdoor enthusiast living for the next summit. Join me for mountain adventures and long road trips across Latin America.
+                </div>
+</div>
+<!-- Rating Card -->
+<div class="bg-surface-container p-6 rounded-xl border-l-4 border-primary">
+<div class="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-2">Member Rating</div>
+<div class="flex text-[#f0a500] gap-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="mt-2 font-headline font-bold text-2xl text-[#EDE9DF]">5.0</div>
+</div>
+</section>
+<!-- Technical Stats Bar -->
+<section class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-1 bg-surface-container-highest rounded-xl overflow-hidden border border-outline-variant/15">
+<div class="bg-surface-container p-8 flex flex-col items-center text-center">
+<span class="font-label text-primary text-3xl font-bold">14</span>
+<span class="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant mt-1">Activities</span>
+</div>
+<div class="bg-surface-container p-8 flex flex-col items-center text-center">
+<span class="font-label text-primary text-3xl font-bold">280 km</span>
+<span class="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant mt-1">Traveled</span>
+</div>
+<div class="bg-surface-container p-8 flex flex-col items-center text-center">
+<span class="font-label text-primary text-3xl font-bold">85</span>
+<span class="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant mt-1">People Met</span>
+</div>
+</section>
+<!-- Badges Row -->
+<section class="mt-12">
+<h2 class="font-headline font-black text-xl tracking-tight mb-6 uppercase text-[#EDE9DF]">Achievements</h2>
+<div class="flex flex-wrap gap-4">
+<div class="flex items-center gap-3 bg-surface-container-low px-4 py-3 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-[#f0a500]" style="font-variation-settings: 'FILL' 1;">landscape</span>
+<span class="font-label text-xs uppercase tracking-widest text-[#EDE9DF]">Mountain King</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-low px-4 py-3 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-[#f0a500]" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-label text-xs uppercase tracking-widest text-[#EDE9DF]">Social Butterfly</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-low px-4 py-3 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-[#f0a500]" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label text-xs uppercase tracking-widest text-[#EDE9DF]">Pathfinder</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-low px-4 py-3 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-[#f0a500]" style="font-variation-settings: 'FILL' 1;">fireplace</span>
+<span class="font-label text-xs uppercase tracking-widest text-[#EDE9DF]">Camp Master</span>
+</div>
+</div>
+</section>
+<!-- Asymmetric Photo Grid -->
+<section class="mt-16 mb-20">
+<div class="flex justify-between items-end mb-8">
+<h2 class="font-headline font-black text-2xl tracking-tight uppercase">Recent Expeditions</h2>
+<span class="font-label text-xs uppercase tracking-widest text-primary hover:underline cursor-pointer">View Archive</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<div class="aspect-square bg-surface-container overflow-hidden rounded-lg group cursor-pointer">
+<img alt="Hiking Trip" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Wide shot of jagged snow-capped mountain peaks under a deep blue sky, epic perspective, cinematic scale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC334wjqwoHrPKj0lsp7cHw76q7F5k6jgshITJpblrFhBVfkG2gv-QN0MpePWIMXmBqGu4pPt3B-NIef2w60vbwTxfuIcZRIIBtav6yRiMEX0O_g_3xYKtroajWyncVCoEKzvRxAHYAhbQi9CR7e_mMvXDS_OKSfYR8_9Q17yUaa0wjJlOw18YG8wTOCmUlOuCf3w1AGDagXKaw77ak9nkc_l06wH8ZmfLUf_cduBC2VP1TR-nGYMlkpo_T4L1EQcUYAYb43unwkbE"/>
+</div>
+<div class="aspect-[3/4] md:aspect-square bg-surface-container overflow-hidden rounded-lg group cursor-pointer">
+<img alt="Camping" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Cozy tent illuminated from inside at night in a dark forest, campfire embers flying, mystical atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcvFhdh3X2GVw9SV1V-t8tSxd6ejeVDtnX4lh7F2CcmFkgu_kwKfK6fHGK-PV81p1GStTYuuE16E-Uf3QSximldegImxtctFB8lw8Gi6IOn6hRJ3pJ4ac0pd3LidS2QhzWIVFnYvdfofqhev2EgnYbz5k66YphUg3Oc2psD4vJJPL02wksnRi0uatbndlpKdpGNZmSyLpk-DFTCPqpSgvOdlVAwtMLSq6yauedI_PwCFX7hPjxr9DrQBx1uCCGI16GnRQsmWcuUiY"/>
+</div>
+<div class="aspect-square bg-surface-container overflow-hidden rounded-lg group cursor-pointer">
+<img alt="Road Trip" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Aerial view of a winding road through a dense green pine forest, foggy morning, moody cinematic vibe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOGXeIFobSjxuEzprcJClxbACJ52vzengl8nWuESE-IZLD2TFRecf3hKLb2la2ceU3bs0f77WxBOzjkoM1RQwZcH4J2lglbJIOP01B6hSwgv0R8A7b5wL6QccXgT0g8JFrptkxkXxkx4l4hCfIJ3F-1Z2j7Lln71uA6zYi9Um_xG1FSsVgsGLYdXQoc8VF7IWkQddNRUYmTz-tQ8JNDcZTFt4nx2HDkXnFIvfWVndVLszV4nigMOL-KyN8UbWfVZzJC0Xu_w79PcI"/>
+</div>
+<div class="aspect-square bg-surface-container overflow-hidden rounded-lg group cursor-pointer">
+<img alt="Trail run" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Detail shot of rugged hiking boots on a rocky trail path, low angle, dust in the air, warm sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf-LKzj8hgKBlzYhyGsa_FhEpRct_eSkGq88qdA01TeaqV1Tf5YBsAPKLOtqwyOL9HxwVz45A6ZRIYMzNdE3hsQ2ZDFUOFWfB4wOzkg708YZMbWVKf2Ui4ojXVrtE-kVsIkpYK4pQOyo_C2oxIEtVRMiYAY5qzNToI8R_wYCFog4pub3VH4cB1NGjeRoa9CPNEdckWxZl8dNsNTzTAC890mgsdh4RccLvkwdCA7MwQ4tdA6v0kaYO7VzMWArDuzip3JtUaB9RuDQY"/>
+</div>
+<div class="aspect-[4/3] md:aspect-square bg-surface-container overflow-hidden rounded-lg group cursor-pointer col-span-1 md:col-span-1">
+<img alt="Lakeview" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Serene mountain lake reflecting a sunset sky with pink and purple hues, calm water, peaceful mood" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPG6uI5cQtyNkV1yJYoQnOn4Kn_4XR-5EYKf5F3XM0RUc7opHY9pCE5c9WM6RjsfSZOJgmYjHfBAWh7wIfI3pm7dvYscEAGuE9JLyXJurXroh9KEimGBZiZ1B1se5duhUydpHO-g6R_Ud3WwAr_2LhavdjfSergt832epupN6qD8IJDRlJ69arToStIBIlaLVHKqmonqeqM_TopjVZcWFpoORV1eYRAgkjvC9bAu7Ezp3GUFDKGtFea7TmwYqN_vtWfJdNYDfVoyM"/>
+</div>
+<div class="aspect-square bg-surface-container overflow-hidden rounded-lg group cursor-pointer">
+<img alt="Peak" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Climber standing on a rocky peak with arms outstretched, overlooking a valley of clouds, victory moment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRucG2BKbU3BbXJg5BxgO51e885z-pcxTIphAAAa6f9ZD8kjMx5yG0fVd1_u7IbF1SheXPoC5A5xo-aEfabiZOHCzgE04uU71tCxZEcxJOOpUDh6-ZRzRWYC-RzKwvz92yrgsFDlyBZ7yMNduXQRdN2MGm5-uQmWu-a8Plb8jjVY-Dd2Mx_ML6y7aU3E4rosmXWOmJGKf_w3S-xPEH0dM1k2BhoEuBQAJYjM_Ai3RpDKZaZCqn9zvdcVwOTLXo2x7CDzHy982sS1A"/>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_-10px_30px_rgba(0,0,0,0.5)] rounded-t-lg">
+<div class="flex flex-col items-center justify-center text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-colors">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-colors">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold mt-1">Explore</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="add_circle">add_circle</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold mt-1">Create</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-colors">
+<span class="material-symbols-outlined" data-icon="backpack">backpack</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold mt-1">My Trips</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#f0a500] scale-110">
+<span class="material-symbols-outlined" data-icon="account_circle" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold mt-1">Profile</span>
+</div>
+</nav>
+</body></html>

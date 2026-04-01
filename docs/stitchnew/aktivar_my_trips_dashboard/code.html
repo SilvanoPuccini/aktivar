@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&amp;family=Manrope:wght@400;500;600&amp;family=Space_Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#d3cfc6",
+              "on-secondary": "#00391a",
+              "on-surface": "#e1e3da",
+              "surface-bright": "#373a34",
+              "on-primary-container": "#5f3f00",
+              "surface": "#11140f",
+              "primary-container": "#f0a500",
+              "on-tertiary-fixed": "#1c1c16",
+              "on-background": "#e1e3da",
+              "error": "#ffb4ab",
+              "tertiary-fixed-dim": "#cac6bd",
+              "on-primary-fixed-variant": "#614000",
+              "surface-container-highest": "#333630",
+              "on-tertiary-container": "#47463f",
+              "inverse-primary": "#805600",
+              "secondary-container": "#00733b",
+              "surface-container-lowest": "#0c0f0a",
+              "secondary-fixed": "#97f7b0",
+              "secondary-fixed-dim": "#7bda96",
+              "on-tertiary": "#32312a",
+              "surface-tint": "#ffba44",
+              "surface-container-high": "#282b25",
+              "on-primary-fixed": "#281800",
+              "tertiary-fixed": "#e6e2d8",
+              "on-primary": "#442c00",
+              "on-error-container": "#ffdad6",
+              "inverse-on-surface": "#2e312b",
+              "on-secondary-fixed": "#00210d",
+              "surface-dim": "#11140f",
+              "on-error": "#690005",
+              "primary-fixed-dim": "#ffba44",
+              "inverse-surface": "#e1e3da",
+              "secondary": "#7bda96",
+              "outline-variant": "#514533",
+              "surface-variant": "#333630",
+              "outline": "#9f8e79",
+              "primary-fixed": "#ffddaf",
+              "on-tertiary-fixed-variant": "#484740",
+              "tertiary-container": "#b7b4ab",
+              "surface-container-low": "#191c17",
+              "primary": "#ffc56c",
+              "on-secondary-container": "#95f5ae",
+              "surface-container": "#1d201b",
+              "on-surface-variant": "#d6c4ac",
+              "error-container": "#93000a",
+              "on-secondary-fixed-variant": "#005228",
+              "background": "#11140f"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+      }
+      .tonal-shift {
+        background: linear-gradient(180deg, #11140f 0%, #1d201b 100%);
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body min-h-screen pb-32 selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<div class="flex justify-between items-center w-full px-6 py-4">
+<span class="text-2xl font-black text-[#F0A500] tracking-tighter uppercase font-headline">Aktivar</span>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#EDE9DF]/60 hover:scale-105 transition-transform duration-200" data-icon="notifications">notifications</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant/15 overflow-hidden">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="close-up portrait of a rugged outdoor adventurer with mountains in the background, warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa78ylYY5nspgtQgBN69KaNeFTRhWZT5IZmJSyIhzLHRE7cX86-qRMPFZjNAnM70G4iDE6wu6qB8mn7u8xw9BtQ2L9rJFEzmJ8ekjfVJSyI5_CkwJXRGV2TyvjJEZnifqeu4qOvzdHI-sO9UssrbIIDVwHA-sqJkIyasIOWWu17zhRWSBOBCgUW4joaOFOOyhY8tC1YbfXYVQfqo53ejaKqwO4YH1vVvEQIj_BDdXpt0goKfmpqAKyTyC0RmkzBlmIBrjhCif0laE"/>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-24 px-6 max-w-7xl mx-auto">
+<!-- Header -->
+<header class="mb-12">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-primary mb-2 block">Adventurer Dashboard</span>
+<h1 class="font-headline text-5xl font-black tracking-tighter text-on-surface leading-none uppercase">My Trips</h1>
+</header>
+<!-- UPCOMING SECTION -->
+<section class="mb-16">
+<div class="flex items-baseline justify-between mb-8">
+<h2 class="font-headline text-2xl font-bold uppercase tracking-tight">UPCOMING</h2>
+<div class="h-px flex-grow mx-6 bg-outline-variant/20"></div>
+<span class="font-label text-sm text-on-surface-variant">2 EXPEDITIONS</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Large Upcoming Card 1 -->
+<div class="group relative overflow-hidden rounded-xl bg-surface-container shadow-2xl transition-transform duration-500 hover:scale-[1.01]">
+<div class="relative h-[420px] overflow-hidden">
+<img alt="Mountain Expedition" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="dramatic aerial view of sharp snow-capped alpine peaks at sunrise with deep blue shadows and orange light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_JrPDOiPtaFCQhcMu9W4fI4VgV3-xZsyJ8xD4XRy2_fspAicoc0lHGWY6mb6gpf9HDlfxMqrvFGdq8Mgv6i0SxwDgCoIK0nQ-inHfyPYE6iUT0LNZ14__0Akuyavefm_NxcL8vVLKY0LhHaNSvr_JRdTLIs-rjevavI8euNwTi5OZgZ1Cf5ojwd5uCmWLYBBfDke2PN9UezNiuIvxfovkRZLkUoiBoncH8ayyOYomoRIpVpWZ2j26dEHZeHlX8vWNIwKlIAcjjMU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent"></div>
+<!-- Floating Badge -->
+<div class="absolute top-6 right-6 bg-primary-container text-on-primary-container px-4 py-2 rounded-xl font-label font-bold text-sm shadow-xl">
+                            3 DAYS TO GO
+                        </div>
+<!-- Content Overlay -->
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">terrain</span>
+<span class="font-label text-xs tracking-widest uppercase text-secondary">Alpine Grade IV</span>
+</div>
+<h3 class="font-headline text-4xl font-black text-on-surface mb-4 leading-none uppercase">The Granite Ridge</h3>
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div>
+<span class="font-label text-[10px] uppercase text-on-surface-variant block mb-1">MEETING POINT</span>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="font-label text-sm">45.8327° N, 6.8651° E</span>
+</div>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase text-on-surface-variant block mb-1">TEAM SIZE</span>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-sm">group</span>
+<span class="font-label text-sm">06 MEMBERS</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-surface-container-highest hover:bg-primary-container hover:text-on-primary-container transition-all duration-300 py-4 rounded-xl flex items-center justify-center gap-3 font-label font-bold uppercase tracking-wider group/btn">
+<span class="material-symbols-outlined text-xl group-hover/btn:rotate-12 transition-transform">forum</span>
+                                OPEN GROUP CHAT
+                            </button>
+</div>
+</div>
+</div>
+<!-- Large Upcoming Card 2 -->
+<div class="group relative overflow-hidden rounded-xl bg-surface-container shadow-2xl transition-transform duration-500 hover:scale-[1.01]">
+<div class="relative h-[420px] overflow-hidden">
+<img alt="Forest Trail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="lush temperate rainforest with moss-covered trees and a misty path, soft green ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkGCHH-N1bCkrilApEE2MLLT0TSApmjGjvsxfIAcn95NFibjbUMyZlfr3e53tSucDF8R0uttuG0gKE4Zcgc-vnIINqN8SYDm4263ivNXirEHpadmjGfz3VupWCTcuCZVl7isFOssoAKNWe7D95hGyjgvwsjpMh0XmCcnH549ViQGf-TBuY0Hfb0GeeKMYJj6PRycK5jIxs519cNofVRCBBsH6UatrT6A5__W3eL6N-2w_rxHoZT1F63Uantr_Skei9vumFQEeHESs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent"></div>
+<div class="absolute top-6 right-6 bg-surface-container-highest text-on-surface px-4 py-2 rounded-xl font-label font-bold text-sm shadow-xl">
+                            12 DAYS TO GO
+                        </div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">forest</span>
+<span class="font-label text-xs tracking-widest uppercase text-secondary">Survival Trek</span>
+</div>
+<h3 class="font-headline text-4xl font-black text-on-surface mb-4 leading-none uppercase">Deep Woods Traverse</h3>
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div>
+<span class="font-label text-[10px] uppercase text-on-surface-variant block mb-1">MEETING POINT</span>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="font-label text-sm">52.1483° N, 10.4521° W</span>
+</div>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase text-on-surface-variant block mb-1">TEAM SIZE</span>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-sm">group</span>
+<span class="font-label text-sm">04 MEMBERS</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-surface-container-highest hover:bg-primary-container hover:text-on-primary-container transition-all duration-300 py-4 rounded-xl flex items-center justify-center gap-3 font-label font-bold uppercase tracking-wider group/btn">
+<span class="material-symbols-outlined text-xl group-hover/btn:rotate-12 transition-transform">forum</span>
+                                OPEN GROUP CHAT
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- PAST EXPEDITIONS SECTION -->
+<section class="mb-24">
+<div class="flex items-baseline justify-between mb-8">
+<h2 class="font-headline text-2xl font-bold uppercase tracking-tight">PAST EXPEDITIONS</h2>
+<div class="h-px flex-grow mx-6 bg-outline-variant/20"></div>
+<span class="font-label text-sm text-on-surface-variant">HISTORY</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Past Card 1 -->
+<div class="space-y-3">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container relative group cursor-pointer">
+<img alt="Past Hike" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="lone hiker standing on a rock overlooking a foggy canyon at dusk, moody atmospheric lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCifb8e3DslxH1vAi_KNjEC7ntTS2nPPQ_u-D8BBW9CgkE5QgMapubQi5jO_CUcfa1_-hlbbqHfP--zZM3IVKKgncYGLZPm6XyT__51a7t9VxkKgZoHxIaszLX0bu_BEJwQqixdwEb7tT57QVBP-IbH5HyLNROt-XxG2xmyb6dQXZ3mhu8J4720-D14Br-nCwZcKt1U_SMWQ7jbEhJmzjqKC7iJ7_NVDTOcFC7WSo1-DOeB-HKn2X4l_4N9HaAPomlzchL6PHFEA4U"/>
+<div class="absolute inset-0 bg-surface/20 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="px-1">
+<h4 class="font-headline text-sm font-bold uppercase tracking-tight truncate">Canyon Shadow Run</h4>
+<div class="flex gap-1 mt-2">
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-xs">star</span>
+</div>
+</div>
+</div>
+<!-- Past Card 2 -->
+<div class="space-y-3">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container relative group cursor-pointer">
+<img alt="Past Hike" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="stunning clear lake reflecting high mountains under a blue sky, high contrast alpine scenery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfYXUkBYfOHVSfK6B5je3tsuFIurqlW5ISU5ojJgBh5aH4oGYcGWBfBIwlKN99WB6FC7Ep9GJeHiQyW1L-BzlohVtgmAXzZyr6-E8NjayrLfIZc4e_ryE3F7ZowCidNtvWa0CdWA_jJ9gyDIv8yr6HZKwLD3G5keVPpqzVmDy2hNW9Ehcq4RarO2vAdEOUzH5zDvDjS_gRgPWLZnsAxbygTu8gFdECVi3fIwNI-w8DUNWgLhWIySOMUs284_VZtjf-G4R0qJ2-soM"/>
+<div class="absolute inset-0 bg-surface/20 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="px-1">
+<h4 class="font-headline text-sm font-bold uppercase tracking-tight truncate">Mirror Lake Loop</h4>
+<div class="flex gap-1 mt-2">
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<!-- Past Card 3 -->
+<div class="space-y-3">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container relative group cursor-pointer">
+<img alt="Past Hike" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="person sitting in a small orange tent in the middle of a snowy landscape at night, glowing light inside" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsXQK4Ch67gxkoyl0ILjYYQKnPeZW6KbrO7wI5RYSP-12yBQPCgbU8pAecL9McmfPF16IX-4tL3yD0P0dnkP9fc05nLIp-4pyV-Wyw1ftF1UYUq-U5SmtIJlT8qqKE1jjl53o6kmMgJ8_1wKoiQQIN1HdQ12P1crH3iGGm5DP_1ixkWME6Fl0xKTTq3dXnfyMyDnHoaf7P8VcIpvKte-6JZ2X-LXYE3nPYsFb_Vnzx268PIg5Qp4TMsyY-IFHfR9Lf2P7JLZE6gl8"/>
+<div class="absolute inset-0 bg-surface/20 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="px-1">
+<h4 class="font-headline text-sm font-bold uppercase tracking-tight truncate">Zero Degree Camp</h4>
+<div class="flex gap-1 mt-2">
+<span class="material-symbols-outlined text-on-surface-variant/30 text-xs">star</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-xs">star</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-xs">star</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-xs">star</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-xs">star</span>
+</div>
+<span class="font-label text-[10px] text-primary uppercase mt-1 block">RATING REQUIRED</span>
+</div>
+</div>
+<!-- Past Card 4 -->
+<div class="space-y-3">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container relative group cursor-pointer">
+<img alt="Past Hike" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="close-up of hiking boots on a gravel path with a sunset behind them, warm lens flare" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZWAyZJH45mlBy3TVTKdBDQhr-DkhWR6LT3cyf-aI1HEVN_L_-KeN1EbKPJ--q93HsbQqifOqdZN1SnG5fKMZtIJ6fBMQGM40_UnsnJQH0cTZFPmD0GNe4Vr9FGqcjvFJv9MCWzrKapHhlnHhIEpaxBZdLJ5EjrPDub0fPYqLEpCbPgQIUD5iFncPQWWm_2oLa8gdrK8AgzSWGzD0rgYqfganJ2-ovBcToC9tUtxzuH4m-thWaMVSnos0JI9f0ENOwV15g2v6nY3k"/>
+<div class="absolute inset-0 bg-surface/20 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="px-1">
+<h4 class="font-headline text-sm font-bold uppercase tracking-tight truncate">Ridge Trail Express</h4>
+<div class="flex gap-1 mt-2">
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-xs">star</span>
+<span class="material-symbols-outlined text-on-surface-variant/30 text-xs">star</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#11140f]/70 backdrop-blur-xl rounded-t-3xl border-t border-[#EDE9DF]/15 shadow-[0px_-12px_32px_rgba(0,0,0,0.5)] z-50">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/50 px-4 py-2 hover:text-[#F0A500] transition-colors" href="#">
+<span class="material-symbols-outlined text-xl mb-1">home</span>
+<span class="font-label text-[10px] uppercase tracking-widest">Home</span>
+</a>
+<!-- Explore -->
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/50 px-4 py-2 hover:text-[#F0A500] transition-colors" href="#">
+<span class="material-symbols-outlined text-xl mb-1">explore</span>
+<span class="font-label text-[10px] uppercase tracking-widest">Explore</span>
+</a>
+<!-- Create -->
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/50 px-4 py-2 hover:text-[#F0A500] transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">add_circle</span>
+<span class="font-label text-[10px] uppercase tracking-widest">Create</span>
+</a>
+<!-- My Trips (ACTIVE) -->
+<a class="flex flex-col items-center justify-center bg-[#F0A500] text-[#11140f] rounded-xl px-4 py-2 scale-110 shadow-lg" href="#">
+<span class="material-symbols-outlined text-xl mb-1" style="font-variation-settings: 'FILL' 1;">terrain</span>
+<span class="font-label text-[10px] uppercase tracking-widest font-bold">My Trips</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/50 px-4 py-2 hover:text-[#F0A500] transition-colors" href="#">
+<span class="material-symbols-outlined text-xl mb-1">person</span>
+<span class="font-label text-[10px] uppercase tracking-widest">Profile</span>
+</a>
+</nav>
+</body></html>

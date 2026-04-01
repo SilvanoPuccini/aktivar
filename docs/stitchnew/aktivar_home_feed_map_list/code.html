@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aktivar | The Digital Expedition</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;900&amp;family=Manrope:wght@400;600&amp;family=Space_Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "surface-bright": "#373a34",
+                "tertiary-fixed": "#e6e2d8",
+                "on-surface": "#e1e3da",
+                "on-error": "#690005",
+                "background": "#11140f",
+                "tertiary-container": "#b7b4ab",
+                "outline": "#9f8e79",
+                "on-primary-fixed-variant": "#614000",
+                "surface-container-highest": "#333630",
+                "surface-container-low": "#191c17",
+                "error": "#ffb4ab",
+                "secondary-container": "#00733b",
+                "on-tertiary-fixed": "#1c1c16",
+                "tertiary-fixed-dim": "#cac6bd",
+                "primary-fixed": "#ffddaf",
+                "on-secondary-container": "#95f5ae",
+                "on-secondary-fixed-variant": "#005228",
+                "surface-tint": "#ffba44",
+                "primary-container": "#f0a500",
+                "surface-dim": "#11140f",
+                "on-tertiary-fixed-variant": "#484740",
+                "secondary-fixed": "#97f7b0",
+                "surface-container": "#1d201b",
+                "inverse-surface": "#e1e3da",
+                "primary": "#ffc56c",
+                "on-secondary": "#00391a",
+                "on-error-container": "#ffdad6",
+                "primary-fixed-dim": "#ffba44",
+                "inverse-on-surface": "#2e312b",
+                "on-primary-container": "#5f3f00",
+                "on-secondary-fixed": "#00210d",
+                "surface-container-lowest": "#0c0f0a",
+                "on-tertiary-container": "#47463f",
+                "inverse-primary": "#805600",
+                "outline-variant": "#514533",
+                "on-surface-variant": "#d6c4ac",
+                "secondary-fixed-dim": "#7bda96",
+                "secondary": "#7bda96",
+                "on-tertiary": "#32312a",
+                "on-primary-fixed": "#281800",
+                "on-primary": "#442c00",
+                "tertiary": "#d3cfc6",
+                "on-background": "#e1e3da",
+                "surface-variant": "#333630",
+                "error-container": "#93000a",
+                "surface": "#11140f",
+                "surface-container-high": "#282b25"
+              },
+              fontFamily: {
+                "headline": ["Epilogue"],
+                "body": ["Manrope"],
+                "label": ["Space Grotesk"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #11140f; }
+        ::-webkit-scrollbar-thumb { background: #333630; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-[#f0a500] uppercase tracking-tighter font-headline">Aktivar</span>
+<!-- Search Bar -->
+<div class="hidden md:flex items-center bg-surface-container-highest rounded-xl px-4 py-2 w-96 gap-3 group border border-transparent focus-within:border-primary-container transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-label uppercase tracking-widest placeholder:text-on-surface-variant/40 w-full" placeholder="Antigua, Guatemala" type="text"/>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-[#f0a500] font-bold border-b-2 border-[#f0a500] pb-1 font-headline hover:scale-105 transition-transform duration-200" href="#">Home</a>
+<a class="text-[#EDE9DF]/60 font-headline hover:scale-105 transition-transform duration-200" href="#">Explore</a>
+<a class="text-[#EDE9DF]/60 font-headline hover:scale-105 transition-transform duration-200" href="#">My Trips</a>
+</nav>
+<div class="flex items-center gap-6">
+<button class="relative hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-on-surface text-2xl">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="close-up portrait of a rugged outdoor enthusiast with a warm smile and mountain gear in soft focus background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZDWsArVGD2-cI6LU89-iodS-ZvAYX1efuA2m5Ex5DqkE81HlBKvSr4vjriFoNCcIQG7oSqZ9In8j70O9VOPRXy6qVe8DYdPOrA8RboLKRERoK379AlOHiiHQDX87tUPoWJAQHJba0PXKovHojmnkblK0Nkt07QjebYZop0nEr1vk_3o61c-g9YH-R5eH0ER8P8XmNSt_i0I6_ZwMWnIdlXtROuCDRLizKTfGnG-NSIv_ILh9pHM0JHn7PU7X3wF5lKmX3XFHuEto"/>
+</div>
+</div>
+</div>
+</header>
+<main class="flex h-screen pt-[72px] pb-[72px] md:pb-0">
+<!-- Sidebar: Activity List (40%) -->
+<aside class="w-full md:w-[40%] bg-surface-container-low overflow-y-auto custom-scrollbar relative z-10 border-r border-outline-variant/10">
+<div class="p-6 space-y-8">
+<header class="flex justify-between items-end">
+<div>
+<p class="font-label text-xs tracking-[0.2em] text-primary-container uppercase mb-1">Adventure awaits</p>
+<h1 class="text-4xl font-black font-headline tracking-tighter leading-none">Upcoming Expeditions</h1>
+</div>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="font-label text-[10px] uppercase tracking-widest font-bold">Filters</span>
+<span class="material-symbols-outlined text-lg">tune</span>
+</button>
+</header>
+<!-- Activity Cards Container -->
+<div class="grid gap-8">
+<!-- Card 1 -->
+<article class="bg-surface-container hover:bg-surface-container-high transition-all group cursor-pointer rounded-xl overflow-hidden shadow-xl">
+<div class="relative h-64 overflow-hidden">
+<img alt="Volcán Acatenango" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="dramatic sunset view from a high mountain peak with thick clouds below and a glowing orange horizon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAn9RAv-tRBBm-CiEOMHh2f8ogn45ohfBuA7CluJeIAyiUiI6k8dNUWqkQiInv4mgnusXjLLPUB40gyawbAdDNC-X1j8xkb6Mr1ljsDzdz0GI85fP1mBVqDkYUDNRN9_mWBVs4gC_ATC_3aabx8uW7k8RWyr_Oa5qHMc2IlTkXJN3llDXxKdAas9Ktbvgn_Mau_5EbsZybOvPOXblA8ONH0ub3AWGffU-JxKqni55ScVqXvh5PFn7WZumcvfFIbfvHV3XCOXFkInY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest to-transparent opacity-60"></div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label text-[10px] font-bold uppercase tracking-widest">Trekking</span>
+</div>
+<div class="absolute top-4 right-4">
+<div class="bg-surface-container/80 backdrop-blur-md p-2 rounded-lg flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-lg">wb_sunny</span>
+<span class="font-label text-xs font-bold">18°C</span>
+</div>
+</div>
+<div class="absolute bottom-4 left-4">
+<div class="bg-error-container text-error px-3 py-1 rounded-lg font-label text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-error rounded-full animate-pulse"></span>
+                                    2 spots left
+                                </div>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="space-y-1">
+<h2 class="text-2xl font-black font-headline tracking-tight group-hover:text-primary transition-colors">Volcán Acatenango Sunset Hike</h2>
+<div class="flex items-center gap-2 text-on-surface-variant font-label text-xs uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    Antigua, Guatemala
+                                </div>
+</div>
+<div class="flex items-center justify-between py-4 border-y border-outline-variant/10">
+<div class="flex items-center gap-3">
+<img alt="Organizer" class="w-10 h-10 rounded-full border border-outline-variant" data-alt="portrait of a professional mountain guide with a weathered face and friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmu9PI8A68Jzw59OwSAhzUb7PgAi_FFRi9qGM1t721EURtqmwvpQQ7LW3DBsddmbbjRT1nS1eeHEQZ8H8p098UpjGAR04GdNYOCzWjpslBk6DW6HAhGmxh7eTtCJXPHuxuC1ZabA42Wjo1G3XHgE3fIzNazanwmlJ_1M8_4lpkXkhekJFFGL4XU4URo_NPcaNAYJFDn46AzcGhZTkmSyBMjXDZYIQ8jrDhxSlaHQWRLuKDSxg-PZ7VrLmIc8EO-VJdiGBTxrUXErc"/>
+<div>
+<p class="text-sm font-bold font-headline">Mateo Valdéz</p>
+<div class="flex items-center text-primary-container text-xs">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 0.5;">star_half</span>
+<span class="ml-1 text-on-surface-variant">4.8</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Oct 24 • 04:00 AM</p>
+<p class="font-label font-bold text-primary">12.4 km</p>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-[10px] font-label font-bold uppercase tracking-tighter">
+<span class="text-on-surface-variant">Capacity Progress</span>
+<span class="text-secondary">10 / 12 Joined</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container w-[83%] rounded-full"></div>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container hover:bg-surface-container-high transition-all group cursor-pointer rounded-xl overflow-hidden shadow-xl">
+<div class="relative h-64 overflow-hidden">
+<img alt="Lake Atitlan Kayak" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="serene morning view of a deep blue volcanic lake surrounded by lush green mountains in soft mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALLH1cL3auj726HbJi8dizkC7b_hEGMPmTnKx73W0vsf8wi9xkGJujxmtmwgeWbZEcyAcmzHVQxnkqYXRNE3qLN9zeTiatAmnc8JYeijdP3CQNRmDl7AQ0c0iqUq7eneasVL-NCHM49tMTND_N1hb2wfXWbos-TzFOALHegwRRAC1sFLIJqtmcZrIYTF8hSg74QAKfUJLys9J1ci0-Pf8l-_ee-HhxBJh5Rrpb8guP0xG9dPsKLmCDDl6iZD7Pc5QG-Xx0nTW5JlY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest to-transparent opacity-60"></div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label text-[10px] font-bold uppercase tracking-widest">Watersports</span>
+</div>
+<div class="absolute top-4 right-4">
+<div class="bg-surface-container/80 backdrop-blur-md p-2 rounded-lg flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-lg">cloud</span>
+<span class="font-label text-xs font-bold">22°C</span>
+</div>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="space-y-1">
+<h2 class="text-2xl font-black font-headline tracking-tight group-hover:text-primary transition-colors">Lake Atitlán Morning Kayak</h2>
+<div class="flex items-center gap-2 text-on-surface-variant font-label text-xs uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    Panajachel, Guatemala
+                                </div>
+</div>
+<div class="flex items-center justify-between py-4 border-y border-outline-variant/10">
+<div class="flex items-center gap-3">
+<img alt="Organizer" class="w-10 h-10 rounded-full border border-outline-variant" data-alt="cheerful athletic woman in outdoor sports gear with a tropical lake background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsP-1-O4JEoJCoZiCHQO_VnbitqjxZFnLJIjMmPtRRsBBgvULjdnx5csiB28mrjv0C5EO1RmtBOtpjvItlzvLX1l1a6A8s1S6X8zYXebfUkImYol5O200awnsU2KJIQJzcSjv2neakxo1Df1aEHUxHXwF1OKpUQpRfiRKhzLwHgxkaeo3eqO5D5U-WeQV3_VA7bIobqIGiIavlmwRA5kend6vEmfBC6JXxw8X-5SPiBYgQmGJ_eFejYV_ioMPxyiBEbRS_u424cb0"/>
+<div>
+<p class="text-sm font-bold font-headline">Elena Santos</p>
+<div class="flex items-center text-primary-container text-xs">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="ml-1 text-on-surface-variant">5.0</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Oct 26 • 07:30 AM</p>
+<p class="font-label font-bold text-primary">5.2 km</p>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-[10px] font-label font-bold uppercase tracking-tighter">
+<span class="text-on-surface-variant">Capacity Progress</span>
+<span class="text-secondary">4 / 8 Joined</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container w-[50%] rounded-full"></div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</div>
+</aside>
+<!-- Map Section (60%) -->
+<section class="hidden md:block w-[60%] bg-surface-container relative">
+<!-- Mock Map Background -->
+<div class="absolute inset-0 bg-[#1d201b]" data-alt="detailed topographic dark mode satellite map of a volcanic mountainous region with city lights and dark terrain" data-location="Antigua, Guatemala" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAdLsHrWgktO0wnXlPJf0_jzFMwMVmxqu4BT0hxttM-8Zzc6znq3sWPN8DIeLz5-HIXIWT5ydAS8XXmfbcElBD7sQHqutRBkuoby-9jcVPNLG8PP0h4trRB5vW4W5b7DCV58oGvo0pp9UT4uEpTcJFvkSXVsdYiO47SGd7wkALY5cdFCz2BYwD16Jl31h2-dXzTd_dycsSkvNn5tqT7eIhC5BeMs8QuRCSzAkkg6_6kqk6pYneTPA-PlDvwMu_o9XPUsNBzLo7b1kU'); background-size: cover; background-position: center;"></div>
+<!-- Map Overlay UI -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<!-- Pin 1 -->
+<div class="absolute translate-x-[-120px] translate-y-[-80px] pointer-events-auto">
+<div class="relative group cursor-pointer">
+<div class="w-10 h-10 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center shadow-2xl scale-100 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">hiking</span>
+</div>
+<div class="absolute bottom-12 left-1/2 -translate-x-1/2 bg-surface-container-highest px-4 py-2 rounded-xl border border-primary-container opacity-0 group-hover:opacity-100 transition-opacity w-48 shadow-2xl backdrop-blur-xl">
+<p class="font-headline font-bold text-xs">Acatenango Hike</p>
+<p class="font-label text-[9px] uppercase tracking-widest text-primary">4 spots available</p>
+</div>
+</div>
+</div>
+<!-- Pin 2 -->
+<div class="absolute translate-x-[40px] translate-y-[120px] pointer-events-auto">
+<div class="relative group cursor-pointer">
+<div class="w-10 h-10 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center shadow-2xl scale-100 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">kayaking</span>
+</div>
+</div>
+</div>
+<!-- Pin 3 -->
+<div class="absolute translate-x-[200px] translate-y-[-40px] pointer-events-auto">
+<div class="relative group cursor-pointer">
+<div class="w-10 h-10 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center shadow-2xl scale-100 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">mountain_flag</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute bottom-8 right-8 flex flex-col gap-3 pointer-events-auto">
+<button class="w-12 h-12 bg-surface-container-highest/80 backdrop-blur-md rounded-xl flex items-center justify-center hover:bg-surface-container-highest transition-colors shadow-xl">
+<span class="material-symbols-outlined text-on-surface">my_location</span>
+</button>
+<div class="flex flex-col bg-surface-container-highest/80 backdrop-blur-md rounded-xl overflow-hidden shadow-xl">
+<button class="w-12 h-12 flex items-center justify-center hover:bg-surface-container-highest transition-colors border-b border-outline-variant/10">
+<span class="material-symbols-outlined text-on-surface">add</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-on-surface">remove</span>
+</button>
+</div>
+</div>
+<!-- Layer Toggle -->
+<div class="absolute top-8 right-8 pointer-events-auto">
+<button class="flex items-center gap-3 bg-surface-container-highest/80 backdrop-blur-md px-4 py-2.5 rounded-xl hover:bg-surface-container-highest transition-colors shadow-xl border border-outline-variant/10">
+<span class="material-symbols-outlined text-on-surface text-xl">layers</span>
+<span class="font-label text-xs font-bold uppercase tracking-widest">Terrain</span>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl flex justify-around items-center px-4 py-3 pb-safe shadow-[0px_-10px_30px_rgba(0,0,0,0.5)] rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-[#f0a500] scale-110" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-colors" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold mt-1">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-colors" href="#">
+<span class="material-symbols-outlined text-3xl">add_circle</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-colors" href="#">
+<span class="material-symbols-outlined">backpack</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold mt-1">My Trips</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-colors" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold mt-1">Profile</span>
+</a>
+</nav>
+<!-- Floating Action Button (Only Home/Explore Context) -->
+<button class="hidden md:flex fixed bottom-8 left-[36%] z-50 items-center gap-3 bg-primary-container text-on-primary-container px-6 py-4 rounded-full shadow-[0px_24px_48px_rgba(240,165,0,0.3)] hover:scale-105 active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label font-black uppercase tracking-widest text-sm">Organize Expedition</span>
+</button>
+</body></html>

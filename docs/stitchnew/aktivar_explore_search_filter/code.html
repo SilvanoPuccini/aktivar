@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aktivar - Explore Adventure</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&amp;family=Manrope:wght@400;500;600&amp;family=Space_Grotesk:wght@500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#d3cfc6",
+              "on-secondary": "#00391a",
+              "on-surface": "#e1e3da",
+              "surface-bright": "#373a34",
+              "on-primary-container": "#5f3f00",
+              "surface": "#11140f",
+              "primary-container": "#f0a500",
+              "on-tertiary-fixed": "#1c1c16",
+              "on-background": "#e1e3da",
+              "error": "#ffb4ab",
+              "tertiary-fixed-dim": "#cac6bd",
+              "on-primary-fixed-variant": "#614000",
+              "surface-container-highest": "#333630",
+              "on-tertiary-container": "#47463f",
+              "inverse-primary": "#805600",
+              "secondary-container": "#00733b",
+              "surface-container-lowest": "#0c0f0a",
+              "secondary-fixed": "#97f7b0",
+              "secondary-fixed-dim": "#7bda96",
+              "on-tertiary": "#32312a",
+              "surface-tint": "#ffba44",
+              "surface-container-high": "#282b25",
+              "on-primary-fixed": "#281800",
+              "tertiary-fixed": "#e6e2d8",
+              "on-primary": "#442c00",
+              "on-error-container": "#ffdad6",
+              "inverse-on-surface": "#2e312b",
+              "on-secondary-fixed": "#00210d",
+              "surface-dim": "#11140f",
+              "on-error": "#690005",
+              "primary-fixed-dim": "#ffba44",
+              "inverse-surface": "#e1e3da",
+              "secondary": "#7bda96",
+              "outline-variant": "#514533",
+              "surface-variant": "#333630",
+              "outline": "#9f8e79",
+              "primary-fixed": "#ffddaf",
+              "on-tertiary-fixed-variant": "#484740",
+              "tertiary-container": "#b7b4ab",
+              "surface-container-low": "#191c17",
+              "primary": "#ffc56c",
+              "on-secondary-container": "#95f5ae",
+              "surface-container": "#1d201b",
+              "on-surface-variant": "#d6c4ac",
+              "error-container": "#93000a",
+              "on-secondary-fixed-variant": "#005228",
+              "background": "#11140f"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .tonal-shift { background: linear-gradient(180deg, rgba(29,32,27,1) 0%, rgba(17,20,15,1) 100%); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl shadow-[0px_24px_48px_rgba(12,15,10,0.4)] px-6 py-4 flex justify-between items-center">
+<div class="text-2xl font-black text-[#F0A500] tracking-tighter uppercase font-['Epilogue']">Aktivar</div>
+<div class="flex items-center gap-4">
+<button class="hover:scale-105 transition-transform duration-200 text-[#EDE9DF]/60">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="Close-up portrait of a bearded man with a beanie in a snowy mountain setting, soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvu4SDJSfUHxHL71blNdIvNbqEfONqfUU_Qiuc0MHtEEVzLJiCMXOaS_KvMRtZU-gDqg1-Puf9nkCzmvGLTe5WWwIxY78gvkENKtxkRqm5ukhsHHxLDFoN5l_U0CLmiWriPNMVj7GNfSNCKTCNhQlpX4N-RY-CfDsXrFOPZFF02yshvumfbGOri3qjIijSW5hVrqhPjIWXcigH6Ka_wS1WvI8BSekjMkLZDCCpWkYFj2pHvxSJAeEvo6R-dSaEJBkE3lYK4IhcEvY"/>
+</div>
+</div>
+</nav>
+<!-- Content Canvas -->
+<main class="pt-24 pb-32 px-6 max-w-6xl mx-auto">
+<!-- Search & Filter Header -->
+<header class="mb-10">
+<h1 class="font-headline text-5xl font-black tracking-tighter text-on-surface mb-8 leading-[0.9]">FIND YOUR<br/><span class="text-primary">NEXT FRONTIER</span></h1>
+<div class="flex gap-3">
+<div class="flex-grow relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary transition-all" placeholder="Search experiences..." type="text"/>
+</div>
+<button class="bg-surface-container-highest p-4 rounded-xl hover:scale-105 transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary">tune</span>
+</button>
+</div>
+</header>
+<!-- Category Horizontal Scroll -->
+<section class="mb-12">
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-4 -mx-6 px-6">
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-primary text-on-primary font-label text-xs uppercase tracking-widest font-bold">Explore</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs uppercase tracking-widest hover:bg-surface-container-highest transition-colors">Trekking</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs uppercase tracking-widest hover:bg-surface-container-highest transition-colors">Surfing</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs uppercase tracking-widest hover:bg-surface-container-highest transition-colors">Climbing</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs uppercase tracking-widest hover:bg-surface-container-highest transition-colors">Road Trip</button>
+</div>
+</section>
+<!-- Activity Grid (Asymmetric Bento-ish Style) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Card 1 -->
+<article class="bg-surface-container rounded-2xl overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+<div class="relative h-72 overflow-hidden">
+<img alt="Mountain range" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Cinematic aerial view of jagged peaks in the Italian Dolomites at sunrise with low-hanging clouds and deep shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-j-rIJn_KgvFZVsVFkO6jPZZY4K5nTB48QbafV6IqI_8Fw5RwLh3FK_k9UUEkE7qgESOFeLj4tthvR4vmYXd9g9tONWhck0tjCZwlEJGY1LIvox9uPNxAXmiI9Pqks2fVBeCuZDxnNWdDk-l9NZdifzWr4fFMebz3HinBjiaEInPNwsb0S8ALJfVOSW--EYfEsm87_uhPw1kCqdYTmp7HId6BTV5jaYAlEBLBINAa2VYuopNP2teyATu_2m418FBiIhCMVu48vEw"/>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label text-[10px] uppercase tracking-tighter font-bold shadow-xl">Trekking</span>
+</div>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-lg">
+<span class="text-primary font-label font-bold">$45</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="font-headline text-2xl font-extrabold mb-4 group-hover:text-primary transition-colors">The Alpinist's Ridge: Summit Pass</h3>
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<img alt="Organizer" class="w-8 h-8 rounded-full border border-primary/20" data-alt="Professional portrait of an outdoor guide, smiling, wearing technical mountain gear with a sun-kissed face" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtEEvkiaeqd_L4TnWsZVq8esVY-yu8zITiKQWxp3wwvr2fL9bY_920fOhjlMn76XAMPhZ1aijhVYFnd8AVqSgK0XmJMmbKz9celwDNRac0klczI-TpEdRZ7LTKwfsUMDgx1RIXZ0ayLAH3oxdAFmkYEztRwHNtXUH70QUyotfAOONE0FcvQULwP_c83ashwKnYwNx2OhN5ZZU6OJbWgTQj7Ev8dhY4nWJruvLr6BjuTzRFbc78ihFdag1IsoC1SGxw4kkmzeBarmk"/>
+<span class="font-body text-sm text-on-surface/70">Erik Thorne</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label text-sm">4.9</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="space-y-2">
+<div class="flex justify-between text-[10px] font-label uppercase tracking-widest text-on-surface-variant">
+<span>Availability</span>
+<span class="text-secondary">3 Spots Left</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-4/5"></div>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container rounded-2xl overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+<div class="relative h-72 overflow-hidden">
+<img alt="Ocean wave" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Powerful turquoise ocean wave curling under golden sunset light with sparkling sea foam and misty spray" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxShejT6oBGDNA1wzVH_WczxaYoiC_aLpN9cDMOSD-vePeLMfTDx-EJNYL0Zi06wkRcWvWFpQXgTinssxs6ZpUcNZgrLwS0XteGyWzkquOWenq2i83eh8DMnW5cx-Alr5ak1dPwJiOJiia60k08j0HvKV1dRcOLZI9e6HeML_IhYsRLeIkfIrA44w-mfkZh5yrKANfj5uUFzM8-Dsxv4CLVMjB0Vd40jUi4KEETh32WHRwD9ZxDsR0YtmRNgaqr_eG6Hi5WlFW1Ig"/>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label text-[10px] uppercase tracking-tighter font-bold shadow-xl">Surfing</span>
+</div>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-lg">
+<span class="text-primary font-label font-bold">$72</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="font-headline text-2xl font-extrabold mb-4 group-hover:text-primary transition-colors">Dawn Patrol: Hidden Swell</h3>
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<img alt="Organizer" class="w-8 h-8 rounded-full border border-primary/20" data-alt="Candid portrait of a woman with wet hair and a surfboard, looking towards the ocean at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-rzI1zLTZtCW2SAbIedHBWiPd8iOrV07vMxU_x96wAif0hQLKfIIVJIwUaRxcpqAJJCq2HS6aczgawV2ukXgFRtVN_3EeQEs9EaGpSrMx_y0W0GpUC13nWzx5Tn-vKkMRoiVn_5BVyTNOTqGwmX4ws47ckJg8tThLYfOhsQFEZk02-ubmob1LAEvKGojSm747DYDcNez65IoBI2zvx_0ApL2XyZOThO7_AV-OT-vtiSbxqHevSEp5NxDKv_szHOxYtjEJSFDuDHQ"/>
+<span class="font-body text-sm text-on-surface/70">Sarah Kai</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label text-sm">5.0</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="space-y-2">
+<div class="flex justify-between text-[10px] font-label uppercase tracking-widest text-on-surface-variant">
+<span>Availability</span>
+<span class="text-primary">Fully Booked</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-full"></div>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-container rounded-2xl overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+<div class="relative h-72 overflow-hidden">
+<img alt="Rock climbing" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Solo rock climber on a vertical granite face with deep orange sunset light highlighting the rock textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLFEIbZH5c-plFAsmaN5ms8c1XXOaAWfis8b2hi6TcMMSXsOyb8cNKfsovDAjX_gaZC-hJdJeYCtyRFu-irrTX_V9-zNASmTRu3o8VKU_yizwX3Q-IKcWpVLRLDvpUh4-wtBT7NLGEGIv3AODxwRZcFyGDcmjycoZ-zx814VR6_2zXjM-SF0lfv_-1dR4ALodSmKAQXD9WnYh6mzqyeKK8sCZp6H_Md-6ILEUP6Mj6-edANU45NvJWQmcnH2C5OoBkDrucEBTGh1U"/>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label text-[10px] uppercase tracking-tighter font-bold shadow-xl">Climbing</span>
+</div>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-lg">
+<span class="text-primary font-label font-bold">$120</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="font-headline text-2xl font-extrabold mb-4 group-hover:text-primary transition-colors">Vertical Rush: Granite Spire</h3>
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<img alt="Organizer" class="w-8 h-8 rounded-full border border-primary/20" data-alt="Close-up of a rugged mountain guide with sun-burnt cheeks and intense focused eyes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDz5FvT4SMEyEkwGKifX2_ODW3cpGCK9MMjVNTnTjd_BLR0GznYz6gdyzg4JXQm-LK4yJfSe2mEZ0K81hR0eyzgWrqIosaLrdtyz_XQABpzE78glQUrK3NU-pMeDhyW7UHB3o3Xu6m7esbc3tsB0n7m99Hs06wU0Oyv0P1lmq7y8IdHxF_lfcEBRjIUNeBCGPzdl7mHttLFgJPlsjAjPiph3VN0f15dbmwzhkF6qp6UGvI4kreVxeNCOtqI9I_AFHl1hmQ-siaYebM"/>
+<span class="font-body text-sm text-on-surface/70">Marcus Vane</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label text-sm">4.8</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="space-y-2">
+<div class="flex justify-between text-[10px] font-label uppercase tracking-widest text-on-surface-variant">
+<span>Availability</span>
+<span class="text-secondary">8 Spots Left</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-1/4"></div>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="bg-surface-container rounded-2xl overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+<div class="relative h-72 overflow-hidden">
+<img alt="Vanlife" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Classic converted camper van parked on a desert road under a vast starry night sky with Milky Way visible" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_L3EaN5FdUV--i9ayQhcF460jiRzOv-ameB1afYHqnRcfLphXWk_Md1KUz5ZwIUCYXfwsg-CA0F7ItS8u2kwN3V0_297J127SlOmsLLWLO2I0WeC4gG2a4yLHmO6srUsQhrhB1Zm2u27a_gxv81-mdzZSl9_LNVfULaVi5uBFd8tKUJp6MWbUk7hpUjZF4rcf0b-stXD_OYCcDK5KKQA6NncXF-r6sZCqZY5-pCPo7zLcnnRZLRHaB2EjcZxxWwW0rZo22nB00f4"/>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label text-[10px] uppercase tracking-tighter font-bold shadow-xl">Road Trip</span>
+</div>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-lg">
+<span class="text-primary font-label font-bold">$310</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="font-headline text-2xl font-extrabold mb-4 group-hover:text-primary transition-colors">Nomadic Nights: Coastal Run</h3>
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-on-primary text-xs">A</div>
+<span class="font-body text-sm text-on-surface/70">Aktivar Curated</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-label text-sm">Staff Pick</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="space-y-2">
+<div class="flex justify-between text-[10px] font-label uppercase tracking-widest text-on-surface-variant">
+<span>Availability</span>
+<span class="text-secondary">2 Slots Left</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-11/12"></div>
+</div>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#11140f]/70 backdrop-blur-xl rounded-t-3xl border-t border-[#EDE9DF]/15 shadow-[0px_-12px_32px_rgba(0,0,0,0.5)] z-50">
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/50 px-4 py-2 hover:text-[#F0A500] transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#F0A500] text-[#11140f] rounded-xl px-4 py-2 scale-110 shadow-lg" href="#">
+<span class="material-symbols-outlined mb-1">explore</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/50 px-4 py-2 hover:text-[#F0A500] transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">add_circle</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">Create</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/50 px-4 py-2 hover:text-[#F0A500] transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">terrain</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">My Trips</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#EDE9DF]/50 px-4 py-2 hover:text-[#F0A500] transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest">Profile</span>
+</a>
+</nav>
+</body></html>
