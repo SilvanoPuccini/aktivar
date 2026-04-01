@@ -1,10 +1,17 @@
-from django.urls import reverse
+from django.test import override_settings
 from rest_framework.test import APITestCase
 
 from users.models import CustomUser
 from .models import Community, JournalStory, MarketplaceListing, UserRankProfile
 
+LOCMEM_CACHE = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
 
+
+@override_settings(CACHES=LOCMEM_CACHE)
 class EcosystemApiTests(APITestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(email='eco@test.com', password='pass12345', full_name='Eco User')

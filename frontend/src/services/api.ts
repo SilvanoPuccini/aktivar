@@ -1,5 +1,4 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
-import { buildReturnPath, savePostAuthPath } from '@/lib/authRedirect';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
@@ -44,9 +43,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Auth endpoints that should NOT trigger the 401 refresh/redirect interceptor
-const AUTH_ENDPOINTS = ['/auth/token/', '/users/register/'];
-
 // Response interceptor: handle errors globally
 api.interceptors.response.use(
   (response) => response,
@@ -75,8 +71,13 @@ api.interceptors.response.use(
 
       isRefreshingToken = true;
       try {
+        const storedRefresh = sessionStorage.getItem('aktivar_refresh_token');
+        if (!storedRefresh) {
+          clearAuthAndRedirect();
+          return Promise.reject(error);
+        }
         const refreshResponse = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {
-          refresh: refreshToken,
+          refresh: storedRefresh,
         });
         const newToken = refreshResponse.data.access;
         sessionStorage.setItem('aktivar_access_token', newToken);
