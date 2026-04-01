@@ -11,6 +11,27 @@ const api = axios.create({
   },
 });
 
+type RetryableRequestConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
+
+let isRefreshingToken = false;
+let pendingRefreshSubscribers: Array<(token: string) => void> = [];
+
+const subscribeTokenRefresh = (callback: (token: string) => void) => {
+  pendingRefreshSubscribers.push(callback);
+};
+
+const publishTokenRefresh = (token: string) => {
+  pendingRefreshSubscribers.forEach((callback) => callback(token));
+  pendingRefreshSubscribers = [];
+};
+
+const clearAuthAndRedirect = () => {
+  sessionStorage.removeItem('aktivar_access_token');
+  window.location.href = '/onboarding';
+};
+
 // Request interceptor: inject JWT token
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -31,45 +52,45 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const status = error.response?.status;
-    const requestUrl = error.config?.url ?? '';
+    const originalRequest = error.config as RetryableRequestConfig | undefined;
 
-    // Skip token refresh for auth endpoints — let the caller handle errors
-    const isAuthRequest = AUTH_ENDPOINTS.some((ep) => requestUrl.includes(ep));
+    if (
+      status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes(endpoints.refresh)
+    ) {
+      originalRequest._retry = true;
 
-    if (status === 401 && !isAuthRequest) {
-      // Token expired — try refresh using stored refresh token
-      const refreshToken = sessionStorage.getItem('aktivar_refresh_token');
-      if (!refreshToken) {
-        sessionStorage.removeItem('aktivar_access_token');
-        if (!window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/onboarding')) {
-          savePostAuthPath(buildReturnPath(window.location.pathname, window.location.search, window.location.hash));
-          window.location.href = '/login';
-        }
-        return Promise.reject(error);
+      if (isRefreshingToken) {
+        return new Promise((resolve) => {
+          subscribeTokenRefresh((newToken: string) => {
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            }
+            resolve(api(originalRequest));
+          });
+        });
       }
+
+      isRefreshingToken = true;
       try {
         const refreshResponse = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {
           refresh: refreshToken,
         });
         const newToken = refreshResponse.data.access;
         sessionStorage.setItem('aktivar_access_token', newToken);
-        if (refreshResponse.data.refresh) {
-          sessionStorage.setItem('aktivar_refresh_token', refreshResponse.data.refresh);
-        }
+        publishTokenRefresh(newToken);
 
         // Retry original request
-        if (error.config) {
-          error.config.headers.Authorization = `Bearer ${newToken}`;
-          return api(error.config);
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
         }
+        return api(originalRequest);
       } catch {
-        sessionStorage.removeItem('aktivar_access_token');
-        sessionStorage.removeItem('aktivar_refresh_token');
-        // Only redirect if we're not already on an auth page
-        if (!window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/onboarding')) {
-          savePostAuthPath(buildReturnPath(window.location.pathname, window.location.search, window.location.hash));
-          window.location.href = '/login';
-        }
+        clearAuthAndRedirect();
+      } finally {
+        isRefreshingToken = false;
       }
     }
 

@@ -1,6 +1,30 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Loader2, MapPin, Mountain } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ArrowRight,
+  ArrowLeft,
+  Plus,
+  Eye,
+  EyeOff,
+  MapPin,
+  Check,
+  Mountain,
+  Music,
+  Bike,
+  Waves,
+  Film,
+  Plane,
+  Users,
+  Trophy,
+  Tent,
+  Zap,
+  Loader2,
+  User,
+  Mail,
+  Lock,
+  Compass,
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { LucideIcon } from 'lucide-react';
 import { Mountain as MountainIcon, Music, Bike, Waves, Film, Plane, Users, Trophy, Tent, Zap } from 'lucide-react';
@@ -16,6 +40,41 @@ interface OnboardingData {
   location: string;
 }
 
+const initialData: OnboardingData = {
+  name: '',
+  email: '',
+  password: '',
+  selectedCategories: [],
+  location: 'Bariloche, Argentina',
+};
+
+/* ------------------------------------------------------------------ */
+/*  Shared classes                                                     */
+/* ------------------------------------------------------------------ */
+const inputClasses =
+  'w-full bg-surface-container-highest/60 border border-outline-variant/20 rounded-2xl px-5 py-4 text-on-surface placeholder:text-muted/60 focus:border-primary/60 focus:bg-surface-container-highest/80 focus:ring-2 focus:ring-primary/20 outline-none transition-all duration-300 font-body text-[15px]';
+
+const labelClasses =
+  'block font-label text-[10px] uppercase tracking-[0.2em] text-muted mb-3';
+
+/* ------------------------------------------------------------------ */
+/*  Animation variants                                                 */
+/* ------------------------------------------------------------------ */
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 200 : -200,
+    opacity: 0,
+  }),
+  center: { x: 0, opacity: 1 },
+  exit: (direction: number) => ({
+    x: direction > 0 ? -200 : 200,
+    opacity: 0,
+  }),
+};
+
+/* ------------------------------------------------------------------ */
+/*  Icon map for category cards                                        */
+/* ------------------------------------------------------------------ */
 const iconMap: Record<string, LucideIcon> = {
   mountain: MountainIcon,
   music: Music,
@@ -34,13 +93,13 @@ export default function OnboardingPage() {
   const { login: storeLogin } = useAuthStore();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState<OnboardingData>({
-    name: '',
-    email: '',
-    password: '',
-    selectedCategories: [],
-    location: 'Bariloche, Argentina',
-  });
+  const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
+  const [gpsAcquiring, setGpsAcquiring] = useState(false);
+  const [customInterests, setCustomInterests] = useState<string[]>([]);
+
+  /* helpers */
+  const update = <K extends keyof OnboardingData>(key: K, value: OnboardingData[K]) =>
+    setFormData((prev) => ({ ...prev, [key]: value }));
 
   const update = <K extends keyof OnboardingData>(key: K, value: OnboardingData[K]) => setForm((prev) => ({ ...prev, [key]: value }));
   const toggleCategory = (id: number) => setForm((prev) => ({ ...prev, selectedCategories: prev.selectedCategories.includes(id) ? prev.selectedCategories.filter((item) => item !== id) : [...prev.selectedCategories, id] }));
@@ -52,9 +111,12 @@ export default function OnboardingPage() {
         return;
       }
     }
-    if (step === 1 && form.selectedCategories.length < 3) {
-      toast.error('Selecciona al menos 3 intereses');
-      return;
+    if (currentStep === 1) {
+      const totalSelected = formData.selectedCategories.length + customInterests.length;
+      if (totalSelected < 3) {
+        toast.error('Selecciona al menos 3 categorías');
+        return;
+      }
     }
     setStep((current) => Math.min(current + 1, 2));
   };
@@ -62,32 +124,262 @@ export default function OnboardingPage() {
   const complete = async () => {
     setLoading(true);
     try {
-      const normalizedEmail = form.email.trim().toLowerCase();
-      await api.post(endpoints.register, { email: normalizedEmail, password: form.password, full_name: form.name.trim() });
-      const tokenRes = await api.post(endpoints.login, { email: normalizedEmail, password: form.password });
+      const normalizedEmail = formData.email.trim().toLowerCase();
+      const normalizedName = formData.name.trim();
+
+      await api.post(endpoints.register, {
+        email: normalizedEmail,
+        password: formData.password,
+        full_name: normalizedName,
+      });
+
+      const tokenRes = await api.post(endpoints.login, {
+        email: normalizedEmail,
+        password: formData.password,
+      });
       sessionStorage.setItem('aktivar_access_token', tokenRes.data.access);
-      if (tokenRes.data.refresh) sessionStorage.setItem('aktivar_refresh_token', tokenRes.data.refresh);
-      if (form.location.trim()) await api.patch(endpoints.myProfile, { location_name: form.location.trim() });
+
+      if (formData.location) {
+        await api.patch(endpoints.myProfile, {
+          location_name: formData.location.trim(),
+        });
+      }
+
       const userRes = await api.get(endpoints.me);
       storeLogin(userRes.data);
       toast.success('Cuenta creada');
       navigate('/');
-    } catch (error: unknown) {
-      const err = error as { response?: { status?: number; data?: Record<string, string[] | string> } };
-      if (err.response?.status === 429) toast.error('Demasiados intentos. Intenta más tarde.');
-      else if (err.response?.data?.email) toast.error('Ese email ya está registrado');
-      else toast.error('No pudimos crear la cuenta');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: Record<string, string[] | string>; status?: number } };
+      const data = error.response?.data;
+      if (data?.email) {
+        toast.error('Este email ya está registrado');
+      } else if (error.response?.status === 429) {
+        toast.error('Demasiados intentos. Espera unos minutos y vuelve a intentar.');
+      } else if (data?.phone) {
+        toast.error(Array.isArray(data.phone) ? data.phone[0] : String(data.phone));
+      } else if (data?.password) {
+        toast.error(Array.isArray(data.password) ? data.password[0] : String(data.password));
+      } else if (data?.detail) {
+        toast.error(Array.isArray(data.detail) ? data.detail[0] : String(data.detail));
+      } else if (error.response?.status === 500) {
+        toast.error('Error interno del servidor al registrar. Intenta nuevamente en 1 minuto.');
+      } else {
+        toast.error('Error al crear la cuenta');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen px-6 py-8 md:px-8 md:py-10">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between">
-        <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary-container">Aktivar</div>
-        <div className="flex gap-3">
-          {[0, 1, 2].map((index) => <div key={index} className={`h-1.5 w-12 rounded-full ${index <= step ? 'bg-primary-container' : 'bg-surface-container-highest'}`} />)}
+  const handleGPS = async () => {
+    setGpsAcquiring(true);
+    const fallbackToBariloche = () => {
+      update('location', 'Bariloche, Argentina');
+      setUserCoords([-41.1335, -71.3103]);
+      setGpsAcquiring(false);
+    };
+
+    if ('permissions' in navigator) {
+      try {
+        const result = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+        if (result.state === 'denied') {
+          toast('Permiso de ubicación bloqueado. Usando Bariloche por defecto.', { icon: '📍' });
+          fallbackToBariloche();
+          return;
+        }
+      } catch {
+        // Continue with normal flow if permission query is unsupported
+      }
+    }
+
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setUserCoords([pos.coords.latitude, pos.coords.longitude]);
+          update(
+            'location',
+            `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`,
+          );
+          setGpsAcquiring(false);
+        },
+        fallbackToBariloche,
+      );
+    } else {
+      fallbackToBariloche();
+    }
+  };
+
+  const addCustomInterest = () => {
+    const interest = window.prompt('¿Qué otra actividad te apasiona?');
+    if (!interest) return;
+    const normalized = interest.trim();
+    if (!normalized) return;
+    if (customInterests.some((i) => i.toLowerCase() === normalized.toLowerCase())) {
+      toast('Esa pasión ya está agregada', { icon: 'ℹ️' });
+      return;
+    }
+    setCustomInterests((prev) => [...prev, normalized]);
+  };
+
+  const selectedCount = formData.selectedCategories.length + customInterests.length;
+
+  /* ---------------------------------------------------------------- */
+  /*  Step 1 — Create your account                                     */
+  /* ---------------------------------------------------------------- */
+  const step1 = (
+    <section className="w-full space-y-10">
+      {/* Hero headline */}
+      <div className="space-y-4">
+        <h1 className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-[0.95] text-on-surface">
+          Crea tu<br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-container">
+            cuenta.
+          </span>
+        </h1>
+        <p className="text-on-surface-variant text-base md:text-lg max-w-md font-body leading-relaxed">
+          Únete a la comunidad outdoor más grande de Latinoamérica.
+          Solo necesitamos lo básico para empezar.
+        </p>
+      </div>
+
+      {/* Form fields */}
+      <div className="space-y-6">
+        <div>
+          <label className={labelClasses}>
+            <User size={12} className="inline mr-1.5 -mt-0.5" />
+            Nombre completo
+          </label>
+          <input
+            type="text"
+            className={inputClasses}
+            placeholder="Ej: Catalina Reyes"
+            value={formData.name}
+            onChange={(e) => update('name', e.target.value)}
+            autoComplete="name"
+          />
+        </div>
+
+        <div>
+          <label className={labelClasses}>
+            <Mail size={12} className="inline mr-1.5 -mt-0.5" />
+            Email
+          </label>
+          <input
+            type="email"
+            className={inputClasses}
+            placeholder="tu@email.com"
+            value={formData.email}
+            onChange={(e) => update('email', e.target.value)}
+            autoComplete="email"
+          />
+        </div>
+
+        <div>
+          <label className={labelClasses}>
+            <Lock size={12} className="inline mr-1.5 -mt-0.5" />
+            Contraseña
+          </label>
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              className={`${inputClasses} pr-14`}
+              placeholder="Mínimo 8 caracteres"
+              value={formData.password}
+              onChange={(e) => update('password', e.target.value)}
+              autoComplete="new-password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((s) => !s)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-on-surface transition-colors p-1"
+              aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+          {/* Password strength indicator */}
+          <div className="mt-3 flex gap-1.5">
+            {[0, 1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+                  formData.password.length >= (i + 1) * 3
+                    ? i < 2
+                      ? 'bg-error'
+                      : i < 3
+                        ? 'bg-primary'
+                        : 'bg-secondary'
+                    : 'bg-surface-container-highest'
+                }`}
+              />
+            ))}
+          </div>
+          <p className="mt-2 font-label text-[10px] tracking-wider text-muted">
+            {formData.password.length === 0
+              ? ''
+              : formData.password.length < 6
+                ? 'Muy corta'
+                : formData.password.length < 8
+                  ? 'Casi...'
+                  : formData.password.length < 12
+                    ? 'Buena'
+                    : 'Excelente'}
+          </p>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <motion.button
+        onClick={next}
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        className="w-full py-4 rounded-2xl font-headline font-extrabold text-base uppercase tracking-wider text-on-primary flex items-center justify-center gap-3 cursor-pointer transition-all"
+        style={{
+          background: 'linear-gradient(135deg, #ffc56c, #f0a500)',
+          boxShadow: '0 8px 32px rgba(240, 165, 0, 0.25)',
+        }}
+      >
+        Continuar
+        <ArrowRight size={18} strokeWidth={2.5} />
+      </motion.button>
+
+      <p className="text-center text-sm text-muted font-body">
+        ¿Ya tienes cuenta?{' '}
+        <Link to="/login" className="text-primary hover:text-primary-container font-semibold transition-colors">
+          Inicia sesión
+        </Link>
+      </p>
+    </section>
+  );
+
+  /* ---------------------------------------------------------------- */
+  /*  Step 2 — Select your interests                                   */
+  /* ---------------------------------------------------------------- */
+  const step2 = (
+    <section className="w-full space-y-8">
+      <div className="space-y-3">
+        <h2 className="text-3xl md:text-4xl font-headline font-black text-on-surface tracking-tight">
+          ¿Qué te <span className="text-primary">apasiona</span>?
+        </h2>
+        <p className="text-on-surface-variant font-body text-base">
+          Selecciona al menos 3 categorías para personalizar tu experiencia.
+        </p>
+        {/* Counter */}
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={`w-8 h-1.5 rounded-full transition-colors duration-300 ${
+                  i < selectedCount ? 'bg-primary' : 'bg-surface-container-highest'
+                }`}
+              />
+            ))}
+          </div>
+          <span className="font-label text-xs text-muted">
+            {selectedCount}/3 mínimo
+          </span>
         </div>
       </header>
 
@@ -130,6 +422,116 @@ export default function OnboardingPage() {
                 <label className="block space-y-3"><span className="section-kicker">Password</span><input type="password" className="editorial-input" value={form.password} onChange={(e) => update('password', e.target.value)} placeholder="Mínimo 8 caracteres" /></label>
                 <p className="text-sm text-on-surface-variant">Al continuar, aceptas los términos de la expedición y activas recomendaciones más precisas desde el día uno.</p>
               </div>
+            </motion.button>
+          );
+        })}
+        <motion.button
+          type="button"
+          onClick={addCustomInterest}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          className="group relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:ring-1 hover:ring-primary/40 bg-surface-container-highest/70 border border-outline-variant/20"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/15 to-secondary/10" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="h-12 w-12 rounded-2xl bg-surface/80 flex items-center justify-center border border-outline-variant/25">
+              <Plus size={24} className="text-primary" />
+            </div>
+          </div>
+          <div className="absolute bottom-3 left-3 right-3">
+            <span className="font-headline text-base font-bold text-on-surface">Agregar otra</span>
+          </div>
+        </motion.button>
+      </div>
+
+      {customInterests.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {customInterests.map((interest) => (
+            <span
+              key={interest}
+              className="px-3 py-1.5 rounded-full bg-secondary/20 text-secondary font-label text-xs tracking-wider uppercase"
+            >
+              {interest}
+            </span>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+
+  /* ---------------------------------------------------------------- */
+  /*  Step 3 — Location                                                */
+  /* ---------------------------------------------------------------- */
+  const step3 = (
+    <section className="w-full space-y-8">
+      <div className="space-y-3">
+        <h2 className="text-3xl md:text-4xl font-headline font-black text-on-surface tracking-tight">
+          ¿Desde <span className="text-secondary">dónde</span> exploras?
+        </h2>
+        <p className="text-on-surface-variant font-body text-base leading-relaxed">
+          Aktivar funciona mejor cuando sabemos tu ubicación.
+          Así te mostramos actividades y grupos cercanos.
+        </p>
+      </div>
+
+      {/* Location input */}
+      <div>
+        <label className={labelClasses}>
+          <MapPin size={12} className="inline mr-1.5 -mt-0.5" />
+          Ciudad o región
+        </label>
+        <input
+          type="text"
+          className={inputClasses}
+          placeholder="Ej: Bariloche, Argentina"
+          value={formData.location}
+          onChange={(e) => update('location', e.target.value)}
+        />
+      </div>
+
+      {/* GPS Button */}
+      <motion.button
+        onClick={handleGPS}
+        disabled={gpsAcquiring}
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-surface-container-high/60 border border-outline-variant/20 text-on-surface font-headline font-bold text-sm uppercase tracking-wider cursor-pointer hover:bg-surface-container-high transition-all disabled:opacity-60"
+      >
+        {gpsAcquiring ? (
+          <Loader2 size={18} className="animate-spin text-primary" />
+        ) : (
+          <MapPin size={18} className="text-primary" />
+        )}
+        {gpsAcquiring ? 'Obteniendo ubicación...' : 'Usar mi ubicación actual'}
+      </motion.button>
+
+      {/* Map */}
+      <div className="w-full aspect-video rounded-2xl overflow-hidden bg-surface-container-high relative border border-outline-variant/15">
+        <div className="w-full h-full">
+          <ActivityMap
+            activities={[]}
+            singleMarker={
+              userCoords
+                ? {
+                    lat: userCoords[0],
+                    lng: userCoords[1],
+                    label: formData.location || 'Tu ubicación',
+                  }
+                : undefined
+            }
+            center={userCoords ?? [-41.1335, -71.3103]}
+            zoom={userCoords ? 13 : 4}
+          />
+        </div>
+
+        {/* Pulsing dot overlay */}
+        {!userCoords && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-20 h-20 bg-primary/15 rounded-full flex items-center justify-center animate-pulse">
+              <div
+                className="w-6 h-6 bg-primary rounded-full"
+                style={{ boxShadow: '0 0 20px rgba(240,165,0,0.5)' }}
+              />
             </div>
           </section>
         )}

@@ -14,38 +14,49 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isEmailTouched, setIsEmailTouched] = useState(false);
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const isFormValid = normalizedEmail.length > 0 && password.length > 0;
 
   const isValid = email.trim().length > 0 && password.length > 0;
 
   const handleLogin = async () => {
-    if (!isValid) {
-      toast.error('Completa email y contraseña');
+    if (!isFormValid) {
+      toast.error('Completa todos los campos');
       return;
     }
 
     setLoading(true);
     try {
-      const normalizedEmail = email.trim().toLowerCase();
       const tokenRes = await api.post(endpoints.login, { email: normalizedEmail, password });
       sessionStorage.setItem('aktivar_access_token', tokenRes.data.access);
       if (tokenRes.data.refresh) sessionStorage.setItem('aktivar_refresh_token', tokenRes.data.refresh);
       const userRes = await api.get(endpoints.me);
       storeLogin(userRes.data);
-      toast.success('Bienvenido de vuelta');
-      const stateTarget = location.state && typeof location.state === 'object' && 'from' in location.state
-        ? location.state.from
-        : undefined;
-      const returnTo = typeof stateTarget === 'string' && stateTarget.startsWith('/')
-        ? stateTarget
-        : consumePostAuthPath('/');
-      navigate(returnTo, { replace: true });
-    } catch (error: unknown) {
-      const err = error as { response?: { status?: number } };
-      if (err.response?.status === 401) toast.error('Email o contraseña incorrectos');
-      else toast.error('No pudimos iniciar sesión');
+
+      toast.success('Bienvenido de vuelta!');
+      navigate('/');
+    } catch (err: unknown) {
+      const error = err as { response?: { status?: number } };
+      if (error.response?.status === 401) {
+        toast.error('Email o contraseña incorrectos');
+      } else if (error.response?.status === 429) {
+        toast.error('Demasiados intentos. Espera unos minutos y vuelve a intentar.');
+      } else {
+        toast.error('Error de conexión');
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgotPassword = () => {
+    if (!normalizedEmail) {
+      toast('Ingresa tu email para recuperar tu contraseña', { icon: '📩' });
+      return;
+    }
+    window.location.href = `mailto:soporte@aktivar.app?subject=Recuperar%20contrase%C3%B1a&body=Hola%20equipo%20Aktivar,%20necesito%20recuperar%20mi%20contrase%C3%B1a%20para%20${encodeURIComponent(normalizedEmail)}.`;
   };
 
   return (
@@ -80,6 +91,111 @@ export default function LoginPage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-surface-container-high text-primary"><Mountain size={20} /></div>
             <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary-container">Aktivar</p>
           </div>
+        </motion.div>
+      </div>
+
+      {/* Right side — Login form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
+        <motion.div
+          className="w-full max-w-[420px] space-y-10"
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Mobile logo */}
+          <motion.div className="lg:hidden text-center space-y-3" custom={0} variants={fadeUp}>
+            <div className="mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/10 flex items-center justify-center border border-primary/10">
+              <Mountain size={28} className="text-primary" />
+            </div>
+          </motion.div>
+
+          {/* Header */}
+          <motion.div className="space-y-3" custom={1} variants={fadeUp}>
+            <h1 className="font-headline text-4xl lg:text-5xl font-black text-on-surface tracking-tight">
+              Bienvenido<br />
+              <span className="text-primary">de vuelta</span>
+            </h1>
+            <p className="font-body text-on-surface-variant text-base">
+              Inicia sesión para continuar tu aventura
+            </p>
+          </motion.div>
+
+          {/* Form */}
+          <motion.form
+            className="space-y-7"
+            custom={2}
+            variants={fadeUp}
+            onSubmit={(e) => {
+              e.preventDefault();
+              void handleLogin();
+            }}
+          >
+            {/* Email */}
+            <div>
+              <label className={labelClasses}>Email</label>
+              <input
+                type="email"
+                className={inputClasses}
+                placeholder="tu@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => setIsEmailTouched(true)}
+                autoComplete="email"
+                aria-invalid={isEmailTouched && normalizedEmail.length === 0}
+              />
+            </div>
+
+            {/* Password */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <label className={labelClasses + ' mb-0'}>Contraseña</label>
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="font-label text-[10px] uppercase tracking-[0.15em] text-primary hover:text-primary-container transition-colors"
+                >
+                  Olvidé mi contraseña
+                </button>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className={`${inputClasses} pr-14`}
+                  placeholder="Tu contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((s) => !s)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-on-surface transition-colors p-1"
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Login button */}
+            <motion.button
+              type="submit"
+              disabled={loading || !isFormValid}
+              whileHover={loading ? undefined : { scale: 1.01 }}
+              whileTap={loading ? undefined : { scale: 0.99 }}
+              className="w-full py-4 rounded-2xl font-headline font-extrabold text-base uppercase tracking-wider text-on-primary flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+              style={{
+                background: 'linear-gradient(135deg, #ffc56c, #f0a500)',
+                boxShadow: '0 8px 32px rgba(240, 165, 0, 0.25)',
+              }}
+            >
+              {loading ? (
+                <Loader2 size={20} className="animate-spin" />
+              ) : (
+                <LogIn size={18} />
+              )}
+              {loading ? 'Ingresando...' : 'Iniciar sesión'}
+            </motion.button>
+          </motion.form>
 
           <div>
             <p className="section-kicker">Login / signup</p>

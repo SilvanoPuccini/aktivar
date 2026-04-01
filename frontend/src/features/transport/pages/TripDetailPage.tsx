@@ -15,22 +15,50 @@ export default function TripDetailPage() {
   const { data: trip, isLoading } = useTrip(id);
   const bookSeat = useBookSeat();
 
-  if (isLoading) return <div className="flex min-h-screen items-center justify-center">Cargando viaje...</div>;
-  if (!trip) return <EmptyState title="Viaje no encontrado" description="Esta ruta ya no está disponible." action={{ label: 'Volver', onClick: () => navigate('/') }} />;
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface">
+        <div className="animate-pulse text-muted">Cargando viaje...</div>
+      </div>
+    );
+  }
 
-  const departure = new Date(trip.departure_time);
-  const arrival = trip.estimated_arrival ? new Date(trip.estimated_arrival) : null;
-  const cost = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(trip.price_per_passenger);
-  const tripTitle = trip.activity?.title || trip.destination_name;
-  const seatDots = Array.from({ length: Math.max(4, trip.vehicle.capacity) }, (_, index) => index < trip.seats_remaining);
-  const handleBook = () => {
-    bookSeat.mutate(trip.id, {
-      onSuccess: () => toast.success('Asiento reservado'),
-      onError: (error) => {
-        const err = error as AxiosError<{ detail?: string }>;
-        toast.error(err.response?.data?.detail ?? 'No se pudo reservar');
-      },
-    });
+  if (!trip) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface p-4">
+        <EmptyState
+          icon={<Car size={48} />}
+          title="Viaje no encontrado"
+          description="Este viaje no existe o fue cancelado."
+          action={{ label: 'Volver al inicio', onClick: () => navigate('/') }}
+        />
+      </div>
+    );
+  }
+
+  const departureDate = new Date(trip.departure_time);
+  const formattedTime = format(departureDate, 'HH:mm', { locale: es });
+  const arrivalDate = trip.estimated_arrival ? new Date(trip.estimated_arrival) : null;
+  const formattedArrival = arrivalDate ? format(arrivalDate, 'HH:mm', { locale: es }) : null;
+  const totalCost = trip.price_per_passenger;
+  const costPerPerson = trip.seats_taken > 0
+    ? Math.round(totalCost)
+    : totalCost;
+  const spotsLeft = trip.seats_remaining ?? (trip.available_seats - (trip.seats_taken ?? 0));
+  const confirmedPassengers = (trip.passengers ?? []).filter((p: { status: string }) => p.status === 'confirmed');
+  const totalSeats = trip.available_seats;
+  const seatsTaken = trip.seats_taken ?? 0;
+  const pendingPassengersCount = (trip.passengers ?? []).filter((p: { status: string }) => p.status === 'pending').length;
+  const bookingDisabled = spotsLeft === 0 || bookSeat.isPending;
+  const bookingLabel = bookSeat.isPending
+    ? 'RESERVANDO...'
+    : spotsLeft > 0
+      ? 'RESERVAR ASIENTO'
+      : 'SIN CUPOS';
+
+  const getApiErrorMessage = (error: unknown) => {
+    const axiosError = error as AxiosError<{ detail?: string; [key: string]: unknown }>;
+    return axiosError.response?.data?.detail || 'No se pudo reservar el asiento';
   };
 
   return (
@@ -114,23 +142,59 @@ export default function TripDetailPage() {
               </div>
             </div>
 
-            <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
-              <p className="section-kicker">Fellow expeditions</p>
-              <div className="mt-4 space-y-4">
-                {trip.passengers.length > 0 ? trip.passengers.map((passenger: TripPassenger) => (
-                  <div key={passenger.id} className="rounded-[1.35rem] border-b-4 border-secondary/30 bg-surface px-5 py-5">
-                    <div className="flex items-center gap-4">
-                      <img src={passenger.user.avatar} alt={passenger.user.full_name} className="h-12 w-12 rounded-full object-cover grayscale" />
-                      <div>
-                        <p className="font-headline text-lg font-bold tracking-tight text-on-surface">{passenger.user.full_name}</p>
-                        <p className="font-label text-[10px] uppercase tracking-[0.16em] text-secondary">{passenger.status}</p>
-                      </div>
+            {/* ---- Primary Action Area ---- */}
+            <div className="flex flex-col gap-4 pt-4">
+              {/* JOIN RIDE Button */}
+              <button
+                onClick={() => {
+                  if (spotsLeft > 0) {
+                    bookSeat.mutate(trip.id, {
+                      onSuccess: () => toast.success('Asiento reservado exitosamente'),
+                      onError: (error) => toast.error(getApiErrorMessage(error)),
+                    });
+                  } else {
+                    toast.error('No hay cupos disponibles');
+                  }
+                }}
+                disabled={bookingDisabled}
+                className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-primary to-primary-container py-5 font-headline text-lg font-bold tracking-tight text-on-primary shadow-lg transition-all active:scale-95 disabled:opacity-50"
+              >
+                <Zap size={22} className="fill-current" />
+                {bookingLabel}
+              </button>
+
+              {/* Emergency + Passenger Avatars Row */}
+              <div className="flex items-center justify-between pt-2">
+                {/* Emergency Button */}
+                <button
+                  className="flex items-center gap-2 font-label text-sm font-bold uppercase tracking-widest text-error opacity-60 transition-opacity hover:opacity-100"
+                  onClick={() => toast('Mantén presionado 3 segundos para activar emergencia')}
+                >
+                  <AlertTriangle size={16} />
+                  Emergencia
+                </button>
+
+                {/* Passenger Avatars */}
+                <div className="flex -space-x-3">
+                  {confirmedPassengers.slice(0, 3).map((passenger: { id: number; user: { avatar: string; full_name: string } }) => (
+                    <img
+                      key={passenger.id}
+                      src={passenger.user.avatar}
+                      alt={passenger.user.full_name}
+                      className="h-8 w-8 rounded-full border-2 border-surface-container-low object-cover"
+                    />
+                  ))}
+                  {confirmedPassengers.length > 3 && (
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface-container-low bg-surface-container-highest text-[10px] font-bold text-on-surface">
+                      +{confirmedPassengers.length - 3}
                     </div>
-                    <p className="mt-4 text-sm text-on-surface-variant">
-                      {passenger.pickup_stop ? `Pickup en ${passenger.pickup_stop.name}.` : 'Sin pickup definido todavía.'}
-                    </p>
-                  </div>
-                )) : <p className="text-sm text-on-surface-variant">Todavía no hay pasajeros confirmados.</p>}
+                  )}
+                  {pendingPassengersCount > 0 && confirmedPassengers.length <= 3 && (
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface-container-low bg-surface-container-highest text-[10px] font-bold text-on-surface">
+                      +{pendingPassengersCount}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
