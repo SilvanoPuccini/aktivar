@@ -65,7 +65,7 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
             <button
               type="button"
               onClick={() => onTabChange('notifications')}
-              className="relative flex h-11 w-11 items-center justify-center rounded-full bg-surface-container-high/90 text-on-surface-variant transition-colors hover:text-on-surface"
+              className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-surface-container-high/90 text-on-surface-variant transition-colors hover:text-on-surface"
             >
               <Bell size={18} />
               {notificationCount > 0 && <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-primary" />}
@@ -93,7 +93,7 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
                 key={tab.key}
                 type="button"
                 onClick={() => onTabChange(tab.key)}
-                className="flex min-w-16 flex-col items-center gap-1 px-3 py-2 text-[10px] font-label uppercase tracking-[0.14em]"
+                className="flex min-w-16 cursor-pointer flex-col items-center gap-1 px-3 py-2.5 text-[10px] font-label uppercase tracking-[0.14em]"
               >
                 <span className={isActive ? 'text-primary' : 'text-on-surface-variant'}>
                   <Icon size={19} strokeWidth={isActive ? 2.4 : 1.8} />
@@ -106,7 +106,7 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
           <button
             type="button"
             onClick={() => onTabChange('create')}
-            className="flex h-12 w-12 items-center justify-center rounded-full text-[#442c00] shadow-[var(--shadow-soft)]"
+            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-[#442c00] shadow-[var(--shadow-soft)]"
             style={{ background: 'var(--cta-gradient)' }}
           >
             <Plus size={20} />
