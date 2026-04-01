@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Manrope:wght@400;500;700&amp;family=Space_Grotesk:wght@400;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "error-container": "#93000a",
+            "on-primary-fixed": "#281800",
+            "on-error-container": "#ffdad6",
+            "tertiary": "#d3cfc6",
+            "surface-dim": "#11140f",
+            "primary-container": "#f0a500",
+            "tertiary-fixed": "#e6e2d8",
+            "on-secondary-container": "#95f5ae",
+            "on-tertiary-fixed-variant": "#484740",
+            "surface-container-lowest": "#0c0f0a",
+            "on-secondary-fixed": "#00210d",
+            "on-secondary": "#00391a",
+            "surface-container-low": "#191c17",
+            "on-primary": "#442c00",
+            "surface-container-high": "#282b25",
+            "surface-bright": "#373a34",
+            "surface-variant": "#333630",
+            "outline": "#9f8e79",
+            "inverse-on-surface": "#2e312b",
+            "surface-container": "#1d201b",
+            "surface": "#11140f",
+            "error": "#ffb4ab",
+            "secondary-fixed": "#97f7b0",
+            "inverse-primary": "#805600",
+            "on-secondary-fixed-variant": "#005228",
+            "surface-tint": "#ffba44",
+            "on-tertiary-container": "#47463f",
+            "primary-fixed-dim": "#ffba44",
+            "on-tertiary-fixed": "#1c1c16",
+            "primary": "#ffc56c",
+            "primary-fixed": "#ffddaf",
+            "background": "#11140f",
+            "on-background": "#e1e3da",
+            "secondary-container": "#00733b",
+            "on-surface-variant": "#d6c4ac",
+            "on-surface": "#e1e3da",
+            "inverse-surface": "#e1e3da",
+            "on-primary-fixed-variant": "#614000",
+            "surface-container-highest": "#333630",
+            "secondary": "#7bda96",
+            "on-error": "#690005",
+            "tertiary-fixed-dim": "#cac6bd",
+            "on-tertiary": "#32312a",
+            "secondary-fixed-dim": "#7bda96",
+            "outline-variant": "#514533",
+            "on-primary-container": "#5f3f00",
+            "tertiary-container": "#b7b4ab"
+          },
+          fontFamily: {
+            "headline": ["Epilogue"],
+            "body": ["Manrope"],
+            "label": ["Space Grotesk"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .tonal-shifting {
+      background-image: linear-gradient(to bottom, transparent, rgba(29, 32, 27, 0.4));
+    }
+    .glass-header {
+      background: rgba(17, 20, 15, 0.7);
+      backdrop-filter: blur(24px);
+    }
+    .micro-gradient-cta {
+      background: linear-gradient(135deg, #ffc56c 0%, #f0a500 100%);
+    }
+    body {
+      background-color: #11140f;
+      color: #ede9df;
+    }
+  </style>
+</head>
+<body class="font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar Navigation Shell -->
+<header class="fixed top-0 w-full z-50 glass-header shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<nav class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tighter text-[#f0a500] italic font-headline uppercase">Aktivar</span>
+<div class="hidden md:flex gap-6">
+<a class="text-[#ede9df] opacity-80 font-headline tracking-tighter font-extrabold uppercase hover:scale-105 transition-transform duration-200 hover:text-[#f0a500]" href="#">Journal</a>
+<a class="text-[#f0a500] border-b-2 border-[#f0a500] pb-1 font-headline tracking-tighter font-extrabold uppercase" href="#">Marketplace</a>
+<a class="text-[#ede9df] opacity-80 font-headline tracking-tighter font-extrabold uppercase hover:scale-105 transition-transform duration-200 hover:text-[#f0a500]" href="#">Safety</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-[#ede9df] hover:text-[#f0a500] transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-[#ede9df] hover:text-[#f0a500] transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-screen-2xl mx-auto">
+<!-- Hero Section / Featured Community -->
+<section class="mb-20">
+<div class="relative overflow-hidden rounded-xl bg-surface-container shadow-2xl group">
+<div class="flex flex-col lg:flex-row h-full">
+<!-- Featured Image Bleed -->
+<div class="w-full lg:w-3/5 h-80 lg:h-[500px] overflow-hidden">
+<img alt="Community of the Week" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Distant silhouette of rock climbers on a steep granite cliff during sunset with atmospheric orange and purple haze" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKTK-EfRDv-bmu5jV-MDLLNqSKAp_JoBCb1L8gKW8jCPtr_OhC9EI35AxU0gx-o9nKS3AMMH1AhJGy68sMWpJwBL3EixZu200yutKzOqzX2uEdXrf17Y4zspxWr9ltPjHiFFq1stLmhLQ8PlsXxAoGEmlWZARZJkGEiWmKLqrushR2uWI8W_Bp-Bv_2x1pmc-ftLXIhrQ45LXciy0lB-RhP-1-lv47KhrY8WwhsM5icasYZNO2xi_eBsKRKzbnbQ30Q9Ng8mI_9J4"/>
+</div>
+<!-- Featured Content -->
+<div class="w-full lg:w-2/5 p-8 lg:p-12 flex flex-col justify-center">
+<div class="flex items-center gap-2 mb-4">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full">Community of the Week</span>
+</div>
+<h1 class="font-headline text-5xl lg:text-7xl font-extrabold tracking-tighter mb-6 leading-[0.9]">Andinistas de Chile</h1>
+<p class="text-on-surface-variant text-lg mb-8 max-w-md">The premier collective for high-altitude exploration in the Southern Andes. From Aconcagua to Ojos del Salado, we chart the peaks together.</p>
+<div class="grid grid-cols-2 gap-8 mb-10">
+<div>
+<span class="font-label text-xs uppercase text-on-surface-variant block mb-1">Members</span>
+<span class="font-label text-2xl font-bold">12.4K+</span>
+</div>
+<div>
+<span class="font-label text-xs uppercase text-on-surface-variant block mb-1">Frequency</span>
+<span class="font-label text-2xl font-bold">Weekly</span>
+</div>
+</div>
+<button class="micro-gradient-cta text-on-primary-fixed py-4 px-8 rounded-xl font-label font-bold uppercase tracking-widest text-sm self-start hover:scale-105 transition-transform active:scale-95 shadow-xl">
+              Join Community
+            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Filter & Search Bar -->
+<section class="mb-12 flex flex-col md:flex-row items-end md:items-center justify-between gap-6">
+<div class="w-full md:w-auto">
+<h2 class="font-headline text-3xl font-extrabold tracking-tighter mb-4">Directory</h2>
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-6 py-2 rounded-full bg-primary-container text-on-primary-container font-label text-xs uppercase tracking-widest">All</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs uppercase tracking-widest hover:text-on-surface transition-colors">Mountain</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs uppercase tracking-widest hover:text-on-surface transition-colors">Water</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs uppercase tracking-widest hover:text-on-surface transition-colors">Air</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs uppercase tracking-widest hover:text-on-surface transition-colors">Survival</button>
+</div>
+</div>
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-xl py-4 pl-12 pr-4 text-on-surface font-body placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-primary/30" placeholder="Find your tribe..." type="text"/>
+</div>
+</section>
+<!-- Communities Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
+<!-- Card 1 -->
+<article class="bg-surface-container-low rounded-lg overflow-hidden group flex flex-col border border-transparent hover:border-outline-variant/15 transition-all">
+<div class="relative h-64 overflow-hidden m-2 rounded-lg">
+<img alt="Surfistas del Pacífico" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Cinematic shot of a surfer paddling out into large blue crashing waves under a bright morning sun" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfgSS8LWjHZ0_SxCTCFFYl6C4IJ6V8mD9HD04AD_8y2WLmlLE6psQRO6ACUqYCIWgInNYyn7AbONeUAcboKWyqln5ldZs513G16Sv7tT57S_4zQSFa-uzzccf37Ncmxi3Vtz-pR-npGhXCf0WQKQkFjfNc-lVYcPrNvbzLZ7OJRfzCaAT_NpVVpmu9TI0x9FHxz51FKQKHG1T5lrPPn4_Bc5qPrU8cBurW4pbk9iPzxfJuDPIbQCK2NaPl-L6fepc7HyP7XHCAOYQ"/>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full">
+<span class="font-label text-[10px] uppercase text-primary font-bold tracking-widest">Water</span>
+</div>
+</div>
+<div class="p-8 flex flex-col flex-grow">
+<h3 class="font-headline text-3xl font-extrabold tracking-tighter mb-2 leading-none">Surfistas del Pacífico</h3>
+<p class="text-on-surface-variant mb-8 line-clamp-2">Chasing the coldest swells and the longest breaks from Vancouver down to Tierra del Fuego.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Activity</span>
+<span class="font-label font-bold text-secondary">High • Daily</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Crew</span>
+<span class="font-label font-bold block">8.2K</span>
+</div>
+</div>
+<button class="mt-8 w-full micro-gradient-cta text-on-primary-fixed py-4 rounded-xl font-label font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-lg">
+            Join Community
+          </button>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-low rounded-lg overflow-hidden group flex flex-col border border-transparent hover:border-outline-variant/15 transition-all">
+<div class="relative h-64 overflow-hidden m-2 rounded-lg">
+<img alt="Kayakistas del Amazonas" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Distant kayaker moving through a mirror-like rainforest river with dense tropical foliage on both sides and morning mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCk_MyRzPlQWaTGwWQBgWN6eoMJlajDvq7SGK1Ed-YCvNE4lkrgcu3XmG8D0oSWBmI2gOZoy-JUzL3ggU7XsS0eC52TbWbD00SxgjfdTxbzhNIVslzSeB88mNI4OE4rBBwEnr7UOwAsMubNeY_LBCpRaC1id40EuiAn1xLuwE1wsIOEIIKlndRTY0CS8S5HB9-6_c-CjiQ-FbLpDQcK3gHNdZYyqFvyjE_UKgfAJbYd_dMnbul7K5SCcMe3D3kAMn--gy59bhD2NQQ"/>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full">
+<span class="font-label text-[10px] uppercase text-primary font-bold tracking-widest">River</span>
+</div>
+</div>
+<div class="p-8 flex flex-col flex-grow">
+<h3 class="font-headline text-3xl font-extrabold tracking-tighter mb-2 leading-none">Kayakistas del Amazonas</h3>
+<p class="text-on-surface-variant mb-8 line-clamp-2">Navigating the heart of the rainforest. We focus on expedition kayaking and environmental preservation.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Activity</span>
+<span class="font-label font-bold text-secondary">Seasonal</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Crew</span>
+<span class="font-label font-bold block">3.5K</span>
+</div>
+</div>
+<button class="mt-8 w-full micro-gradient-cta text-on-primary-fixed py-4 rounded-xl font-label font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-lg">
+            Join Community
+          </button>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-container-low rounded-lg overflow-hidden group flex flex-col border border-transparent hover:border-outline-variant/15 transition-all">
+<div class="relative h-64 overflow-hidden m-2 rounded-lg">
+<img alt="Overlanders Patagonia" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A rugged 4x4 vehicle parked in a vast Patagonian plains landscape with dramatic snow-capped mountains in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK16meMIdKz-bce8_uQoVzpuU8yMq5wedHNnzi8SNgGVEce5Ed4JBm3258DfrBTn5LAKk5oHdRwXd9C9KBx6h4H_66x4ZlFDxO_UCIzCjp-_mQBMn5mdJtjBXxBDfQN0h8pLN6lAkWz3Bvn-HA47FhEOnJ9bchq06lw_aWv-YDHva9JNiOEWKgmlbjN2eKwJJp5NruNAAbLfSJru8V2whAdEqdMZnKvIY-oBkfE3u9oIS4DGkHDQDLTGF20PqkwrppFGjiuzyDwnw"/>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full">
+<span class="font-label text-[10px] uppercase text-primary font-bold tracking-widest">Land</span>
+</div>
+</div>
+<div class="p-8 flex flex-col flex-grow">
+<h3 class="font-headline text-3xl font-extrabold tracking-tighter mb-2 leading-none">Overlanders Patagonia</h3>
+<p class="text-on-surface-variant mb-8 line-clamp-2">Extreme vehicle expeditions through the Carretera Austral and beyond. Off-grid living specialists.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Activity</span>
+<span class="font-label font-bold text-secondary">Monthly</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Crew</span>
+<span class="font-label font-bold block">15.1K</span>
+</div>
+</div>
+<button class="mt-8 w-full micro-gradient-cta text-on-primary-fixed py-4 rounded-xl font-label font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-lg">
+            Join Community
+          </button>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="bg-surface-container-low rounded-lg overflow-hidden group flex flex-col border border-transparent hover:border-outline-variant/15 transition-all">
+<div class="relative h-64 overflow-hidden m-2 rounded-lg">
+<img alt="Gliding Alliance" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A paraglider soaring over a lush mountain ridge with the blue ocean visible in the distant horizon under bright midday light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFMJxPw0xuidHtcIwhPI9igXYl_7TCm2KKqKF3tU0lshgpYaYoTsMQ6ioU5d-t9I5fsWuuk_tt9n0PDEH5pRmI1zZ_zLGFbRWXSYKiuVbBhfNQIfB6MY2jQ8j4I3HnFa7YfCIN0qzkgmdc_a6nI9FRXyl7qisvLIYkBQm3X9OBgHtWsMpGpoM4oLLXQ2qYneuOguwYRzXdtWcKeog-w0iTrT9tq-XHuE0YPvXzqiDXkkJSOOleK_4Qv5TZV5rtiGNYA5jMllxymRc"/>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full">
+<span class="font-label text-[10px] uppercase text-primary font-bold tracking-widest">Air</span>
+</div>
+</div>
+<div class="p-8 flex flex-col flex-grow">
+<h3 class="font-headline text-3xl font-extrabold tracking-tighter mb-2 leading-none">Gliding Alliance</h3>
+<p class="text-on-surface-variant mb-8 line-clamp-2">Paragliding and hang-gliding enthusiasts focused on thermals, cross-country flights, and safety.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Activity</span>
+<span class="font-label font-bold text-secondary">Bi-Weekly</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Crew</span>
+<span class="font-label font-bold block">2.2K</span>
+</div>
+</div>
+<button class="mt-8 w-full micro-gradient-cta text-on-primary-fixed py-4 rounded-xl font-label font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-lg">
+            Join Community
+          </button>
+</div>
+</article>
+<!-- Card 5 -->
+<article class="bg-surface-container-low rounded-lg overflow-hidden group flex flex-col border border-transparent hover:border-outline-variant/15 transition-all">
+<div class="relative h-64 overflow-hidden m-2 rounded-lg">
+<img alt="Alpine Photographers" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Detailed close up of a professional camera on a tripod in a snowy mountain setting during blue hour" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8wGziQ-w9oR-LMdbA0bfi_Yay9AAmFhktn4kEayDSU2iRxBRj2-nkc2oXqHeyqSeq1gKKLCe-O9_bFKBimmSXokglHeofGbX9kmc0PKCQgvcD-KqyrxG4IOsVbJb49WkGcvRXoDhdFKkgI_PCOkkj-xyKsbMWIWi0Yv9BUfdo_WL1YPFCJT_wbxgq8Dn9PuIT3GClgyXT7MTzxr0CjqRrOA-oASpomNQQT5Yy2fjUzgt6m8X0XzXDYSg3xZqcDeiLLmKUS02NMAo"/>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full">
+<span class="font-label text-[10px] uppercase text-primary font-bold tracking-widest">Art</span>
+</div>
+</div>
+<div class="p-8 flex flex-col flex-grow">
+<h3 class="font-headline text-3xl font-extrabold tracking-tighter mb-2 leading-none">Alpine Photographers</h3>
+<p class="text-on-surface-variant mb-8 line-clamp-2">Capturing the raw beauty of the peaks. A community for landscape artists and wilderness documentarians.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Activity</span>
+<span class="font-label font-bold text-secondary">Daily</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Crew</span>
+<span class="font-label font-bold block">5.7K</span>
+</div>
+</div>
+<button class="mt-8 w-full micro-gradient-cta text-on-primary-fixed py-4 rounded-xl font-label font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-lg">
+            Join Community
+          </button>
+</div>
+</article>
+<!-- Card 6 -->
+<article class="bg-surface-container-low rounded-lg overflow-hidden group flex flex-col border border-transparent hover:border-outline-variant/15 transition-all">
+<div class="relative h-64 overflow-hidden m-2 rounded-lg">
+<img alt="Forest Trackers" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Someone in tactical outdoor gear looking at tracks in a forest soil with sunbeams filtering through the dark canopy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5MoJXPRrqymB6KlBvMfQFGhoz3tZB6VoWMgUjZSqfboCjzLX5hEphyoB5LzMWoV8jE0Ha9W2W8GtWU8iro45ptsSOR942_VVFl8h2WXLjWO0fVwLna0qTKDFbaqCRkqodapmypDH5_0-_kh1xMFsDN_cHwkalD91TgjKNZe32HkHvnLH64qhA6aWr8KYmi2XxF0czWsHrXbxNsrKTB0fz2jKFDVPgnHBuChtOfRgJ8_h9bRhwXHwRTj2tX4bHgi7qizSICO3jCbQ"/>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full">
+<span class="font-label text-[10px] uppercase text-primary font-bold tracking-widest">Skills</span>
+</div>
+</div>
+<div class="p-8 flex flex-col flex-grow">
+<h3 class="font-headline text-3xl font-extrabold tracking-tighter mb-2 leading-none">Forest Trackers</h3>
+<p class="text-on-surface-variant mb-8 line-clamp-2">Preserving the ancient art of animal tracking and wilderness awareness in the northern woods.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Activity</span>
+<span class="font-label font-bold text-secondary">Weekly</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Crew</span>
+<span class="font-label font-bold block">1.8K</span>
+</div>
+</div>
+<button class="mt-8 w-full micro-gradient-cta text-on-primary-fixed py-4 rounded-xl font-label font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-lg">
+            Join Community
+          </button>
+</div>
+</article>
+</section>
+</main>
+<!-- BottomNavBar Navigation Shell (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 glass-header rounded-t-3xl border-t border-[#333630]/15 z-50">
+<div class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60">
+<span class="material-symbols-outlined" data-icon="landscape">landscape</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-1">Journal</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#f0a500] text-[#11140f] rounded-2xl p-3 scale-110 -translate-y-2 transition-all shadow-lg">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-1">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-1">Trophy</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#ede9df] p-2 opacity-60">
+<span class="material-symbols-outlined" data-icon="health_and_safety">health_and_safety</span>
+<span class="font-label text-[10px] uppercase tracking-widest mt-1">Safety</span>
+</div>
+</nav>
+</body></html>

@@ -1,9 +1,10 @@
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout } from '@/layouts/MainLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
+import { buildReturnPath, savePostAuthPath } from '@/lib/authRedirect';
 import { useCurrentUser } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -20,6 +21,14 @@ const PaymentPage = lazy(() => import('@/features/payments/pages/PaymentPage'));
 const OnboardingPage = lazy(() => import('@/features/auth/pages/OnboardingPage'));
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
 const OrganizerDashboardPage = lazy(() => import('@/features/dashboard/pages/OrganizerDashboardPage'));
+const CommunitiesPage = lazy(() => import('@/features/communities/pages/CommunitiesPage'));
+const JournalPage = lazy(() => import('@/features/journal/pages/JournalPage'));
+const JournalStoryPage = lazy(() => import('@/features/journal/pages/JournalStoryPage'));
+const MarketplacePage = lazy(() => import('@/features/marketplace/pages/MarketplacePage'));
+const MarketplaceListingPage = lazy(() => import('@/features/marketplace/pages/MarketplaceListingPage'));
+const MarketplaceCreatePage = lazy(() => import('@/features/marketplace/pages/MarketplaceCreatePage'));
+const SafetyPage = lazy(() => import('@/features/safety/pages/SafetyPage'));
+const AchievementsPage = lazy(() => import('@/features/achievements/pages/AchievementsPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -79,7 +88,14 @@ function AuthBootstrap({ children }: { children: ReactNode }) {
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuthStore();
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    const returnPath = buildReturnPath(location.pathname, location.search, location.hash);
+    savePostAuthPath(returnPath);
+    return <Navigate to="/login" replace state={{ from: returnPath }} />;
+  }
+
   return <>{children}</>;
 }
 
@@ -108,6 +124,14 @@ export default function App() {
             <Route path="/payment/:activityId" element={<RequireAuth><PaymentPage /></RequireAuth>} />
             <Route path="/notifications" element={<RequireAuth><NotificationsPage /></RequireAuth>} />
             <Route path="/dashboard" element={<RequireAuth><OrganizerDashboardPage /></RequireAuth>} />
+            <Route path="/communities" element={<CommunitiesPage />} />
+            <Route path="/journal" element={<JournalPage />} />
+            <Route path="/journal/:slug" element={<JournalStoryPage />} />
+            <Route path="/marketplace" element={<MarketplacePage />} />
+            <Route path="/marketplace/:listingSlug" element={<MarketplaceListingPage />} />
+            <Route path="/marketplace/new" element={<RequireAuth><MarketplaceCreatePage /></RequireAuth>} />
+            <Route path="/safety" element={<RequireAuth><SafetyPage /></RequireAuth>} />
+            <Route path="/achievements" element={<RequireAuth><AchievementsPage /></RequireAuth>} />
           </Route>
         </Routes>
       </Suspense>

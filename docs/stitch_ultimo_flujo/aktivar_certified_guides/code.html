@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&amp;family=Manrope:wght@400;500;600&amp;family=Space_Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#191c17",
+              "on-primary": "#442c00",
+              "surface-container-high": "#282b25",
+              "surface-bright": "#373a34",
+              "surface-variant": "#333630",
+              "outline": "#9f8e79",
+              "inverse-on-surface": "#2e312b",
+              "surface-container": "#1d201b",
+              "surface": "#11140f",
+              "error": "#ffb4ab",
+              "secondary-fixed": "#97f7b0",
+              "inverse-primary": "#805600",
+              "on-secondary-fixed-variant": "#005228",
+              "surface-tint": "#ffba44",
+              "on-tertiary-container": "#47463f",
+              "error-container": "#93000a",
+              "on-primary-fixed": "#281800",
+              "on-error-container": "#ffdad6",
+              "tertiary": "#d3cfc6",
+              "surface-dim": "#11140f",
+              "primary-container": "#f0a500",
+              "tertiary-fixed": "#e6e2d8",
+              "on-secondary-container": "#95f5ae",
+              "on-tertiary-fixed-variant": "#484740",
+              "surface-container-lowest": "#0c0f0a",
+              "on-secondary-fixed": "#00210d",
+              "on-secondary": "#00391a",
+              "tertiary-fixed-dim": "#cac6bd",
+              "on-tertiary": "#32312a",
+              "secondary-fixed-dim": "#7bda96",
+              "outline-variant": "#514533",
+              "on-primary-container": "#5f3f00",
+              "tertiary-container": "#b7b4ab",
+              "primary-fixed-dim": "#ffba44",
+              "on-tertiary-fixed": "#1c1c16",
+              "primary": "#ffc56c",
+              "primary-fixed": "#ffddaf",
+              "background": "#11140f",
+              "on-background": "#e1e3da",
+              "secondary-container": "#00733b",
+              "on-surface-variant": "#d6c4ac",
+              "on-surface": "#e1e3da",
+              "inverse-surface": "#e1e3da",
+              "on-primary-fixed-variant": "#614000",
+              "surface-container-highest": "#333630",
+              "secondary": "#7bda96",
+              "on-error": "#690005"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+      }
+      .fill-icon {
+        font-variation-settings: 'FILL' 1;
+      }
+      .tonal-shift {
+        background: linear-gradient(to bottom, #11140f, #1d201b);
+      }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#11140f]/70 backdrop-blur-xl flex justify-between items-center px-8 h-20 w-full max-w-none shadow-[0px_24px_48px_rgba(12,15,10,0.4)]">
+<div class="flex items-center gap-4">
+<span class="text-2xl font-black tracking-tighter text-[#EDE9DF] font-['Epilogue'] uppercase">AKTIVAR</span>
+</div>
+<div class="hidden md:flex items-center gap-8 font-['Epilogue'] tracking-tighter font-extrabold uppercase text-xs">
+<a class="text-[#EDE9DF]/60 hover:scale-105 hover:text-[#ffc56c] transition-transform" href="#">Journal</a>
+<a class="text-[#EDE9DF]/60 hover:scale-105 hover:text-[#ffc56c] transition-transform" href="#">Marketplace</a>
+<a class="text-[#EDE9DF]/60 hover:scale-105 hover:text-[#ffc56c] transition-transform" href="#">Safety</a>
+<a class="text-[#ffc56c] border-b-2 border-[#ffc56c] pb-1 hover:scale-105 transition-transform" href="#">Guides</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group hidden sm:block">
+<input class="bg-surface-container-highest border-none rounded-full py-2 px-6 text-sm font-label focus:ring-1 focus:ring-primary w-64 transition-all" placeholder="Search guides..." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+</div>
+<button class="text-[#EDE9DF] hover:scale-105 duration-200">
+<span class="material-symbols-outlined text-3xl" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-8 max-w-7xl mx-auto">
+<!-- Header & Filter Section -->
+<header class="mb-20">
+<div class="flex flex-col md:flex-row justify-between items-end gap-8 mb-12">
+<div class="max-w-2xl">
+<span class="font-label text-primary uppercase tracking-[0.3em] text-xs mb-4 block">Certified Expedition Partners</span>
+<h1 class="font-headline text-6xl md:text-8xl font-black tracking-tighter text-[#EDE9DF] leading-[0.9]">GUIDE<br/>DIRECTORY</h1>
+</div>
+<div class="text-right">
+<p class="font-label text-on-surface-variant text-sm mb-2">CURRENTLY ACTIVE</p>
+<p class="font-headline text-4xl font-bold text-primary">142</p>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex flex-wrap gap-3 mt-12">
+<button class="px-8 py-3 rounded-full bg-primary text-on-primary font-label text-xs font-bold tracking-widest uppercase hover:scale-105 transition-transform">ALL GUIDES</button>
+<button class="px-8 py-3 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs font-bold tracking-widest uppercase hover:bg-surface-bright hover:scale-105 transition-transform">High Mountain</button>
+<button class="px-8 py-3 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs font-bold tracking-widest uppercase hover:bg-surface-bright hover:scale-105 transition-transform">Kayaking</button>
+<button class="px-8 py-3 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs font-bold tracking-widest uppercase hover:bg-surface-bright hover:scale-105 transition-transform">Surfing</button>
+<button class="px-8 py-3 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs font-bold tracking-widest uppercase hover:bg-surface-bright hover:scale-105 transition-transform">Jungle</button>
+</div>
+</header>
+<!-- Guide Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
+<!-- Guide Card 1 -->
+<article class="group relative">
+<div class="aspect-[4/5] mb-6 overflow-hidden rounded-lg bg-surface-container border border-outline-variant/15 group-hover:border-primary/30 transition-colors">
+<img alt="Guide Portrait" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" data-alt="Rugged mountain guide with beard and outdoor gear standing against a background of misty alpine peaks, dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjg6cGYi9WHrnXnNqkav8aJqbr-OROHMj7u6jcuC6bNGa4Sz98G2RWbhK8hUPYl52eIozyWJ5B7JODNZiI6jFmkURf7KpPj8xGvlkGWdF8ClJEvvbyVJsaarOCMjgaKhGYdcqnZ--bHcQLXhzgFj_UegawGz8bSYkIELULQ2lsSUQe0GEDvsra-iCJqnUi2tUTPSbqN93LFIzJZF5W3QPBRM4GkAeKGgb4XNaW01R1hp0Zv8MM8EEvg-ly0apyGwAueGyX5sY28U0"/>
+<div class="absolute top-4 right-4 bg-primary px-3 py-1 rounded-full flex items-center gap-1 shadow-xl">
+<span class="material-symbols-outlined text-on-primary text-[16px] fill-icon" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label text-[10px] font-bold text-on-primary uppercase tracking-tighter">Verified</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-2xl font-bold text-[#EDE9DF]">ELIAS VANCE</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2 py-0.5 rounded-sm bg-secondary-container/30 text-secondary text-[10px] font-label font-bold uppercase tracking-wider">High Mountain</span>
+<span class="text-on-surface-variant/40 font-label text-[10px]">•</span>
+<span class="font-label text-on-surface-variant text-[10px] uppercase">12 Years Exp.</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="text-[10px] font-label text-on-surface-variant tracking-widest mt-1">4.9/5.0</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-4 border-y border-outline-variant/15">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Languages</span>
+<div class="flex gap-2 text-on-surface">
+<span class="material-symbols-outlined text-lg" title="English">language_pinyin</span>
+<span class="material-symbols-outlined text-lg" title="German">translate</span>
+<span class="material-symbols-outlined text-lg" title="French">language_french</span>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline font-extrabold text-sm uppercase tracking-widest hover:bg-primary-container transition-colors rounded-xl flex justify-center items-center gap-2 group/btn">
+                        VIEW PROFILE
+                        <span class="material-symbols-outlined text-lg group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Guide Card 2 -->
+<article class="group relative">
+<div class="aspect-[4/5] mb-6 overflow-hidden rounded-lg bg-surface-container border border-outline-variant/15 group-hover:border-primary/30 transition-colors">
+<img alt="Guide Portrait" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" data-alt="Professional female sea kayak instructor with focused expression wearing orange life vest, bright coastal sunlight, ocean spray" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs8aF5J0ik9SG40Ne6GKlx7R7e-0okO_7pzs_2XJlyjpyn3UfQ7guwdLGsfAHwYD63J9kLg9othTHxB9FX23PGGAah_tx1vbi7946AtEACZZFRsunJTpLFoIN7w21zgJkEdncQNdqsBdauhGMq9vUk9GpMn-MEKiT6MnGl32jA4SZyLqOExAidxmNmAj-qDqTE1wrhvMSfmHkhSbp4hnouTBBfm8U9w9mjx2qEPhNcq2FDY1nTQ4ks6mBK_4yRc5xx7KyZvxB-kn4"/>
+<div class="absolute top-4 right-4 bg-primary px-3 py-1 rounded-full flex items-center gap-1 shadow-xl">
+<span class="material-symbols-outlined text-on-primary text-[16px] fill-icon" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label text-[10px] font-bold text-on-primary uppercase tracking-tighter">Verified</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-2xl font-bold text-[#EDE9DF]">MAYA CHEN</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2 py-0.5 rounded-sm bg-secondary-container/30 text-secondary text-[10px] font-label font-bold uppercase tracking-wider">Kayaking</span>
+<span class="text-on-surface-variant/40 font-label text-[10px]">•</span>
+<span class="font-label text-on-surface-variant text-[10px] uppercase">8 Years Exp.</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+<span class="text-[10px] font-label text-on-surface-variant tracking-widest mt-1">4.7/5.0</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-4 border-y border-outline-variant/15">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Languages</span>
+<div class="flex gap-2 text-on-surface">
+<span class="material-symbols-outlined text-lg" title="English">language_pinyin</span>
+<span class="material-symbols-outlined text-lg" title="Mandarin">translate</span>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline font-extrabold text-sm uppercase tracking-widest hover:bg-primary-container transition-colors rounded-xl flex justify-center items-center gap-2 group/btn">
+                        VIEW PROFILE
+                        <span class="material-symbols-outlined text-lg group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Guide Card 3 -->
+<article class="group relative">
+<div class="aspect-[4/5] mb-6 overflow-hidden rounded-lg bg-surface-container border border-outline-variant/15 group-hover:border-primary/30 transition-colors">
+<img alt="Guide Portrait" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" data-alt="Athletic surf instructor standing on beach with surfboard under arm, warm golden hour backlighting, sand and waves background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcQoeLNKCkk6MAYoaNgIIbtK5zg-ocT6cqESR2bf-7sG7_U2_K0-rBQIJJmSO9U7oPGyRJ9BU7VQ_iirBZVnHfURx_dJ8nHav6XSTsYfe_5WeXWU6yAVu0AmH9p3ujK4UTx6GUm30pneW7cvwIHmv9X4njYBVaxC1UfbqSMPGlH0iSZupWZ0He0AEOylLtb-R1-JwcsYKDg2-NajZigaVGuiWgtpmw08Ys5YvMR6J7FCaJeslrFUbcmfPFshAneyQrLNmvePuACY8"/>
+<div class="absolute top-4 right-4 bg-primary px-3 py-1 rounded-full flex items-center gap-1 shadow-xl">
+<span class="material-symbols-outlined text-on-primary text-[16px] fill-icon" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label text-[10px] font-bold text-on-primary uppercase tracking-tighter">Verified</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-2xl font-bold text-[#EDE9DF]">JULIAN RIOS</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2 py-0.5 rounded-sm bg-secondary-container/30 text-secondary text-[10px] font-label font-bold uppercase tracking-wider">Surfing</span>
+<span class="text-on-surface-variant/40 font-label text-[10px]">•</span>
+<span class="font-label text-on-surface-variant text-[10px] uppercase">15 Years Exp.</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="text-[10px] font-label text-on-surface-variant tracking-widest mt-1">5.0/5.0</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-4 border-y border-outline-variant/15">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Languages</span>
+<div class="flex gap-2 text-on-surface">
+<span class="material-symbols-outlined text-lg" title="English">language_pinyin</span>
+<span class="material-symbols-outlined text-lg" title="Spanish">language_spanish</span>
+<span class="material-symbols-outlined text-lg" title="Portuguese">translate</span>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline font-extrabold text-sm uppercase tracking-widest hover:bg-primary-container transition-colors rounded-xl flex justify-center items-center gap-2 group/btn">
+                        VIEW PROFILE
+                        <span class="material-symbols-outlined text-lg group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Guide Card 4 -->
+<article class="group relative">
+<div class="aspect-[4/5] mb-6 overflow-hidden rounded-lg bg-surface-container border border-outline-variant/15 group-hover:border-primary/30 transition-colors">
+<img alt="Guide Portrait" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" data-alt="Indigenous jungle guide in humid tropical rainforest environment, dense green foliage, wearing technical trekking gear, natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsaTQZA3M0wO6f6N--d6uvjOlABLE1-jfLmIhSHfFNsWWPoyD17wRlQ9RLwLYDxnLufQ-GC2OuZq7W-v3i7D5XquITHLBuRgFPcWnnyuLfokq-MiB7VXNK2rnf5PP43ncclVCsb5J7FjmQ_fMgRbX9phryKV1kBTerOmEUjzWswDSXcPBZUgrKN3jU1xhVaAi_KWmWwibRbuIpT9xnWESjVOE3pF1j4atwuNGAK5NtxXX8A9qN5zdgpUDxDFZ9dh8foVNDba-mVVQ"/>
+<div class="absolute top-4 right-4 bg-primary px-3 py-1 rounded-full flex items-center gap-1 shadow-xl">
+<span class="material-symbols-outlined text-on-primary text-[16px] fill-icon" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label text-[10px] font-bold text-on-primary uppercase tracking-tighter">Verified</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline text-2xl font-bold text-[#EDE9DF]">ANIKA SILVA</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2 py-0.5 rounded-sm bg-secondary-container/30 text-secondary text-[10px] font-label font-bold uppercase tracking-wider">Jungle</span>
+<span class="text-on-surface-variant/40 font-label text-[10px]">•</span>
+<span class="font-label text-on-surface-variant text-[10px] uppercase">10 Years Exp.</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm fill-icon" style="font-variation-settings: 'FILL' 0;">star_half</span>
+</div>
+<span class="text-[10px] font-label text-on-surface-variant tracking-widest mt-1">4.8/5.0</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-4 border-y border-outline-variant/15">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Languages</span>
+<div class="flex gap-2 text-on-surface">
+<span class="material-symbols-outlined text-lg" title="English">language_pinyin</span>
+<span class="material-symbols-outlined text-lg" title="Thai">translate</span>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline font-extrabold text-sm uppercase tracking-widest hover:bg-primary-container transition-colors rounded-xl flex justify-center items-center gap-2 group/btn">
+                        VIEW PROFILE
+                        <span class="material-symbols-outlined text-lg group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</article>
+</section>
+<!-- Magazine Style Callout -->
+<section class="mt-40 border-t border-outline-variant/15 pt-20 flex flex-col lg:flex-row gap-12">
+<div class="lg:w-1/3">
+<h2 class="font-headline text-4xl font-black text-[#EDE9DF] leading-tight">BEYOND THE MAP.</h2>
+<p class="font-body text-on-surface-variant mt-6 leading-relaxed">Our guides are more than experts; they are the gatekeepers of the wild. Every Aktivar Certified Guide undergoes a rigorous 4-stage evaluation process focusing on safety, cultural heritage, and ecological stewardship.</p>
+</div>
+<div class="lg:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-8">
+<div class="space-y-2">
+<span class="font-label text-primary text-sm uppercase font-bold tracking-widest">Safety first</span>
+<p class="font-body text-xs text-on-surface/60">WFR &amp; CPR Certified Professionals only.</p>
+</div>
+<div class="space-y-2">
+<span class="font-label text-primary text-sm uppercase font-bold tracking-widest">LOCAL ROOTS</span>
+<p class="font-body text-xs text-on-surface/60">Guides born and raised in their expedition territories.</p>
+</div>
+<div class="space-y-2">
+<span class="font-label text-primary text-sm uppercase font-bold tracking-widest">GEAR EXPERTS</span>
+<p class="font-body text-xs text-on-surface/60">Specialized knowledge in high-alpine and technical kits.</p>
+</div>
+<div class="space-y-2">
+<span class="font-label text-primary text-sm uppercase font-bold tracking-widest">NO TRACE</span>
+<p class="font-body text-xs text-on-surface/60">Committed to minimal impact and wildlife protection.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#11140f] w-full border-t border-[#333630]/15 flex flex-col items-center py-12 space-y-6 w-full font-['Space_Grotesk'] text-xs uppercase tracking-widest">
+<div class="flex gap-8">
+<a class="text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity opacity-80 hover:opacity-100" href="#">Journal</a>
+<a class="text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity opacity-80 hover:opacity-100" href="#">Marketplace</a>
+<a class="text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity opacity-80 hover:opacity-100" href="#">Safety</a>
+<a class="text-[#ffc56c] opacity-100" href="#">Guides</a>
+</div>
+<div class="flex gap-8">
+<a class="text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity opacity-80 hover:opacity-100" href="#">Privacy</a>
+<a class="text-[#EDE9DF]/40 hover:text-[#ffc56c] transition-opacity opacity-80 hover:opacity-100" href="#">Terms</a>
+</div>
+<p class="text-[#EDE9DF] font-bold mt-8">© 2024 AKTIVAR. THE DIGITAL EXPEDITION.</p>
+</footer>
+<!-- Mobile Navigation (Visible on mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#11140f]/90 backdrop-blur-md flex justify-around items-center z-50">
+<button class="flex flex-col items-center gap-1 text-[#EDE9DF]/40">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="text-[9px] font-label font-bold uppercase tracking-widest">Journal</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-[#EDE9DF]/40">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="text-[9px] font-label font-bold uppercase tracking-widest">Market</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-[#ffc56c]">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="text-[9px] font-label font-bold uppercase tracking-widest">Guides</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-[#EDE9DF]/40">
+<span class="material-symbols-outlined" data-icon="gpp_good">gpp_good</span>
+<span class="text-[9px] font-label font-bold uppercase tracking-widest">Safety</span>
+</button>
+</nav>
+</body></html>

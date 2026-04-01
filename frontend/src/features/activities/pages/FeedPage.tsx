@@ -57,7 +57,7 @@ export default function FeedPage() {
 
   return (
     <div className="space-y-10 md:space-y-14">
-      <section className="relative overflow-hidden rounded-[2.25rem] bg-surface-container px-6 py-8 md:px-8 md:py-10 lg:px-10 lg:py-12">
+      <section className="editorial-grid-glow relative overflow-hidden rounded-[2.5rem] bg-surface-container px-6 py-8 md:px-8 md:py-10 lg:px-10 lg:py-12">
         <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-primary/8 blur-3xl" />
         <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/8 blur-3xl" />
 
@@ -73,6 +73,10 @@ export default function FeedPage() {
               <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Busca por destino, host o tipo de aventura" />
               <CTAButton label="Mapa editorial" icon={<Compass size={16} />} onClick={() => navigate('/explore')} />
             </div>
+            <div className="flex flex-wrap gap-3 text-sm text-on-surface-variant">
+              <div className="editorial-badge">Selección más activa del día</div>
+              <div className="editorial-badge">Filtros rápidos por energía</div>
+            </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3 md:gap-4">
@@ -81,7 +85,7 @@ export default function FeedPage() {
               ['Abiertas', `${filtered.filter((a) => a.spots_remaining > 0).length}`],
               ['Rutas', `${categories.length}`],
             ].map(([label, value]) => (
-              <div key={label} className="rounded-[1.5rem] bg-surface px-4 py-5">
+              <div key={label} className="editorial-metric rounded-[1.5rem] px-4 py-5">
                 <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">{label}</p>
                 <p className="mt-2 font-headline text-4xl font-black tracking-tight text-primary">{value}</p>
               </div>
@@ -138,7 +142,7 @@ export default function FeedPage() {
                 <ActivityCard activity={featured} onClick={() => navigate(`/activity/${featured.id}`)} />
               </div>
 
-              <div className="editorial-card flex flex-col justify-between rounded-[2.25rem] px-6 py-6 md:px-8 md:py-8">
+              <div className="editorial-card-soft editorial-border flex flex-col justify-between rounded-[2.25rem] px-6 py-6 md:px-8 md:py-8">
                 <div className="space-y-4">
                   <p className="section-kicker">Pulso del día</p>
                   <h3 className="font-headline text-4xl font-black uppercase leading-[0.95] tracking-tight text-on-surface">
@@ -150,13 +154,13 @@ export default function FeedPage() {
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-[1.5rem] bg-surface px-4 py-5">
+                  <div className="editorial-metric rounded-[1.5rem] px-4 py-5">
                     <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Con lugar</p>
                     <p className="mt-2 font-headline text-4xl font-black tracking-tight text-secondary">
                       {filtered.filter((activity) => activity.spots_remaining > 0).length}
                     </p>
                   </div>
-                  <div className="rounded-[1.5rem] bg-surface px-4 py-5">
+                  <div className="editorial-metric rounded-[1.5rem] px-4 py-5">
                     <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Destinos</p>
                     <p className="mt-2 font-headline text-4xl font-black tracking-tight text-primary">
                       {new Set(filtered.map((activity) => activity.location_name)).size}

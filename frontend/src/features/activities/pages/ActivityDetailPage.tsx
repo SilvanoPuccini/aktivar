@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ArrowLeft, Calendar, Clock3, MapPin, Route, Share2, Star } from 'lucide-react';
@@ -9,6 +9,7 @@ import AvatarGroup from '@/components/AvatarGroup';
 import CTAButton from '@/components/CTAButton';
 import EmptyState from '@/components/EmptyState';
 import WeatherBadge from '@/components/WeatherBadge';
+import { preparePostAuthRedirect } from '@/lib/authRedirect';
 import { useActivity, useJoinActivity } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -21,10 +22,22 @@ const difficultyStyles: Record<string, string> = {
 
 export default function ActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuthStore();
-  const { data: activity } = useActivity(id);
+  const { isAuthenticated, user } = useAuthStore();
+  const { data: activity, isLoading } = useActivity(id);
   const joinMutation = useJoinActivity();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface px-6" aria-label="Cargando actividad">
+        <div className="space-y-3 text-center">
+          <p className="section-kicker">Cargando actividad</p>
+          <p className="text-on-surface-variant">Estamos preparando los detalles de la salida.</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!activity) {
     return (
@@ -46,11 +59,57 @@ export default function ActivityDetailPage() {
   const whatToBring = activity.what_to_bring ? activity.what_to_bring.split(',').map((item) => item.trim()).filter(Boolean) : [];
   const heroMeta = `${format(start, 'MMM d, hh:mm a', { locale: es }).toUpperCase()} · ${activity.location_name.toUpperCase()}`;
   const squadLabel = `${activity.confirmed_count} / ${activity.capacity} spots filled`;
+  const participantEntries = activity.participants?.filter((participant) => participant.status === 'confirmed').map((participant) => participant.user) ?? activity.participants_preview;
+  const viewerParticipant = activity.participants?.find((participant) => participant.user.id === user?.id && participant.status !== 'cancelled');
+  const isPublished = activity.status === 'published';
+  const isWaitlistOnly = activity.spots_remaining <= 0;
+  const isConfirmedParticipant = viewerParticipant?.status === 'confirmed';
+  const isWaitlistedParticipant = viewerParticipant?.status === 'waitlisted';
+  const canOpenGroupChat = isAuthenticated && !!viewerParticipant && isPublished;
+  const joinLabel = !isPublished
+    ? activity.status === 'completed'
+      ? 'Activity ended'
+      : activity.status === 'cancelled'
+        ? 'Activity cancelled'
+        : 'Unavailable'
+    : isConfirmedParticipant
+      ? 'You are in'
+      : isWaitlistedParticipant
+        ? 'On waitlist'
+        : isWaitlistOnly
+          ? `Join waitlist · ${priceLabel}`
+          : `Join activity · ${priceLabel}`;
+  const joinHelperText = !isPublished
+    ? 'Esta salida ya no acepta nuevas reservas.'
+    : isConfirmedParticipant
+      ? 'Tu lugar está confirmado. Ya puedes coordinarte con el grupo.'
+      : isWaitlistedParticipant
+        ? 'Estás en lista de espera. Te avisaremos si se libera un cupo.'
+        : isWaitlistOnly
+          ? 'No quedan cupos confirmados. Si te sumas, entrarás a la lista de espera.'
+          : 'Reserva tu lugar para desbloquear la coordinación del grupo.';
+
+  const openGroupChat = () => {
+    if (canOpenGroupChat) {
+      navigate(`/chat/${activity.id}`);
+      return;
+    }
+
+    if (!isAuthenticated) {
+      const returnPath = preparePostAuthRedirect(location.pathname, location.search, location.hash);
+      navigate('/login', { state: { from: returnPath } });
+    }
+  };
 
   const handleJoin = () => {
+    if (!isPublished || viewerParticipant) {
+      return;
+    }
+
     if (!isAuthenticated) {
       toast.error('Inicia sesión para reservar tu lugar');
-      navigate('/login');
+      const returnPath = preparePostAuthRedirect(location.pathname, location.search, location.hash);
+      navigate('/login', { state: { from: returnPath } });
       return;
     }
 
@@ -141,7 +200,12 @@ export default function ActivityDetailPage() {
                   </div>
                 </div>
               </div>
-              <CTAButton label="Message" variant="secondary" onClick={() => navigate(`/chat/${activity.id}`)} />
+              <CTAButton
+                label={canOpenGroupChat ? 'Open group chat' : isAuthenticated ? 'Join to unlock chat' : 'Log in to unlock chat'}
+                variant="secondary"
+                onClick={openGroupChat}
+                disabled={isAuthenticated && !canOpenGroupChat}
+              />
             </div>
           </section>
 
@@ -188,7 +252,11 @@ export default function ActivityDetailPage() {
               </div>
             </div>
             <div className="mt-5 space-y-4">
-              <AvatarGroup users={activity.participants_preview.map((p) => ({ id: p.id, full_name: p.full_name, avatar: p.avatar }))} size="lg" />
+              {participantEntries.length > 0 ? (
+                <AvatarGroup users={participantEntries.map((participant) => ({ id: participant.id, full_name: participant.full_name, avatar: participant.avatar }))} size="lg" />
+              ) : (
+                <p className="text-sm text-on-surface-variant">Todavía no hay participantes confirmados. Sé la primera persona en activar esta salida.</p>
+              )}
               <div className="flex items-center justify-between gap-4">
                 <p className="text-sm text-on-surface-variant">Únete al grupo, coordina transporte y conversa con personas que ya confirmaron esta salida.</p>
                 <p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant whitespace-nowrap">{squadLabel}</p>
@@ -223,7 +291,8 @@ export default function ActivityDetailPage() {
               <button type="button" onClick={handleShare} className="rounded-full bg-surface px-3 py-3 text-on-surface-variant hover:text-on-surface cursor-pointer"><Share2 size={16} /></button>
             </div>
             <div className="mt-6">
-              <CTAButton label={joinMutation.isPending ? `Join activity · ${priceLabel}` : `Join activity · ${priceLabel}`} loading={joinMutation.isPending} onClick={handleJoin} fullWidth />
+              <CTAButton label={joinLabel} loading={joinMutation.isPending} onClick={handleJoin} disabled={!isPublished || !!viewerParticipant} fullWidth />
+              <p className="mt-3 text-sm text-on-surface-variant">{joinHelperText}</p>
             </div>
             <div className="mt-6 space-y-4">
               <div className="rounded-[1.35rem] bg-surface px-4 py-4">
@@ -243,7 +312,13 @@ export default function ActivityDetailPage() {
                   <span className="rounded-full bg-secondary/20 px-3 py-1 font-label text-[10px] uppercase tracking-[0.16em] text-secondary">{activity.spots_remaining} seats left</span>
                 </div>
                 <div className="mt-4">
-                  <CTAButton label="Open group chat" variant="secondary" onClick={() => navigate(`/chat/${activity.id}`)} fullWidth />
+                  <CTAButton
+                    label={canOpenGroupChat ? 'Open group chat' : isAuthenticated ? 'Join to unlock chat' : 'Log in to unlock chat'}
+                    variant="secondary"
+                    onClick={openGroupChat}
+                    disabled={isAuthenticated && !canOpenGroupChat}
+                    fullWidth
+                  />
                 </div>
               </div>
               {activity.weather && <div><WeatherBadge temp={activity.weather.temp} description={activity.weather.description} icon={activity.weather.icon} /></div>}

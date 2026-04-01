@@ -120,7 +120,7 @@ export default function ExplorePage() {
 
       <div className="absolute left-4 right-4 top-4 z-[1000] md:left-8 md:right-8 md:top-6">
         <div className="mx-auto max-w-5xl space-y-4">
-          <div className="glass overflow-hidden rounded-[2rem] border border-outline-variant/20 px-5 py-5 shadow-[var(--shadow-forest)] md:px-6">
+          <div className="glass overflow-hidden rounded-[2.1rem] border border-outline-variant/20 px-5 py-5 shadow-[var(--shadow-forest)] md:px-6">
             <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
               <div className="space-y-3">
                 <p className="section-kicker">Map + list</p>
@@ -139,6 +139,10 @@ export default function ExplorePage() {
                       {visibleCount ?? filtered.length} activas en pantalla
                     </span>
                   </div>
+                </div>
+                <div className="flex flex-wrap gap-3 text-sm text-on-surface-variant">
+                  <div className="editorial-badge">Mapa inmersivo</div>
+                  <div className="editorial-badge">Overlay editorial</div>
                 </div>
               </div>
               <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Montaña, host, ciudad o experiencia" />
@@ -219,7 +223,7 @@ export default function ExplorePage() {
                 <button
                   type="button"
                   onClick={() => navigate(`/activity/${selectedActivity.id}`)}
-                  className="font-label text-[10px] font-bold uppercase tracking-[0.18em] text-primary cursor-pointer"
+                  className="rounded-full bg-primary/10 px-4 py-2 font-label text-[10px] font-bold uppercase tracking-[0.18em] text-primary cursor-pointer"
                 >
                   Abrir ficha
                 </button>

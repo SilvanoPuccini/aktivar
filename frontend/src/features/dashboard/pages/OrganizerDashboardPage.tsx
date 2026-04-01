@@ -1,5 +1,7 @@
 import { Calendar, Download, DollarSign, Loader2, Star, TrendingUp, Users } from 'lucide-react';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import CTAButton from '@/components/CTAButton';
 import api, { endpoints } from '@/services/api';
 import { useOrganizerDashboard } from '@/services/hooks';
@@ -17,7 +19,18 @@ function formatCLP(amount: number) {
   return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(amount);
 }
 
+function downloadCsv(filename: string, rows: string[]) {
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function OrganizerDashboardPage() {
+  const navigate = useNavigate();
   const { data, isLoading, error } = useOrganizerDashboard() as { data: DashboardData | undefined; isLoading: boolean; error: Error | null };
   const [now] = useState(() => Date.now());
   const recent = data?.recent_activities ?? [];
@@ -29,6 +42,11 @@ export default function OrganizerDashboardPage() {
   ];
 
   const handleExport = async () => {
+    if (!data) {
+      toast.error('No hay datos para exportar');
+      return;
+    }
+
     try {
       const res = await api.get(`${endpoints.activities}dashboard/export/`, { responseType: 'blob' });
       const url = URL.createObjectURL(res.data as Blob);
@@ -37,8 +55,20 @@ export default function OrganizerDashboardPage() {
       link.download = 'aktivar_activities.csv';
       link.click();
       URL.revokeObjectURL(url);
+      toast.success('CSV exportado');
     } catch {
-      // noop
+      const rows = [
+        'title,status,start_datetime,capacity,confirmed',
+        ...recent.map((activity) => [
+          activity.title,
+          activity.status,
+          activity.start_datetime,
+          activity.capacity,
+          activity.confirmed,
+        ].map((value) => `"${String(value).replaceAll('"', '""')}"`).join(',')),
+      ];
+      downloadCsv('aktivar_activities.csv', rows);
+      toast('Exportamos una copia local del dashboard.', { icon: '⬇️' });
     }
   };
 
@@ -86,7 +116,7 @@ export default function OrganizerDashboardPage() {
                     </div>
                   </div>
                   <div className="mt-8">
-                    <CTAButton label="Open group chat" variant="secondary" fullWidth />
+                    <CTAButton label="Open group chat" variant="secondary" onClick={() => navigate(`/chat/${activity.id}`)} fullWidth />
                   </div>
                 </div>
               </div>
