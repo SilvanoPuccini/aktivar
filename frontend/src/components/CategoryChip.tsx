@@ -39,8 +39,8 @@ interface CategoryChipProps {
 }
 
 const sizeClasses = {
-  sm: 'min-h-10 px-4 py-2 text-xs',
-  md: 'min-h-12 px-5 py-2.5 text-sm',
+  sm: 'min-h-11 px-5 py-2.5 text-xs',
+  md: 'min-h-12 px-6 py-3 text-sm',
 } as const;
 
 const iconSizes = { sm: 14, md: 16 } as const;
@@ -58,11 +58,11 @@ export default function CategoryChip({ category, selected = false, onClick, size
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
       className={[
-        'inline-flex items-center gap-2 rounded-full border font-label font-bold uppercase tracking-[0.14em] transition-all duration-200 cursor-pointer',
+        'inline-flex items-center gap-2.5 rounded-full border font-label font-bold uppercase tracking-[0.12em] transition-all duration-200 cursor-pointer whitespace-nowrap',
         sizeClasses[size],
         selected
-          ? 'border-secondary/30 bg-secondary text-surface shadow-[0_10px_24px_rgba(123,218,150,0.18)]'
-          : 'border-outline-variant/10 bg-surface-container-highest text-on-surface-variant hover:border-outline-variant/20 hover:bg-surface-container-high hover:text-on-surface',
+          ? 'border-secondary/40 bg-secondary text-surface shadow-[0_8px_20px_rgba(123,218,150,0.2)]'
+          : 'border-outline-variant bg-surface-container-high text-on-surface-variant hover:border-primary/30 hover:bg-surface-variant hover:text-on-surface',
       ].join(' ')}
     >
       {renderIcon(category.icon, iconSizes[size])}
