@@ -120,7 +120,7 @@ export default function ExplorePage() {
 
       <div className="absolute left-4 right-4 top-4 z-[1000] md:left-8 md:right-8 md:top-6">
         <div className="mx-auto max-w-5xl space-y-4">
-          <div className="glass overflow-hidden rounded-[2.1rem] border border-outline-variant/20 px-5 py-5 shadow-[var(--shadow-forest)] md:px-6">
+          <div className="glass overflow-hidden rounded-[1.125rem] border border-outline-variant/20 px-5 py-5 shadow-[var(--shadow-forest)] md:px-6">
             <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
               <div className="space-y-3">
                 <p className="section-kicker">Map + list</p>
@@ -179,7 +179,7 @@ export default function ExplorePage() {
         <button
           type="button"
           onClick={handleRecenter}
-          className="glass flex h-14 w-14 items-center justify-center rounded-[1.2rem] border border-outline-variant/20 text-on-surface shadow-[var(--shadow-soft)] cursor-pointer"
+          className="glass flex h-14 w-14 items-center justify-center rounded-[0.75rem] border border-outline-variant/20 text-on-surface shadow-[var(--shadow-soft)] cursor-pointer"
           title="Centrar mapa"
         >
           {isLocating ? (
@@ -202,7 +202,7 @@ export default function ExplorePage() {
             transition={{ type: 'spring', stiffness: 280, damping: 28 }}
             className="absolute bottom-0 left-0 right-0 z-[1000] px-4 pb-6 md:px-8"
           >
-            <div className="relative mx-auto max-w-xl overflow-hidden rounded-[2rem] border border-outline-variant/20 glass shadow-[var(--shadow-forest)]">
+            <div className="relative mx-auto max-w-xl overflow-hidden rounded-[1rem] border border-outline-variant/20 glass shadow-[var(--shadow-forest)]">
               <button
                 type="button"
                 onClick={() => setSelectedActivityId(null)}

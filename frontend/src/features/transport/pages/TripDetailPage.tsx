@@ -91,7 +91,7 @@ export default function TripDetailPage() {
               {arrival && <span className="inline-flex items-center gap-2"><Car size={15} className="text-primary" /> llegada {format(arrival, 'HH:mm', { locale: es })}</span>}
             </div>
           </div>
-          <section className="editorial-card rounded-[1.8rem] border-l-4 border-primary px-6 py-6 text-center">
+          <section className="editorial-card rounded-[1rem] border-l-4 border-primary px-6 py-6 text-center">
             <p className="section-kicker">Seats left</p>
             <p className="mt-1 font-headline text-6xl font-black leading-none text-primary">{String(trip.seats_remaining).padStart(2, '0')}</p>
             <div className="mt-4 flex justify-center gap-1.5">
@@ -102,7 +102,7 @@ export default function TripDetailPage() {
 
         <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-6">
-            <div className="editorial-card rounded-[2rem] overflow-hidden">
+            <div className="editorial-card rounded-[1rem] overflow-hidden">
               <div className="relative h-72 bg-surface-container-highest md:h-[31rem]">
                 {trip.vehicle.photo ? <img src={trip.vehicle.photo} alt={trip.vehicle.model_name} className="h-full w-full object-cover opacity-75" /> : null}
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-container via-surface/10 to-surface-container-lowest/30" />
@@ -134,7 +134,7 @@ export default function TripDetailPage() {
               </div>
             </div>
 
-            <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+            <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
               <p className="section-kicker">Driver</p>
               <div className="mt-4 flex items-center gap-4">
                 <img src={trip.driver.avatar} alt={trip.driver.full_name} className="h-16 w-16 rounded-[1.25rem] object-cover" />
@@ -206,7 +206,7 @@ export default function TripDetailPage() {
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
-            <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+            <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
               <p className="section-kicker">Vehicle</p>
               <h3 className="mt-3 font-headline text-4xl font-black uppercase leading-[0.95] tracking-tight text-on-surface">{trip.vehicle.brand} {trip.vehicle.model_name}</h3>
               <div className="mt-5 space-y-3 text-sm text-on-surface-variant">
@@ -216,10 +216,10 @@ export default function TripDetailPage() {
               </div>
             </section>
 
-            <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+            <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
               <p className="section-kicker">Cost split breakdown</p>
               <div className="mt-4 space-y-4">
-                <div className="rounded-[1.35rem] bg-surface px-4 py-4">
+                <div className="rounded-[0.75rem] bg-surface px-4 py-4">
                   <div className="flex items-end justify-between gap-4">
                     <p className="mt-2 font-headline text-4xl font-black text-primary">{cost}</p>
                     <p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">per person</p>

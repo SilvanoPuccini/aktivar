@@ -32,7 +32,7 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
         <img
           src={activity.cover_image}
           alt={activity.title}
-          className="h-24 w-24 shrink-0 rounded-[1.15rem] object-cover"
+          className="h-24 w-24 shrink-0 rounded-[0.625rem] object-cover"
           onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/200x200/1d201b/ffc56c?text=${encodeURIComponent(activity.category.name)}`; }}
         />
         <div className="min-w-0 flex-1 space-y-2">
@@ -56,9 +56,9 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
   return (
     <article
       onClick={onClick}
-      className="group editorial-card cursor-pointer overflow-hidden rounded-[2rem] transition-transform duration-300 hover:-translate-y-1"
+      className="group editorial-card cursor-pointer overflow-hidden rounded-[1rem] transition-transform duration-300 hover:-translate-y-1"
     >
-      <div className="relative aspect-[1.05] overflow-hidden rounded-[1.3rem] m-3.5 mb-0">
+      <div className="relative aspect-[1.05] overflow-hidden rounded-[0.75rem] m-3.5 mb-0">
         <img
           src={activity.cover_image}
           alt={activity.title}

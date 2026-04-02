@@ -51,7 +51,7 @@ export default function CTAButton({
       whileHover={isDisabled ? undefined : { scale: 1.02 }}
       whileTap={isDisabled ? undefined : { scale: 0.985 }}
       className={[
-        'inline-flex items-center justify-center gap-2 rounded-[1.35rem] font-label font-bold uppercase tracking-[0.2em] transition-all duration-200 cursor-pointer',
+        'inline-flex items-center justify-center gap-2 rounded-[0.75rem] font-label font-bold uppercase tracking-[0.2em] transition-all duration-200 cursor-pointer',
         sizeClasses[size],
         variantClasses[variant],
         variant === 'primary' ? 'ring-1 ring-[#fff3dd]/15 hover:brightness-[1.02]' : '',

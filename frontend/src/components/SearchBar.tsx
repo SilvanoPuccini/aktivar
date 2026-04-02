@@ -11,7 +11,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ value, onChange, placeholder = 'Buscar aventuras…', onFocus, onBlur }: SearchBarProps) {
   return (
-    <div className="glass flex w-full items-center rounded-[1.5rem] border border-outline-variant/20 bg-surface/70 px-4 py-1.5 shadow-[var(--shadow-soft)] transition-all focus-within:-translate-y-0.5 focus-within:border-primary/40 focus-within:bg-surface-container/85">
+    <div className="glass flex w-full items-center rounded-[0.875rem] border border-outline-variant/20 bg-surface/70 px-4 py-1.5 shadow-[var(--shadow-soft)] transition-all focus-within:-translate-y-0.5 focus-within:border-primary/40 focus-within:bg-surface-container/85">
       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-container-high text-primary">
         <Search size={16} className="shrink-0" />
       </div>

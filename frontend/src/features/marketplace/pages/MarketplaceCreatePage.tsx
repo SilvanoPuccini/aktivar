@@ -44,7 +44,7 @@ export default function MarketplaceCreatePage() {
   return (
     <div className="mx-auto max-w-3xl space-y-8 pb-12">
       <EcosystemNav />
-      <section className="editorial-card rounded-[2rem] px-6 py-8 md:px-8">
+      <section className="editorial-card rounded-[1rem] px-6 py-8 md:px-8">
         <p className="section-kicker">Marketplace</p>
         <h1 className="hero-title text-4xl text-on-surface md:text-6xl">List your gear</h1>
         <form className="mt-8" onSubmit={(event) => { event.preventDefault(); handleSubmit(); }}>

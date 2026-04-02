@@ -109,7 +109,7 @@ export default function ChatPage() {
                 {!own && <div className="w-10 shrink-0">{showAvatar ? <img src={message.author.avatar} alt={message.author.full_name} className="h-8 w-8 rounded-full object-cover" /> : null}</div>}
                 <div className={`max-w-[80%] ${own ? '' : 'pt-1'}`}>
                   {!own && showAvatar && <p className="mb-1 ml-1 font-headline text-xs font-bold text-on-surface-variant">{message.author.full_name}</p>}
-                  <div className={`rounded-[1.2rem] px-4 py-3 ${own ? 'rounded-bl-[1.2rem] rounded-br-md rounded-tl-[1.2rem] bg-primary-container text-[#442c00]' : 'rounded-br-[1.2rem] rounded-bl-md rounded-tr-[1.2rem] bg-surface-container text-on-surface'}`}>
+                  <div className={`rounded-[0.75rem] px-4 py-3 ${own ? 'rounded-bl-[1.2rem] rounded-br-md rounded-tl-[1.2rem] bg-primary-container text-[#442c00]' : 'rounded-br-[1.2rem] rounded-bl-md rounded-tr-[1.2rem] bg-surface-container text-on-surface'}`}>
                   <p className="text-sm leading-relaxed">{message.content}</p>
                   <div className={`mt-3 flex items-center justify-between gap-4 ${own ? 'text-[#5f3f00]' : 'text-on-surface-variant'}`}>
                     <span className="font-label text-[10px] uppercase tracking-[0.16em]">{formatTime(message.created_at)}</span>

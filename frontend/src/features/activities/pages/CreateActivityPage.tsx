@@ -205,7 +205,7 @@ export default function CreateActivityPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 pb-12">
-      <section className="editorial-card rounded-[2.25rem] px-6 py-7 md:px-8 md:py-8">
+      <section className="editorial-card rounded-[1.25rem] px-6 py-7 md:px-8 md:py-8">
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="section-kicker">Nueva actividad</p>
@@ -224,7 +224,7 @@ export default function CreateActivityPage() {
       </section>
 
       {step === 0 && (
-        <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
+        <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
           <div>
             <label className="section-kicker">Cover expedition photo</label>
             <button
@@ -320,7 +320,7 @@ export default function CreateActivityPage() {
       )}
 
       {step === 1 && (
-        <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
+        <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
           <div className="grid gap-4 md:grid-cols-3">
             <label className="space-y-3"><span className="section-kicker flex items-center gap-2"><Calendar size={14} /> Fecha</span><input type="date" className="editorial-input font-label" value={form.date} onChange={(e) => set('date', e.target.value)} /></label>
             <label className="space-y-3"><span className="section-kicker flex items-center gap-2"><Clock3 size={14} /> Inicio</span><input type="time" className="editorial-input font-label" value={form.startTime} onChange={(e) => set('startTime', e.target.value)} /></label>
@@ -336,7 +336,7 @@ export default function CreateActivityPage() {
       )}
 
       {step === 2 && (
-        <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
+        <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
           <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
             <button type="button" onClick={() => fileInputRef.current?.click()} className="relative flex min-h-72 items-center justify-center overflow-hidden rounded-[1.75rem] bg-surface cursor-pointer">
               {form.coverImage ? <img src={form.coverImage} alt="preview" className="absolute inset-0 h-full w-full object-cover" /> : <div className="flex flex-col items-center gap-3 text-on-surface-variant"><Camera size={26} /><span className="font-label text-[10px] uppercase tracking-[0.18em]">Subir portada</span></div>}
@@ -347,7 +347,7 @@ export default function CreateActivityPage() {
               <label className="space-y-3 block"><span className="section-kicker flex items-center gap-2"><Mountain size={14} /> Dificultad</span><div className="flex flex-wrap gap-2">{difficultyOptions.map((option) => <button key={option.value} type="button" onClick={() => set('difficulty', option.value)} className={`rounded-full px-4 py-3 font-label text-[10px] uppercase tracking-[0.16em] ${form.difficulty === option.value ? 'bg-primary text-[#442c00]' : 'bg-surface text-on-surface-variant'}`}>{option.label}</button>)}</div></label>
               <label className="space-y-3 block"><span className="section-kicker">Distancia estimada</span><input className="editorial-input" value={form.distanceKm} onChange={(e) => set('distanceKm', e.target.value)} placeholder="12.5" /></label>
               <label className="space-y-3 block"><span className="section-kicker">Qué llevar</span><textarea className="editorial-input min-h-32 resize-none" value={form.whatToBring} onChange={(e) => set('whatToBring', e.target.value)} placeholder="Agua, rompeviento, linterna, snack, documento" /></label>
-              <div className="rounded-[1.5rem] bg-surface px-5 py-5 space-y-4">
+              <div className="rounded-[0.875rem] bg-surface px-5 py-5 space-y-4">
                 <div className="flex items-center justify-between"><span className="section-kicker flex items-center gap-2"><DollarSign size={14} /> Precio</span><span className="font-headline text-3xl font-black text-primary">{form.isFree ? 'Gratis' : `$${form.price}`}</span></div>
                 <div className="flex gap-2">
                   <button type="button" onClick={() => { set('isFree', true); set('price', 0); }} className={`flex-1 rounded-full px-4 py-3 font-label text-[10px] uppercase tracking-[0.16em] ${form.isFree ? 'bg-primary text-[#442c00]' : 'bg-surface-container-high text-on-surface-variant'}`}>Gratis</button>

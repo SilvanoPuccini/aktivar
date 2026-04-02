@@ -92,7 +92,7 @@ export default function ProfilePage() {
     <div className="space-y-10 pb-12">
       <section className="grid gap-8 xl:grid-cols-[1.2fr_0.45fr] xl:items-start">
         <div className="space-y-8">
-          <div className="editorial-card rounded-[2.25rem] px-6 py-8 md:px-8">
+          <div className="editorial-card rounded-[1.25rem] px-6 py-8 md:px-8">
             <div className="flex flex-col gap-6 md:flex-row md:items-end">
               <div className="relative">
                 <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-primary-container p-1 md:h-40 md:w-40">
@@ -170,7 +170,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="space-y-6">
-          <section className="editorial-card rounded-[1.8rem] border-l-4 border-primary px-6 py-6 md:px-8">
+          <section className="editorial-card rounded-[1rem] border-l-4 border-primary px-6 py-6 md:px-8">
             <p className="section-kicker">Member rating</p>
             <div className="mt-3 flex items-center gap-1 text-primary">
               {Array.from({ length: 5 }).map((_, index) => <Star key={index} size={16} fill="currentColor" />)}
@@ -178,7 +178,7 @@ export default function ProfilePage() {
             <p className="mt-3 font-headline text-4xl font-black text-on-surface">{profile.avg_rating ?? 5}</p>
           </section>
 
-          <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
+          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="section-kicker">Bio</p>
@@ -200,7 +200,7 @@ export default function ProfilePage() {
             )}
           </section>
 
-          <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
             <p className="section-kicker">Presence</p>
             <div className="mt-4 space-y-4 text-sm text-on-surface-variant">
                <div className="flex items-center gap-3"><MapPin size={16} className="text-primary" /> {locationName || 'Sin ubicación definida'}</div>
