@@ -52,7 +52,7 @@ export default function LoginPage() {
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-surface-container-high text-primary"><Mountain size={20} /></div>
           <div>
-            <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary-container">Aktivar</p>
+            <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary">Aktivar</p>
             <p className="font-label text-[10px] uppercase tracking-[0.22em] text-on-surface-variant">Digital expedition</p>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md space-y-8">
           <div className="space-y-3 lg:hidden">
             <div className="flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-surface-container-high text-primary"><Mountain size={20} /></div>
-            <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary-container">Aktivar</p>
+            <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary">Aktivar</p>
           </div>
 
           <div>
@@ -88,7 +88,7 @@ export default function LoginPage() {
           <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); void handleLogin(); }}>
             <label className="block space-y-3"><span className="section-kicker">Email address</span><input type="email" className="editorial-input" placeholder="explorer@aktivar.com" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
             <label className="block space-y-3"><span className="section-kicker">Password</span><div className="relative"><input type={showPassword ? 'text' : 'password'} className="editorial-input pr-14" placeholder="Tu contraseña" value={password} onChange={(e) => setPassword(e.target.value)} /><button type="button" onClick={() => setShowPassword((prev) => !prev)} className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant cursor-pointer">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div></label>
-            <button type="submit" disabled={loading || !isValid} className="flex w-full items-center justify-center gap-3 rounded-[1.35rem] px-6 py-4 font-label text-xs font-bold uppercase tracking-[0.18em] text-[#442c00] cursor-pointer disabled:opacity-50" style={{ background: 'linear-gradient(135deg, #ffc56c 0%, #f0a500 100%)' }}>
+            <button type="submit" disabled={loading || !isValid} className="flex w-full items-center justify-center gap-3 rounded-[0.75rem] px-6 py-4 font-label text-xs font-bold uppercase tracking-[0.18em] text-[#442c00] cursor-pointer disabled:opacity-50" style={{ background: 'linear-gradient(135deg, #ffc56c 0%, #f0a500 100%)' }}>
               {loading ? <Loader2 size={18} className="animate-spin" /> : <ArrowRight size={16} />}
               {loading ? 'Ingresando' : 'Continue'}
             </button>

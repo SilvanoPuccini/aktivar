@@ -26,7 +26,7 @@ export default function Footer() {
               <Compass size={18} />
             </div>
             <div>
-              <p className="font-headline text-xl font-black uppercase tracking-tight text-on-surface">Aktivar</p>
+              <p className="font-headline text-xl font-black uppercase tracking-tight text-primary">Aktivar</p>
               <p className="font-label text-[10px] uppercase tracking-[0.22em] text-on-surface-variant">Digital expedition for Latam outdoors</p>
             </div>
           </div>

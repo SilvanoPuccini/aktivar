@@ -23,7 +23,7 @@ export default function AchievementsPage() {
     return (
       <div className="premium-page">
         <EcosystemNav />
-        <section className="editorial-card-tonal rounded-[2rem] p-6 md:p-8">
+        <section className="editorial-card-tonal rounded-[1rem] p-6 md:p-8">
           <p className="section-kicker">Loading rank data</p>
           <h1 className="mt-2 font-headline text-4xl font-black uppercase tracking-tight text-on-surface">Preparing your trophy room…</h1>
         </section>
@@ -81,16 +81,16 @@ export default function AchievementsPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-            <div className="editorial-card-tonal rounded-[1.8rem] p-6">
+            <div className="editorial-card-tonal rounded-[1rem] p-6">
               <p className="section-kicker">Next unlock</p>
                <p className="mt-3 font-headline text-3xl font-black text-on-surface">{dashboard.next_unlock}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="editorial-metric rounded-[1.5rem] px-4 py-5">
+              <div className="editorial-metric rounded-[0.875rem] px-4 py-5">
                 <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Badges</p>
                 <p className="mt-2 font-headline text-3xl font-black text-primary">{unlockedBadges}</p>
               </div>
-              <div className="editorial-metric rounded-[1.5rem] px-4 py-5">
+              <div className="editorial-metric rounded-[0.875rem] px-4 py-5">
                 <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Challenges</p>
                  <p className="mt-2 font-headline text-3xl font-black text-secondary">{challenges.length}</p>
               </div>
@@ -100,17 +100,17 @@ export default function AchievementsPage() {
       </section>
 
       <section className="grid gap-6 md:grid-cols-3">
-        <div className="editorial-card-tonal rounded-[1.8rem] px-6 py-6">
+        <div className="editorial-card-tonal rounded-[1rem] px-6 py-6">
           <p className="section-kicker">Total distance</p>
            <p className="mt-3 font-headline text-5xl font-black text-on-surface">{dashboard.total_distance_km}<span className="ml-2 text-2xl text-primary">km</span></p>
           <p className="mt-3 text-sm text-on-surface-variant">Se amplió la lectura de métricas principales para que se sientan como hitos, no solo números.</p>
         </div>
-        <div className="editorial-card-tonal rounded-[1.8rem] px-6 py-6">
+        <div className="editorial-card-tonal rounded-[1rem] px-6 py-6">
           <p className="section-kicker">Peak elevation</p>
            <p className="mt-3 font-headline text-5xl font-black text-on-surface">{dashboard.peak_elevation_m}<span className="ml-2 text-2xl text-primary">m</span></p>
           <p className="mt-3 text-sm text-on-surface-variant">Más énfasis tipográfico y menos borde duro para una sensación de perfil élite.</p>
         </div>
-        <div className="editorial-card-tonal rounded-[1.8rem] px-6 py-6">
+        <div className="editorial-card-tonal rounded-[1rem] px-6 py-6">
           <p className="section-kicker">Group saves</p>
            <p className="mt-3 font-headline text-5xl font-black text-on-surface">{dashboard.group_saves}<span className="ml-2 text-2xl text-secondary">verified</span></p>
           <p className="mt-3 text-sm text-on-surface-variant">La métrica de impacto social ahora gana peso visual junto al resto del progreso.</p>
@@ -149,13 +149,13 @@ export default function AchievementsPage() {
          </div>
 
          <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
-           <div className="editorial-card-tonal rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+           <div className="editorial-card-tonal rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
              <h2 className="font-headline text-3xl font-black uppercase tracking-tight text-on-surface">Active challenges</h2>
              <div className="mt-6 space-y-6">
                {challenges.length === 0 ? (
                  <EmptyState title="No active challenges" description="Cuando el servicio recupere desafíos, volverán a mostrarse aquí sin bloquear el CTA principal." />
                ) : challenges.map((challenge) => (
-                 <div key={challenge.id} className="rounded-[1.5rem] bg-surface-container-low/80 p-5">
+                 <div key={challenge.id} className="rounded-[0.875rem] bg-surface-container-low/80 p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-semibold text-on-surface">{challenge.title}</p>
