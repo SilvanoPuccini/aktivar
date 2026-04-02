@@ -58,13 +58,13 @@ export default function FeedPage() {
   const editorialGrid = featured ? filtered.slice(1) : filtered;
 
   return (
-    <div className="space-y-10 md:space-y-14">
-      <section className="editorial-grid-glow relative overflow-hidden rounded-[1.25rem] bg-surface-container px-6 py-8 md:px-8 md:py-10 lg:px-10 lg:py-12">
+    <div className="space-y-12 md:space-y-16">
+      <section className="editorial-grid-glow relative overflow-hidden rounded-[0.875rem] border border-outline-variant bg-surface-container px-7 py-10 md:px-10 md:py-12 lg:px-12 lg:py-14">
         <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-primary/8 blur-3xl" />
         <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/8 blur-3xl" />
 
-        <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-          <div className="space-y-5">
+        <div className="relative grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+          <div className="space-y-6">
             <p className="section-kicker">Curated expedition feed</p>
             <h1 className="hero-title text-5xl text-on-surface md:text-7xl">Explora la próxima salida</h1>
             <p className="max-w-2xl text-base text-on-surface-variant md:text-lg">
@@ -96,19 +96,19 @@ export default function FeedPage() {
         </div>
       </section>
 
-      <section className="space-y-4">
+      <section className="space-y-6">
         <div className="flex items-center justify-between gap-4">
-          <div>
+          <div className="space-y-1">
             <p className="section-kicker">Filtros</p>
             <h2 className="font-headline text-3xl font-black uppercase tracking-tight text-on-surface">Busca por energía</h2>
           </div>
-          <div className="hidden items-center gap-2 rounded-full bg-surface-container-high px-5 py-2.5 md:flex">
+          <div className="hidden items-center gap-2.5 rounded-full border border-outline-variant bg-surface-container-high px-5 py-2.5 md:flex">
             <SlidersHorizontal size={16} className="text-primary" />
             <span className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">sin líneas, solo capas</span>
           </div>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-none">
           <CategoryChip category={{ name: 'Todas', icon: 'users' }} selected={selectedCategory === null} onClick={() => setSelectedCategory(null)} size="sm" />
           {categories.map((category) => (
             <CategoryChip
@@ -136,8 +136,8 @@ export default function FeedPage() {
       ) : (
         <>
           {featured && (
-            <section className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
-              <div className="relative overflow-hidden rounded-[1.25rem] bg-surface-container">
+            <section className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
+              <div className="relative overflow-hidden rounded-[0.875rem] border border-outline-variant bg-surface-container">
                 <div className="absolute right-5 top-5 z-10 rounded-full bg-surface/80 px-4 py-2 font-label text-[10px] uppercase tracking-[0.18em] text-primary backdrop-blur-sm">
                   Selección editorial
                 </div>
@@ -161,7 +161,7 @@ export default function FeedPage() {
                 <button
                   type="button"
                   onClick={() => navigate(`/activity/${featured.id}`)}
-                  className="w-full cursor-pointer px-6 py-5 text-left"
+                  className="w-full cursor-pointer px-7 py-6 text-left"
                 >
                   <p className="font-label text-[10px] uppercase tracking-[0.18em] text-primary">Expedición abierta</p>
                   <h2 className="mt-1.5 font-headline text-2xl font-black uppercase leading-tight tracking-tight text-on-surface">
@@ -180,7 +180,7 @@ export default function FeedPage() {
                 </button>
               </div>
 
-              <div className="editorial-card-soft editorial-border flex flex-col justify-between gap-5 rounded-[1.25rem] px-6 py-6 md:px-8 md:py-8">
+              <div className="editorial-card-soft editorial-border flex flex-col justify-between gap-6 rounded-[0.875rem] px-7 py-7 md:px-9 md:py-9">
                 <div className="space-y-4">
                   <p className="section-kicker">Pulso del día</p>
                   <h3 className="font-headline text-3xl font-black uppercase leading-[0.95] tracking-tight text-on-surface md:text-4xl">
@@ -225,9 +225,9 @@ export default function FeedPage() {
             </section>
           )}
 
-          <section className="space-y-5">
+          <section className="space-y-7">
             <div className="flex items-end justify-between gap-4">
-              <div>
+              <div className="space-y-1">
                 <p className="section-kicker">Lista</p>
                 <h2 className="font-headline text-3xl font-black uppercase tracking-tight text-on-surface">Rutas, hosts y experiencias</h2>
               </div>
@@ -237,7 +237,7 @@ export default function FeedPage() {
               </div>
             </div>
 
-            <motion.div layout className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <motion.div layout className="grid gap-7 md:grid-cols-2 xl:grid-cols-3">
               {editorialGrid.map((activity) => (
                 <motion.div key={activity.id} layout>
                   <ActivityCard activity={activity} onClick={() => navigate(`/activity/${activity.id}`)} />
