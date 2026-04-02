@@ -56,9 +56,9 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
   return (
     <article
       onClick={onClick}
-      className="group editorial-card cursor-pointer overflow-hidden rounded-[1rem] transition-transform duration-300 hover:-translate-y-1"
+      className="group editorial-card cursor-pointer overflow-hidden rounded-[0.875rem] transition-transform duration-300 hover:-translate-y-1"
     >
-      <div className="relative aspect-[1.05] overflow-hidden rounded-[0.75rem] m-3.5 mb-0">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-[0.625rem] m-4 mb-0">
         <img
           src={activity.cover_image}
           alt={activity.title}
@@ -74,7 +74,7 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
         </div>
       </div>
 
-      <div className="space-y-5 px-5 py-5 md:px-7 md:py-6">
+      <div className="space-y-5 px-6 py-6 md:px-7 md:py-7">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
             <p className="font-label text-[10px] uppercase tracking-[0.18em] text-primary">Expedición abierta</p>
