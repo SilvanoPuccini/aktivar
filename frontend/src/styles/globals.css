@@ -189,7 +189,7 @@ button {
 
 .editorial-input {
   width: 100%;
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   border: 1px solid transparent;
   background: var(--color-surface-container-highest);
   color: var(--color-on-surface);
@@ -233,7 +233,7 @@ button {
 .premium-hero {
   position: relative;
   overflow: hidden;
-  border-radius: 2rem;
+  border-radius: 1rem;
   background:
     radial-gradient(circle at top right, rgba(255, 197, 108, 0.12), transparent 28%),
     radial-gradient(circle at bottom left, rgba(123, 218, 150, 0.1), transparent 24%),
@@ -363,7 +363,7 @@ button {
 
 .leaflet-popup-content-wrapper {
   background: #1d201b !important;
-  border-radius: 20px !important;
+  border-radius: 14px !important;
   box-shadow: var(--shadow-forest) !important;
   overflow: hidden;
 }

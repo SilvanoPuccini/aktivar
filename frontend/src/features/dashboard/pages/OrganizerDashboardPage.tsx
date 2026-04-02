@@ -95,7 +95,7 @@ export default function OrganizerDashboardPage() {
         </div>
         <div className="grid gap-8 lg:grid-cols-2">
           {upcoming.map((activity, index) => (
-            <article key={activity.id} className="group relative overflow-hidden rounded-[1.8rem] bg-surface-container shadow-2xl">
+            <article key={activity.id} className="group relative overflow-hidden rounded-[1rem] bg-surface-container shadow-2xl">
               <div className="relative h-[26rem] overflow-hidden">
                 <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style={{ background: cardBackgrounds[index % cardBackgrounds.length] }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/50 to-transparent" />
@@ -126,30 +126,30 @@ export default function OrganizerDashboardPage() {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+        <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
           <div className="flex items-center gap-3"><TrendingUp size={18} className="text-primary" /><div><p className="section-kicker">Revenue</p><h2 className="font-headline text-3xl font-black uppercase tracking-tight text-on-surface">Desglose financiero</h2></div></div>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <div className="rounded-[1.5rem] bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Bruto</p><p className="mt-2 font-headline text-3xl font-black text-on-surface">{formatCLP(data.revenue.total)}</p></div>
-            <div className="rounded-[1.5rem] bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Comisión</p><p className="mt-2 font-headline text-3xl font-black text-error">{formatCLP(data.revenue.fees)}</p></div>
-            <div className="rounded-[1.5rem] bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Neto</p><p className="mt-2 font-headline text-3xl font-black text-secondary">{formatCLP(data.revenue.payout)}</p></div>
+            <div className="rounded-[0.875rem] bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Bruto</p><p className="mt-2 font-headline text-3xl font-black text-on-surface">{formatCLP(data.revenue.total)}</p></div>
+            <div className="rounded-[0.875rem] bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Comisión</p><p className="mt-2 font-headline text-3xl font-black text-error">{formatCLP(data.revenue.fees)}</p></div>
+            <div className="rounded-[0.875rem] bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Neto</p><p className="mt-2 font-headline text-3xl font-black text-secondary">{formatCLP(data.revenue.payout)}</p></div>
           </div>
         </div>
 
-        <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+        <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-[1.5rem] bg-surface px-4 py-5">
+            <div className="rounded-[0.875rem] bg-surface px-4 py-5">
               <div className="flex items-center gap-2"><Calendar size={16} className="text-primary" /><p className="section-kicker">Activities</p></div>
               <p className="mt-3 font-headline text-4xl font-black text-on-surface">{data.total_activities}</p>
             </div>
-            <div className="rounded-[1.5rem] bg-surface px-4 py-5">
+            <div className="rounded-[0.875rem] bg-surface px-4 py-5">
               <div className="flex items-center gap-2"><Users size={16} className="text-primary" /><p className="section-kicker">Participants</p></div>
               <p className="mt-3 font-headline text-4xl font-black text-on-surface">{data.participants.total}</p>
             </div>
-            <div className="rounded-[1.5rem] bg-surface px-4 py-5">
+            <div className="rounded-[0.875rem] bg-surface px-4 py-5">
               <div className="flex items-center gap-2"><DollarSign size={16} className="text-primary" /><p className="section-kicker">Payout</p></div>
               <p className="mt-3 font-headline text-3xl font-black text-on-surface">{formatCLP(data.revenue.payout)}</p>
             </div>
-            <div className="rounded-[1.5rem] bg-surface px-4 py-5">
+            <div className="rounded-[0.875rem] bg-surface px-4 py-5">
               <div className="flex items-center gap-2"><Star size={16} className="text-primary" /><p className="section-kicker">Rating</p></div>
               <p className="mt-3 font-headline text-4xl font-black text-on-surface">{data.ratings.average > 0 ? `${data.ratings.average}/5` : '—'}</p>
             </div>

@@ -147,7 +147,7 @@ export default function ActivityDetailPage() {
               <ArrowLeft size={18} />
               <span className="font-label text-[10px] uppercase tracking-[0.18em]">Volver</span>
             </button>
-            <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary-container">Aktivar</div>
+            <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary">Aktivar</div>
             <button type="button" onClick={handleShare} className="flex items-center gap-2 text-on-surface-variant cursor-pointer hover:text-on-surface">
               <Share2 size={16} />
               <span className="font-label text-[10px] uppercase tracking-[0.18em]">Compartir</span>
@@ -186,7 +186,7 @@ export default function ActivityDetailPage() {
 
       <div className="premium-shell -mt-8 grid gap-8 md:-mt-12 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-8">
-          <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-5">
                 <img src={activity.organizer.avatar} alt={activity.organizer.full_name} className="h-20 w-20 rounded-[1.25rem] object-cover grayscale transition duration-300 hover:grayscale-0" />
@@ -209,20 +209,20 @@ export default function ActivityDetailPage() {
             </div>
           </section>
 
-          <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
             <h2 className="border-l-4 border-primary pl-5 font-headline text-3xl font-black uppercase italic tracking-tight text-on-surface md:text-4xl">The journey</h2>
             <div className="mt-4 space-y-5">
               <p className="text-on-surface-variant">{activity.description}</p>
               <div className="grid gap-4 md:grid-cols-3">
-                <div className="rounded-[1.35rem] bg-surface px-4 py-4">
+                <div className="rounded-[0.75rem] bg-surface px-4 py-4">
                   <p className="section-kicker">Fecha</p>
                   <div className="mt-3 flex items-start gap-3"><Calendar size={18} className="text-primary" /><div><p className="font-headline text-xl font-black uppercase tracking-tight">{formattedDate}</p></div></div>
                 </div>
-                <div className="rounded-[1.35rem] bg-surface px-4 py-4">
+                <div className="rounded-[0.75rem] bg-surface px-4 py-4">
                   <p className="section-kicker">Horario</p>
                   <div className="mt-3 flex items-start gap-3"><Clock3 size={18} className="text-primary" /><p className="text-on-surface">{timeRange}</p></div>
                 </div>
-                <div className="rounded-[1.35rem] bg-surface px-4 py-4">
+                <div className="rounded-[0.75rem] bg-surface px-4 py-4">
                   <p className="section-kicker">Encuentro</p>
                   <div className="mt-3 flex items-start gap-3"><MapPin size={18} className="text-primary" /><p className="text-on-surface">{activity.meeting_point || activity.location_name}</p></div>
                 </div>
@@ -240,7 +240,7 @@ export default function ActivityDetailPage() {
             </div>
           </section>
 
-          <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="section-kicker">Current squad</p>
@@ -264,12 +264,12 @@ export default function ActivityDetailPage() {
             </div>
           </section>
 
-          <section className="overflow-hidden rounded-[2rem] editorial-card">
+          <section className="overflow-hidden rounded-[1rem] editorial-card">
             <div className="px-6 pb-2 pt-6 md:px-8">
               <p className="section-kicker">Territorio</p>
               <h2 className="font-headline text-3xl font-black uppercase tracking-tight text-on-surface">Mapa y punto de reunión</h2>
             </div>
-            <div className="h-[22rem] overflow-hidden rounded-[1.5rem] m-4 mt-2">
+            <div className="h-[22rem] overflow-hidden rounded-[0.875rem] m-4 mt-2">
               <ActivityMap
                 activities={[activity]}
                 singleMarker={{ lat: activity.latitude, lng: activity.longitude, label: activity.location_name }}
@@ -282,7 +282,7 @@ export default function ActivityDetailPage() {
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
-          <section className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8">
+          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="section-kicker">Total price</p>
@@ -295,15 +295,15 @@ export default function ActivityDetailPage() {
               <p className="mt-3 text-sm text-on-surface-variant">{joinHelperText}</p>
             </div>
             <div className="mt-6 space-y-4">
-              <div className="rounded-[1.35rem] bg-surface px-4 py-4">
+              <div className="rounded-[0.75rem] bg-surface px-4 py-4">
                 <p className="section-kicker">Meeting point</p>
                 <div className="mt-3 flex items-center gap-2 text-on-surface"><MapPin size={16} className="text-primary" /> {activity.meeting_point || activity.location_name}</div>
               </div>
-              <div className="rounded-[1.35rem] bg-surface px-4 py-4">
+              <div className="rounded-[0.75rem] bg-surface px-4 py-4">
                 <p className="section-kicker">Route</p>
                 <div className="mt-3 flex items-center gap-2 text-on-surface"><Route size={16} className="text-primary" /> {activity.location_name}</div>
               </div>
-              <div className="rounded-[1.35rem] bg-surface px-4 py-4">
+              <div className="rounded-[0.75rem] bg-surface px-4 py-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-headline text-xl font-black text-on-surface">Rideshare available</p>
