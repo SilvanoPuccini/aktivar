@@ -15,9 +15,9 @@ interface CTAButtonProps {
 }
 
 const sizeClasses = {
-  sm: 'min-h-11 px-5 py-2.5 text-xs',
-  md: 'min-h-14 px-7 py-3.5 text-sm',
-  lg: 'min-h-16 px-9 py-4 text-base',
+  sm: 'min-h-12 px-6 py-3 text-xs',
+  md: 'min-h-14 px-8 py-4 text-sm',
+  lg: 'min-h-16 px-10 py-5 text-base',
 } as const;
 
 export default function CTAButton({
@@ -35,7 +35,7 @@ export default function CTAButton({
 
   const variantClasses = {
     primary: 'text-[#442c00]',
-    secondary: 'bg-transparent border border-outline-variant/20 text-on-surface hover:bg-surface-container-high',
+    secondary: 'bg-transparent border border-outline-variant text-on-surface hover:bg-surface-container-high',
     danger: 'bg-error text-[#442c00] shadow-[var(--shadow-soft)]',
   };
 

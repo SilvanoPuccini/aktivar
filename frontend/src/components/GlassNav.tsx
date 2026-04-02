@@ -38,8 +38,8 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
             </div>
           </button>
 
-          <div className="rounded-full border border-outline-variant/10 bg-surface-container-low/70 p-1.5 backdrop-blur-xl">
-            <div className="flex items-center gap-1.5">
+          <div className="rounded-full border border-outline-variant bg-surface-container/80 p-1.5 backdrop-blur-xl">
+            <div className="flex items-center gap-2">
             {visibleTabs.map((tab) => {
               const isActive = activeTab === tab.key;
               return (
@@ -48,7 +48,7 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
                   type="button"
                   onClick={() => onTabChange(tab.key)}
                   className={[
-                    'relative cursor-pointer rounded-full px-5 py-3 font-label text-xs uppercase tracking-[0.18em] transition-colors',
+                    'relative cursor-pointer rounded-full px-6 py-3.5 font-label text-xs uppercase tracking-[0.14em] transition-colors',
                     isActive ? 'text-[#442c00]' : 'text-on-surface-variant hover:text-on-surface',
                   ].join(' ')}
                   style={isActive ? { background: 'var(--cta-gradient)' } : undefined}
@@ -73,7 +73,7 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
             <button
               type="button"
               onClick={() => onTabChange('create')}
-              className="inline-flex h-12 items-center gap-2 rounded-full px-5 font-label text-xs font-bold uppercase tracking-[0.18em] text-[#442c00] cursor-pointer"
+              className="inline-flex h-12 items-center gap-2.5 rounded-full px-6 font-label text-xs font-bold uppercase tracking-[0.14em] text-[#442c00] cursor-pointer"
               style={{ background: 'var(--cta-gradient)', boxShadow: 'var(--shadow-soft)' }}
             >
               <Plus size={16} />
