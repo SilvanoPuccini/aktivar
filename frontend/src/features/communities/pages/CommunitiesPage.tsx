@@ -116,8 +116,8 @@ export default function CommunitiesPage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((community) => (
-              <article key={community.id} className="group editorial-card-tonal overflow-hidden rounded-[1.8rem] p-3 transition hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]">
-                <div className="relative overflow-hidden rounded-[1.3rem]">
+              <article key={community.id} className="group editorial-card-tonal overflow-hidden rounded-[1rem] p-3 transition hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]">
+                <div className="relative overflow-hidden rounded-[0.75rem]">
                   <img src={community.cover_image} alt={community.name} className="h-60 w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
                   <span className="absolute right-3 top-3 premium-chip">{community.category}</span>
                 </div>

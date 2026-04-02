@@ -36,7 +36,7 @@ export default function JournalPage() {
         <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]" aria-label="Cargando journal">
           <div className="space-y-6">
             <div className="h-7 w-36 animate-pulse rounded-full bg-surface-container-high" />
-            <div className="aspect-[16/10] animate-pulse rounded-[2rem] bg-surface-container" />
+            <div className="aspect-[16/10] animate-pulse rounded-[1rem] bg-surface-container" />
             <div className="space-y-3">
               <div className="h-5 w-48 animate-pulse rounded-full bg-surface-container-high" />
               <div className="h-14 w-full animate-pulse rounded-[1.6rem] bg-surface-container" />
@@ -45,7 +45,7 @@ export default function JournalPage() {
           </div>
           <div className="space-y-4">
             {Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="h-28 animate-pulse rounded-[1.8rem] bg-surface-container-low" />
+              <div key={index} className="h-28 animate-pulse rounded-[1rem] bg-surface-container-low" />
             ))}
           </div>
         </section>
@@ -66,7 +66,7 @@ export default function JournalPage() {
                 Featured expedition
               </div>
 
-              <div className="relative overflow-hidden rounded-[2rem] bg-surface-container-low shadow-[var(--shadow-forest)]">
+              <div className="relative overflow-hidden rounded-[1rem] bg-surface-container-low shadow-[var(--shadow-forest)]">
                 <img src={featured.cover_image} alt={featured.title} className="aspect-[16/10] w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
@@ -102,7 +102,7 @@ export default function JournalPage() {
             </div>
 
             <aside className="grid gap-4 content-start">
-              <div className="editorial-card-tonal rounded-[1.8rem] p-6">
+              <div className="editorial-card-tonal rounded-[1rem] p-6">
                 <p className="section-kicker">The essence</p>
                 <p className="mt-5 text-xl italic leading-relaxed text-on-surface">“{featured.featured_quote || featured.summary}”</p>
               </div>
@@ -120,7 +120,7 @@ export default function JournalPage() {
                 ))}
               </div>
 
-              <div className="editorial-card-tonal rounded-[1.8rem] p-6">
+              <div className="editorial-card-tonal rounded-[1rem] p-6">
                 <div className="flex items-center gap-2 text-primary">
                   <Flame size={16} />
                   <p className="section-kicker text-primary">Trending now</p>
@@ -144,7 +144,7 @@ export default function JournalPage() {
 
       {highlightedStory && (
         <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <div className="editorial-card-tonal rounded-[2rem] p-6 md:p-8">
+          <div className="editorial-card-tonal rounded-[1rem] p-6 md:p-8">
             <p className="section-kicker">Editorial dispatch</p>
             <h2 className="mt-4 font-headline text-4xl font-black uppercase leading-[0.94] tracking-tight text-on-surface md:text-5xl">{highlightedStory.title}</h2>
             <p className="mt-4 max-w-xl text-on-surface-variant">{highlightedStory.summary}</p>
@@ -160,7 +160,7 @@ export default function JournalPage() {
               </Link>
             ) : null}
           </div>
-          <div className="overflow-hidden rounded-[2rem] bg-surface-container shadow-[var(--shadow-soft)]">
+          <div className="overflow-hidden rounded-[1rem] bg-surface-container shadow-[var(--shadow-soft)]">
             <img src={highlightedStory.cover_image} alt={highlightedStory.title} className="aspect-[16/10] w-full object-cover" />
           </div>
         </section>
@@ -177,11 +177,11 @@ export default function JournalPage() {
           {listStories.map((story, index) => (
             <article key={story.id} className={`grid gap-6 ${index % 2 === 0 ? 'md:grid-cols-[0.92fr_1.08fr]' : 'md:grid-cols-[1.08fr_0.92fr]'}`}>
               <div className={index % 2 === 0 ? '' : 'md:order-2'}>
-                <div className="overflow-hidden rounded-[1.8rem] bg-surface-container shadow-[var(--shadow-soft)]">
+                <div className="overflow-hidden rounded-[1rem] bg-surface-container shadow-[var(--shadow-soft)]">
                   <img src={story.cover_image} alt={story.title} className="aspect-[4/3] w-full object-cover transition-transform duration-500 hover:scale-[1.03]" />
                 </div>
               </div>
-              <div className="flex flex-col justify-center rounded-[1.8rem] bg-surface-container-low/70 p-6 md:p-7">
+              <div className="flex flex-col justify-center rounded-[1rem] bg-surface-container-low/70 p-6 md:p-7">
                 <div className="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
                   <span className="premium-chip">{story.category_label}</span>
                   <span>{story.author_name}</span>

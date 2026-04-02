@@ -57,7 +57,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 pb-12">
-      <section className="editorial-card rounded-[2.25rem] px-6 py-8 md:px-8">
+      <section className="editorial-card rounded-[1.25rem] px-6 py-8 md:px-8">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="section-kicker">Inbox</p>
@@ -65,7 +65,7 @@ export default function NotificationsPage() {
             <p className="mt-3 text-on-surface-variant">Actividad reciente, mensajes y movimientos de cupos en una vista más clara.</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="rounded-[1.2rem] bg-surface px-5 py-4 text-center">
+            <div className="rounded-[0.75rem] bg-surface px-5 py-4 text-center">
               <p className="section-kicker">Unread</p>
               <p className="mt-2 font-headline text-3xl font-black text-primary">{unread}</p>
             </div>

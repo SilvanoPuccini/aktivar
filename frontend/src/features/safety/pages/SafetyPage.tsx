@@ -27,7 +27,7 @@ export default function SafetyPage() {
     return (
       <div className="premium-page">
         <EcosystemNav />
-        <section className="editorial-card-tonal rounded-[2rem] p-6 md:p-8">
+        <section className="editorial-card-tonal rounded-[1rem] p-6 md:p-8">
           <p className="section-kicker">Loading safety data</p>
           <h1 className="mt-2 font-headline text-4xl font-black uppercase tracking-tight text-on-surface">Connecting the command center…</h1>
         </section>
@@ -86,11 +86,11 @@ export default function SafetyPage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:w-[24rem]">
-            <div className="editorial-metric rounded-[1.5rem] px-5 py-5">
+            <div className="editorial-metric rounded-[0.875rem] px-5 py-5">
               <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">System</p>
                <p className="mt-2 font-headline text-2xl font-black tracking-tight text-secondary">{dashboard.status.system_status}</p>
             </div>
-            <div className="editorial-metric rounded-[1.5rem] px-5 py-5">
+            <div className="editorial-metric rounded-[0.875rem] px-5 py-5">
               <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Last sync</p>
                <p className="mt-2 font-headline text-2xl font-black tracking-tight text-on-surface">{Number.isNaN(new Date(dashboard.status.last_sync_at).getTime()) ? '—' : new Date(dashboard.status.last_sync_at).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}</p>
             </div>
@@ -99,7 +99,7 @@ export default function SafetyPage() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[0.9fr_1.05fr_0.8fr]">
-        <div className="relative overflow-hidden rounded-[2rem] border border-error/25 bg-error-container/14 p-6 shadow-[var(--shadow-soft)]">
+        <div className="relative overflow-hidden rounded-[1rem] border border-error/25 bg-error-container/14 p-6 shadow-[var(--shadow-soft)]">
           <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-error/10 blur-3xl" />
           <div className="relative">
             <p className="section-kicker text-error">Emergency override</p>
@@ -112,7 +112,7 @@ export default function SafetyPage() {
           </div>
         </div>
 
-        <div className="relative overflow-hidden rounded-[2rem] bg-surface-container shadow-[var(--shadow-forest)]">
+        <div className="relative overflow-hidden rounded-[1rem] bg-surface-container shadow-[var(--shadow-forest)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,197,108,0.12),_transparent_32%),linear-gradient(180deg,_rgba(17,20,15,0.12),_rgba(17,20,15,0.72))]" />
           <div className="relative flex h-full flex-col justify-between p-6 md:p-8">
             <div className="flex items-start justify-between gap-4">
@@ -149,7 +149,7 @@ export default function SafetyPage() {
           </div>
         </div>
 
-        <div className="editorial-card-tonal rounded-[2rem] p-6">
+        <div className="editorial-card-tonal rounded-[1rem] p-6">
           <div className="flex items-center justify-between">
             <p className="section-kicker">Group status</p>
             <CheckCircle2 size={16} className="text-secondary" />
@@ -158,7 +158,7 @@ export default function SafetyPage() {
              {contacts.length === 0 ? (
                <EmptyState title="No critical contacts configured" description="La red de soporte no llegó desde backend, pero el módulo sigue operativo." />
              ) : contacts.slice(0, 3).map((contact, index) => (
-               <div key={`${contact.contact_name}-${index}`} className="flex items-center justify-between rounded-[1.2rem] bg-surface-container-low/80 px-4 py-4">
+               <div key={`${contact.contact_name}-${index}`} className="flex items-center justify-between rounded-[0.75rem] bg-surface-container-low/80 px-4 py-4">
                 <div>
                   <p className="font-semibold text-on-surface">{contact.contact_name}</p>
                   <p className="mt-1 text-xs uppercase tracking-[0.16em] text-on-surface-variant">{contact.relationship}</p>
@@ -171,7 +171,7 @@ export default function SafetyPage() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-        <div className="editorial-card-tonal rounded-[2rem] p-6 md:p-7">
+        <div className="editorial-card-tonal rounded-[1rem] p-6 md:p-7">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="section-kicker">Critical contacts</p>
@@ -184,7 +184,7 @@ export default function SafetyPage() {
              {contacts.length === 0 ? (
                <EmptyState title="No contacts available" description="Recarga la página o revisa la integración del dashboard de safety." />
              ) : contacts.map((contact, index) => (
-               <div key={`${contact.contact_name}-${index}`} className="rounded-[1.35rem] bg-surface-container-low/75 px-5 py-5">
+               <div key={`${contact.contact_name}-${index}`} className="rounded-[0.75rem] bg-surface-container-low/75 px-5 py-5">
                 <p className="font-semibold text-on-surface">{contact.contact_name}</p>
                 <p className="mt-1 text-sm text-on-surface-variant">{contact.relationship}</p>
                 <p className="mt-3 font-label text-[10px] uppercase tracking-[0.18em] text-primary">{contact.contact_phone}</p>
@@ -193,7 +193,7 @@ export default function SafetyPage() {
            </div>
          </div>
 
-        <div className="editorial-card-tonal rounded-[2rem] p-6 md:p-7">
+        <div className="editorial-card-tonal rounded-[1rem] p-6 md:p-7">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="section-kicker">Pre-ex checklists</p>
@@ -203,7 +203,7 @@ export default function SafetyPage() {
           </div>
 
           <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <div className="rounded-[1.5rem] bg-surface-container-low/80 p-5 md:col-span-2">
+            <div className="rounded-[0.875rem] bg-surface-container-low/80 p-5 md:col-span-2">
               <div className="flex items-center justify-between">
                 <span className="section-kicker">Gear & equipment</span>
                  <span className="text-sm text-on-surface">{gearProgress}/{Number(dashboard.checklist.gear_target) || 0}</span>
@@ -212,11 +212,11 @@ export default function SafetyPage() {
                <p className="mt-3 text-sm text-on-surface-variant">{gearPercent}% del equipo esencial confirmado antes de salir.</p>
             </div>
 
-            <div className="rounded-[1.5rem] bg-surface-container-low/80 p-5">
+            <div className="rounded-[0.875rem] bg-surface-container-low/80 p-5">
               <p className="section-kicker">Route planning</p>
                <p className={`mt-3 font-headline text-3xl font-black uppercase ${dashboard.checklist.route_status === 'completed' ? 'text-secondary' : 'text-primary'}`}>{dashboard.checklist.route_status}</p>
             </div>
-            <div className="rounded-[1.5rem] bg-surface-container-low/80 p-5">
+            <div className="rounded-[0.875rem] bg-surface-container-low/80 p-5">
               <p className="section-kicker">Health & fitness</p>
                <p className={`mt-3 font-headline text-3xl font-black uppercase ${dashboard.checklist.health_status === 'completed' ? 'text-secondary' : 'text-primary'}`}>{dashboard.checklist.health_status}</p>
             </div>
@@ -230,7 +230,7 @@ export default function SafetyPage() {
       </section>
 
       {dashboard.active_trip && (
-        <section className="editorial-card-tonal rounded-[2rem] p-6 md:p-7">
+        <section className="editorial-card-tonal rounded-[1rem] p-6 md:p-7">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="section-kicker">Active trip</p>
@@ -241,7 +241,7 @@ export default function SafetyPage() {
         </section>
       )}
 
-      <section className="editorial-card-tonal rounded-[2rem] p-6 md:p-7">
+      <section className="editorial-card-tonal rounded-[1rem] p-6 md:p-7">
         <div className="flex items-center gap-2 text-primary">
           <AlertTriangle size={16} />
           <p className="section-kicker text-primary">Real-time safety log</p>
@@ -250,7 +250,7 @@ export default function SafetyPage() {
            {logs.length === 0 ? (
              <EmptyState title="No safety events yet" description="El log está vacío o incompleto, pero las acciones principales siguen disponibles." />
            ) : logs.map((log) => (
-             <div key={log.id} className={`rounded-[1.35rem] border px-5 py-5 ${severityTone[log.severity]}`}>
+             <div key={log.id} className={`rounded-[0.75rem] border px-5 py-5 ${severityTone[log.severity]}`}>
               <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <p className="font-label text-[10px] uppercase tracking-[0.18em]">{log.severity}</p>
                 <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">{new Date(log.created_at).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}</p>

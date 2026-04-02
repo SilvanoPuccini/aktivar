@@ -62,11 +62,11 @@ export default function MarketplaceListingPage() {
       </button>
 
       <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
-        <div className="overflow-hidden rounded-[2rem] bg-surface-container shadow-[var(--shadow-forest)]">
+        <div className="overflow-hidden rounded-[1rem] bg-surface-container shadow-[var(--shadow-forest)]">
           <img src={listing.cover_image} alt={listing.title} className="h-full min-h-[26rem] w-full object-cover" />
         </div>
 
-        <div className="editorial-card-tonal flex flex-col justify-between rounded-[2rem] p-6 md:p-8">
+        <div className="editorial-card-tonal flex flex-col justify-between rounded-[1rem] p-6 md:p-8">
           <div>
             <div className="flex flex-wrap gap-2 text-sm text-on-surface-variant">
               <span className="premium-chip">{listing.condition}</span>

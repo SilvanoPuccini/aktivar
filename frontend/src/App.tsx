@@ -43,8 +43,8 @@ function LoadingFallback() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface">
       <div className="flex flex-col items-center gap-6">
-        <div className="font-headline text-4xl font-black text-on-surface tracking-tight">
-          AKT<span className="text-primary">IVAR</span>
+        <div className="font-headline text-4xl font-black text-primary tracking-tight uppercase">
+          Aktivar
         </div>
         <div className="h-0.5 w-32 overflow-hidden rounded-full bg-surface-container-highest">
           <div

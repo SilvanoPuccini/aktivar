@@ -39,7 +39,7 @@ export default function JournalStoryPage() {
   return (
     <div className="space-y-8 pb-12">
       <EcosystemNav />
-      <div className="overflow-hidden rounded-[2rem] bg-surface-container">
+      <div className="overflow-hidden rounded-[1rem] bg-surface-container">
         {story.cover_image ? (
           <img src={story.cover_image} alt={story.title} className="h-[28rem] w-full object-cover" />
         ) : (
@@ -53,7 +53,7 @@ export default function JournalStoryPage() {
           <p className="section-kicker">{story.category_label}</p>
           <h1 className="hero-title text-5xl text-on-surface md:text-7xl">{story.title}</h1>
           <p className="max-w-3xl text-lg text-on-surface-variant">{story.summary}</p>
-          <div className="rounded-[1.8rem] bg-surface-container-low px-6 py-6 text-on-surface-variant leading-relaxed">
+          <div className="rounded-[1rem] bg-surface-container-low px-6 py-6 text-on-surface-variant leading-relaxed">
             {story.body || `${story.summary} Este circuito editorial abre una lectura más profunda del territorio, del ritmo humano y de cómo una expedición también se convierte en memoria compartida.`}
           </div>
         </article>

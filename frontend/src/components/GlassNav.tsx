@@ -29,11 +29,11 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
       <nav className="glass fixed left-0 right-0 top-0 z-50 hidden border-b border-outline-variant/10 shadow-[0_20px_40px_rgba(12,15,10,0.22)] md:block">
         <div className="premium-shell flex h-20 items-center justify-between">
           <button type="button" onClick={() => onTabChange('home')} className="flex cursor-pointer items-center gap-3 rounded-full pr-4 transition-transform hover:scale-[1.01]">
-            <div className="flex h-11 w-11 items-center justify-center rounded-[1.2rem] bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.18),_transparent_58%),rgba(40,43,37,0.95)] text-primary shadow-[var(--shadow-soft)]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[0.75rem] bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.18),_transparent_58%),rgba(40,43,37,0.95)] text-primary shadow-[var(--shadow-soft)]">
               <Mountain size={18} />
             </div>
             <div className="text-left">
-              <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary-container">Aktivar</div>
+              <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary">Aktivar</div>
               <div className="font-label text-[10px] uppercase tracking-[0.24em] text-on-surface-variant">Premium outdoor operating system</div>
             </div>
           </button>
@@ -83,7 +83,7 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
         </div>
       </nav>
 
-      <nav className="glass pb-safe fixed bottom-3 left-3 right-3 z-50 rounded-[1.8rem] border border-outline-variant/15 px-2 py-2 shadow-[var(--shadow-forest)] md:hidden">
+      <nav className="glass pb-safe fixed bottom-3 left-3 right-3 z-50 rounded-[1rem] border border-outline-variant/15 px-2 py-2 shadow-[var(--shadow-forest)] md:hidden">
         <div className="flex items-center justify-around">
           {visibleTabs.map((tab) => {
             const Icon = tab.icon;

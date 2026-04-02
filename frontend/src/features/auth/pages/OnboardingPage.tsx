@@ -141,10 +141,10 @@ export default function OnboardingPage() {
       <header className="glass fixed inset-x-0 top-0 z-20 border-b border-outline-variant/10">
         <div className="premium-shell flex h-20 items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-[1.2rem] bg-surface-container-high text-primary">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[0.75rem] bg-surface-container-high text-primary">
               <Mountain size={18} />
             </div>
-            <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary-container">Aktivar</div>
+            <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary">Aktivar</div>
           </div>
           <div className="flex items-center gap-2 rounded-full bg-surface-container-high px-4 py-2 font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">
             Step {step + 1} / 3
@@ -165,14 +165,14 @@ export default function OnboardingPage() {
                   ['Hosts', '48'],
                   ['Comunidades', '18'],
                 ].map(([label, value]) => (
-                  <div key={label} className="editorial-metric rounded-[1.35rem] px-4 py-4">
+                  <div key={label} className="editorial-metric rounded-[0.75rem] px-4 py-4">
                     <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">{label}</p>
                     <p className="mt-2 font-headline text-3xl font-black tracking-tight text-primary">{value}</p>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8 space-y-5">
+            <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-5">
               <label className="block space-y-3">
                 <span className="section-kicker">Name</span>
                 <input className="editorial-input" value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Tu nombre" />
@@ -247,12 +247,12 @@ export default function OnboardingPage() {
                 <p className="mt-3 text-on-surface-variant">Ajustaremos el mapa, comunidades sugeridas y relatos destacados según tu basecamp e intereses.</p>
               </div>
             </div>
-            <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8 space-y-5">
+            <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-5">
               <label className="block space-y-3">
                 <span className="section-kicker flex items-center gap-2"><MapPin size={14} /> Ubicación</span>
                 <input className="editorial-input" value={form.location} onChange={(e) => update('location', e.target.value)} placeholder="Ciudad o basecamp" />
               </label>
-              <div className="rounded-[1.5rem] bg-surface px-5 py-5">
+              <div className="rounded-[0.875rem] bg-surface px-5 py-5">
                 <p className="section-kicker">Resumen</p>
                 <div className="mt-4 space-y-2 text-sm text-on-surface-variant">
                   <p><strong className="text-on-surface">Explorer:</strong> {form.name || '—'}</p>

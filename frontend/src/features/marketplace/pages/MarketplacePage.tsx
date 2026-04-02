@@ -58,7 +58,7 @@ export default function MarketplacePage() {
       <section className="premium-hero p-5 md:p-7 lg:p-8">
         <div className="grid gap-8 xl:grid-cols-[18rem_1fr]">
           <aside className="space-y-5">
-            <div className="editorial-card-tonal rounded-[1.8rem] p-5">
+            <div className="editorial-card-tonal rounded-[1rem] p-5">
               <p className="section-kicker">Categories</p>
               <div className="mt-4 space-y-2.5">
                 {categories.filter((value) => value !== 'all').map((value) => (
@@ -75,7 +75,7 @@ export default function MarketplacePage() {
               </div>
             </div>
 
-            <div className="editorial-card-tonal rounded-[1.8rem] p-5">
+            <div className="editorial-card-tonal rounded-[1rem] p-5">
               <p className="section-kicker">Condition</p>
               <div className="mt-4 space-y-3 text-sm text-on-surface-variant">
                 {conditions.filter((value) => value !== 'all').map((value) => (
@@ -121,7 +121,7 @@ export default function MarketplacePage() {
 
             <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
               <SearchBar value={query} onChange={setQuery} placeholder="Busca por marca, seller o tipo de equipo" />
-              <div className="flex items-center gap-2 rounded-[1.2rem] bg-surface-container-low/80 p-1.5">
+              <div className="flex items-center gap-2 rounded-[0.75rem] bg-surface-container-low/80 p-1.5">
                 {[
                   ['featured', 'Featured'],
                   ['newest', 'Newest'],
@@ -154,7 +154,7 @@ export default function MarketplacePage() {
 
       {featuredListing && (
         <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
-          <div className="relative overflow-hidden rounded-[2rem] bg-surface-container shadow-[var(--shadow-forest)]">
+          <div className="relative overflow-hidden rounded-[1rem] bg-surface-container shadow-[var(--shadow-forest)]">
             <img src={featuredListing.cover_image} alt={featuredListing.title} className="h-full min-h-[24rem] w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/50 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8">
@@ -170,7 +170,7 @@ export default function MarketplacePage() {
             </div>
           </div>
 
-          <div className="editorial-card-tonal flex flex-col justify-between rounded-[2rem] p-6 md:p-8">
+          <div className="editorial-card-tonal flex flex-col justify-between rounded-[1rem] p-6 md:p-8">
             <div>
               <p className="section-kicker">Seller confidence</p>
               <div className="mt-5 flex items-center gap-3">
@@ -195,7 +195,7 @@ export default function MarketplacePage() {
               ))}
             </div>
 
-            <div className="rounded-[1.5rem] bg-surface-container-low/80 p-5">
+            <div className="rounded-[0.875rem] bg-surface-container-low/80 p-5">
               <div className="flex items-center gap-2 text-primary">
                 <Gauge size={16} />
                 <p className="section-kicker text-primary">Marketplace intent</p>
@@ -227,7 +227,7 @@ export default function MarketplacePage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {listingGrid.map((listing) => (
-              <article key={listing.id} className="group editorial-card-tonal overflow-hidden rounded-[1.8rem] p-3 transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-forest)]">
+              <article key={listing.id} className="group editorial-card-tonal overflow-hidden rounded-[1rem] p-3 transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-forest)]">
                 <div className="relative overflow-hidden rounded-[1.4rem]">
                   <img src={listing.cover_image} alt={listing.title} className="h-72 w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
                   <div className="absolute left-3 top-3 flex flex-wrap gap-2">

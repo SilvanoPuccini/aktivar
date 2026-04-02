@@ -67,7 +67,7 @@ export default function PaymentPage() {
   if (paymentState === 'success') {
     return (
       <div className="flex min-h-screen items-center justify-center px-6">
-        <div className="editorial-card w-full max-w-2xl rounded-[2.25rem] px-6 py-10 text-left md:px-10">
+        <div className="editorial-card w-full max-w-2xl rounded-[1.25rem] px-6 py-10 text-left md:px-10">
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-secondary/20 text-secondary"><CheckCircle size={40} /></div>
           <p className="section-kicker">Expedition confirmed</p>
           <h1 className="hero-title text-4xl text-on-surface md:text-6xl">Pago confirmado</h1>
@@ -89,25 +89,25 @@ export default function PaymentPage() {
         <Lock size={16} className="text-secondary" />
       </header>
 
-      <section className="editorial-card rounded-[2.25rem] px-6 py-8 md:px-8">
+      <section className="editorial-card rounded-[1.25rem] px-6 py-8 md:px-8">
         <p className="section-kicker">Booking confirmation</p>
         <h1 className="hero-title text-4xl text-on-surface md:text-6xl">Confirma tu lugar</h1>
         <p className="mt-3 text-on-surface-variant">Completa el pago para cerrar tu reserva en la expedición.</p>
       </section>
 
       <section className="grid gap-6 md:grid-cols-[0.95fr_1.05fr]">
-        <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8 space-y-4">
+        <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-4">
           <p className="section-kicker">Resumen</p>
           <h2 className="font-headline text-3xl font-black uppercase tracking-tight text-on-surface">{activity.title}</h2>
-          <div className="rounded-[1.5rem] bg-surface px-4 py-4">
+          <div className="rounded-[0.875rem] bg-surface px-4 py-4">
             <p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Monto</p>
             <p className="mt-2 font-headline text-4xl font-black text-primary">{formatCLP(activity.price)}</p>
           </div>
         </div>
 
-        <div className="editorial-card rounded-[2rem] px-6 py-6 md:px-8 md:py-8 space-y-5">
+        <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-5">
           <p className="section-kicker">Pago</p>
-          {stripe && clientSecret ? <div id="stripe-payment-element" className="rounded-[1.5rem] bg-surface-container-highest p-4" /> : <div className="rounded-[1.5rem] bg-surface px-4 py-5 text-sm text-on-surface-variant">Modo desarrollo: no hay llave pública de Stripe configurada.</div>}
+          {stripe && clientSecret ? <div id="stripe-payment-element" className="rounded-[0.875rem] bg-surface-container-highest p-4" /> : <div className="rounded-[0.875rem] bg-surface px-4 py-5 text-sm text-on-surface-variant">Modo desarrollo: no hay llave pública de Stripe configurada.</div>}
           {paymentState === 'processing' && <div className="flex items-center gap-2 text-sm text-on-surface-variant"><Loader2 size={16} className="animate-spin" /> Procesando…</div>}
           {errorMessage && <p className="text-sm text-error">{errorMessage}</p>}
           <CTAButton label="Confirmar pago" loading={paymentState === 'processing'} disabled={stripe ? !cardComplete : false} onClick={() => void handlePayment()} fullWidth />
