@@ -137,70 +137,79 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-surface text-on-surface">
-      <header className="glass fixed inset-x-0 top-0 z-20 border-b border-outline-variant/10">
-        <div className="premium-shell flex h-20 items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-[0.75rem] bg-surface-container-high text-primary">
-              <Mountain size={18} />
-            </div>
-            <div className="font-headline text-2xl font-black uppercase tracking-tight text-primary">Aktivar</div>
-          </div>
-          <div className="flex items-center gap-2 rounded-full bg-surface-container-high px-4 py-2 font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">
-            Step {step + 1} / 3
+    <div className="grid min-h-screen lg:grid-cols-2">
+      {/* Left panel - branding (desktop only) */}
+      <section className="hidden lg:flex flex-col justify-between px-12 py-12">
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-surface-container-high text-primary"><Mountain size={20} /></div>
+          <div>
+            <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary">Aktivar</p>
+            <p className="font-label text-[10px] uppercase tracking-[0.22em] text-on-surface-variant">Digital expedition</p>
           </div>
         </div>
-      </header>
-
-      <main className="mx-auto mt-28 w-full max-w-6xl px-6 md:px-8">
-        {step === 0 && (
-          <section className="grid items-center gap-10 md:grid-cols-[0.9fr_1.1fr]">
-            <div className="space-y-6">
-              <p className="section-kicker">Begin your journey</p>
-              <h1 className="hero-title text-5xl text-on-surface md:text-7xl">Join the adventure</h1>
-              <p className="max-w-xl text-on-surface-variant">Un onboarding más premium, con foco editorial y menos sensación de formulario genérico.</p>
-              <div className="grid gap-3 sm:grid-cols-3">
-                {[
-                  ['Rutas', '120+'],
-                  ['Hosts', '48'],
-                  ['Comunidades', '18'],
-                ].map(([label, value]) => (
-                  <div key={label} className="editorial-metric rounded-[0.75rem] px-4 py-4">
-                    <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">{label}</p>
-                    <p className="mt-2 font-headline text-3xl font-black tracking-tight text-primary">{value}</p>
-                  </div>
-                ))}
+        <div className="space-y-8">
+          <p className="section-kicker">Begin your journey</p>
+          <h1 className="hero-title text-7xl text-on-surface">Join the adventure</h1>
+          <p className="max-w-xl text-lg text-on-surface-variant">Crea tu cuenta y empieza a descubrir rutas, comunidades y próximas salidas.</p>
+          <div className="grid grid-cols-3 gap-4 max-w-xl">
+            {[['120+', 'Rutas'], ['48', 'Hosts'], ['18', 'Comunidades']].map(([value, label]) => (
+              <div key={label} className="rounded-[0.75rem] bg-surface-container px-5 py-5">
+                <p className="font-headline text-4xl font-black text-primary">{value}</p>
+                <p className="mt-2 font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">{label}</p>
               </div>
+            ))}
+          </div>
+        </div>
+        <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Step {step + 1} / 3</p>
+      </section>
+
+      {/* Right panel - form */}
+      <section className="flex items-center justify-center px-6 py-12 md:px-10">
+        <div className="w-full max-w-md space-y-8">
+          {/* Mobile header */}
+          <div className="space-y-3 lg:hidden">
+            <div className="flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-surface-container-high text-primary"><Mountain size={20} /></div>
+            <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary">Aktivar</p>
+          </div>
+
+        {step === 0 && (
+          <>
+            <div>
+              <p className="section-kicker">Step 01 / 03</p>
+              <h1 className="hero-title text-4xl text-on-surface md:text-5xl">Crear cuenta</h1>
+              <p className="mt-3 text-on-surface-variant">Completa tus datos para comenzar la expedición.</p>
             </div>
-            <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-5">
+            <div className="space-y-5">
               <label className="block space-y-3">
-                <span className="section-kicker">Name</span>
+                <span className="section-kicker">Nombre</span>
                 <input className="editorial-input" value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Tu nombre" />
               </label>
               <label className="block space-y-3">
-                <span className="section-kicker">Email address</span>
+                <span className="section-kicker">Email</span>
                 <input className="editorial-input" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="explorer@aktivar.com" />
               </label>
               <label className="block space-y-3">
-                <span className="section-kicker">Password</span>
+                <span className="section-kicker">Contraseña</span>
                 <input type="password" className="editorial-input" value={form.password} onChange={(e) => update('password', e.target.value)} placeholder="Mínimo 8 caracteres" />
               </label>
-              <p className="text-sm text-on-surface-variant">Al continuar, aceptas los términos de la expedición y activas recomendaciones más precisas desde el día uno.</p>
+              <p className="text-sm text-on-surface-variant">Al continuar, aceptas los términos y activas recomendaciones personalizadas.</p>
             </div>
-          </section>
+          </>
         )}
 
         {step === 1 && (
-          <section className="space-y-8">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <p className="section-kicker">Step 02 / 03</p>
-                <h1 className="hero-title text-4xl text-on-surface md:text-6xl">What fuels your soul?</h1>
-                <p className="mt-3 text-on-surface-variant">Selecciona al menos 3 categorías para personalizar tus recomendaciones.</p>
+          <>
+            <div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="section-kicker">Step 02 / 03</p>
+                  <h1 className="hero-title text-4xl text-on-surface md:text-5xl">Tus intereses</h1>
+                  <p className="mt-3 text-on-surface-variant">Selecciona al menos 3 categorías.</p>
+                </div>
+                <div className="editorial-badge shrink-0">{form.selectedCategories.length} elegidos</div>
               </div>
-              <div className="editorial-badge w-fit">{form.selectedCategories.length} intereses elegidos</div>
             </div>
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3">
               {categories.map((category) => {
                 const Icon = iconMap[category.icon.toLowerCase()] ?? Mountain;
                 const selected = form.selectedCategories.includes(category.id);
@@ -209,63 +218,51 @@ export default function OnboardingPage() {
                     key={category.id}
                     type="button"
                     onClick={() => toggleCategory(category.id)}
-                    className={`relative overflow-hidden rounded-[1.75rem] border p-6 text-left cursor-pointer transition-transform hover:-translate-y-1 ${
+                    className={`rounded-[0.75rem] border p-4 text-left cursor-pointer transition-colors ${
                       selected
-                        ? 'border-primary/20 bg-primary-container text-[#442c00]'
-                        : 'border-outline-variant/10 bg-surface-container text-on-surface'
+                        ? 'border-primary/30 bg-primary-container text-[#442c00]'
+                        : 'border-outline-variant bg-surface-container text-on-surface hover:bg-surface-container-high'
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className={`font-label text-[10px] uppercase tracking-[0.18em] ${selected ? 'text-[#5f3f00]' : 'text-on-surface-variant'}`}>
-                          Interés
-                        </p>
-                        <h3 className="mt-3 font-headline text-3xl font-black uppercase tracking-tight">{category.name}</h3>
+                    <div className="flex items-center gap-3">
+                      <div className={`rounded-full p-2 ${selected ? 'bg-white/35' : 'bg-surface-container-high'}`}>
+                        <Icon size={16} />
                       </div>
-                      <div className={`rounded-full p-3 ${selected ? 'bg-white/35' : 'bg-surface-container-high'}`}>
-                        <Icon size={22} />
-                      </div>
+                      <span className="font-headline text-sm font-bold uppercase tracking-tight">{category.name}</span>
                     </div>
-                    <p className={`relative mt-10 text-sm ${selected ? 'text-[#5f3f00]' : 'text-on-surface-variant'}`}>
-                      Construye un feed más afinado entre salidas, relatos y comunidad.
-                    </p>
                   </button>
                 );
               })}
             </div>
-          </section>
+          </>
         )}
 
         {step === 2 && (
-          <section className="grid items-center gap-10 md:grid-cols-[1.05fr_0.95fr]">
-            <div className="space-y-6">
-              <p className="section-kicker">Final setup</p>
-              <h1 className="hero-title text-4xl text-on-surface md:text-6xl">Set your basecamp</h1>
-              <p className="text-on-surface-variant">Guarda una ubicación inicial para mejorar descubrimiento de actividades y transporte compartido.</p>
-              <div className="editorial-card-soft editorial-border max-w-lg rounded-[1.7rem] px-6 py-6">
-                <p className="section-kicker">What unlocks next</p>
-                <p className="mt-3 text-on-surface-variant">Ajustaremos el mapa, comunidades sugeridas y relatos destacados según tu basecamp e intereses.</p>
-              </div>
+          <>
+            <div>
+              <p className="section-kicker">Step 03 / 03</p>
+              <h1 className="hero-title text-4xl text-on-surface md:text-5xl">Tu ubicación</h1>
+              <p className="mt-3 text-on-surface-variant">Guarda tu ubicación para mejorar las recomendaciones.</p>
             </div>
-            <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-5">
+            <div className="space-y-5">
               <label className="block space-y-3">
                 <span className="section-kicker flex items-center gap-2"><MapPin size={14} /> Ubicación</span>
                 <input className="editorial-input" value={form.location} onChange={(e) => update('location', e.target.value)} placeholder="Ciudad o basecamp" />
               </label>
-              <div className="rounded-[0.875rem] bg-surface px-5 py-5">
+              <div className="rounded-[0.75rem] bg-surface-container px-5 py-5">
                 <p className="section-kicker">Resumen</p>
                 <div className="mt-4 space-y-2 text-sm text-on-surface-variant">
-                  <p><strong className="text-on-surface">Explorer:</strong> {form.name || '—'}</p>
+                  <p><strong className="text-on-surface">Nombre:</strong> {form.name || '—'}</p>
                   <p><strong className="text-on-surface">Intereses:</strong> {form.selectedCategories.length}</p>
                   <p><strong className="text-on-surface">Basecamp:</strong> {form.location}</p>
                 </div>
               </div>
             </div>
-          </section>
+          </>
         )}
-      </main>
 
-      <div className="mx-auto mt-10 flex w-full max-w-6xl items-center justify-between gap-3 px-6 pb-10 md:px-8">
+        {/* Navigation buttons */}
+        <div className="flex items-center justify-between gap-3 pt-4">
         <button
           type="button"
           onClick={() => setStep((current) => Math.max(current - 1, 0))}
@@ -299,7 +296,9 @@ export default function OnboardingPage() {
             </button>
           )}
         </div>
-      </div>
+        </div>
+        </div>
+      </section>
     </div>
   );
 }
