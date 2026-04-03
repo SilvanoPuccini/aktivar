@@ -12,6 +12,11 @@ Aktivar is a platform that connects people who enjoy outdoor activities — runn
 ### 🌐 **Demo en vivo:** https://aktivar.online
 ---
 
+![Aktivar Preview](docs/Aktivar-login.png)
+
+![Aktivar Preview](docs/Aktivar-Hackathon-2026.png)
+
+---
 ## Features
 
 ### Activities & Discovery
