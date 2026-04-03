@@ -27,7 +27,11 @@ async function withFallback<T>(request: () => Promise<T>, fallback: () => T | Pr
   try {
     return await request();
   } catch {
-    return fallback();
+    // Only use mock data in development, never in production
+    if (import.meta.env.DEV) {
+      return fallback();
+    }
+    throw new Error('API request failed');
   }
 }
 
