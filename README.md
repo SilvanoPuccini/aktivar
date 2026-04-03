@@ -1,11 +1,15 @@
-# Aktivar — Outdoor Activities & Shared Transport Platform
+![Deploy](https://img.shields.io/badge/deploy-CubePath-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Hackathon](https://img.shields.io/badge/Hackathon-CubePath_2026-orange)
 
+# Aktivar — Outdoor Activities & Shared Transport Platform
 **Connect with people who love the outdoors. Organize activities, share rides, and go on adventures together.**
 
 Aktivar is a platform that connects people who enjoy outdoor activities — running, hiking, cycling, climbing, kayaking, and more. It includes integrated carpooling so groups can share transport costs and reduce their environmental impact. Built with Django, React, and PostGIS for real-time geolocation.
 
 > Hackathon CubePath 2026 — Deployed on CubePath with Docker Compose
 
+### 🌐 **Demo en vivo:** https://aktivar.online
 ---
 
 ## Features
