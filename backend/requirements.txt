@@ -35,7 +35,7 @@ cloudinary>=1.38,<2.0
 stripe>=8.0,<10.0
 
 # Server
-gunicorn>=21.2,<23.0
+gunicorn>=21.2,<26.0
 whitenoise>=6.6,<7.0
 
 # Admin extras
