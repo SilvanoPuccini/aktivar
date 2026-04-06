@@ -32,7 +32,7 @@ django-cloudinary-storage>=0.3,<1.0
 cloudinary>=1.38,<2.0
 
 # Payments
-stripe>=8.0,<10.0
+stripe>=8.0,<15.0
 
 # Server
 gunicorn>=21.2,<23.0
