@@ -35,7 +35,7 @@ fi
 pushd "$BACKEND_DIR" >/dev/null
 export DJANGO_SETTINGS_MODULE="$DJANGO_SETTINGS_MODULE_VALUE"
 ./venv/bin/python manage.py migrate --noinput
-./venv/bin/python manage.py seed_smoke
+./venv/bin/python manage.py load_demo_data
 ./venv/bin/python manage.py runserver "${BACKEND_HOST}:${BACKEND_PORT}" > /tmp/${PROJECT}-backend-smoke.log 2>&1 &
 BACKEND_PID=$!
 popd >/dev/null

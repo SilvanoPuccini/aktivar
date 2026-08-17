@@ -58,13 +58,10 @@ INSTALLED_APPS = [
     # Project apps
     "users",
     "activities",
-    "transport",
     "chat",
-    "reviews",
     "payments",
     "notifications",
     "core",
-    "ecosystem",
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"

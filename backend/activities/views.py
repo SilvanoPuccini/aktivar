@@ -1,3 +1,5 @@
+import logging
+
 from django.core.cache import cache
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -17,6 +19,47 @@ from .serializers import (
     ActivityParticipantSerializer,
     CategorySerializer,
 )
+
+logger = logging.getLogger(__name__)
+
+
+class ContentModerationMixin:
+    """Mixin to moderate activity descriptions before publishing."""
+
+    def moderate_content(self, text):
+        """
+        Check content with OpenAI moderation API.
+        Returns (is_safe, categories) tuple.
+        """
+        import requests
+        from django.conf import settings
+
+        api_key = getattr(settings, 'OPENAI_API_KEY', '')
+        if not api_key:
+            logger.warning('OPENAI_API_KEY not set, skipping moderation')
+            return True, {}
+
+        try:
+            response = requests.post(
+                'https://api.openai.com/v1/moderations',
+                headers={
+                    'Authorization': f'Bearer {api_key}',
+                    'Content-Type': 'application/json',
+                },
+                json={'input': text},
+                timeout=5,
+            )
+            response.raise_for_status()
+            data = response.json()
+            result = data['results'][0]
+            flagged = result.get('flagged', False)
+            categories = {
+                k: v for k, v in result.get('categories', {}).items() if v
+            }
+            return not flagged, categories
+        except Exception as e:
+            logger.error('OpenAI moderation error: %s', str(e))
+            return True, {}  # Allow on failure (fail open)
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -63,7 +106,6 @@ class ActivityViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # Content moderation before publishing
-        from .social_views import ContentModerationMixin
         moderator = ContentModerationMixin()
         description = serializer.validated_data.get('description', '')
         title = serializer.validated_data.get('title', '')
@@ -104,6 +146,17 @@ class ActivityViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        if not activity.is_free and activity.price > 0:
+            from payments.models import Payment
+            has_paid = Payment.objects.filter(
+                user=user, activity=activity, status='succeeded'
+            ).exists()
+            if not has_paid:
+                return Response(
+                    {'detail': 'Payment required before joining this activity.'},
+                    status=status.HTTP_402_PAYMENT_REQUIRED,
+                )
+
         if activity.is_full:
             participant_status = 'waitlisted'
         else:
@@ -117,6 +170,26 @@ class ActivityViewSet(viewsets.ModelViewSet):
 
         serializer = ActivityParticipantSerializer(participant)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def _cancel_participant(self, activity, participant):
+        """Cancel a participant and promote the oldest waitlisted one if a
+        confirmed spot opened up. Shared by leave_activity and
+        remove_participant."""
+        was_confirmed = participant.status == 'confirmed'
+        participant.status = 'cancelled'
+        participant.save()
+
+        if was_confirmed:
+            waitlisted = (
+                ActivityParticipant.objects.filter(
+                    activity=activity, status='waitlisted'
+                )
+                .order_by('joined_at')
+                .first()
+            )
+            if waitlisted:
+                waitlisted.status = 'confirmed'
+                waitlisted.save()
 
     @action(detail=True, methods=['post'], url_path='leave')
     def leave_activity(self, request, pk=None):
@@ -133,22 +206,7 @@ class ActivityViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        was_confirmed = participant.status == 'confirmed'
-        participant.status = 'cancelled'
-        participant.save()
-
-        # Promote first waitlisted user if a confirmed spot opened up
-        if was_confirmed:
-            waitlisted = (
-                ActivityParticipant.objects.filter(
-                    activity=activity, status='waitlisted'
-                )
-                .order_by('joined_at')
-                .first()
-            )
-            if waitlisted:
-                waitlisted.status = 'confirmed'
-                waitlisted.save()
+        self._cancel_participant(activity, participant)
 
         return Response(
             {'detail': 'You have left the activity.'},
@@ -158,11 +216,35 @@ class ActivityViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'], url_path='participants')
     def participants(self, request, pk=None):
         activity = self.get_object()
+        self._ensure_organizer(activity)
         participants = activity.participants.select_related('user').exclude(
             status='cancelled'
         )
         serializer = ActivityParticipantSerializer(participants, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['post'], url_path='remove-participant')
+    def remove_participant(self, request, pk=None):
+        activity = self.get_object()
+        self._ensure_organizer(activity)
+
+        user_id = request.data.get('user_id')
+        try:
+            participant = ActivityParticipant.objects.exclude(
+                status='cancelled'
+            ).get(activity=activity, user_id=user_id)
+        except ActivityParticipant.DoesNotExist:
+            return Response(
+                {'detail': 'Participant not found.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        self._cancel_participant(activity, participant)
+
+        return Response(
+            {'detail': 'Participant removed.'},
+            status=status.HTTP_200_OK,
+        )
 
     # ── FSM Transition Endpoints ──────────────────────────────────
 
@@ -216,7 +298,7 @@ class ActivityViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='dashboard')
     def organizer_dashboard(self, request):
         """Dashboard stats for the current organizer."""
-        from django.db.models import Avg, Count, Sum
+        from django.db.models import Count, Sum
 
         user = request.user
         my_activities = Activity.objects.filter(organizer=user)
@@ -250,15 +332,6 @@ class ActivityViewSet(viewsets.ModelViewSet):
             total_payout=Sum('organizer_payout'),
         )
 
-        # Average rating from reviews
-        from reviews.models import Review
-        rating_stats = Review.objects.filter(
-            activity__organizer=user,
-        ).aggregate(
-            avg_rating=Avg('rating'),
-            total_reviews=Count('id'),
-        )
-
         # Recent activities with participant count
         recent = (
             my_activities.order_by('-created_at')[:10]
@@ -281,10 +354,6 @@ class ActivityViewSet(viewsets.ModelViewSet):
                 'total': float(revenue['total_revenue'] or 0),
                 'fees': float(revenue['total_fees'] or 0),
                 'payout': float(revenue['total_payout'] or 0),
-            },
-            'ratings': {
-                'average': round(float(rating_stats['avg_rating'] or 0), 2),
-                'total_reviews': rating_stats['total_reviews'] or 0,
             },
             'recent_activities': recent_list,
         })

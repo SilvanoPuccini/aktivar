@@ -33,8 +33,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         from activities.models import Activity, ActivityParticipant, Category
-        from reviews.models import Review
-        from transport.models import Trip, TripStop, Vehicle
         from users.models import CustomUser
 
         if options['skip_if_exists'] and CustomUser.objects.filter(email='demo@aktivar.app').exists():
@@ -43,12 +41,9 @@ class Command(BaseCommand):
 
         if options['flush']:
             self.stdout.write('Flushing existing data...')
-            Review.objects.all().delete()
             ActivityParticipant.objects.all().delete()
             Activity.objects.all().delete()
             Category.objects.all().delete()
-            Trip.objects.all().delete()
-            Vehicle.objects.all().delete()
             CustomUser.objects.filter(is_superuser=False).delete()
 
         self.stdout.write('Seeding demo data...')
@@ -276,82 +271,11 @@ class Command(BaseCommand):
 
         self.stdout.write('  Added random participants to activities')
 
-        # ── Reviews ────────────────────────────────────────────────
-        organizers = [u for u in users.values() if u.role == 'organizer']
-        for org in organizers:
-            for reviewer in random.sample(participant_users, min(3, len(participant_users))):
-                org_activities = Activity.objects.filter(organizer=org)
-                if org_activities.exists():
-                    Review.objects.get_or_create(
-                        reviewer=reviewer,
-                        reviewee=org,
-                        activity=org_activities.first(),
-                        defaults={
-                            'rating': random.randint(4, 5),
-                            'comment': random.choice([
-                                '¡Excelente experiencia! Muy bien organizado.',
-                                'Increíble actividad, repetiría sin dudarlo.',
-                                'Buen organizador, todo puntual y seguro.',
-                                'La pasé genial, super recomendado.',
-                                'Muy profesional y buena onda.',
-                            ]),
-                        },
-                    )
-
-        self.stdout.write('  Created reviews for organizers')
-
-        # ── Vehicle + Trip ─────────────────────────────────────────
-        driver = users['andres@aktivar.app']
-        vehicle, _ = Vehicle.objects.get_or_create(
-            owner=driver,
-            defaults={
-                'brand': 'Toyota',
-                'model_name': 'Hilux',
-                'year': 2022,
-                'color': 'Blanco',
-                'plate': 'AB-1234',
-                'capacity': 4,
-            },
-        )
-
-        trip_activity = activities[0]  # Running en Circuito Chico
-        trip, _ = Trip.objects.get_or_create(
-            driver=driver,
-            activity=trip_activity,
-            defaults={
-                'vehicle': vehicle,
-                'origin_name': 'Centro Cívico, Bariloche',
-                'origin_latitude': Decimal('-41.1335'),
-                'origin_longitude': Decimal('-71.3103'),
-                'destination_name': trip_activity.location_name if hasattr(trip_activity, 'location_name') else 'Circuito Chico, Bariloche',
-                'destination_latitude': Decimal('-41.0580'),
-                'destination_longitude': Decimal('-71.4500'),
-                'departure_time': trip_activity.start_datetime - timedelta(hours=1),
-                'available_seats': 3,
-                'price_per_passenger': Decimal('3000'),
-                'status': 'planned',
-                'notes': 'Salimos desde el Centro Cívico de Bariloche. Traer buena onda!',
-            },
-        )
-        # Add a stop
-        TripStop.objects.get_or_create(
-            trip=trip,
-            defaults={
-                'name': 'Centro Cívico, Bariloche',
-                'latitude': Decimal('-41.1335'),
-                'longitude': Decimal('-71.3103'),
-                'order': 1,
-            },
-        )
-
-        self.stdout.write('  Created demo vehicle and trip')
-
         # ── Summary ────────────────────────────────────────────────
         self.stdout.write(self.style.SUCCESS(
             f'\n✅ Demo data seeded successfully!\n'
             f'   Users: {len(users)} (login: any email / password: aktivar2024)\n'
             f'   Categories: {len(categories)}\n'
             f'   Activities: {len(activities)}\n'
-            f'   Vehicle + Trip: 1\n'
             f'\n   Demo login: demo@aktivar.app / aktivar2024'
         ))

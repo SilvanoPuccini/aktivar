@@ -1,6 +1,6 @@
 """
 Management command to load demo data for AKTIVAR.
-Creates demo users, categories, activities, vehicles, trips, and transport data.
+Creates demo users, categories, and activities.
 Usage: python manage.py load_demo_data
 """
 
@@ -12,14 +12,13 @@ from django.utils import timezone
 
 
 class Command(BaseCommand):
-    help = 'Load demo data for AKTIVAR (users, activities, transport)'
+    help = 'Load demo data for AKTIVAR (users, activities)'
 
     def handle(self, *args, **options):
         self.stdout.write('Loading demo data for AKTIVAR...')
         self._create_users()
         self._create_categories()
         self._create_activities()
-        self._create_vehicles_and_trips()
         self.stdout.write(self.style.SUCCESS('Demo data loaded successfully!'))
 
     def _create_users(self):
@@ -289,58 +288,3 @@ class Command(BaseCommand):
                 },
             )
             action = 'Created' if created else 'Exists'
-            self.stdout.write(f'  {action} activity: {activity.title}')
-
-    def _create_vehicles_and_trips(self):
-        from transport.models import Vehicle, Trip, TripStop
-        from users.models import CustomUser
-
-        driver = CustomUser.objects.filter(role='driver').first()
-        if not driver:
-            self.stdout.write(self.style.WARNING('No driver found, skipping transport'))
-            return
-
-        vehicle, created = Vehicle.objects.get_or_create(
-            plate='GGXK-42',
-            defaults={
-                'owner': driver,
-                'brand': 'Toyota',
-                'model_name': 'HiAce',
-                'color': 'Blanco',
-                'capacity': 8,
-                'year': 2022,
-            },
-        )
-        if created:
-            self.stdout.write(f'  Created vehicle: {vehicle.brand} {vehicle.model_name}')
-
-        now = timezone.now()
-        trip, created = Trip.objects.get_or_create(
-            driver=driver,
-            vehicle=vehicle,
-            departure_time=now + timedelta(days=6, hours=6),
-            defaults={
-                'origin_name': 'Metro Tobalaba, Santiago',
-                'origin_latitude': Decimal('-33.4195000'),
-                'origin_longitude': Decimal('-70.6005000'),
-                'destination_name': 'Cerro Manquehue, Lo Barnechea',
-                'destination_latitude': Decimal('-33.3889000'),
-                'destination_longitude': Decimal('-70.5765000'),
-                'price_per_passenger': Decimal('3500'),
-                'available_seats': 8,
-                'status': 'planned',
-                'notes': 'Salimos puntuales. Traigan mochilas livianas.',
-            },
-        )
-        if created:
-            base_time = now + timedelta(days=6, hours=6)
-            stops = [
-                {'name': 'Metro Tobalaba', 'latitude': Decimal('-33.4195000'), 'longitude': Decimal('-70.6005000'), 'order': 1, 'estimated_time': base_time},
-                {'name': 'Metro Los Dominicos', 'latitude': Decimal('-33.4088000'), 'longitude': Decimal('-70.5243000'), 'order': 2, 'estimated_time': base_time + timedelta(minutes=15)},
-                {'name': 'Cerro Manquehue', 'latitude': Decimal('-33.3889000'), 'longitude': Decimal('-70.5765000'), 'order': 3, 'estimated_time': base_time + timedelta(minutes=45)},
-            ]
-            for s in stops:
-                TripStop.objects.create(trip=trip, **s)
-            self.stdout.write(f'  Created trip: {trip.origin_name} → {trip.destination_name}')
-        else:
-            self.stdout.write('  Trip already exists')

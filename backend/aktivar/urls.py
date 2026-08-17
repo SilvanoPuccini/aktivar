@@ -41,13 +41,10 @@ urlpatterns = [
     # API v1 - App routes
     path("api/v1/users/", include("users.urls")),
     path("api/v1/activities/", include("activities.urls")),
-    path("api/v1/transport/", include("transport.urls")),
     path("api/v1/chat/", include("chat.urls")),
-    path("api/v1/reviews/", include("reviews.urls")),
     path("api/v1/payments/", include("payments.urls")),
     path("api/v1/notifications/", include("notifications.urls")),
     path("api/v1/core/", include("core.urls")),
-    path("api/v1/ecosystem/", include("ecosystem.urls")),
 ]
 
 # API docs and media files only in development
