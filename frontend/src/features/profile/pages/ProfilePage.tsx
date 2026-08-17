@@ -3,6 +3,7 @@ import { AtSign, Camera, CheckCircle, Globe, Loader2, LogOut, MapPin, Mountain, 
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
+import Card from '@/components/Card';
 import CTAButton from '@/components/CTAButton';
 import EmptyState from '@/components/EmptyState';
 import { preparePostAuthRedirect } from '@/lib/authRedirect';
@@ -89,14 +90,20 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="space-y-10 pb-12">
+    <div className="premium-page">
       <section className="grid gap-8 xl:grid-cols-[1.2fr_0.45fr] xl:items-start">
         <div className="space-y-8">
-          <div className="editorial-card rounded-[1.25rem] px-6 py-8 md:px-8">
+          <div className="editorial-card rounded-lg px-6 py-8 md:px-8">
             <div className="flex flex-col gap-6 md:flex-row md:items-end">
               <div className="relative">
                 <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-primary-container p-1 md:h-40 md:w-40">
-                  <img src={avatarSrc} alt={user.full_name} className="h-full w-full rounded-full object-cover" />
+                  <img
+                    src={avatarSrc}
+                    alt={user.full_name}
+                    loading="lazy"
+                    className="h-full w-full rounded-full object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/400x400/1d201b/ffc56c?text=${encodeURIComponent(user.full_name)}`; }}
+                  />
                 </div>
                 <button type="button" onClick={() => fileInputRef.current?.click()} className="absolute bottom-1 right-1 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-[#442c00] cursor-pointer"><Camera size={16} /></button>
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarSelected} />
@@ -111,7 +118,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <section className="grid gap-px overflow-hidden rounded-[1.6rem] border border-outline-variant/10 bg-outline-variant/10 md:grid-cols-3">
+          <section className="grid gap-px overflow-hidden rounded-lg border border-outline-variant/10 bg-outline-variant/10 md:grid-cols-3">
             <div className="bg-surface-container px-6 py-7 text-center">
               <p className="font-headline text-4xl font-black text-primary">{profile.total_activities}</p>
               <p className="mt-2 font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Activities</p>
@@ -155,7 +162,7 @@ export default function ProfilePage() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {galleryGradients.map((gradient, index) => (
-                <div key={gradient} className="group relative aspect-square overflow-hidden rounded-[1.4rem] bg-surface-container">
+                <div key={gradient} className="group relative aspect-square overflow-hidden rounded-lg bg-surface-container">
                   <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-105" style={{ background: gradient }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-surface/70 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-4 right-4">
@@ -170,15 +177,15 @@ export default function ProfilePage() {
         </div>
 
         <div className="space-y-6">
-          <section className="editorial-card rounded-[1rem] border-l-4 border-primary px-6 py-6 md:px-8">
+          <Card padding="md" className="border-l-4 border-primary">
             <p className="section-kicker">Member rating</p>
             <div className="mt-3 flex items-center gap-1 text-primary">
               {Array.from({ length: 5 }).map((_, index) => <Star key={index} size={16} fill="currentColor" />)}
             </div>
             <p className="mt-3 font-headline text-4xl font-black text-on-surface">{profile.avg_rating ?? 5}</p>
-          </section>
+          </Card>
 
-          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
+          <Card padding="md" className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="section-kicker">Bio</p>
@@ -198,9 +205,9 @@ export default function ProfilePage() {
             ) : (
               <p className="text-on-surface-variant">{bio || 'Todavía no agregaste una biografía extendida.'}</p>
             )}
-          </section>
+          </Card>
 
-          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
+          <Card padding="md">
             <p className="section-kicker">Presence</p>
             <div className="mt-4 space-y-4 text-sm text-on-surface-variant">
                <div className="flex items-center gap-3"><MapPin size={16} className="text-primary" /> {locationName || 'Sin ubicación definida'}</div>
@@ -208,7 +215,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-3"><Globe size={16} className="text-primary" /> {website || 'Sin sitio web'}</div>
               <div className="flex items-center gap-3"><CheckCircle size={16} className="text-primary" /> {user.is_verified_email ? 'Email verificado' : 'Email pendiente'}</div>
             </div>
-          </section>
+          </Card>
 
           <CTAButton label="Cerrar sesión" variant="secondary" icon={<LogOut size={14} />} onClick={() => { logout(); navigate('/login'); }} />
         </div>

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff, Loader2, Mountain } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, Mountain } from 'lucide-react';
 import toast from 'react-hot-toast';
+import CTAButton from '@/components/CTAButton';
 import api, { endpoints } from '@/services/api';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -48,9 +49,9 @@ export default function LoginPage() {
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
-      <section className="hidden lg:flex flex-col justify-between px-12 py-12">
+      <section className="hidden lg:flex flex-col justify-between px-12 py-12 xl:px-16">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-surface-container-high text-primary"><Mountain size={20} /></div>
+          <div className="flex h-12 w-12 items-center justify-center rounded-sm bg-surface-container-high text-primary"><Mountain size={20} /></div>
           <div>
             <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary">Aktivar</p>
             <p className="font-label text-[10px] uppercase tracking-[0.22em] text-on-surface-variant">Digital expedition</p>
@@ -62,7 +63,7 @@ export default function LoginPage() {
           <p className="max-w-xl text-lg text-on-surface-variant">Un acceso más editorial para volver a tus rutas, grupos y próximas salidas sin fricción.</p>
           <div className="grid grid-cols-3 gap-4 max-w-xl">
             {[['2.4k', 'Actividades'], ['15k', 'Exploradores'], ['8', 'Países']].map(([value, label]) => (
-              <div key={label} className="rounded-[1.6rem] bg-surface-container px-5 py-5">
+              <div key={label} className="rounded-lg bg-surface-container px-5 py-5">
                 <p className="font-headline text-4xl font-black text-primary">{value}</p>
                 <p className="mt-2 font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">{label}</p>
               </div>
@@ -72,10 +73,10 @@ export default function LoginPage() {
         <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Campfire atmosphere · warm contrast · editorial spacing</p>
       </section>
 
-      <section className="flex items-center justify-center px-6 py-12 md:px-10">
-        <div className="w-full max-w-md space-y-8">
+      <section className="flex items-center justify-center px-6 py-12 md:px-10 lg:px-16">
+        <div className="w-full max-w-md space-y-8 lg:max-w-lg">
           <div className="space-y-3 lg:hidden">
-            <div className="flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-surface-container-high text-primary"><Mountain size={20} /></div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-sm bg-surface-container-high text-primary"><Mountain size={20} /></div>
             <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary">Aktivar</p>
           </div>
 
@@ -88,10 +89,7 @@ export default function LoginPage() {
           <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); void handleLogin(); }}>
             <label className="block space-y-3"><span className="section-kicker">Email address</span><input type="email" className="editorial-input" placeholder="explorer@aktivar.com" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
             <label className="block space-y-3"><span className="section-kicker">Password</span><div className="relative"><input type={showPassword ? 'text' : 'password'} className="editorial-input pr-14" placeholder="Tu contraseña" value={password} onChange={(e) => setPassword(e.target.value)} /><button type="button" onClick={() => setShowPassword((prev) => !prev)} className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant cursor-pointer">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div></label>
-            <button type="submit" disabled={loading || !isValid} className="flex w-full items-center justify-center gap-3 rounded-[0.75rem] px-6 py-4 font-label text-xs font-bold uppercase tracking-[0.18em] text-[#442c00] cursor-pointer disabled:opacity-50" style={{ background: 'linear-gradient(135deg, #ffc56c 0%, #f0a500 100%)' }}>
-              {loading ? <Loader2 size={18} className="animate-spin" /> : <ArrowRight size={16} />}
-              {loading ? 'Ingresando' : 'Continue'}
-            </button>
+            <CTAButton type="submit" label={loading ? 'Ingresando' : 'Continue'} icon={<ArrowRight size={16} />} loading={loading} disabled={!isValid} fullWidth />
           </form>
 
           <div className="flex items-center justify-between text-sm text-on-surface-variant">

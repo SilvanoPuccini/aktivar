@@ -4,6 +4,7 @@ import { Compass, MapPin, SearchX, SlidersHorizontal } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ActivityCard from '@/components/ActivityCard';
 import ActivityCardSkeleton from '@/components/ActivityCardSkeleton';
+import Avatar from '@/components/Avatar';
 import CategoryChip from '@/components/CategoryChip';
 import CTAButton from '@/components/CTAButton';
 import EmptyState from '@/components/EmptyState';
@@ -58,8 +59,8 @@ export default function FeedPage() {
   const editorialGrid = featured ? filtered.slice(1) : filtered;
 
   return (
-    <div className="space-y-12 md:space-y-16">
-      <section className="editorial-grid-glow relative overflow-hidden rounded-[0.875rem] border border-outline-variant bg-surface-container px-7 py-10 md:px-10 md:py-12 lg:px-12 lg:py-14">
+    <div className="premium-page">
+      <section className="editorial-grid-glow relative overflow-hidden rounded-md border border-outline-variant bg-surface-container px-7 py-10 md:px-10 md:py-12 lg:px-12 lg:py-14">
         <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-primary/8 blur-3xl" />
         <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/8 blur-3xl" />
 
@@ -87,7 +88,7 @@ export default function FeedPage() {
               ['Abiertas', `${filtered.filter((a) => a.spots_remaining > 0).length}`],
               ['Rutas', `${categories.length}`],
             ].map(([label, value]) => (
-              <div key={label} className="editorial-metric rounded-[0.875rem] px-4 py-5">
+              <div key={label} className="editorial-metric rounded-md px-4 py-5">
                 <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">{label}</p>
                 <p className="mt-2 font-headline text-4xl font-black tracking-tight text-primary">{value}</p>
               </div>
@@ -137,7 +138,7 @@ export default function FeedPage() {
         <>
           {featured && (
             <section className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
-              <div className="relative overflow-hidden rounded-[0.875rem] border border-outline-variant bg-surface-container">
+              <div className="relative overflow-hidden rounded-md border border-outline-variant bg-surface-container">
                 <div className="absolute right-5 top-5 z-10 rounded-full bg-surface/80 px-4 py-2 font-label text-[10px] uppercase tracking-[0.18em] text-primary backdrop-blur-sm">
                   Selección editorial
                 </div>
@@ -145,6 +146,7 @@ export default function FeedPage() {
                   <img
                     src={featured.cover_image}
                     alt={featured.title}
+                    loading="lazy"
                     className="h-full w-full object-cover"
                     onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/800x600/1d201b/ffc56c?text=${encodeURIComponent(featured.category.name)}`; }}
                   />
@@ -171,7 +173,7 @@ export default function FeedPage() {
                     <span className="flex items-center gap-1.5"><MapPin size={14} className="text-primary" /> {featured.location_name}</span>
                   </div>
                   <div className="mt-4 flex items-center gap-3">
-                    <img src={featured.organizer.avatar} alt={featured.organizer.full_name} className="h-9 w-9 rounded-full object-cover" />
+                    <Avatar src={featured.organizer.avatar} alt={featured.organizer.full_name} size="sm" />
                     <span className="text-sm font-semibold text-on-surface">{featured.organizer.full_name}</span>
                     <span className="ml-auto font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">
                       {featured.spots_remaining} cupos
@@ -180,7 +182,7 @@ export default function FeedPage() {
                 </button>
               </div>
 
-              <div className="editorial-card-soft editorial-border flex flex-col justify-between gap-6 rounded-[0.875rem] px-7 py-7 md:px-9 md:py-9">
+              <div className="editorial-card-soft editorial-border flex flex-col justify-between gap-6 rounded-md px-7 py-7 md:px-9 md:py-9">
                 <div className="space-y-4">
                   <p className="section-kicker">Pulso del día</p>
                   <h3 className="font-headline text-3xl font-black uppercase leading-[0.95] tracking-tight text-on-surface md:text-4xl">
@@ -189,7 +191,7 @@ export default function FeedPage() {
                 </div>
 
                 <div
-                  className="relative h-48 cursor-pointer overflow-hidden rounded-[0.75rem] border border-outline-variant/15 md:h-56"
+                  className="relative h-48 cursor-pointer overflow-hidden rounded-sm border border-outline-variant/15 md:h-56"
                   onClick={() => navigate('/explore')}
                 >
                   <Suspense fallback={<div className="h-full w-full bg-surface-container" />}>
@@ -208,13 +210,13 @@ export default function FeedPage() {
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="editorial-metric rounded-[0.875rem] px-4 py-5">
+                  <div className="editorial-metric rounded-md px-4 py-5">
                     <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Con lugar</p>
                     <p className="mt-2 font-headline text-4xl font-black tracking-tight text-secondary">
                       {filtered.filter((activity) => activity.spots_remaining > 0).length}
                     </p>
                   </div>
-                  <div className="editorial-metric rounded-[0.875rem] px-4 py-5">
+                  <div className="editorial-metric rounded-md px-4 py-5">
                     <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Destinos</p>
                     <p className="mt-2 font-headline text-4xl font-black tracking-tight text-primary">
                       {new Set(filtered.map((activity) => activity.location_name)).size}

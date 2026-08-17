@@ -141,7 +141,7 @@ export default function OnboardingPage() {
       {/* Left panel - branding (desktop only) */}
       <section className="hidden lg:flex flex-col justify-between px-12 py-12">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-surface-container-high text-primary"><Mountain size={20} /></div>
+          <div className="flex h-12 w-12 items-center justify-center rounded-sm bg-surface-container-high text-primary"><Mountain size={20} /></div>
           <div>
             <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary">Aktivar</p>
             <p className="font-label text-[10px] uppercase tracking-[0.22em] text-on-surface-variant">Digital expedition</p>
@@ -153,7 +153,7 @@ export default function OnboardingPage() {
           <p className="max-w-xl text-lg text-on-surface-variant">Crea tu cuenta y empieza a descubrir rutas, comunidades y próximas salidas.</p>
           <div className="grid grid-cols-3 gap-4 max-w-xl">
             {[['120+', 'Rutas'], ['48', 'Hosts'], ['18', 'Comunidades']].map(([value, label]) => (
-              <div key={label} className="rounded-[0.75rem] bg-surface-container px-5 py-5">
+              <div key={label} className="rounded-sm bg-surface-container px-5 py-5">
                 <p className="font-headline text-4xl font-black text-primary">{value}</p>
                 <p className="mt-2 font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">{label}</p>
               </div>
@@ -168,7 +168,7 @@ export default function OnboardingPage() {
         <div className="w-full max-w-md space-y-8">
           {/* Mobile header */}
           <div className="space-y-3 lg:hidden">
-            <div className="flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-surface-container-high text-primary"><Mountain size={20} /></div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-sm bg-surface-container-high text-primary"><Mountain size={20} /></div>
             <p className="font-headline text-3xl font-black uppercase tracking-tight text-primary">Aktivar</p>
           </div>
 
@@ -218,7 +218,7 @@ export default function OnboardingPage() {
                     key={category.id}
                     type="button"
                     onClick={() => toggleCategory(category.id)}
-                    className={`rounded-[0.75rem] border p-4 text-left cursor-pointer transition-colors ${
+                    className={`rounded-sm border p-4 text-left cursor-pointer transition-colors ${
                       selected
                         ? 'border-primary/30 bg-primary-container text-[#442c00]'
                         : 'border-outline-variant bg-surface-container text-on-surface hover:bg-surface-container-high'
@@ -249,7 +249,7 @@ export default function OnboardingPage() {
                 <span className="section-kicker flex items-center gap-2"><MapPin size={14} /> Ubicación</span>
                 <input className="editorial-input" value={form.location} onChange={(e) => update('location', e.target.value)} placeholder="Ciudad o basecamp" />
               </label>
-              <div className="rounded-[0.75rem] bg-surface-container px-5 py-5">
+              <div className="rounded-sm bg-surface-container px-5 py-5">
                 <p className="section-kicker">Resumen</p>
                 <div className="mt-4 space-y-2 text-sm text-on-surface-variant">
                   <p><strong className="text-on-surface">Nombre:</strong> {form.name || '—'}</p>

@@ -7,14 +7,10 @@ export default function Footer() {
   const primaryLinks = [
     { to: '/', label: 'Inicio' },
     { to: '/explore', label: 'Explorar' },
-    { to: '/journal', label: 'Journal' },
-    { to: '/communities', label: 'Comunidades' },
-    { to: '/marketplace', label: 'Marketplace' },
   ];
   const memberLinks = [
     { to: '/create', label: 'Crear' },
     { to: '/profile', label: 'Perfil' },
-    { to: '/safety', label: 'Safety' },
   ];
 
   return (
@@ -22,7 +18,7 @@ export default function Footer() {
       <div className="premium-shell grid gap-8 py-10 md:grid-cols-[1.2fr_1fr_auto] md:items-end">
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.18),_transparent_58%),rgba(40,43,37,0.95)] text-primary">
+            <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.18),_transparent_58%),rgba(40,43,37,0.95)] text-primary">
               <Compass size={18} />
             </div>
             <div>
@@ -34,9 +30,8 @@ export default function Footer() {
             Explora actividades, comparte rutas y arma tu próxima salida con una interfaz editorial, cálida y claramente premium.
           </p>
           <div className="flex flex-wrap gap-2 text-xs text-on-surface-variant">
-            <span className="premium-chip">Journal</span>
-            <span className="premium-chip">Gear</span>
-            <span className="premium-chip">Safety</span>
+            <span className="premium-chip">Actividades</span>
+            <span className="premium-chip">Explorar</span>
           </div>
         </div>
 

@@ -4,6 +4,8 @@ import { Calendar, Camera, Clock3, DollarSign, MapPin, Mountain, Users } from 'l
 import toast from 'react-hot-toast';
 import type { AxiosError } from 'axios';
 import CategoryChip from '@/components/CategoryChip';
+import Card from '@/components/Card';
+import Chip from '@/components/Chip';
 import CTAButton from '@/components/CTAButton';
 import { preparePostAuthRedirect } from '@/lib/authRedirect';
 import { useCategories, useCreateActivity, useUploadImage } from '@/services/hooks';
@@ -204,8 +206,8 @@ export default function CreateActivityPage() {
   const steps = ['Identidad', 'Ruta', 'Publicación'];
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8 pb-12">
-      <section className="editorial-card rounded-[1.25rem] px-6 py-7 md:px-8 md:py-8">
+    <div className="premium-page mx-auto max-w-4xl">
+      <section className="editorial-card rounded-lg px-6 py-7 md:px-8 md:py-8">
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="section-kicker">Nueva actividad</p>
@@ -224,13 +226,13 @@ export default function CreateActivityPage() {
       </section>
 
       {step === 0 && (
-        <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
+        <Card padding="md" className="space-y-6">
           <div>
             <label className="section-kicker">Cover expedition photo</label>
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="relative mt-3 flex min-h-64 w-full items-center justify-center overflow-hidden rounded-[1.75rem] border border-dashed border-outline-variant/30 bg-surface cursor-pointer"
+              className="relative mt-3 flex min-h-64 w-full items-center justify-center overflow-hidden rounded-xl border border-dashed border-outline-variant/30 bg-surface cursor-pointer"
             >
               {form.coverImage ? (
                 <img src={form.coverImage} alt="preview" className="absolute inset-0 h-full w-full object-cover" />
@@ -267,7 +269,7 @@ export default function CreateActivityPage() {
               </label>
             </div>
           </div>
-          <div className="rounded-[1.75rem] bg-surface px-5 py-5">
+          <div className="rounded-xl bg-surface px-5 py-5">
             <div className="flex items-center justify-between">
               <span className="section-kicker flex items-center gap-2"><Users size={14} /> Squad capacity</span>
               <div className="text-right">
@@ -281,7 +283,7 @@ export default function CreateActivityPage() {
             <label className="section-kicker">The brief / description</label>
             <textarea className="editorial-input mt-3 min-h-32 resize-none" value={form.description} onChange={(e) => set('description', e.target.value)} placeholder="Tell the explorers what to expect..." />
           </div>
-          <div className="rounded-[1.75rem] bg-surface px-5 py-5">
+          <div className="rounded-xl bg-surface px-5 py-5">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <p className="font-headline text-xl font-black text-on-surface">Expedition cost</p>
@@ -316,11 +318,11 @@ export default function CreateActivityPage() {
               />
             )}
           </div>
-        </section>
+        </Card>
       )}
 
       {step === 1 && (
-        <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
+        <Card padding="md" className="space-y-6">
           <div className="grid gap-4 md:grid-cols-3">
             <label className="space-y-3"><span className="section-kicker flex items-center gap-2"><Calendar size={14} /> Fecha</span><input type="date" className="editorial-input font-label" value={form.date} onChange={(e) => set('date', e.target.value)} /></label>
             <label className="space-y-3"><span className="section-kicker flex items-center gap-2"><Clock3 size={14} /> Inicio</span><input type="time" className="editorial-input font-label" value={form.startTime} onChange={(e) => set('startTime', e.target.value)} /></label>
@@ -332,32 +334,32 @@ export default function CreateActivityPage() {
             <label className="space-y-3 block"><span className="section-kicker">Latitud</span><input className="editorial-input font-label" value={form.latitude} onChange={(e) => set('latitude', e.target.value)} /></label>
             <label className="space-y-3 block"><span className="section-kicker">Longitud</span><input className="editorial-input font-label" value={form.longitude} onChange={(e) => set('longitude', e.target.value)} /></label>
           </div>
-        </section>
+        </Card>
       )}
 
       {step === 2 && (
-        <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8 space-y-6">
+        <Card padding="md" className="space-y-6">
           <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
-            <button type="button" onClick={() => fileInputRef.current?.click()} className="relative flex min-h-72 items-center justify-center overflow-hidden rounded-[1.75rem] bg-surface cursor-pointer">
+            <button type="button" onClick={() => fileInputRef.current?.click()} className="relative flex min-h-72 items-center justify-center overflow-hidden rounded-xl bg-surface cursor-pointer">
               {form.coverImage ? <img src={form.coverImage} alt="preview" className="absolute inset-0 h-full w-full object-cover" /> : <div className="flex flex-col items-center gap-3 text-on-surface-variant"><Camera size={26} /><span className="font-label text-[10px] uppercase tracking-[0.18em]">Subir portada</span></div>}
               <div className="absolute bottom-4 right-4 rounded-full bg-surface/80 px-4 py-2 font-label text-[10px] uppercase tracking-[0.16em] text-on-surface backdrop-blur-sm">Cambiar imagen</div>
               <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
             </button>
             <div className="space-y-5">
-              <label className="space-y-3 block"><span className="section-kicker flex items-center gap-2"><Mountain size={14} /> Dificultad</span><div className="flex flex-wrap gap-2">{difficultyOptions.map((option) => <button key={option.value} type="button" onClick={() => set('difficulty', option.value)} className={`rounded-full px-4 py-3 font-label text-[10px] uppercase tracking-[0.16em] ${form.difficulty === option.value ? 'bg-primary text-[#442c00]' : 'bg-surface text-on-surface-variant'}`}>{option.label}</button>)}</div></label>
+              <label className="space-y-3 block"><span className="section-kicker flex items-center gap-2"><Mountain size={14} /> Dificultad</span><div className="flex flex-wrap gap-2">{difficultyOptions.map((option) => <Chip key={option.value} label={option.label} selected={form.difficulty === option.value} onClick={() => set('difficulty', option.value)} />)}</div></label>
               <label className="space-y-3 block"><span className="section-kicker">Distancia estimada</span><input className="editorial-input" value={form.distanceKm} onChange={(e) => set('distanceKm', e.target.value)} placeholder="12.5" /></label>
               <label className="space-y-3 block"><span className="section-kicker">Qué llevar</span><textarea className="editorial-input min-h-32 resize-none" value={form.whatToBring} onChange={(e) => set('whatToBring', e.target.value)} placeholder="Agua, rompeviento, linterna, snack, documento" /></label>
-              <div className="rounded-[0.875rem] bg-surface px-5 py-5 space-y-4">
+              <div className="rounded-md bg-surface px-5 py-5 space-y-4">
                 <div className="flex items-center justify-between"><span className="section-kicker flex items-center gap-2"><DollarSign size={14} /> Precio</span><span className="font-headline text-3xl font-black text-primary">{form.isFree ? 'Gratis' : `$${form.price}`}</span></div>
                 <div className="flex gap-2">
-                  <button type="button" onClick={() => { set('isFree', true); set('price', 0); }} className={`flex-1 rounded-full px-4 py-3 font-label text-[10px] uppercase tracking-[0.16em] ${form.isFree ? 'bg-primary text-[#442c00]' : 'bg-surface-container-high text-on-surface-variant'}`}>Gratis</button>
-                  <button type="button" onClick={() => set('isFree', false)} className={`flex-1 rounded-full px-4 py-3 font-label text-[10px] uppercase tracking-[0.16em] ${!form.isFree ? 'bg-primary text-[#442c00]' : 'bg-surface-container-high text-on-surface-variant'}`}>Pago</button>
+                  <Chip label="Gratis" selected={form.isFree} onClick={() => { set('isFree', true); set('price', 0); }} className="flex-1" />
+                  <Chip label="Pago" selected={!form.isFree} onClick={() => set('isFree', false)} className="flex-1" />
                 </div>
                 {!form.isFree && <input type="number" className="editorial-input" value={form.price} onChange={(e) => set('price', Number(e.target.value))} placeholder="Precio por persona" />}
               </div>
             </div>
           </div>
-        </section>
+        </Card>
       )}
 
       <div className="flex items-center justify-between gap-3">

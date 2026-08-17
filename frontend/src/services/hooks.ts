@@ -4,22 +4,8 @@ import api, { endpoints } from './api';
 import analytics from '@/lib/analytics';
 import { mockActivities } from '@/data/activities';
 import { categories as mockCategories } from '@/data/categories';
-import {
-  createMockMarketplaceListing,
-  joinMockCommunity,
-  mockChatMessages,
-  mockCommunities,
-  mockJournalStories,
-  mockMarketplaceListings,
-  mockOrganizerDashboard,
-  mockRankDashboard,
-  mockSafetyDashboard,
-  updateMockSafetyChecklist,
-} from '@/data/ecosystem';
-import { mockTrips } from '@/data/trips';
-import { normalizeMarketplaceListing, normalizeMarketplaceListings } from '@/features/marketplace/listingUtils';
-import type { Activity, Category } from '@/types/activity';
-import type { Community, JournalStory, MarketplaceListing, RankDashboard, SafetyChecklist, SafetyDashboard } from '@/types/ecosystem';
+import { mockChatMessages, mockOrganizerDashboard } from '@/data/mockDevData';
+import type { Activity, ActivityParticipant, Category } from '@/types/activity';
 import type { User } from '@/types/user';
 import type { ChatMessage } from '@/types/chat';
 
@@ -131,6 +117,33 @@ export function useLeaveActivity() {
     onSuccess: (_data, activityId) => {
       queryClient.invalidateQueries({ queryKey: ['activity', String(activityId)] });
       queryClient.invalidateQueries({ queryKey: ['activities'] });
+      queryClient.invalidateQueries({ queryKey: ['activityParticipants', activityId] });
+    },
+  });
+}
+
+export function useActivityParticipants(activityId: number | undefined) {
+  return useQuery<ActivityParticipant[]>({
+    queryKey: ['activityParticipants', activityId],
+    queryFn: async () => {
+      const res = await api.get(endpoints.participants(activityId!));
+      return res.data.results ?? res.data;
+    },
+    enabled: !!activityId,
+  });
+}
+
+export function useRemoveParticipant() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ activityId, userId }: { activityId: number; userId: number }) => {
+      const res = await api.post(endpoints.removeParticipant(activityId), { user_id: userId });
+      return res.data;
+    },
+    onSuccess: (_data, { activityId }) => {
+      queryClient.invalidateQueries({ queryKey: ['activityParticipants', activityId] });
+      queryClient.invalidateQueries({ queryKey: ['activity', String(activityId)] });
+      queryClient.invalidateQueries({ queryKey: ['activities'] });
     },
   });
 }
@@ -202,57 +215,6 @@ export function useVerifyPhone() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-    },
-  });
-}
-
-// ---- Trips ----
-
-export function useTrips() {
-  return useQuery({
-    queryKey: ['trips'],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(endpoints.trips);
-      return res.data.results ?? res.data;
-    }, () => mockTrips),
-  });
-}
-
-export function useTrip(id: string | undefined) {
-  return useQuery({
-    queryKey: ['trip', id],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(`${endpoints.trips}${id}/`);
-      return res.data;
-    }, () => mockTrips.find((trip) => String(trip.id) === id) ?? mockTrips[0]),
-    enabled: !!id,
-  });
-}
-
-export function useBookSeat() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (tripId: number) => {
-      const res = await api.post(`${endpoints.trips}${tripId}/book_seat/`);
-      return res.data;
-    },
-    onSuccess: (_data, tripId) => {
-      queryClient.invalidateQueries({ queryKey: ['trip', String(tripId)] });
-    },
-  });
-}
-
-// ---- Reviews ----
-
-export function useCreateReview() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (data: { reviewee: number; activity: number; rating: number; comment: string }) => {
-      const res = await api.post(endpoints.reviews, data);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reviews'] });
     },
   });
 }
@@ -440,238 +402,3 @@ export function useOrganizerDashboard() {
   }));
 }
 
-// ---- Social Features ----
-
-export function useActivityStories(activityId: number | undefined) {
-  return useQuery({
-    queryKey: ['stories', activityId],
-    queryFn: async () => {
-      const res = await api.get(`${endpoints.activities}${activityId}/stories/`);
-      return res.data.results ?? res.data;
-    },
-    enabled: !!activityId,
-  });
-}
-
-export function useSquads() {
-  return useQuery({
-    queryKey: ['squads'],
-    queryFn: async () => {
-      const res = await api.get(`${endpoints.activities.replace('activities/', 'squads/')}`);
-      return res.data.results ?? res.data;
-    },
-  });
-}
-
-export function useAvailabilityStatuses(params?: { lat?: number; lng?: number; radius_km?: number }) {
-  return useQuery({
-    queryKey: ['availability', params],
-    queryFn: async () => {
-      const res = await api.get(`${endpoints.activities.replace('activities/', 'availability/')}`, { params });
-      return res.data.results ?? res.data;
-    },
-  });
-}
-
-export function useSwipeActivity() {
-  return useMutation({
-    mutationFn: async ({ activityId, interested }: { activityId: number; interested: boolean }) => {
-      const res = await api.post(`${endpoints.activities.replace('activities/', 'swipes/')}`, {
-        activity: activityId,
-        interested,
-      });
-      return res.data;
-    },
-  });
-}
-
-export function useEmergencyContact() {
-  return useQuery({
-    queryKey: ['emergencyContact'],
-    queryFn: async () => {
-      const res = await api.get(`${endpoints.trips.replace('trips/', 'emergency-contacts/')}`);
-      return res.data;
-    },
-    enabled: !!sessionStorage.getItem('aktivar_access_token'),
-  });
-}
-
-export function useTripSplit(tripId: string | undefined) {
-  return useQuery({
-    queryKey: ['tripSplit', tripId],
-    queryFn: async () => {
-      const res = await api.get(`${endpoints.trips}${tripId}/split/`);
-      return res.data;
-    },
-    enabled: !!tripId,
-    refetchInterval: 10000, // Refresh every 10s for real-time split
-  });
-}
-
-export function useTriggerEmergency() {
-  return useMutation({
-    mutationFn: async ({ tripId, latitude, longitude, message }: {
-      tripId: number; latitude: number; longitude: number; message?: string;
-    }) => {
-      const res = await api.post(`${endpoints.trips}${tripId}/emergency/`, {
-        latitude, longitude, message,
-      });
-      return res.data;
-    },
-  });
-}
-
-// ---- Ecosystem ----
-
-export function useCommunities(params?: { search?: string }) {
-  return useQuery<Community[]>({
-    queryKey: ['communities', params],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(endpoints.communities, { params });
-      return res.data.results ?? res.data;
-    }, () => {
-      const q = params?.search?.trim().toLowerCase();
-      return mockCommunities.filter((community) => {
-        if (!q) return true;
-        return [community.name, community.description, community.location_name, community.activity_label]
-          .some((field) => field.toLowerCase().includes(q));
-      });
-    }),
-  });
-}
-
-export function useFeaturedCommunity() {
-  return useQuery<Community>({
-    queryKey: ['communities', 'featured'],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(`${endpoints.communities}featured/`);
-      return res.data;
-    }, () => mockCommunities.find((community) => community.is_featured) ?? mockCommunities[0]),
-  });
-}
-
-export function useJoinCommunity() {
-  const queryClient = useQueryClient();
-  return useMutation<Community, Error, number>({
-    mutationFn: async (communityId: number) => withFallback(async () => {
-      const res = await api.post(`${endpoints.communities}${communityId}/join/`);
-      return res.data;
-    }, () => joinMockCommunity(communityId)),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communities'] });
-    },
-  });
-}
-
-export function useJournalStories() {
-  return useQuery<JournalStory[]>({
-    queryKey: ['journalStories'],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(endpoints.journal);
-      return res.data.results ?? res.data;
-    }, () => mockJournalStories),
-  });
-}
-
-export function useFeaturedJournalStory() {
-  return useQuery<JournalStory>({
-    queryKey: ['journalStories', 'featured'],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(`${endpoints.journal}featured/`);
-      return res.data;
-    }, () => mockJournalStories.find((story) => story.is_featured) ?? mockJournalStories[0]),
-  });
-}
-
-export function useTrendingJournalStories() {
-  return useQuery<JournalStory[]>({
-    queryKey: ['journalStories', 'trending'],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(`${endpoints.journal}trending/`);
-      return res.data;
-    }, () => mockJournalStories.filter((story) => story.is_trending)),
-  });
-}
-
-export function useMarketplaceListings(params?: { search?: string; category?: string; ordering?: string }) {
-  return useQuery<MarketplaceListing[]>({
-    queryKey: ['marketplaceListings', params],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(endpoints.marketplace, { params });
-      return normalizeMarketplaceListings(res.data.results ?? res.data);
-    }, () => {
-      const q = params?.search?.trim().toLowerCase();
-      return normalizeMarketplaceListings(mockMarketplaceListings).filter((listing) => {
-        if (params?.category && listing.category !== params.category) return false;
-        if (!q) return true;
-        return [listing.title, listing.location_name, listing.seller_name, listing.subcategory]
-          .some((field) => field.toLowerCase().includes(q));
-      });
-    }),
-  });
-}
-
-export function useCreateMarketplaceListing() {
-  const queryClient = useQueryClient();
-  return useMutation<MarketplaceListing, Error, Partial<MarketplaceListing>>({
-    mutationFn: async (payload) => withFallback(async () => {
-      const res = await api.post(endpoints.marketplace, payload);
-      const listing = normalizeMarketplaceListing(res.data);
-      if (!listing) {
-        throw new Error('Invalid marketplace listing response');
-      }
-      return listing;
-    }, () => createMockMarketplaceListing(payload)),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['marketplaceListings'] });
-    },
-  });
-}
-
-export function useRankDashboard() {
-  return useQuery<RankDashboard>({
-    queryKey: ['rankDashboard'],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(endpoints.rank);
-      return res.data;
-    }, () => mockRankDashboard),
-    enabled: !!sessionStorage.getItem('aktivar_access_token'),
-  });
-}
-
-export function useSafetyDashboard() {
-  return useQuery<SafetyDashboard>({
-    queryKey: ['safetyDashboard'],
-    queryFn: async () => withFallback(async () => {
-      const res = await api.get(endpoints.safety);
-      return res.data;
-    }, () => mockSafetyDashboard),
-    enabled: !!sessionStorage.getItem('aktivar_access_token'),
-  });
-}
-
-export function useInitiateSOS() {
-  const queryClient = useQueryClient();
-  return useMutation<{ id: number; detail: string }, Error, { message?: string }>({
-    mutationFn: async (payload) => withFallback(async () => {
-      const res = await api.post(endpoints.safetySos, payload);
-      return res.data;
-    }, () => ({ id: Date.now(), detail: payload.message ?? 'SOS triggered from command center.' })),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['safetyDashboard'] });
-    },
-  });
-}
-
-export function useUpdateSafetyChecklist() {
-  const queryClient = useQueryClient();
-  return useMutation<SafetyChecklist, Error, Partial<SafetyChecklist>>({
-    mutationFn: async (payload) => withFallback(async () => {
-      const res = await api.patch(endpoints.safetyChecklist, payload);
-      return res.data;
-    }, () => updateMockSafetyChecklist(payload)),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['safetyDashboard'] });
-    },
-  });
-}

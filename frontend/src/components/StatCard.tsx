@@ -8,8 +8,8 @@ interface StatCardProps {
 
 export default function StatCard({ icon, value, label }: StatCardProps) {
   return (
-    <div className="editorial-card flex min-h-36 flex-col justify-between rounded-[1.75rem] px-5 py-5">
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-surface-container-high text-primary">
+    <div className="editorial-card flex min-h-36 flex-col justify-between rounded-xl px-5 py-5">
+      <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-surface-container-high text-primary">
         {icon}
       </div>
       <div className="space-y-1">

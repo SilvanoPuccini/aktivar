@@ -19,6 +19,7 @@ vi.mock('react-router-dom', async () => {
 const hooksMock = vi.hoisted(() => ({
   useActivity: vi.fn(),
   useJoinActivity: vi.fn(),
+  useLeaveActivity: vi.fn(),
 }))
 
 const authStoreMock = vi.hoisted(() => ({
@@ -72,6 +73,7 @@ beforeEach(() => {
   navigateMock.mockReset()
   sessionStorage.clear()
   hooksMock.useJoinActivity.mockReturnValue({ isPending: false, mutate: vi.fn() })
+  hooksMock.useLeaveActivity.mockReturnValue({ isPending: false, mutate: vi.fn() })
   hooksMock.useActivity.mockReturnValue({ data: baseActivity, isLoading: false })
   authStoreMock.useAuthStore.mockReturnValue({ isAuthenticated: false, user: null })
 })

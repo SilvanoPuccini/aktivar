@@ -1,11 +1,13 @@
 import { motion } from 'framer-motion';
-import { Bell, Compass, Home, Mountain, Plus, User } from 'lucide-react';
+import { Bell, Compass, Home, LayoutDashboard, Mountain, Plus, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import IconButton from './IconButton';
 
 interface GlassNavProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   isAuthenticated?: boolean;
+  isOrganizer?: boolean;
   notificationCount?: number;
 }
 
@@ -19,17 +21,22 @@ const tabs: Tab[] = [
   { key: 'home', label: 'Inicio', icon: Home },
   { key: 'explore', label: 'Explorar', icon: Compass },
   { key: 'profile', label: 'Perfil', icon: User },
+  { key: 'dashboard', label: 'Panel', icon: LayoutDashboard },
 ];
 
-export default function GlassNav({ activeTab, onTabChange, isAuthenticated = false, notificationCount = 0 }: GlassNavProps) {
-  const visibleTabs = isAuthenticated ? tabs : tabs.filter((tab) => tab.key !== 'profile');
+export default function GlassNav({ activeTab, onTabChange, isAuthenticated = false, isOrganizer = false, notificationCount = 0 }: GlassNavProps) {
+  const visibleTabs = tabs.filter((tab) => {
+    if (tab.key === 'profile') return isAuthenticated;
+    if (tab.key === 'dashboard') return isOrganizer;
+    return true;
+  });
 
   return (
     <>
       <nav className="glass fixed left-0 right-0 top-0 z-50 hidden border-b border-outline-variant/10 shadow-[0_20px_40px_rgba(12,15,10,0.22)] md:block">
         <div className="premium-shell flex h-20 items-center justify-between">
           <button type="button" onClick={() => onTabChange('home')} className="flex cursor-pointer items-center gap-3 rounded-full pr-4 transition-transform hover:scale-[1.01]">
-            <div className="flex h-11 w-11 items-center justify-center rounded-[0.75rem] bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.18),_transparent_58%),rgba(40,43,37,0.95)] text-primary shadow-[var(--shadow-soft)]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-[radial-gradient(circle_at_top,_rgba(255,197,108,0.18),_transparent_58%),rgba(40,43,37,0.95)] text-primary shadow-[var(--shadow-soft)]">
               <Mountain size={18} />
             </div>
             <div className="text-left">
@@ -62,14 +69,10 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => onTabChange('notifications')}
-              className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-surface-container-high/90 text-on-surface-variant transition-colors hover:text-on-surface"
-            >
-              <Bell size={18} />
-              {notificationCount > 0 && <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-primary" />}
-            </button>
+            <div className="relative">
+              <IconButton icon={<Bell size={18} />} ariaLabel="Notificaciones" onClick={() => onTabChange('notifications')} />
+              {notificationCount > 0 && <span className="pointer-events-none absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-primary" />}
+            </div>
             <button
               type="button"
               onClick={() => onTabChange('create')}
@@ -83,7 +86,7 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
         </div>
       </nav>
 
-      <nav className="glass pb-safe fixed bottom-3 left-3 right-3 z-50 rounded-[1rem] border border-outline-variant/15 px-2 py-2 shadow-[var(--shadow-forest)] md:hidden">
+      <nav className="glass pb-safe fixed bottom-3 left-3 right-3 z-50 rounded-md border border-outline-variant/15 px-2 py-2 shadow-[var(--shadow-forest)] md:hidden">
         <div className="flex items-center justify-around">
           {visibleTabs.map((tab) => {
             const Icon = tab.icon;
@@ -103,14 +106,13 @@ export default function GlassNav({ activeTab, onTabChange, isAuthenticated = fal
             );
           })}
 
-          <button
-            type="button"
+          <IconButton
+            icon={<Plus size={20} />}
+            ariaLabel="Crear salida"
             onClick={() => onTabChange('create')}
-            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-[#442c00] shadow-[var(--shadow-soft)]"
+            className="text-[#442c00] shadow-[var(--shadow-soft)]"
             style={{ background: 'var(--cta-gradient)' }}
-          >
-            <Plus size={20} />
-          </button>
+          />
         </div>
       </nav>
     </>

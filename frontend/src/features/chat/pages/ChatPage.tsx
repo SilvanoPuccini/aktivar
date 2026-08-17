@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, Image, MapPin, Wifi, WifiOff } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Avatar from '@/components/Avatar';
+import CTAButton from '@/components/CTAButton';
 import api from '@/services/api';
 import { useActivity, useCurrentUser, useMessages } from '@/services/hooks';
 import { useWebSocket, type ConnectionStatus } from '@/services/useWebSocket';
@@ -79,7 +81,7 @@ export default function ChatPage() {
   return (
     <div className="flex min-h-screen flex-col bg-surface-container-lowest text-on-surface">
       <header className="glass fixed inset-x-0 top-0 z-20 border-b border-outline-variant/10">
-        <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-4 md:px-6">
+        <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-4 md:max-w-4xl md:px-6 lg:px-8">
           <div className="flex items-center gap-4">
             <button type="button" onClick={() => navigate(-1)} className="flex h-11 w-11 items-center justify-center rounded-full bg-transparent text-primary cursor-pointer"><ArrowLeft size={18} /></button>
             <div>
@@ -90,13 +92,13 @@ export default function ChatPage() {
               </div>
             </div>
           </div>
-          <div className="h-10 w-10 overflow-hidden rounded-full border border-outline-variant/30 bg-surface-container-highest">
-            {currentUser?.avatar ? <img src={currentUser.avatar} alt={currentUser.full_name} className="h-full w-full object-cover" /> : null}
-          </div>
+          {currentUser && (
+            <Avatar src={currentUser.avatar} alt={currentUser.full_name} size="md" className="border border-outline-variant/30" />
+          )}
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pb-32 pt-24 md:px-6">
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pb-32 pt-24 md:max-w-4xl md:px-6 lg:px-8">
         <div className="my-6 flex justify-center">
           <span className="rounded-full border border-outline-variant/10 bg-surface-container px-4 py-1 font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">Today</span>
         </div>
@@ -106,10 +108,10 @@ export default function ChatPage() {
             const showAvatar = !own && (index === 0 || displayedMessages[index - 1]?.author.id !== message.author.id);
             return (
               <div key={message.id} className={`flex ${own ? 'justify-end' : 'justify-start'} gap-3`}>
-                {!own && <div className="w-10 shrink-0">{showAvatar ? <img src={message.author.avatar} alt={message.author.full_name} className="h-8 w-8 rounded-full object-cover" /> : null}</div>}
+                {!own && <div className="w-10 shrink-0">{showAvatar ? <Avatar src={message.author.avatar} alt={message.author.full_name} size="sm" /> : null}</div>}
                 <div className={`max-w-[80%] ${own ? '' : 'pt-1'}`}>
                   {!own && showAvatar && <p className="mb-1 ml-1 font-headline text-xs font-bold text-on-surface-variant">{message.author.full_name}</p>}
-                  <div className={`rounded-[0.75rem] px-4 py-3 ${own ? 'rounded-bl-[1.2rem] rounded-br-md rounded-tl-[1.2rem] bg-primary-container text-[#442c00]' : 'rounded-br-[1.2rem] rounded-bl-md rounded-tr-[1.2rem] bg-surface-container text-on-surface'}`}>
+                  <div className={`rounded-sm px-4 py-3 ${own ? 'rounded-bl-md rounded-br-md rounded-tl-md bg-primary-container text-[#442c00]' : 'rounded-br-md rounded-bl-md rounded-tr-md bg-surface-container text-on-surface'}`}>
                   <p className="text-sm leading-relaxed">{message.content}</p>
                   <div className={`mt-3 flex items-center justify-between gap-4 ${own ? 'text-[#5f3f00]' : 'text-on-surface-variant'}`}>
                     <span className="font-label text-[10px] uppercase tracking-[0.16em]">{formatTime(message.created_at)}</span>
@@ -131,11 +133,11 @@ export default function ChatPage() {
       </main>
 
       <div className="glass fixed inset-x-0 bottom-0 z-20 border-t border-outline-variant/10 pb-safe">
-        <div className="mx-auto flex w-full max-w-3xl items-center gap-3 px-4 py-4 md:px-6">
+        <div className="mx-auto flex w-full max-w-3xl items-center gap-3 px-4 py-4 md:max-w-4xl md:px-6 lg:px-8">
           <button type="button" className="flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant cursor-pointer hover:text-primary"><Image size={18} /></button>
           <button type="button" className="flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant cursor-pointer hover:text-primary"><MapPin size={18} /></button>
-          <input value={inputValue} onChange={(e) => { setInputValue(e.target.value); if (status === 'connected') sendMessage({ type: 'typing' }); }} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSend(); } }} className="editorial-input" placeholder="Escribe al grupo" />
-          <button type="button" onClick={handleSend} className="flex h-12 w-12 items-center justify-center rounded-[1rem] text-[#442c00] cursor-pointer" style={{ background: 'linear-gradient(135deg, #ffc56c 0%, #f0a500 100%)' }}><Send size={18} /></button>
+          <input value={inputValue} onChange={(e) => { setInputValue(e.target.value); if (status === 'connected') sendMessage({ type: 'typing' }); }} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSend(); } }} className="editorial-input flex-1" placeholder="Escribe al grupo" />
+          <CTAButton label="Enviar" icon={<Send size={14} />} onClick={handleSend} size="sm" />
         </div>
       </div>
     </div>

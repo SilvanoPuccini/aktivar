@@ -289,6 +289,7 @@ export default function ActivityMap({
                 <img
                   src={m.cover}
                   alt={m.title}
+                  loading="lazy"
                   style={{
                     width: '100%',
                     height: 110,
@@ -395,6 +396,7 @@ export default function ActivityMap({
                 <img
                   src={m.organizer.avatar}
                   alt={m.organizer.full_name}
+                  loading="lazy"
                   style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover', border: '1px solid #514533' }}
                 />
                 <div>
@@ -430,6 +432,7 @@ export default function ActivityMap({
                           src={p.avatar}
                           alt={p.full_name}
                           title={p.full_name}
+                          loading="lazy"
                           style={{
                             width: 20,
                             height: 20,

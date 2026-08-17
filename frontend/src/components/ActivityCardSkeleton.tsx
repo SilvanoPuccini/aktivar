@@ -5,7 +5,7 @@ export default function ActivityCardSkeleton() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="rounded-xl bg-surface-container overflow-hidden"
+      className="rounded-md bg-surface-container overflow-hidden"
       style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.35)' }}
     >
       <div className="aspect-video skeleton" />

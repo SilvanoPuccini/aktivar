@@ -41,6 +41,7 @@ function Avatar({ user, px, isFirst }: { user: User; px: number; isFirst: boolea
         <img
           src={user.avatar}
           alt={user.full_name}
+          loading="lazy"
           className="w-full h-full object-cover"
           onError={() => setFailed(true)}
         />

@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ArrowUpRight, BadgeCheck, Calendar, MapPin } from 'lucide-react';
 import type { Activity } from '@/types/activity';
+import Avatar from './Avatar';
 import CategoryChip from './CategoryChip';
 import SpotsBar from './SpotsBar';
 
@@ -32,7 +33,8 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
         <img
           src={activity.cover_image}
           alt={activity.title}
-          className="h-24 w-24 shrink-0 rounded-[0.625rem] object-cover"
+          loading="lazy"
+          className="h-24 w-24 shrink-0 rounded-sm object-cover"
           onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/200x200/1d201b/ffc56c?text=${encodeURIComponent(activity.category.name)}`; }}
         />
         <div className="min-w-0 flex-1 space-y-2">
@@ -56,12 +58,13 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
   return (
     <article
       onClick={onClick}
-      className="group editorial-card cursor-pointer overflow-hidden rounded-[0.875rem] transition-transform duration-300 hover:-translate-y-1"
+      className="group editorial-card cursor-pointer overflow-hidden rounded-md transition-transform duration-300 hover:-translate-y-1"
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[0.625rem] m-4 mb-0">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-sm m-4 mb-0">
         <img
           src={activity.cover_image}
           alt={activity.title}
+          loading="lazy"
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/600x400/1d201b/ffc56c?text=${encodeURIComponent(activity.category.name)}`; }}
         />
@@ -100,7 +103,7 @@ export default function ActivityCard({ activity, onClick, variant = 'feed' }: Ac
 
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
-            <img src={activity.organizer.avatar} alt={activity.organizer.full_name} className="h-11 w-11 rounded-full object-cover" />
+            <Avatar src={activity.organizer.avatar} alt={activity.organizer.full_name} size="md" />
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="truncate text-sm font-semibold text-on-surface">{activity.organizer.full_name}</span>

@@ -1,10 +1,13 @@
-import { Calendar, Download, DollarSign, Loader2, Star, TrendingUp, Users } from 'lucide-react';
+import { Calendar, Download, DollarSign, Loader2, Star, TrendingUp, Users, X } from 'lucide-react';
 import { useState } from 'react';
+import type { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import Avatar from '@/components/Avatar';
+import Card from '@/components/Card';
 import CTAButton from '@/components/CTAButton';
 import api, { endpoints } from '@/services/api';
-import { useOrganizerDashboard } from '@/services/hooks';
+import { useActivityParticipants, useOrganizerDashboard, useRemoveParticipant } from '@/services/hooks';
 
 interface DashboardData {
   total_activities: number;
@@ -27,6 +30,67 @@ function downloadCsv(filename: string, rows: string[]) {
   link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+function ActivityParticipantsPanel({ activityId }: { activityId: number }) {
+  const { data: participants, isLoading } = useActivityParticipants(activityId);
+  const removeParticipant = useRemoveParticipant();
+
+  const handleRemove = (userId: number) => {
+    removeParticipant.mutate(
+      { activityId, userId },
+      {
+        onSuccess: () => toast.success('Participante removido'),
+        onError: (err) => {
+          const error = err as AxiosError<{ detail?: string }>;
+          toast.error(error.response?.data?.detail ?? 'No se pudo remover al participante');
+        },
+      },
+    );
+  };
+
+  if (isLoading) {
+    return <p className="text-sm text-on-surface-variant">Cargando participantes…</p>;
+  }
+
+  const confirmed = participants?.filter((participant) => participant.status === 'confirmed') ?? [];
+  const waitlisted = participants?.filter((participant) => participant.status === 'waitlisted') ?? [];
+
+  const renderRow = (participant: NonNullable<typeof participants>[number]) => (
+    <div key={participant.id} className="flex items-center justify-between gap-3 rounded-sm bg-surface px-3 py-2.5">
+      <div className="flex items-center gap-3">
+        <Avatar src={participant.user.avatar} alt={participant.user.full_name} size="sm" />
+        <span className="text-sm text-on-surface">{participant.user.full_name}</span>
+      </div>
+      <button
+        type="button"
+        onClick={() => handleRemove(participant.user.id)}
+        disabled={removeParticipant.isPending}
+        className="flex items-center gap-1 rounded-full bg-surface-container-high px-3 py-1.5 font-label text-[10px] uppercase tracking-[0.14em] text-error cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <X size={12} /> Quitar
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="mt-6 space-y-4 rounded-md bg-surface-container-highest/60 p-4">
+      <div>
+        <p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Confirmados ({confirmed.length})</p>
+        <div className="mt-2 space-y-2">
+          {confirmed.length > 0 ? confirmed.map(renderRow) : <p className="text-sm text-on-surface-variant">Sin participantes confirmados todavía.</p>}
+        </div>
+      </div>
+      {waitlisted.length > 0 && (
+        <div>
+          <p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Lista de espera ({waitlisted.length})</p>
+          <div className="mt-2 space-y-2">
+            {waitlisted.map(renderRow)}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function OrganizerDashboardPage() {
@@ -76,7 +140,7 @@ export default function OrganizerDashboardPage() {
   if (error || !data) return <div className="flex min-h-[60vh] items-center justify-center text-on-surface-variant">No se pudo cargar el dashboard.</div>;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-10 pb-12">
+    <div className="premium-page">
       <section className="px-2 pt-2">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -95,11 +159,11 @@ export default function OrganizerDashboardPage() {
         </div>
         <div className="grid gap-8 lg:grid-cols-2">
           {upcoming.map((activity, index) => (
-            <article key={activity.id} className="group relative overflow-hidden rounded-[1rem] bg-surface-container shadow-2xl">
+            <article key={activity.id} className="group relative overflow-hidden rounded-md bg-surface-container shadow-2xl">
               <div className="relative h-[26rem] overflow-hidden">
                 <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style={{ background: cardBackgrounds[index % cardBackgrounds.length] }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/50 to-transparent" />
-                <div className={`absolute right-6 top-6 rounded-[1rem] px-4 py-2 font-label text-[10px] uppercase tracking-[0.16em] ${index === 0 ? 'bg-primary text-[#442c00]' : 'bg-surface-container-highest text-on-surface'}`}>
+                <div className={`absolute right-6 top-6 rounded-md px-4 py-2 font-label text-[10px] uppercase tracking-[0.16em] ${index === 0 ? 'bg-primary text-[#442c00]' : 'bg-surface-container-highest text-on-surface'}`}>
                   {Math.max(1, Math.ceil((new Date(activity.start_datetime).getTime() - now) / 86400000))} days to go
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-8">
@@ -118,6 +182,7 @@ export default function OrganizerDashboardPage() {
                   <div className="mt-8">
                     <CTAButton label="Open group chat" variant="secondary" onClick={() => navigate(`/chat/${activity.id}`)} fullWidth />
                   </div>
+                  <ActivityParticipantsPanel activityId={activity.id} />
                 </div>
               </div>
             </article>
@@ -126,35 +191,35 @@ export default function OrganizerDashboardPage() {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
+        <Card padding="md">
           <div className="flex items-center gap-3"><TrendingUp size={18} className="text-primary" /><div><p className="section-kicker">Revenue</p><h2 className="font-headline text-3xl font-black uppercase tracking-tight text-on-surface">Desglose financiero</h2></div></div>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <div className="rounded-[0.875rem] bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Bruto</p><p className="mt-2 font-headline text-3xl font-black text-on-surface">{formatCLP(data.revenue.total)}</p></div>
-            <div className="rounded-[0.875rem] bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Comisión</p><p className="mt-2 font-headline text-3xl font-black text-error">{formatCLP(data.revenue.fees)}</p></div>
-            <div className="rounded-[0.875rem] bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Neto</p><p className="mt-2 font-headline text-3xl font-black text-secondary">{formatCLP(data.revenue.payout)}</p></div>
+            <div className="rounded-md bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Bruto</p><p className="mt-2 font-headline text-3xl font-black text-on-surface">{formatCLP(data.revenue.total)}</p></div>
+            <div className="rounded-md bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Comisión</p><p className="mt-2 font-headline text-3xl font-black text-error">{formatCLP(data.revenue.fees)}</p></div>
+            <div className="rounded-md bg-surface px-4 py-5"><p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">Neto</p><p className="mt-2 font-headline text-3xl font-black text-secondary">{formatCLP(data.revenue.payout)}</p></div>
           </div>
-        </div>
+        </Card>
 
-        <div className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
+        <Card padding="md">
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-[0.875rem] bg-surface px-4 py-5">
+            <div className="rounded-md bg-surface px-4 py-5">
               <div className="flex items-center gap-2"><Calendar size={16} className="text-primary" /><p className="section-kicker">Activities</p></div>
               <p className="mt-3 font-headline text-4xl font-black text-on-surface">{data.total_activities}</p>
             </div>
-            <div className="rounded-[0.875rem] bg-surface px-4 py-5">
+            <div className="rounded-md bg-surface px-4 py-5">
               <div className="flex items-center gap-2"><Users size={16} className="text-primary" /><p className="section-kicker">Participants</p></div>
               <p className="mt-3 font-headline text-4xl font-black text-on-surface">{data.participants.total}</p>
             </div>
-            <div className="rounded-[0.875rem] bg-surface px-4 py-5">
+            <div className="rounded-md bg-surface px-4 py-5">
               <div className="flex items-center gap-2"><DollarSign size={16} className="text-primary" /><p className="section-kicker">Payout</p></div>
               <p className="mt-3 font-headline text-3xl font-black text-on-surface">{formatCLP(data.revenue.payout)}</p>
             </div>
-            <div className="rounded-[0.875rem] bg-surface px-4 py-5">
+            <div className="rounded-md bg-surface px-4 py-5">
               <div className="flex items-center gap-2"><Star size={16} className="text-primary" /><p className="section-kicker">Rating</p></div>
               <p className="mt-3 font-headline text-4xl font-black text-on-surface">{data.ratings.average > 0 ? `${data.ratings.average}/5` : '—'}</p>
             </div>
           </div>
-        </div>
+        </Card>
       </section>
 
       <section className="space-y-7">
@@ -166,7 +231,7 @@ export default function OrganizerDashboardPage() {
         <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
           {archive.slice(0, 4).map((activity, index) => (
             <div key={activity.id} className="space-y-3">
-              <div className="aspect-square overflow-hidden rounded-[1.25rem] bg-surface-container">
+              <div className="aspect-square overflow-hidden rounded-lg bg-surface-container">
                 <div className="h-full w-full grayscale transition duration-500 hover:grayscale-0" style={{ background: cardBackgrounds[index % cardBackgrounds.length] }} />
               </div>
               <div className="px-1">

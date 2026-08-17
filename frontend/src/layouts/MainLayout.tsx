@@ -1,12 +1,15 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import GlassNav from '@/components/GlassNav';
 import Footer from '@/components/Footer';
+import { useNotifications } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
 
 export function MainLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
+  const { data: notifications } = useNotifications();
+  const notificationCount = notifications?.filter((notification) => !notification.is_read).length ?? 0;
 
   const getActiveTab = () => {
     const path = location.pathname;
@@ -44,7 +47,8 @@ export function MainLayout() {
           activeTab={getActiveTab()}
           onTabChange={handleTabChange}
           isAuthenticated={isAuthenticated}
-          notificationCount={3}
+          isOrganizer={user?.role === 'organizer'}
+          notificationCount={notificationCount}
         />
       )}
 

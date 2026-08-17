@@ -13,7 +13,6 @@ const FeedPage = lazy(() => import('@/features/activities/pages/FeedPage'));
 const ActivityDetailPage = lazy(() => import('@/features/activities/pages/ActivityDetailPage'));
 const CreateActivityPage = lazy(() => import('@/features/activities/pages/CreateActivityPage'));
 const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'));
-const TripDetailPage = lazy(() => import('@/features/transport/pages/TripDetailPage'));
 const ExplorePage = lazy(() => import('@/features/explore/pages/ExplorePage'));
 const ChatPage = lazy(() => import('@/features/chat/pages/ChatPage'));
 const NotificationsPage = lazy(() => import('@/features/notifications/pages/NotificationsPage'));
@@ -21,14 +20,6 @@ const PaymentPage = lazy(() => import('@/features/payments/pages/PaymentPage'));
 const OnboardingPage = lazy(() => import('@/features/auth/pages/OnboardingPage'));
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
 const OrganizerDashboardPage = lazy(() => import('@/features/dashboard/pages/OrganizerDashboardPage'));
-const CommunitiesPage = lazy(() => import('@/features/communities/pages/CommunitiesPage'));
-const JournalPage = lazy(() => import('@/features/journal/pages/JournalPage'));
-const JournalStoryPage = lazy(() => import('@/features/journal/pages/JournalStoryPage'));
-const MarketplacePage = lazy(() => import('@/features/marketplace/pages/MarketplacePage'));
-const MarketplaceListingPage = lazy(() => import('@/features/marketplace/pages/MarketplaceListingPage'));
-const MarketplaceCreatePage = lazy(() => import('@/features/marketplace/pages/MarketplaceCreatePage'));
-const SafetyPage = lazy(() => import('@/features/safety/pages/SafetyPage'));
-const AchievementsPage = lazy(() => import('@/features/achievements/pages/AchievementsPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -118,20 +109,11 @@ export default function App() {
             <Route path="/activity/:id" element={<ActivityDetailPage />} />
             <Route path="/create" element={<RequireAuth><CreateActivityPage /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
-            <Route path="/trip/:id" element={<TripDetailPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/chat/:activityId" element={<RequireAuth><ChatPage /></RequireAuth>} />
             <Route path="/payment/:activityId" element={<RequireAuth><PaymentPage /></RequireAuth>} />
             <Route path="/notifications" element={<RequireAuth><NotificationsPage /></RequireAuth>} />
             <Route path="/dashboard" element={<RequireAuth><OrganizerDashboardPage /></RequireAuth>} />
-            <Route path="/communities" element={<CommunitiesPage />} />
-            <Route path="/journal" element={<JournalPage />} />
-            <Route path="/journal/:slug" element={<JournalStoryPage />} />
-            <Route path="/marketplace" element={<MarketplacePage />} />
-            <Route path="/marketplace/:listingSlug" element={<MarketplaceListingPage />} />
-            <Route path="/marketplace/new" element={<RequireAuth><MarketplaceCreatePage /></RequireAuth>} />
-            <Route path="/safety" element={<RequireAuth><SafetyPage /></RequireAuth>} />
-            <Route path="/achievements" element={<RequireAuth><AchievementsPage /></RequireAuth>} />
           </Route>
         </Routes>
       </Suspense>

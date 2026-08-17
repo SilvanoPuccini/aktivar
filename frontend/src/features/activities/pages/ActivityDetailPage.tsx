@@ -6,11 +6,13 @@ import toast from 'react-hot-toast';
 import type { AxiosError } from 'axios';
 import ActivityMap from '@/components/ActivityMap';
 import AvatarGroup from '@/components/AvatarGroup';
+import Card from '@/components/Card';
 import CTAButton from '@/components/CTAButton';
 import EmptyState from '@/components/EmptyState';
+import IconButton from '@/components/IconButton';
 import WeatherBadge from '@/components/WeatherBadge';
 import { preparePostAuthRedirect } from '@/lib/authRedirect';
-import { useActivity, useJoinActivity } from '@/services/hooks';
+import { useActivity, useJoinActivity, useLeaveActivity } from '@/services/hooks';
 import { useAuthStore } from '@/stores/authStore';
 
 const difficultyStyles: Record<string, string> = {
@@ -27,6 +29,7 @@ export default function ActivityDetailPage() {
   const { isAuthenticated, user } = useAuthStore();
   const { data: activity, isLoading } = useActivity(id);
   const joinMutation = useJoinActivity();
+  const leaveMutation = useLeaveActivity();
 
   if (isLoading) {
     return (
@@ -113,11 +116,26 @@ export default function ActivityDetailPage() {
       return;
     }
 
+    if (!activity.is_free && activity.price > 0) {
+      navigate(`/payment/${activity.id}`);
+      return;
+    }
+
     joinMutation.mutate(activity.id, {
       onSuccess: () => toast.success('Te uniste a la actividad'),
       onError: (err) => {
         const error = err as AxiosError<{ detail?: string }>;
         toast.error(error.response?.data?.detail ?? 'No se pudo completar la reserva');
+      },
+    });
+  };
+
+  const handleLeave = () => {
+    leaveMutation.mutate(activity.id, {
+      onSuccess: () => toast.success('Cancelaste tu lugar en la actividad'),
+      onError: (err) => {
+        const error = err as AxiosError<{ detail?: string }>;
+        toast.error(error.response?.data?.detail ?? 'No se pudo cancelar tu lugar');
       },
     });
   };
@@ -138,7 +156,12 @@ export default function ActivityDetailPage() {
   return (
     <div className="min-h-screen bg-surface pb-24">
       <section className="relative h-[36rem] overflow-hidden md:h-[44rem]">
-        <img src={activity.cover_image} alt={activity.title} className="h-full w-full object-cover" />
+        <img
+          src={activity.cover_image}
+          alt={activity.title}
+          className="h-full w-full object-cover"
+          onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/1600x900/1d201b/ffc56c?text=${encodeURIComponent(activity.category.name)}`; }}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent" />
 
         <header className="glass absolute inset-x-0 top-0 z-20 hidden border-b border-outline-variant/10 md:block">
@@ -155,9 +178,12 @@ export default function ActivityDetailPage() {
           </div>
         </header>
 
-        <button type="button" onClick={() => navigate(-1)} className="glass absolute left-6 top-6 z-20 flex h-12 w-12 items-center justify-center rounded-[1rem] md:hidden">
-          <ArrowLeft size={18} />
-        </button>
+        <IconButton
+          icon={<ArrowLeft size={18} />}
+          ariaLabel="Volver"
+          onClick={() => navigate(-1)}
+          className="glass absolute left-6 top-6 z-20 md:hidden"
+        />
 
         <div className="absolute inset-x-0 bottom-0 z-10">
           <div className="premium-shell pb-10 md:pb-14">
@@ -186,10 +212,16 @@ export default function ActivityDetailPage() {
 
       <div className="premium-shell -mt-8 grid gap-8 md:-mt-12 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-8">
-          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
+          <Card padding="md">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-5">
-                <img src={activity.organizer.avatar} alt={activity.organizer.full_name} className="h-20 w-20 rounded-[1.25rem] object-cover grayscale transition duration-300 hover:grayscale-0" />
+                <img
+                  src={activity.organizer.avatar}
+                  alt={activity.organizer.full_name}
+                  loading="lazy"
+                  className="h-20 w-20 rounded-lg object-cover grayscale transition duration-300 hover:grayscale-0"
+                  onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/200x200/1d201b/ffc56c?text=${encodeURIComponent(activity.organizer.full_name)}`; }}
+                />
                 <div>
                   <p className="section-kicker">Organizer</p>
                   <h2 className="font-headline text-3xl font-black tracking-tight text-on-surface">{activity.organizer.full_name}</h2>
@@ -207,22 +239,22 @@ export default function ActivityDetailPage() {
                 disabled={isAuthenticated && !canOpenGroupChat}
               />
             </div>
-          </section>
+          </Card>
 
-          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
+          <Card padding="md">
             <h2 className="border-l-4 border-primary pl-5 font-headline text-3xl font-black uppercase italic tracking-tight text-on-surface md:text-4xl">The journey</h2>
             <div className="mt-4 space-y-5">
               <p className="text-on-surface-variant">{activity.description}</p>
               <div className="grid gap-4 md:grid-cols-3">
-                <div className="rounded-[0.75rem] bg-surface px-4 py-4">
+                <div className="rounded-sm bg-surface px-4 py-4">
                   <p className="section-kicker">Fecha</p>
                   <div className="mt-3 flex items-start gap-3"><Calendar size={18} className="text-primary" /><div><p className="font-headline text-xl font-black uppercase tracking-tight">{formattedDate}</p></div></div>
                 </div>
-                <div className="rounded-[0.75rem] bg-surface px-4 py-4">
+                <div className="rounded-sm bg-surface px-4 py-4">
                   <p className="section-kicker">Horario</p>
                   <div className="mt-3 flex items-start gap-3"><Clock3 size={18} className="text-primary" /><p className="text-on-surface">{timeRange}</p></div>
                 </div>
-                <div className="rounded-[0.75rem] bg-surface px-4 py-4">
+                <div className="rounded-sm bg-surface px-4 py-4">
                   <p className="section-kicker">Encuentro</p>
                   <div className="mt-3 flex items-start gap-3"><MapPin size={18} className="text-primary" /><p className="text-on-surface">{activity.meeting_point || activity.location_name}</p></div>
                 </div>
@@ -238,9 +270,9 @@ export default function ActivityDetailPage() {
                 </div>
               )}
             </div>
-          </section>
+          </Card>
 
-          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
+          <Card padding="md">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="section-kicker">Current squad</p>
@@ -262,14 +294,14 @@ export default function ActivityDetailPage() {
                 <p className="font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant whitespace-nowrap">{squadLabel}</p>
               </div>
             </div>
-          </section>
+          </Card>
 
-          <section className="overflow-hidden rounded-[1rem] editorial-card">
+          <section className="overflow-hidden rounded-md editorial-card">
             <div className="px-6 pb-2 pt-6 md:px-8">
               <p className="section-kicker">Territorio</p>
               <h2 className="font-headline text-3xl font-black uppercase tracking-tight text-on-surface">Mapa y punto de reunión</h2>
             </div>
-            <div className="h-[22rem] overflow-hidden rounded-[0.875rem] m-4 mt-2">
+            <div className="h-[22rem] overflow-hidden rounded-md m-4 mt-2">
               <ActivityMap
                 activities={[activity]}
                 singleMarker={{ lat: activity.latitude, lng: activity.longitude, label: activity.location_name }}
@@ -282,28 +314,33 @@ export default function ActivityDetailPage() {
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
-          <section className="editorial-card rounded-[1rem] px-6 py-6 md:px-8 md:py-8">
+          <Card padding="md">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="section-kicker">Total price</p>
                 <p className="mt-2 font-headline text-5xl font-black leading-none text-primary">{priceLabel}</p>
               </div>
-              <button type="button" onClick={handleShare} className="rounded-full bg-surface px-3 py-3 text-on-surface-variant hover:text-on-surface cursor-pointer"><Share2 size={16} /></button>
+              <IconButton icon={<Share2 size={16} />} ariaLabel="Compartir" onClick={handleShare} />
             </div>
             <div className="mt-6">
               <CTAButton label={joinLabel} loading={joinMutation.isPending} onClick={handleJoin} disabled={!isPublished || !!viewerParticipant} fullWidth />
               <p className="mt-3 text-sm text-on-surface-variant">{joinHelperText}</p>
+              {(isConfirmedParticipant || isWaitlistedParticipant) && (
+                <div className="mt-3">
+                  <CTAButton label="Cancelar mi lugar" variant="secondary" loading={leaveMutation.isPending} onClick={handleLeave} fullWidth />
+                </div>
+              )}
             </div>
             <div className="mt-6 space-y-4">
-              <div className="rounded-[0.75rem] bg-surface px-4 py-4">
+              <div className="rounded-sm bg-surface px-4 py-4">
                 <p className="section-kicker">Meeting point</p>
                 <div className="mt-3 flex items-center gap-2 text-on-surface"><MapPin size={16} className="text-primary" /> {activity.meeting_point || activity.location_name}</div>
               </div>
-              <div className="rounded-[0.75rem] bg-surface px-4 py-4">
+              <div className="rounded-sm bg-surface px-4 py-4">
                 <p className="section-kicker">Route</p>
                 <div className="mt-3 flex items-center gap-2 text-on-surface"><Route size={16} className="text-primary" /> {activity.location_name}</div>
               </div>
-              <div className="rounded-[0.75rem] bg-surface px-4 py-4">
+              <div className="rounded-sm bg-surface px-4 py-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-headline text-xl font-black text-on-surface">Rideshare available</p>
@@ -323,7 +360,7 @@ export default function ActivityDetailPage() {
               </div>
               {activity.weather && <div><WeatherBadge temp={activity.weather.temp} description={activity.weather.description} icon={activity.weather.icon} /></div>}
             </div>
-          </section>
+          </Card>
         </aside>
       </div>
     </div>

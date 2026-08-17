@@ -20,19 +20,9 @@ describe('API endpoints', () => {
     expect(endpoints.categories).toBe('/activities/categories/')
   })
 
-  it('has correct transport endpoints', () => {
-    expect(endpoints.trips).toBe('/transport/trips/')
-    expect(endpoints.vehicles).toBe('/transport/vehicles/')
-  })
-
   it('generates correct messages endpoint for a given activity ID', () => {
     expect(endpoints.messages(42)).toBe('/chat/activities/42/messages/')
     expect(endpoints.messages(1)).toBe('/chat/activities/1/messages/')
-  })
-
-  it('has correct review and report endpoints', () => {
-    expect(endpoints.reviews).toBe('/reviews/')
-    expect(endpoints.reports).toBe('/reviews/reports/')
   })
 
   it('has correct payment endpoints', () => {

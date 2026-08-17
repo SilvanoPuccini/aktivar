@@ -62,7 +62,7 @@ export default function PaymentCard({
       onClick={onClick}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
-      className="flex w-full items-center gap-3 rounded-2xl bg-surface-container border border-outline-variant p-4 text-left transition-colors hover:bg-surface-container-high cursor-pointer"
+      className="flex w-full items-center gap-3 rounded-md bg-surface-container border border-outline-variant p-4 text-left transition-colors hover:bg-surface-container-high cursor-pointer"
     >
       {/* Icon */}
       <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${config.bg}`}>

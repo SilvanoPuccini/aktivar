@@ -56,8 +56,8 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8 pb-12">
-      <section className="editorial-card rounded-[1.25rem] px-6 py-8 md:px-8">
+    <div className="premium-page mx-auto max-w-4xl">
+      <section className="editorial-card rounded-lg px-6 py-8 md:px-8">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="section-kicker">Inbox</p>
@@ -65,7 +65,7 @@ export default function NotificationsPage() {
             <p className="mt-3 text-on-surface-variant">Actividad reciente, mensajes y movimientos de cupos en una vista más clara.</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="rounded-[0.75rem] bg-surface px-5 py-4 text-center">
+            <div className="rounded-sm bg-surface px-5 py-4 text-center md:px-6">
               <p className="section-kicker">Unread</p>
               <p className="mt-2 font-headline text-3xl font-black text-primary">{unread}</p>
             </div>
@@ -81,14 +81,20 @@ export default function NotificationsPage() {
           {notifications.map((notification) => {
             const Icon = notificationIcons[notification.type];
             return (
-              <button key={notification.id} type="button" onClick={() => handleClick(notification)} className={`flex w-full items-start gap-4 rounded-[1.75rem] border px-5 py-5 text-left cursor-pointer transition ${notification.isRead ? 'border-outline-variant/10 bg-surface-container' : 'border-primary/20 bg-surface-container-high shadow-[0_18px_40px_rgba(0,0,0,0.15)]'}`}>
+              <button key={notification.id} type="button" onClick={() => handleClick(notification)} className={`flex w-full items-start gap-4 rounded-xl border px-5 py-5 text-left cursor-pointer transition md:px-6 md:py-6 ${notification.isRead ? 'border-outline-variant/10 bg-surface-container' : 'border-primary/20 bg-surface-container-high shadow-[0_18px_40px_rgba(0,0,0,0.15)]'}`}>
                 <div className="relative shrink-0">
-                  <img src={notification.actor.avatar} alt={notification.actor.full_name} className="h-14 w-14 rounded-[1rem] object-cover" />
+                  <img
+                    src={notification.actor.avatar}
+                    alt={notification.actor.full_name}
+                    loading="lazy"
+                    className="h-14 w-14 rounded-md object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).src = `https://placehold.co/100x100/1d201b/ffc56c?text=${encodeURIComponent(notification.actor.full_name)}`; }}
+                  />
                   <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[#442c00]"><Icon size={12} /></div>
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="font-label text-[10px] uppercase tracking-[0.16em] text-primary">{notification.actor.full_name}</p>
-                  <p className={`${notification.isRead ? 'text-on-surface-variant' : 'text-on-surface'} text-sm leading-relaxed`}>{notification.description}</p>
+                  <p className={`${notification.isRead ? 'text-on-surface-variant' : 'text-on-surface'} text-sm leading-relaxed md:text-base`}>{notification.description}</p>
                   <p className="mt-2 font-label text-[10px] uppercase tracking-[0.16em] text-on-surface-variant">{notification.timestamp}</p>
                 </div>
                 {!notification.isRead && <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary" />}

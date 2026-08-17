@@ -121,17 +121,11 @@ export const endpoints = {
   // Activities (included at /api/v1/activities/)
   activities: '/activities/',
   categories: '/activities/categories/',
-
-  // Transport (included at /api/v1/transport/)
-  trips: '/transport/trips/',
-  vehicles: '/transport/vehicles/',
+  participants: (activityId: number) => `/activities/${activityId}/participants/`,
+  removeParticipant: (activityId: number) => `/activities/${activityId}/remove-participant/`,
 
   // Chat (included at /api/v1/chat/)
   messages: (activityId: number) => `/chat/activities/${activityId}/messages/`,
-
-  // Reviews (included at /api/v1/reviews/)
-  reviews: '/reviews/',
-  reports: '/reviews/reports/',
 
   // Payments (included at /api/v1/payments/)
   payments: '/payments/',
@@ -146,13 +140,4 @@ export const endpoints = {
 
   // Health
   health: '/health/',
-
-  // Ecosystem
-  communities: '/ecosystem/communities/',
-  journal: '/ecosystem/journal/',
-  marketplace: '/ecosystem/marketplace/',
-  rank: '/ecosystem/rank/',
-  safety: '/ecosystem/safety/',
-  safetySos: '/ecosystem/safety/initiate-sos/',
-  safetyChecklist: '/ecosystem/safety/checklist/',
 } as const;
