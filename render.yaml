@@ -1,11 +1,12 @@
 # Production deploy for AKTIVAR on Render (free web service) + Neon (free Postgres).
 # DATABASE_URL must be set in the Render dashboard with the Neon connection string
-# (a Neon Postgres database with the PostGIS extension enabled).
+# (a plain Neon Postgres database; PostGIS is NOT required).
 services:
   - type: web
     name: aktivar
     plan: free
     runtime: python
+    pythonVersion: 3.12.8
     buildCommand: "./build.sh"
     startCommand: daphne -b 0.0.0.0 -p $PORT aktivar.asgi:application
     healthCheckPath: /api/v1/health/

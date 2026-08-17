@@ -1,24 +1,22 @@
 #!/usr/bin/env bash
 set -o errexit
 
-echo "==> Installing system dependencies (PostGIS runtime)"
-apt-get update -qq
-apt-get install -y -qq gdal-bin libgdal-dev
+# NOTE: The Render free build environment has a read-only filesystem, so apt-get
+# is NOT available. GDAL/PostGIS are not required: the app uses the standard
+# postgres engine (see backend/aktivar/settings.py).
 
-echo "==> Checking Node.js (Vite 8 requires Node >= 20.19)"
-NODE_OK=false
-if command -v node >/dev/null 2>&1; then
-  NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]')
-  NODE_MINOR=$(node -p 'process.versions.node.split(".")[1]')
-  if [ "$NODE_MAJOR" -gt 20 ] || { [ "$NODE_MAJOR" -eq 20 ] && [ "$NODE_MINOR" -ge 19 ]; }; then
-    NODE_OK=true
-  fi
+echo "==> Setting up Node.js (official binary tarball, no apt-get)"
+NODE_VERSION="v22.14.0"
+NODE_HOME="${HOME}/nodejs"
+if [ ! -x "${NODE_HOME}/bin/node" ]; then
+  mkdir -p "${NODE_HOME}"
+  curl -fsSL "https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz" -o "${HOME}/node.tar.xz"
+  tar -xJf "${HOME}/node.tar.xz" -C "${NODE_HOME}" --strip-components=1
+  rm -f "${HOME}/node.tar.xz"
 fi
-if [ "$NODE_OK" = "false" ]; then
-  echo "==> Installing Node.js 22 via NodeSource"
-  curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
-  apt-get install -y -qq nodejs
-fi
+export PATH="${NODE_HOME}/bin:${PATH}"
+node --version
+npm --version
 
 echo "==> Installing Python dependencies"
 pip install --upgrade pip
@@ -30,11 +28,8 @@ npm ci
 npm run build
 cd ..
 
-echo "==> Django: enabling PostGIS on the database"
-cd backend
-python manage.py shell -c "from django.db import connection; connection.cursor().execute('CREATE EXTENSION IF NOT EXISTS postgis')"
-
 echo "==> Django: collectstatic"
+cd backend
 python manage.py collectstatic --noinput
 
 echo "==> Django: migrate"

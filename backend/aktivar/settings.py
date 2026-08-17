@@ -18,7 +18,7 @@ env = environ.Env(
     CORS_ALLOWED_ORIGINS=(list, ["http://localhost:5173"]),
     SECRET_KEY=(str, "django-insecure-change-me-in-production"),
     CLOUDINARY_URL=(str, ""),
-    DB_ENGINE=(str, "django.contrib.gis.db.backends.postgis"),
+    DB_ENGINE=(str, "django.db.backends.postgresql"),
 )
 
 _env_file = os.path.join(BASE_DIR, ".env")
@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.gis",
     # Third-party
     "rest_framework",
     "rest_framework_simplejwt",
@@ -104,7 +103,7 @@ WSGI_APPLICATION = "aktivar.wsgi.application"
 ASGI_APPLICATION = "aktivar.asgi.application"
 
 # Database
-_db_engine = env("DB_ENGINE", default="django.contrib.gis.db.backends.postgis")
+_db_engine = env("DB_ENGINE", default="django.db.backends.postgresql")
 _database_url = env("DATABASE_URL", default="")
 DATABASES = {
     "default": {
@@ -120,17 +119,15 @@ DATABASES = {
 # If DATABASE_URL is provided (Dokploy/12-factor style), prefer it.
 if _database_url:
     DATABASES["default"] = env.db("DATABASE_URL")
-    # Force the PostGIS engine regardless of URL scheme so a plain postgres://
-    # URL (e.g. Neon) does not downgrade to the non-GIS backend.
+    # Keep the configured engine even when the URL scheme is plain postgres://.
     DATABASES["default"]["ENGINE"] = _db_engine
 
-# When using SQLite (CI), remove GIS from INSTALLED_APPS since GDAL is not available
+# When using SQLite (CI), use a plain file database.
 if "sqlite" in _db_engine:
     DATABASES["default"] = {
         "ENGINE": _db_engine,
         "NAME": BASE_DIR / env("DB_NAME", default="db.sqlite3"),
     }
-    INSTALLED_APPS = [app for app in INSTALLED_APPS if app != "django.contrib.gis"]
 
 # Caches
 _redis_url = env("REDIS_URL", default="redis://127.0.0.1:6379/0")
