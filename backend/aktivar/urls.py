@@ -5,18 +5,30 @@ URL configuration for AKTIVAR project.
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
 
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from users.views import AuthTokenObtainPairView
 
 
 def health_check(request):
     return JsonResponse({"status": "ok"})
+
+
+def spa_index(request):
+    index_path = getattr(settings, "FRONTEND_DIST", None)
+    if index_path:
+        index_file = index_path / "index.html"
+        if index_file.is_file():
+            return HttpResponse(
+                index_file.read_text(encoding="utf-8"),
+                content_type="text/html",
+            )
+    return JsonResponse({"detail": "Frontend build not found"}, status=404)
 
 
 urlpatterns = [
@@ -47,3 +59,11 @@ if settings.DEBUG:
         path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# SPA catch-all: serve the built index.html for any non-API route so a single
+# origin hosts both the Django API and the React app. Kept outside the DEBUG
+# block so it works in production. API, admin, static, media and the WebSocket
+# (/ws/*) prefixes are untouched.
+urlpatterns += [
+    re_path(r"^(?!api/|admin/|static/|media/|ws/).*", spa_index, name="spa_index"),
+]

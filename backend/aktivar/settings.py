@@ -120,6 +120,9 @@ DATABASES = {
 # If DATABASE_URL is provided (Dokploy/12-factor style), prefer it.
 if _database_url:
     DATABASES["default"] = env.db("DATABASE_URL")
+    # Force the PostGIS engine regardless of URL scheme so a plain postgres://
+    # URL (e.g. Neon) does not downgrade to the non-GIS backend.
+    DATABASES["default"]["ENGINE"] = _db_engine
 
 # When using SQLite (CI), remove GIS from INSTALLED_APPS since GDAL is not available
 if "sqlite" in _db_engine:
@@ -151,14 +154,23 @@ else:
     }
 
 # Channel Layers
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [env("REDIS_CHANNEL_URL", default=_redis_url)],
+_use_redis_channel = env.bool("USE_REDIS_CHANNEL", default=True)
+
+if _use_redis_channel:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [env("REDIS_CHANNEL_URL", default=_redis_url)],
+            },
         },
-    },
-}
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        },
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -186,6 +198,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Built Vite SPA assets served by WhiteNoise (single-origin production deploy).
+# Guarded so local/CI runs without a frontend build keep working.
+FRONTEND_DIST = BASE_DIR.parent / "frontend" / "dist"
+if os.path.isdir(FRONTEND_DIST):
+    STATICFILES_DIRS = [FRONTEND_DIST]
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
@@ -278,6 +296,8 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
+CELERY_TASK_ALWAYS_EAGER = env.bool("CELERY_TASK_ALWAYS_EAGER", default=False)
+CELERY_TASK_EAGER_PROPAGATES = True
 
 # Resend (transactional emails)
 RESEND_API_KEY = env("RESEND_API_KEY", default="")

@@ -1,0 +1,66 @@
+# Production deploy for AKTIVAR on Render (free web service) + Neon (free Postgres).
+# DATABASE_URL must be set in the Render dashboard with the Neon connection string
+# (a Neon Postgres database with the PostGIS extension enabled).
+services:
+  - type: web
+    name: aktivar
+    plan: free
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: daphne -b 0.0.0.0 -p $PORT aktivar.asgi:application
+    healthCheckPath: /api/v1/health/
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: aktivar.settings_prod
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://*.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        value: http://localhost:5173
+      - key: RESEND_FROM_EMAIL
+        value: "Aktivar <noreply@aktivar.app>"
+      - key: FRONTEND_URL
+        value: https://aktivar.onrender.com
+      - key: USE_REDIS_CACHE
+        value: "False"
+      - key: USE_REDIS_CHANNEL
+        value: "False"
+      - key: CELERY_TASK_ALWAYS_EAGER
+        value: "True"
+      - key: SECRET_KEY
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_ORGANIZER
+        sync: false
+      - key: STRIPE_PRICE_EXPLORER
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: ONESIGNAL_APP_ID
+        sync: false
+      - key: ONESIGNAL_REST_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
