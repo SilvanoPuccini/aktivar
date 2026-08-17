@@ -76,6 +76,21 @@ class ActivityViewSet(viewsets.ModelViewSet):
             })
         serializer.save(organizer=self.request.user)
 
+    def _ensure_organizer(self, activity):
+        if activity.organizer != self.request.user and not self.request.user.is_staff:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied(
+                'You do not have permission to modify this activity.'
+            )
+
+    def perform_update(self, serializer):
+        self._ensure_organizer(self.get_object())
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        self._ensure_organizer(instance)
+        instance.delete()
+
     @action(detail=True, methods=['post'], url_path='join', throttle_classes=[JoinRateThrottle])
     def join_activity(self, request, pk=None):
         activity = self.get_object()

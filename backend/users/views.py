@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import CustomUser, EmailVerificationToken, PhoneVerificationOTP
+from .permissions import IsOwnerOrStaff
 from .serializers import (
     RequestPhoneVerificationSerializer,
     UserAvatarSerializer,
@@ -82,7 +83,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'create':
             return [AllowAny()]
-        return [IsAuthenticated()]
+        return [IsAuthenticated(), IsOwnerOrStaff()]
 
     def perform_create(self, serializer):
         serializer.save()

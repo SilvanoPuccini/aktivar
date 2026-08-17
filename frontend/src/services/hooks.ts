@@ -71,7 +71,11 @@ export function useActivity(id: string | undefined) {
           return undefined;
         }
 
-        return mockActivities.find((activity) => String(activity.id) === id);
+        if (import.meta.env.DEV) {
+          return mockActivities.find((activity) => String(activity.id) === id);
+        }
+
+        throw error;
       }
     },
     enabled: !!id,
@@ -612,7 +616,11 @@ export function useCreateMarketplaceListing() {
   return useMutation<MarketplaceListing, Error, Partial<MarketplaceListing>>({
     mutationFn: async (payload) => withFallback(async () => {
       const res = await api.post(endpoints.marketplace, payload);
-      return normalizeMarketplaceListing(res.data) ?? createMockMarketplaceListing(payload);
+      const listing = normalizeMarketplaceListing(res.data);
+      if (!listing) {
+        throw new Error('Invalid marketplace listing response');
+      }
+      return listing;
     }, () => createMockMarketplaceListing(payload)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['marketplaceListings'] });

@@ -90,6 +90,21 @@ class MarketplaceListingViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(seller=self.request.user)
 
+    def _ensure_seller(self, listing):
+        if listing.seller != self.request.user and not self.request.user.is_staff:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied(
+                'You do not have permission to modify this listing.'
+            )
+
+    def perform_update(self, serializer):
+        self._ensure_seller(self.get_object())
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        self._ensure_seller(instance)
+        instance.delete()
+
 
 class RankDashboardView(generics.RetrieveAPIView):
     serializer_class = RankDashboardSerializer

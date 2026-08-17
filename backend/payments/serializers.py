@@ -21,6 +21,8 @@ class PaymentSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id',
             'user',
+            'amount',
+            'currency',
             'stripe_payment_intent_id',
             'status',
             'created_at',

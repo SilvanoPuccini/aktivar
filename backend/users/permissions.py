@@ -44,3 +44,12 @@ class IsOwnerOrReadOnly(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         return obj == request.user
+
+
+class IsOwnerOrStaff(BasePermission):
+    """Allow write access only to the object owner or staff members."""
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+        return request.user.is_staff or obj == request.user

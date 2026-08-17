@@ -32,8 +32,14 @@ class PaymentViewSet(
         serializer.is_valid(raise_exception=True)
 
         activity = serializer.validated_data.get('activity')
-        amount = serializer.validated_data['amount']
-        currency = serializer.validated_data.get('currency', 'CLP')
+        if activity is None:
+            return Response(
+                {'detail': 'An activity is required to create a payment.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        amount = activity.price
+        currency = 'CLP'
 
         try:
             import stripe
@@ -74,6 +80,8 @@ class PaymentViewSet(
             intent = stripe.PaymentIntent.create(**create_kwargs)
             payment = serializer.save(
                 user=request.user,
+                amount=amount,
+                currency=currency,
                 stripe_payment_intent_id=intent['id'],
                 platform_fee=platform_fee,
                 organizer_payout=organizer_payout,
