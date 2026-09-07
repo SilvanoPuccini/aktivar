@@ -39,7 +39,7 @@ gunicorn>=21.2,<23.0
 whitenoise>=6.6,<7.0
 
 # Admin extras
-django-import-export>=4.0,<5.0
+django-import-export>=4.4.1,<5.0
 
 # HTTP Requests (for Resend, OneSignal, Twilio, Open-Meteo API calls)
 requests>=2.31,<3.0
