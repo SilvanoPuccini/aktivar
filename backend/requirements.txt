@@ -22,7 +22,7 @@ django-redis>=5.4,<6.0
 celery>=5.3,<6.0
 
 # WebSocket / Real-time
-channels>=4.0,<5.0
+channels>=4.3.2,<5.0
 channels-redis>=4.2,<5.0
 daphne>=4.1,<5.0
 
