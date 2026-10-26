@@ -1,6 +1,6 @@
 # Django Core
-Django>=5.0,<5.1
-djangorestframework>=3.15,<4.0
+Django>=5.2.18,<5.3
+djangorestframework>=3.18.2,<4.0
 djangorestframework-simplejwt>=5.3,<6.0
 django-cors-headers>=4.3,<5.0
 django-filter>=24.1,<25.0
@@ -24,10 +24,10 @@ celery>=5.3,<6.0
 # WebSocket / Real-time
 channels>=4.0,<5.0
 channels-redis>=4.2,<5.0
-daphne>=4.1,<5.0
+uvicorn[standard]>=0.54.0,<1.0
 
 # Media & Storage
-Pillow>=10.2,<11.0
+Pillow>=13.0.0,<14.0
 django-cloudinary-storage>=0.3,<1.0
 cloudinary>=1.38,<2.0
 
@@ -35,7 +35,7 @@ cloudinary>=1.38,<2.0
 stripe>=8.0,<10.0
 
 # Server
-gunicorn>=21.2,<23.0
+gunicorn>=26.2.0,<27.0
 whitenoise>=6.6,<7.0
 
 # Admin extras
@@ -49,15 +49,15 @@ django-fsm>=3.0,<4.0
 
 # Security
 argon2-cffi>=23.1,<24.0
-django-bleach>=3.1,<4.0
+bleach[css]>=6.4.0,<7.0
 sentry-sdk[django]>=2.0,<3.0
 
 # Testing
-pytest>=8.0,<9.0
+pytest>=9.0.3,<10.0
 pytest-django>=4.8,<5.0
 factory-boy>=3.3,<4.0
-pytest-asyncio>=0.23,<1.0
+pytest-asyncio>=1.4.1,<2.0
 
 # Linting
-black>=24.0,<25.0
+black>=26.10.1,<27.0
 isort>=5.13,<6.0

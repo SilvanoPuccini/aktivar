@@ -1,6 +1,6 @@
 # =============================================================================
 # Aktivar Backend Dockerfile
-# Python 3.12 + Django + Daphne (ASGI) + Gunicorn
+# Python 3.12 + Django + Uvicorn (ASGI) + Gunicorn
 # =============================================================================
 
 FROM python:3.12-slim AS base
@@ -48,11 +48,11 @@ USER django
 # Expose the application port
 EXPOSE 8000
 
-# Run with daphne (ASGI server) for WebSocket support
-# Gunicorn handles HTTP workers, daphne handles WS connections
-# In production, use daphne as the primary server since it handles both HTTP and WS
-CMD ["daphne", \
-    "-b", "0.0.0.0", \
-    "-p", "8000", \
-    "--access-log", "-", \
-    "aktivar.asgi:application"]
+# Serve the unchanged Channels ASGI application over HTTP and WebSocket.
+# Keep forwarded-header trust disabled, matching the previous server command.
+CMD ["uvicorn", "aktivar.asgi:application", \
+    "--host", "0.0.0.0", \
+    "--port", "8000", \
+    "--access-log", \
+    "--no-proxy-headers", \
+    "--lifespan", "off"]

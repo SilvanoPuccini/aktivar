@@ -44,7 +44,7 @@ services:
       retries: 5
 
   # ---------------------------------------------------------------------------
-  # Django Backend (Daphne ASGI server)
+  # Django Backend (Uvicorn ASGI server)
   # ---------------------------------------------------------------------------
   backend:
     build:
@@ -69,7 +69,7 @@ services:
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
-             daphne -b 0.0.0.0 -p 8000 --access-log - aktivar.asgi:application"
+             uvicorn aktivar.asgi:application --host 0.0.0.0 --port 8000 --access-log --no-proxy-headers --lifespan off"
 
   # ---------------------------------------------------------------------------
   # Celery Worker for async task processing

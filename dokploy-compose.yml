@@ -53,7 +53,7 @@ services:
       retries: 5
 
   # ---------------------------------------------------------------------------
-  # Django Backend (Daphne ASGI — HTTP + WebSocket)
+  # Django Backend (Uvicorn ASGI — HTTP + WebSocket)
   # ---------------------------------------------------------------------------
   backend:
     build:
@@ -103,7 +103,7 @@ services:
         echo '=== Seeding demo data ===' &&
         (python manage.py seed_demo --skip-if-exists 2>&1 || echo 'Seed skipped or failed (non-fatal)') &&
         echo '=== Starting Daphne on port 8000 ===' &&
-        daphne -b 0.0.0.0 -p 8000 --access-log - aktivar.asgi:application
+        uvicorn aktivar.asgi:application --host 0.0.0.0 --port 8000 --access-log --no-proxy-headers --lifespan off
       "
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health/')"]

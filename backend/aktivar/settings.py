@@ -35,8 +35,6 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
 # Application definition
 INSTALLED_APPS = [
-    # Daphne must be before django.contrib.staticfiles
-    "daphne",
     # Django defaults
     "django.contrib.admin",
     "django.contrib.auth",

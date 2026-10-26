@@ -4,8 +4,8 @@
 # =============================================================================
 
 # Virtual environment
-venv/
-.venv/
+venv
+.venv
 env/
 
 # Python cache
