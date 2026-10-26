@@ -15,6 +15,8 @@ from decimal import Decimal
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
+from core.demo_credentials import DEMO_PASSWORD_ENV, apply_demo_password
+
 
 class Command(BaseCommand):
     help = 'Seed the database with demo data for Aktivar'
@@ -91,11 +93,11 @@ class Command(BaseCommand):
                 },
             )
             if created:
-                user.set_password('aktivar2024')
+                apply_demo_password(user)
                 user.save()
             users[u_data['email']] = user
 
-        self.stdout.write(f'  Created {len(users)} users (password: aktivar2024)')
+        self.stdout.write(f'  Created {len(users)} users (password from {DEMO_PASSWORD_ENV}, unusable if unset)')
 
         # ── Update profiles ────────────────────────────────────────
         locations = [
@@ -274,8 +276,8 @@ class Command(BaseCommand):
         # ── Summary ────────────────────────────────────────────────
         self.stdout.write(self.style.SUCCESS(
             f'\n✅ Demo data seeded successfully!\n'
-            f'   Users: {len(users)} (login: any email / password: aktivar2024)\n'
+            f'   Users: {len(users)} (password from {DEMO_PASSWORD_ENV})\n'
             f'   Categories: {len(categories)}\n'
             f'   Activities: {len(activities)}\n'
-            f'\n   Demo login: demo@aktivar.app / aktivar2024'
+            f'\n   Demo login: demo@aktivar.app'
         ))

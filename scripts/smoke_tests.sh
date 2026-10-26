@@ -4,7 +4,7 @@ set -euo pipefail
 # Usage:
 #   bash scripts/smoke_tests.sh https://tu-dominio.com
 # Optional:
-#   AUTH_EMAIL=demo@aktivar.app AUTH_PASSWORD=aktivar2024 bash scripts/smoke_tests.sh https://demo.aktivar.app
+#   AUTH_EMAIL=demo@aktivar.app AUTH_PASSWORD="$DEMO_USER_PASSWORD" bash scripts/smoke_tests.sh https://demo.aktivar.app
 
 BASE_URL="${1:-}"
 if [[ -z "$BASE_URL" ]]; then

@@ -38,8 +38,8 @@ python manage.py migrate
 echo "==> Django: creating superuser if missing"
 DJANGO_SUPERUSER_PASSWORD="$ADMIN_PASSWORD" python manage.py createsuperuser --noinput --email admin@aktivar.app --full_name admin || true
 
-echo "==> Django: loading demo data (idempotent, fails softly)"
-python manage.py load_demo_data || true
+echo "==> Django: locking demo logins that use publicly leaked passwords"
+python manage.py lock_leaked_demo_passwords
 
 cd ..
 

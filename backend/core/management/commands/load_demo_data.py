@@ -7,14 +7,19 @@ Usage: python manage.py load_demo_data
 from datetime import timedelta
 from decimal import Decimal
 
-from django.core.management.base import BaseCommand
+from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
+
+from core.demo_credentials import apply_demo_password
 
 
 class Command(BaseCommand):
     help = 'Load demo data for AKTIVAR (users, activities)'
 
     def handle(self, *args, **options):
+        if not settings.DEBUG:
+            raise CommandError('load_demo_data is for local development only and refuses to run with DEBUG=False.')
         self.stdout.write('Loading demo data for AKTIVAR...')
         self._create_users()
         self._create_categories()
@@ -99,10 +104,10 @@ class Command(BaseCommand):
         for i, data in enumerate(users_data):
             user, created = CustomUser.objects.get_or_create(
                 email=data['email'],
-                defaults={**data, 'password': 'pbkdf2_sha256$600000$dummy$hash='},
+                defaults=data,
             )
             if created:
-                user.set_password('demo1234')
+                apply_demo_password(user)
                 user.save()
                 # Update auto-created profile
                 profile = user.profile
@@ -113,14 +118,6 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(f'  User already exists: {user.full_name}')
 
-        # Create superuser
-        if not CustomUser.objects.filter(email='admin@aktivar.app').exists():
-            CustomUser.objects.create_superuser(
-                email='admin@aktivar.app',
-                password='admin1234',
-                full_name='Admin AKTIVAR',
-            )
-            self.stdout.write('  Created superuser: admin@aktivar.app / admin1234')
 
     def _create_categories(self):
         from activities.models import Category

@@ -102,6 +102,7 @@ services:
         python manage.py collectstatic --noinput &&
         echo '=== Seeding demo data ===' &&
         (python manage.py seed_demo --skip-if-exists 2>&1 || echo 'Seed skipped or failed (non-fatal)') &&
+        python manage.py lock_leaked_demo_passwords &&
         echo '=== Starting Daphne on port 8000 ===' &&
         uvicorn aktivar.asgi:application --host 0.0.0.0 --port 8000 --access-log --no-proxy-headers --lifespan off
       "
