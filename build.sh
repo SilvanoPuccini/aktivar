@@ -6,11 +6,15 @@ set -o errexit
 # postgres engine (see backend/aktivar/settings.py).
 
 echo "==> Setting up Node.js (official binary tarball, no apt-get)"
-NODE_VERSION="v22.14.0"
+NODE_VERSION="v22.23.4"
+# From the GPG-signed https://nodejs.org/dist/v22.23.4/SHASUMS256.txt
+NODE_SHA256="1805bcd35e6815559bd2eb97db438d3fdb0eb3a5e6a977b7c1badca76337e9ce"
 NODE_HOME="${HOME}/nodejs"
-if [ ! -x "${NODE_HOME}/bin/node" ]; then
+if [ "$("${NODE_HOME}/bin/node" --version 2>/dev/null)" != "${NODE_VERSION}" ]; then
+  rm -rf "${NODE_HOME}"
   mkdir -p "${NODE_HOME}"
   curl -fsSL "https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz" -o "${HOME}/node.tar.xz"
+  echo "${NODE_SHA256}  ${HOME}/node.tar.xz" | sha256sum -c -
   tar -xJf "${HOME}/node.tar.xz" -C "${NODE_HOME}" --strip-components=1
   rm -f "${HOME}/node.tar.xz"
 fi

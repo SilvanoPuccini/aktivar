@@ -5,7 +5,8 @@ from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
+from rest_framework.settings import api_settings
+from rest_framework.throttling import AnonRateThrottle, SimpleRateThrottle, UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -41,6 +42,24 @@ class AuthRateThrottle(AnonRateThrottle):
             return True
 
 
+class LoginAccountRateThrottle(SimpleRateThrottle):
+    """Per-target-account login limit, independent of the client IP.
+
+    The IP-based limit can be dodged by rotating spoofed X-Forwarded-For values;
+    keying on the submitted email caps password guessing against any one account.
+    """
+    scope = 'login_account'
+
+    def get_rate(self):
+        return api_settings.DEFAULT_THROTTLE_RATES.get(self.scope)
+
+    def get_cache_key(self, request, view):
+        email = request.data.get('email') if hasattr(request.data, 'get') else None
+        if not isinstance(email, str) or not email.strip():
+            return None
+        return self.cache_format % {'scope': self.scope, 'ident': email.strip().lower()}
+
+
 class OTPRateThrottle(UserRateThrottle):
     """3 requests/hour for OTP/verification requests."""
     rate = '3/hour'
@@ -56,7 +75,7 @@ class JoinRateThrottle(UserRateThrottle):
 class AuthTokenObtainPairView(TokenObtainPairView):
     """JWT login endpoint with throttling and structured logging."""
 
-    throttle_classes = [AuthRateThrottle]
+    throttle_classes = [AuthRateThrottle, LoginAccountRateThrottle]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -66,10 +85,13 @@ class AuthTokenObtainPairView(TokenObtainPairView):
             raise
 
         if response.status_code >= 400:
+            # Hop count only (no values): used to size DRF NUM_PROXIES for the real proxy chain.
+            xff = request.META.get("HTTP_X_FORWARDED_FOR", "")
             logger.warning(
-                "JWT login rejected status=%s ip=%s",
+                "JWT login rejected status=%s ip=%s xff_hops=%d",
                 response.status_code,
                 request.META.get("REMOTE_ADDR", "unknown"),
+                len([hop for hop in xff.split(",") if hop.strip()]),
             )
         return response
 
