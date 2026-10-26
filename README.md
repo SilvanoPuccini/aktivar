@@ -1,13 +1,13 @@
-![Deploy](https://img.shields.io/badge/deploy-CubePath-green)
+![Deploy](https://img.shields.io/badge/deploy-Render-46E3B7)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Hackathon](https://img.shields.io/badge/Hackathon-CubePath_2026-orange)
 
 # 🏔️ Aktivar — Outdoor Activities & Shared Transport Platform
 **Connect with people who love the outdoors. Organize activities, share rides, and go on adventures together.**
 
-Aktivar is a platform that connects people who enjoy outdoor activities — running, hiking, cycling, climbing, kayaking, and more. It includes integrated carpooling so groups can share transport costs and reduce their environmental impact. Built with Django, React, and PostGIS for real-time geolocation.
+Aktivar is a platform that connects people who enjoy outdoor activities — running, hiking, cycling, climbing, kayaking, and more. It includes integrated carpooling so groups can share transport costs and reduce their environmental impact. Built with Django and React, with radius-based geolocation search (PostGIS when available, plain PostgreSQL fallback on Neon).
 
-> Hackathon CubePath 2026 — Deployed on CubePath with Docker Compose
+> Built for Hackathon CubePath 2026 — now deployed on Render with a Neon PostgreSQL database
 
 ### 🌐 **Demo en vivo:** https://aktivar.online
 ---
@@ -21,7 +21,7 @@ Aktivar is a platform that connects people who enjoy outdoor activities — runn
 
 ### Activities & Discovery
 - **Create and join activities** by category, location, difficulty level, and date
-- **Interactive map** with geolocation powered by Leaflet + PostGIS
+- **Interactive map** with geolocation powered by Leaflet (PostGIS optional)
 - **Smart feed** with recommendations based on your preferred categories
 - **Weather forecast** integrated per activity via Open-Meteo API
 - **Categories**: Running, Hiking, Cycling, Climbing, Kayak, Skiing, and more
@@ -65,105 +65,60 @@ Aktivar is a platform that connects people who enjoy outdoor activities — runn
 
 | Layer | Technology |
 |-------|-----------|
-| **Backend** | Django 5, Django REST Framework, Daphne (ASGI) |
+| **Backend** | Django 5, Django REST Framework, Uvicorn (ASGI) |
 | **Frontend** | React 19, TypeScript, Vite, Tailwind CSS |
-| **Database** | PostgreSQL 16 + PostGIS (geospatial queries) |
-| **Cache / Broker** | Redis 7 |
-| **Async Tasks** | Celery |
-| **WebSocket** | Django Channels + channels-redis |
+| **Database** | PostgreSQL on Neon |
+| **Async Tasks** | Celery (eager mode in production, no broker) |
+| **WebSocket** | Django Channels (in-memory layer in production) |
 | **Payments** | Stripe (Checkout, Connect, Subscriptions) |
 | **Auth** | JWT (SimpleJWT) + Argon2 password hashing |
 | **State Management** | Zustand |
 | **Maps** | Leaflet + React-Leaflet |
-| **CI/CD** | GitHub Actions (lint, test, build, security audit, Docker) |
+| **CI/CD** | GitHub Actions (lint, test, build, security audit) |
 | **Monitoring** | Sentry (backend + frontend) |
-| **Deployment** | Docker Compose, Nginx, CubePath / Dokploy |
+| **Deployment** | Render (web service, `render.yaml` + `build.sh`), Neon (PostgreSQL) |
 
 ---
 
 ## Architecture
 
 ```
-                        ┌─────────────────────────────────────┐
-                        │           Nginx (port 80)           │
-                        │  React SPA (static) + Reverse Proxy │
-                        └──────────┬──────────────────────────┘
-                                   │
-                          /api/    │    /ws/
-                     ┌─────────────┼─────────────┐
-                     │                           │
-               ┌─────▼──────┐             ┌──────▼──────┐
-               │   Daphne   │             │   Daphne    │
-               │  HTTP API  │             │  WebSocket  │
-               └─────┬──────┘             └─────────────┘
-                     │
-         ┌───────────┼───────────┐
-         │           │           │
-   ┌─────▼─────┐ ┌──▼───┐ ┌────▼────┐
-   │ PostgreSQL │ │Redis │ │ Celery  │
-   │ + PostGIS  │ │      │ │ Workers │
-   └───────────┘ └──────┘ └─────────┘
+            Browser
+               │  HTTPS (aktivar.online / aktivar.onrender.com)
+               ▼
+   ┌───────────────────────────────┐
+   │ Render web service            │
+   │  Uvicorn (ASGI) + Django      │
+   │  ├─ /api/  REST API (DRF)     │
+   │  ├─ /ws/   Channels WebSocket │
+   │  └─ React SPA (WhiteNoise)    │
+   └───────────────┬───────────────┘
+                   │
+           ┌───────▼────────┐
+           │ Neon PostgreSQL│
+           └────────────────┘
 ```
 
-**Docker services:** `db` · `redis` · `backend` · `celery` · `nginx`
+`build.sh` builds the React frontend (Node with verified checksum), collects static files and runs migrations on every deploy.
 
 ---
 
-## Quick Start
+## Local development
 
-### Prerequisites
-- Docker & Docker Compose
-- Git
-
-### 1. Clone
-
-```bash
-git clone https://github.com/SilvanoPuccini/aktivar.git
-cd aktivar
-```
-
-### 2. Configure environment
-
-```bash
-cp .env.production.example .env
-```
-
-Set the required values:
-
-```bash
-SECRET_KEY=<generate-with: python -c "import secrets; print(secrets.token_urlsafe(50))">
-POSTGRES_PASSWORD=<strong-password>
-```
-
-### 3. Deploy
-
-```bash
-docker compose -f dokploy-compose.yml up -d --build
-```
-
-The backend automatically runs migrations, collects static files, and seeds demo data on first start.
-
-### 4. Access
-
-| URL | Description |
-|-----|-------------|
-| `http://localhost` | Application |
-| `http://localhost/api/v1/` | REST API |
-| `http://localhost/api/v1/health/` | Health check |
-| `http://localhost/admin/` | Django Admin |
+See [`docs/local-development.md`](docs/local-development.md) for the Python 3.12 virtualenv and Vite setup.
 
 ---
 
-## Deploy on CubePath / Dokploy
+## Deploy (Render + Neon)
 
-1. In Dokploy, create a new project → **Docker Compose**
-2. Connect the GitHub repository
-3. Set environment variables: `SECRET_KEY` and `POSTGRES_PASSWORD` (minimum)
-4. Go to **Domains** tab → generate a subdomain
-5. Set **Container Port: 80**, **Service: nginx**
-6. Deploy
+1. Create a Neon PostgreSQL database and copy its connection string.
+2. In Render, create the service from this repository (`render.yaml` describes it).
+3. Set the secret environment variables in the Render dashboard: `DATABASE_URL` (Neon), `SECRET_KEY`, `ADMIN_PASSWORD` and the integration keys listed in `render.yaml`.
+4. Deploy. `build.sh` builds the frontend, collects static files and applies migrations.
 
-The `dokploy-compose.yml` file handles everything: PostgreSQL, Redis, backend, Celery, and Nginx with the built-in frontend.
+> If the Render service is not Blueprint-managed, the start command and environment values in the dashboard take precedence over `render.yaml`; keep both in sync.
+
+No demo users are created in production. `load_demo_data` refuses to run with `DEBUG=False`, and every deploy locks any demo account that still uses a password previously published in this repository.
 
 ---
 
@@ -191,7 +146,7 @@ Interactive docs available in development mode at `/api/docs/` (Swagger UI).
 
 - JWT tokens stored in sessionStorage with automatic refresh
 - Argon2 password hashing (OWASP recommended)
-- Rate limiting: auth 30/hr, OTP 3/hr, API 100/day (anon)
+- Rate limiting: auth 30/hr per real client IP, 10 failed logins per account lock it for 15 min, OTP 3/hr, API 100/day (anon)
 - Input sanitization via django-bleach on all user content
 - CORS and CSRF protection configured per-environment
 - Stripe webhook signature verification
@@ -224,30 +179,12 @@ npm run build
 bash scripts/smoke_tests.sh https://your-domain.com
 ```
 
-### Smoke tests sobre dominio real (VPS / CubePath)
+Optional login check (use a dedicated test account, never a published credential):
 
 ```bash
-# Desde la raíz del repo:
-bash scripts/smoke_tests.sh https://tu-dominio.com
-
-# Opcional: validar login también
-AUTH_EMAIL=tu_email_de_prueba AUTH_PASSWORD=tu_password_de_prueba \
-  bash scripts/smoke_tests.sh https://tu-dominio.com
+AUTH_EMAIL=your_test_email AUTH_PASSWORD="$DEMO_USER_PASSWORD" \
+  bash scripts/smoke_tests.sh https://aktivar.online
 ```
-
-### Verificación guiada auth/register en VPS (500 troubleshooting)
-
-```bash
-# Control de conexión total (DNS + HTTPS + API + register probe)
-bash scripts/vps_connection_check.sh https://tu-dominio.com
-
-# Opcional: validar login con usuario real
-AUTH_EMAIL=tu_email_de_prueba AUTH_PASSWORD=tu_password_de_prueba \
-  bash scripts/vps_connection_check.sh https://tu-dominio.com
-```
-
-Checklist operativo completo:
-- `docs/vps-auth-debug-checklist.md`
 
 ---
 
@@ -281,23 +218,21 @@ aktivar/
 │   ├── src/components/       # Shared UI components
 │   ├── src/services/         # API client, hooks
 │   └── src/stores/           # Zustand state management
-├── nginx/                    # Nginx config + multi-stage Dockerfile
-├── dokploy-compose.yml       # Production Docker Compose
-├── docker-compose.yml        # Development Docker Compose
-└── scripts/                  # Smoke tests, deployment checks
+├── render.yaml               # Render service definition
+├── build.sh                  # Render build: frontend, static files, migrations
+└── scripts/                  # Smoke tests
 ```
 
 ---
 
 ## CI/CD
 
-GitHub Actions pipeline with 5 jobs:
+GitHub Actions pipeline with 4 jobs:
 
 1. **backend-test** — Django pytest suite (Python 3.12)
 2. **frontend-lint** — ESLint with React Compiler rules
 3. **frontend-build** — Production build verification
 4. **security-audit** — pip-audit + npm audit
-5. **docker-build** — Docker image builds (on push to main)
 
 ---
 

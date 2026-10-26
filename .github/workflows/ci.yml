@@ -1,6 +1,6 @@
 # =============================================================================
 # Aktivar CI/CD Pipeline
-# Runs tests, linting, and Docker builds
+# Runs tests, linting, builds and dependency audits
 # =============================================================================
 
 name: CI/CD
@@ -157,40 +157,3 @@ jobs:
       - name: Run npm audit (frontend)
         working-directory: frontend
         run: npm audit --audit-level=high
-
-  # ---------------------------------------------------------------------------
-  # Docker: Build images (only on push to main/develop)
-  # ---------------------------------------------------------------------------
-  docker-build:
-    name: Docker Build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
-    needs:
-      - backend-test
-      - frontend-lint
-      - frontend-build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build backend image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend
-          push: false
-          tags: aktivar-backend:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build frontend image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          push: false
-          tags: aktivar-frontend:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max

@@ -111,7 +111,7 @@ DATABASES = {
     }
 }
 
-# If DATABASE_URL is provided (Dokploy/12-factor style), prefer it.
+# If DATABASE_URL is provided (Neon on Render, 12-factor style), prefer it.
 if _database_url:
     DATABASES["default"] = env.db("DATABASE_URL")
     # Keep the configured engine even when the URL scheme is plain postgres://.

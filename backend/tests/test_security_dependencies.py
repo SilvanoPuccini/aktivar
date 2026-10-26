@@ -28,9 +28,17 @@ def test_backend_security_floors():
     assert "<5.3" in str(requirements["django"].specifier)
 
 
-def test_node_container_builds_use_security_release():
-    for path in ("frontend/Dockerfile", "nginx/Dockerfile"):
-        assert "FROM node:24.22.1-alpine AS " in (ROOT / path).read_text()
+def test_render_build_uses_verified_node_security_release():
+    build = (ROOT / "build.sh").read_text()
+    assert 'NODE_VERSION="v22.23.4"' in build
+    assert 'sha256sum -c -' in build
+
+
+def test_retired_docker_deploy_configs_are_gone():
+    # Deploys run on Render (+ Neon); stale Docker/Dokploy configs used to seed demo users.
+    for path in ("dokploy-compose.yml", "docker-compose.yml", "docker-compose.prod.yml",
+                 "backend/Dockerfile", "frontend/Dockerfile", "nginx", "deploy.sh"):
+        assert not (ROOT / path).exists(), path
 
 
 def test_stable_asgi_server_preserves_http_and_anonymous_websocket_rejection(tmp_path):
