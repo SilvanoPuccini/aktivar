@@ -1,6 +1,9 @@
+from unittest.mock import patch
+
 import pytest
 from django.core.cache import cache
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.views import TokenObtainPairView
 from users.models import CustomUser
 
 LOGIN_URL = "/api/v1/auth/token/"
@@ -73,6 +76,34 @@ class TestLoginAccountFailureLimit:
         _attempt(client, "victim@example.com", "bad")
 
         assert _attempt(client, "other@example.com", "other-pass-77").status_code == 200
+
+    def test_attempt_is_reserved_before_authenticating(self, victim, client, settings):
+        # Concurrent requests must not all pass a stale read of the counter.
+        settings.LOGIN_ACCOUNT_MAX_FAILURES = 3
+        seen = []
+        original = TokenObtainPairView.post
+
+        def spy(view, request, *args, **kwargs):
+            seen.append(cache.get("login-failures:victim@example.com"))
+            return original(view, request, *args, **kwargs)
+
+        with patch.object(TokenObtainPairView, "post", spy):
+            _attempt(client, "victim@example.com", "bad")
+
+        assert seen == [1]
+
+    def test_lock_lasts_full_window_from_reaching_the_limit(self, victim, client, settings):
+        settings.LOGIN_ACCOUNT_MAX_FAILURES = 2
+        settings.LOGIN_ACCOUNT_LOCK_SECONDS = 100
+        now = [1_000_000.0]
+
+        with patch("django.core.cache.backends.locmem.time.time", lambda: now[0]):
+            _attempt(client, "victim@example.com", "bad-1")
+            now[0] += 90
+            _attempt(client, "victim@example.com", "bad-2")
+            now[0] += 60  # 150s after the first failure, 60s after hitting the limit
+
+            assert _attempt(client, "victim@example.com", PASSWORD).status_code == 429
 
     def test_defaults_bound_the_lockout_window(self, settings):
         assert settings.LOGIN_ACCOUNT_MAX_FAILURES == 10

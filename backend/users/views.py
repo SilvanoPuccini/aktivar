@@ -74,22 +74,33 @@ class AuthTokenObtainPairView(TokenObtainPairView):
 
     def post(self, request, *args, **kwargs):
         failure_key = _login_failure_key(request)
-        if failure_key and cache.get(failure_key, 0) >= settings.LOGIN_ACCOUNT_MAX_FAILURES:
-            return Response(
-                {"detail": "Demasiados intentos fallidos para esta cuenta. Probá de nuevo más tarde."},
-                status=status.HTTP_429_TOO_MANY_REQUESTS,
-            )
+        if failure_key:
+            # Reserve this attempt atomically before authenticating, so concurrent
+            # requests cannot all pass a stale read of the counter.
+            cache.add(failure_key, 0, settings.LOGIN_ACCOUNT_LOCK_SECONDS)
+            attempts = cache.incr(failure_key)
+            if attempts > settings.LOGIN_ACCOUNT_MAX_FAILURES:
+                return Response(
+                    {"detail": "Demasiados intentos fallidos para esta cuenta. Probá de nuevo más tarde."},
+                    status=status.HTTP_429_TOO_MANY_REQUESTS,
+                )
+            if attempts == settings.LOGIN_ACCOUNT_MAX_FAILURES:
+                # The lock lasts a full window from reaching the limit, not from the first failure.
+                cache.touch(failure_key, settings.LOGIN_ACCOUNT_LOCK_SECONDS)
         try:
             response = super().post(request, *args, **kwargs)
         except AuthenticationFailed:
             # SimpleJWT raises on bad credentials; DRF turns it into the 401 response.
+            # The attempt reserved above stays counted as a failure.
             self._log_rejected(request, status.HTTP_401_UNAUTHORIZED)
-            if failure_key:
-                cache.add(failure_key, 0, settings.LOGIN_ACCOUNT_LOCK_SECONDS)
-                cache.incr(failure_key)
             raise
         except Exception:
             logger.exception("JWT login failed unexpectedly")
+            if failure_key:
+                try:
+                    cache.decr(failure_key)  # server errors must not lock users out
+                except ValueError:
+                    pass  # key expired meanwhile; nothing to undo
             raise
 
         if response.status_code >= 400:
