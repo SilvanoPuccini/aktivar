@@ -4,6 +4,7 @@ from rest_framework.test import APIClient
 from users.models import CustomUser
 
 LOGIN_URL = "/api/v1/auth/token/"
+PASSWORD = "correct-horse-battery-9"
 
 
 @pytest.fixture(autouse=True)
@@ -15,12 +16,15 @@ def clear_throttle_cache():
 
 @pytest.fixture
 def victim(db):
-    return CustomUser.objects.create_user(
-        email="victim@example.com", password="correct-horse-battery-9", full_name="Victim"
-    )
+    return CustomUser.objects.create_user(email="victim@example.com", password=PASSWORD, full_name="Victim")
 
 
-def _attempt(client, email, password, spoofed_ip):
+@pytest.fixture
+def client():
+    return APIClient()
+
+
+def _attempt(client, email, password, spoofed_ip="10.0.0.1"):
     return client.post(
         LOGIN_URL,
         {"email": email, "password": password},
@@ -30,47 +34,46 @@ def _attempt(client, email, password, spoofed_ip):
 
 
 @pytest.mark.django_db
-class TestLoginAccountThrottle:
-    def test_rotating_spoofed_ips_cannot_bypass_per_account_limit(self, victim, settings):
-        settings.REST_FRAMEWORK = {
-            **settings.REST_FRAMEWORK,
-            "DEFAULT_THROTTLE_RATES": {**settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"], "login_account": "5/hour"},
-        }
-        client = APIClient()
+class TestLoginAccountFailureLimit:
+    def test_rotating_spoofed_ips_cannot_bypass_per_account_limit(self, victim, client, settings):
+        settings.LOGIN_ACCOUNT_MAX_FAILURES = 5
 
-        statuses = [
-            _attempt(client, "victim@example.com", f"guess-{i}", f"10.0.0.{i}").status_code
-            for i in range(6)
-        ]
+        statuses = [_attempt(client, "victim@example.com", f"guess-{i}", f"10.0.0.{i}").status_code for i in range(6)]
 
         assert statuses[:5] == [401] * 5
         assert statuses[5] == 429
 
-    def test_account_key_is_case_and_whitespace_insensitive(self, victim, settings):
-        settings.REST_FRAMEWORK = {
-            **settings.REST_FRAMEWORK,
-            "DEFAULT_THROTTLE_RATES": {**settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"], "login_account": "2/hour"},
-        }
-        client = APIClient()
+    def test_account_key_is_case_and_whitespace_insensitive(self, victim, client, settings):
+        settings.LOGIN_ACCOUNT_MAX_FAILURES = 2
 
-        _attempt(client, "victim@example.com", "x1", "10.0.1.1")
-        _attempt(client, " VICTIM@example.com ", "x2", "10.0.1.2")
-        response = _attempt(client, "Victim@Example.com", "x3", "10.0.1.3")
+        _attempt(client, "victim@example.com", "x1")
+        _attempt(client, " VICTIM@example.com ", "x2")
 
-        assert response.status_code == 429
+        assert _attempt(client, "Victim@Example.com", "x3").status_code == 429
 
-    def test_other_accounts_are_not_affected(self, victim, settings):
-        settings.REST_FRAMEWORK = {
-            **settings.REST_FRAMEWORK,
-            "DEFAULT_THROTTLE_RATES": {**settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"], "login_account": "1/hour"},
-        }
+    def test_successful_logins_do_not_count_toward_the_limit(self, victim, client, settings):
+        settings.LOGIN_ACCOUNT_MAX_FAILURES = 2
+
+        for _ in range(5):
+            assert _attempt(client, "victim@example.com", PASSWORD).status_code == 200
+
+    def test_successful_login_resets_failure_count(self, victim, client, settings):
+        settings.LOGIN_ACCOUNT_MAX_FAILURES = 2
+
+        _attempt(client, "victim@example.com", "bad-1")
+        assert _attempt(client, "victim@example.com", PASSWORD).status_code == 200
+        _attempt(client, "victim@example.com", "bad-2")
+
+        assert _attempt(client, "victim@example.com", PASSWORD).status_code == 200
+
+    def test_other_accounts_are_not_affected(self, victim, client, settings):
+        settings.LOGIN_ACCOUNT_MAX_FAILURES = 1
         CustomUser.objects.create_user(email="other@example.com", password="other-pass-77", full_name="Other")
-        client = APIClient()
 
-        _attempt(client, "victim@example.com", "bad", "10.0.2.1")
-        response = _attempt(client, "other@example.com", "other-pass-77", "10.0.2.2")
+        _attempt(client, "victim@example.com", "bad")
 
-        assert response.status_code == 200
+        assert _attempt(client, "other@example.com", "other-pass-77").status_code == 200
 
-    def test_default_rate_is_configured(self, settings):
-        assert settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]["login_account"] == "10/hour"
+    def test_defaults_bound_the_lockout_window(self, settings):
+        assert settings.LOGIN_ACCOUNT_MAX_FAILURES == 10
+        assert settings.LOGIN_ACCOUNT_LOCK_SECONDS == 15 * 60

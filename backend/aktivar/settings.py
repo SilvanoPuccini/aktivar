@@ -237,11 +237,14 @@ REST_FRAMEWORK = {
         "anon": "100/day",
         "user": "1000/day",
         "auth": "30/hour",
-        "login_account": "10/hour",
         "otp": "3/hour",
         "join": "10/hour",
     },
 }
+
+# Failed-login limit per target account (see users.views.AuthTokenObtainPairView)
+LOGIN_ACCOUNT_MAX_FAILURES = 10
+LOGIN_ACCOUNT_LOCK_SECONDS = 15 * 60
 
 # Simple JWT
 SIMPLE_JWT = {
