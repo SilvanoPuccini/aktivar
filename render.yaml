@@ -8,7 +8,7 @@ services:
     runtime: python
     pythonVersion: 3.12.8
     buildCommand: "./build.sh"
-    startCommand: daphne -b 0.0.0.0 -p $PORT aktivar.asgi:application
+    startCommand: python -m uvicorn aktivar.asgi:application --host 0.0.0.0 --port $PORT --access-log --no-proxy-headers --lifespan off
     healthCheckPath: /api/v1/health/
     envVars:
       - key: DJANGO_SETTINGS_MODULE
