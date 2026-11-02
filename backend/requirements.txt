@@ -60,4 +60,4 @@ pytest-asyncio>=1.4.1,<2.0
 
 # Linting
 black>=26.10.1,<27.0
-isort>=5.13,<6.0
+isort>=9.0.2,<10.0
