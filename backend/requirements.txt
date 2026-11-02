@@ -1,6 +1,6 @@
 # Django Core
 Django>=5.2.18,<5.3
-djangorestframework>=3.18.2,<4.0
+djangorestframework>=3.18.3,<4.0
 djangorestframework-simplejwt>=5.3,<6.0
 django-cors-headers>=4.3,<5.0
 django-filter>=24.1,<25.0
